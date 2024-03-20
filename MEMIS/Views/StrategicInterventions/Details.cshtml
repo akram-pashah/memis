@@ -1,0 +1,37 @@
+﻿@model MEMIS.Data.StrategicIntervention
+
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Views/Shared/_PlanningLayout.cshtml";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>StrategicIntervention</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.InterventionCode)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.InterventionCode)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.InterventionName)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.InterventionName)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.StrategicObjective)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.StrategicObjective.ObjectiveCode)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model?.intIntervention">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>

@@ -1,0 +1,282 @@
+﻿@using MEMIS.Data.Risk;
+@using System.Security.Claims;
+@using Microsoft.AspNetCore.Identity;
+
+@model cloudscribe.Pagination.Models.PagedResult<MEMIS.Models.Report.SDTReportModel>
+
+@{
+    ViewData["Title"] = "Report";
+    Layout = "~/Views/Shared/_MELayout.cshtml";
+}
+<style>
+    .content {
+        width: calc(100% - 50px);
+    }
+
+    table {
+        font-size: 12px;
+    }
+</style>
+
+<h1>SDTM&E Framework Report</h1>
+
+<p>
+   
+</p>
+<div style="width:100%; overflow-x:auto;">
+    <table class="table table-striped table-bordered table-hover dt-responsive nowrap">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Data[0].ServiceDeliveryTimeline)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Data[0].Measure)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Data[0].ReportingInterval)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Data[0].Jul)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Data[0].Aug)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Data[0].Sep)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Data[0].Oct)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Data[0].Nov)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Data[0].Dec)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Data[0].Jan)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Data[0].Feb)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Data[0].Mar)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Data[0].Apr)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Data[0].May)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Data[0].Jun)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Data[0].Target)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Data[0].AvgQ1)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Data[0].AvgQ2)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Data[0].AvgQ3)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Data[0].AvgQ4)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Data[0].AnnualAverage)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Data[0].AchievedJul)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Data[0].AchievedAug)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Data[0].AchievedSep)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Data[0].AchievedOct)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Data[0].AchievedNov)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Data[0].AchievedDec)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Data[0].AchievedJan)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Data[0].AchievedFeb)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Data[0].AchievedMar)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Data[0].AchievedApr)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Data[0].AchievedMay)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Data[0].AchievedJun)
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Data)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ServiceDeliveryTimeline)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Measure)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ReportingInterval)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Jul)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Aug)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Sep)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Oct)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Nov)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Dec)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Jan)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Feb)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Mar)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Apr)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.May)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Jun)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Target)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.AvgQ1)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.AvgQ2)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.AvgQ3)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.AvgQ4)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.AnnualAverage)
+                    </td>
+                    <td class="AS">
+                        @Html.DisplayFor(modelItem => item.AchievedJul)
+                    </td>
+                    <td class="AS">
+                        @Html.DisplayFor(modelItem => item.AchievedAug)
+                    </td>
+                    <td class="AS">
+                        @Html.DisplayFor(modelItem => item.AchievedSep)
+                    </td>
+                    <td class="AS">
+                        @Html.DisplayFor(modelItem => item.AchievedOct)
+                    </td>
+                    <td class="AS">
+                        @Html.DisplayFor(modelItem => item.AchievedNov)
+                    </td>
+                    <td class="AS">
+                        @Html.DisplayFor(modelItem => item.AchievedDec)
+                    </td>
+                    <td class="AS">
+                        @Html.DisplayFor(modelItem => item.AchievedJan)
+                    </td>
+                    <td class="AS">
+                        @Html.DisplayFor(modelItem => item.AchievedFeb)
+                    </td>
+                    <td class="AS">
+                        @Html.DisplayFor(modelItem => item.AchievedMar)
+                    </td>
+                    <td class="AS">
+                        @Html.DisplayFor(modelItem => item.AchievedApr)
+                    </td>
+                    <td class="AS">
+                        @Html.DisplayFor(modelItem => item.AchievedMay)
+                    </td>
+                    <td class="AS">
+                        @Html.DisplayFor(modelItem => item.AchievedJun)
+                    </td>
+
+                </tr>
+            }
+        </tbody>
+    </table>
+    <cs-pager cs-paging-pagenumber="@Model.PageNumber"
+              cs-paging-totalitems="@Model.TotalItems"
+              cs-paging-pagesize="@Model.PageSize"
+              cs-pagenumber-param="pagenumber"
+              asp-controller="SDTReport"
+              asp-action="Index"
+              cs-pager-li-current-class="page-item active"
+              cs-pager-li-other-class="page-item"
+              cs-pager-li-non-active-class="page-item disabled"
+              cs-pager-link-current-class="page-link"
+              cs-pager-link-other-class="page-link"></cs-pager>
+</div>
+@section Scripts {
+    <script>
+
+        window.addEventListener('load', function () {
+            calculateAchivementStatus();
+        })
+            let calculateAchivementStatus = () => {
+                var elements = document.getElementsByClassName("AS");
+                for (ele of elements) {
+                    var t = ele.innerText;
+                    
+                    if (t == "1.00") {
+                        ele.style.backgroundColor = "#00b050";
+                    }
+                    else if (t == "0.50") {
+                        ele.style.backgroundColor = "#fefe00";
+                    }
+                    else if (t == "0.25") {
+                        ele.style.backgroundColor = "#fd0000";
+                    }
+                    
+                }
+
+
+
+
+               
+            }
+        
+
+    </script>
+}

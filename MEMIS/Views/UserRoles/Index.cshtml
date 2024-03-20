@@ -1,0 +1,32 @@
+﻿@using MEMIS.Models
+@model List<MEMIS.Models.UserRolesViewModel>
+@{
+    ViewData["Title"] = "User Roles";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+<h1>User Roles</h1>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>User Name</th>
+            <th>Phone Number</th>
+            <th>Email</th>
+            <th>Roles</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in Model)
+        {
+        <tr>
+            <td>@user.UserName</td>
+            <td>@user.MobileNo</td>
+            <td>@user.Email</td>
+            <td>@string.Join(" , ", user.Roles.ToList())</td>
+            <td>
+                <a class="btn btn-primary" asp-controller="UserRoles" asp-action="Manage" asp-route-userId="@user.UserId">Manage Roles</a>
+            </td>
+        </tr>
+        }
+    </tbody>
+</table>

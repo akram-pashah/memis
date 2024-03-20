@@ -1,0 +1,243 @@
+﻿@model MEMIS.Models.SDTAssessmentDto
+
+@{
+	ViewData["Title"] = "Edit";
+	Layout = "~/Views/Shared/_MELayout.cshtml";
+}
+
+
+<h5>Edit Assessment</h5>
+<hr />
+<div class="row">
+	<div class="col-md-6">
+		<form asp-action="Edit">
+			<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+			<input type="hidden" asp-for="Id" />
+			<input type="hidden" asp-for="SDTMasterId" value="@Model.SDTMasterFk.Id" />
+			<div class="row m-t-10">
+				<div class="col-md-6">
+					<div class="form-group">
+						<label asp-for="SDTMasterFk.ServiceDeliveryTimeline" class="control-label"></label>
+						@*<br />
+						<label class="control-label">@Model.SDTMasterFk.ServiceDeliveryTimeline</label>*@
+						<textarea asp-for="SDTMasterFk.ServiceDeliveryTimeline" class="form-control form-control-sm" readonly></textarea>
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="form-group">
+						<label asp-for="SDTMasterFk.Measure" class="control-label"></label>
+						<textarea asp-for="SDTMasterFk.Measure" class="form-control form-control-sm" readonly></textarea>
+					</div>
+				</div>
+
+			</div>
+
+			<div class="row m-t-10">
+				<div class="col-md-6">
+					<div class="form-group">
+						<label asp-for="SDTMasterFk.EvaluationPeriod" class="control-label"></label>
+						<input asp-for="SDTMasterFk.EvaluationPeriod" class="form-control form-control-sm" readonly />
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="form-group">
+						<label asp-for="Month" class="control-label"></label>
+						<select asp-for="Month" class="form-control form-control-sm" asp-items="ViewBag.Months" ></select>
+					</div>
+				</div>
+			</div>
+
+			<div class="row m-t-10">
+				<div class="col-md-6">
+					<div class="form-group">
+						<label asp-for="Numerator" class="control-label"></label>
+						<input asp-for="Numerator" class="form-control form-control-sm" aria-describedby="SDTMasterNumeratorBlock" />
+						<div id="SDTMasterNumeratorBlock" class="form-text">
+							SDT Master Numerator : @Model.SDTMasterFk.Numerator
+						</div>
+						@*<small class="text-muted">SDT Master Numerator :@Model.SDTMasterFk.Numerator</small>*@
+						<span asp-validation-for="Numerator" class="text-danger"></span>
+					</div>
+				</div>
+
+				<div class="col-md-6">
+					<div class="form-group">
+						<label asp-for="ImplementedTimeline" class="control-label"></label>
+						<input asp-for="ImplementedTimeline" class="form-control form-control-sm" />
+						<span asp-validation-for="ImplementedTimeline" class="text-danger"></span>
+					</div>
+
+				</div>
+			</div>
+
+			<div class="row m-t-10">
+				<div class="col-md-6">
+					<div class="form-group">
+						<label asp-for="Denominator" class="control-label"></label>
+						<input asp-for="Denominator" class="form-control form-control-sm" aria-describedby="SDTMasterDenominatorBlock" />
+						<div id="SDTMasterDenominatorBlock" class="form-text">
+							SDT Master Denominator : @Model.SDTMasterFk.Denominator
+						</div>
+						@*<small class="text-muted">SDT Master Denominator : @Model.SDTMasterFk.Denominator</small>*@
+						<span asp-validation-for="Denominator" class="text-danger"></span>
+					</div>
+				</div>
+
+				<div class="col-md-6">
+					<div class="form-group">
+						<label asp-for="Rate" class="control-label"></label>
+						<input asp-for="Rate" class="form-control form-control-sm" readonly />
+						<span asp-validation-for="Rate" class="text-danger"></span>
+					</div>
+
+				</div>
+			</div>
+
+			<div class="row m-t-10">
+				<div class="col-md-6">
+					<div class="form-group">
+						<label asp-for="ProportionTimeline" class="control-label"></label>
+						<input asp-for="ProportionTimeline" class="form-control form-control-sm" readonly />
+						<span asp-validation-for="ProportionTimeline" class="text-danger"></span>
+					</div>
+				</div>
+
+				<div class="col-md-6">
+					<div class="form-group">
+						<label asp-for="Target" class="control-label"></label>
+						<input asp-for="Target" value="@Model.SDTMasterFk.Target" class="form-control form-control-sm" readonly />
+						<span asp-validation-for="Target" class="text-danger"></span>
+					</div>
+
+				</div>
+			</div>
+
+			<div class="row m-t-10">
+				<div class="col-md-6">
+					<div class="form-group">
+						<label asp-for="AchivementStatus" class="control-label"></label>
+						<select asp-for="AchivementStatus" class="form-control form-control-sm readonly" asp-items="ViewBag.AchievementStatus" readonly>
+							<option value="">Select Achivement Status</option>
+						</select>
+						<span asp-validation-for="AchivementStatus" class="text-danger"></span>
+					</div>
+				</div>
+
+				<div class="col-md-6">
+					<div class="form-group">
+						<label asp-for="Variance" class="control-label"></label>
+						<input asp-for="Variance" class="form-control form-control-sm" readonly />
+						<span asp-validation-for="Variance" class="text-danger"></span>
+					</div>
+
+				</div>
+			</div>
+
+			<div class="row m-t-10">
+				<div class="col-md-6">
+					<div class="form-group">
+						<label asp-for="Rating" class="control-label"></label>
+						<input asp-for="Rating" class="form-control form-control-sm" readonly />
+						<span asp-validation-for="Rating" class="text-danger"></span>
+					</div>
+
+				</div>
+				<div class="col-md-6">
+					<div class="form-group">
+						<label asp-for="Justification" class="control-label"></label>
+						<textarea asp-for="Justification" class="form-control form-control-sm"></textarea>
+						<span asp-validation-for="Justification" class="text-danger"></span>
+					</div>
+				</div>
+			</div>
+
+			<div class="row m-t-10">
+				<div class="col-md-12 text-center">
+					<div class="form-group">
+						<button type="submit" class="btn btn-sm btn-outline-primary">Save</button>
+						@*<button type="reset" class="btn btn-sm btn-outline-secondary">Clear</button>*@
+						<a role="button" class="btn btn-sm btn-outline-secondary" asp-action="Index">Back to List</a>
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
+
+
+@section Scripts {
+	@{
+		await Html.RenderPartialAsync("_ValidationScriptsPartial");
+	}
+
+	<script>
+
+		$(function () {
+
+			//Numerator,Denominator Change
+			$("#Numerator,#Denominator").keyup(function () {
+				let nr = Number($("#Numerator").val());
+				let dr = Number($("#Denominator").val());
+				let rate = parseFloat(nr / dr).toFixed(2);
+				if (isNaN(rate) || !isFinite(rate))
+					rate = 0;
+				$("#Rate").val(rate);
+				calculateVariance();
+				calculateProportionTL();
+				calculateAchivementStatus();
+			});
+
+			//Numerator,Denominator Change
+			$("#ImplementedTimeline").keyup(function () {
+				calculateProportionTL();
+				calculateAchivementStatus();
+			});
+
+			//Variance Calculation
+			let calculateVariance = () => {
+				let rate = Number($("#Rate").val());
+				let target = Number($("#Target").val());
+				let variance = (rate - target) / target;
+				if (isNaN(variance) || !isFinite(variance))
+					variance = 0;
+				variance = parseFloat(variance).toFixed(2);
+				$("#Variance").val(variance);
+			}
+
+			//Proportion Timeline Calculation
+			let calculateProportionTL = () => {
+				let impTl = Number($("#ImplementedTimeline").val());
+				let dr = Number($("#Denominator").val());
+				let proportionTL = parseFloat(impTl / dr).toFixed(2);
+				if (isNaN(proportionTL) || !isFinite(proportionTL))
+					proportionTL = 0;
+				$("#ProportionTimeline").val(proportionTL);
+			}
+
+			//Achivement Status Calculation
+			let calculateAchivementStatus = () => {
+				let impTl = Number($("#ImplementedTimeline").val());
+				let target = Number($("#Target").val());
+				let variance = Number($("#Variance").val());
+
+				if (impTl <= target) {
+					$("#AchivementStatus").val("1.0");
+					$("#Rating").val(1.0).css('background-color', '#00b050');
+				}
+				else if (impTl > target && variance <= 10) {
+					$("#AchivementStatus").val("0.5");
+					$("#Rating").val(0.5).css('background-color', '#fefe00');
+				}
+				else if (impTl > target && variance > 10) {
+					$("#AchivementStatus").val("0.25");
+					$("#Rating").val(0.25).css('background-color', '#fd0000');
+				}
+				else {
+					$("#AchivementStatus").val("");
+					$("#Rating").val("").css('background-color', '#e9ecef');
+				}
+			}
+		});
+
+	</script>
+}

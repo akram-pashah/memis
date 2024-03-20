@@ -1,0 +1,93 @@
+﻿@model MEMIS.Data.KPIAssessment
+
+@{
+    ViewData["Title"] = " Verify Details";
+}
+
+<div>
+    <h4>SDTM&E Framework</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.FY)
+        </dt>
+        <dd class="col-sm-4">
+            @Html.DisplayFor(model => model.FY)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.PerformanceIndicator)
+        </dt>
+        <dd class="col-sm-4">
+            @Html.DisplayFor(model => model.PerformanceIndicator)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.FrequencyofReporting)
+        </dt>
+        <dd class="col-sm-4">
+            @Html.DisplayFor(model => model.FrequencyofReporting)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.IndicatorFormulae)
+        </dt>
+        <dd class="col-sm-4">
+            @Html.DisplayFor(model => model.IndicatorFormulae)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.IndicatorDefinition)
+        </dt>
+        <dd class="col-sm-4">
+            @Html.DisplayFor(model => model.IndicatorDefinition)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Numerator)
+        </dt>
+        <dd class="col-sm-4">
+            @Html.DisplayFor(model => model.Numerator)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Denominator)
+        </dt>
+        <dd class="col-sm-4">
+            @Html.DisplayFor(model => model.Denominator)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Rate)
+        </dt>
+        <dd class="col-sm-4">
+            @Html.DisplayFor(model => model.Rate)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Achieved)
+        </dt>
+        <dd class="col-sm-4">
+            @Html.DisplayFor(model => model.Achieved)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Justification)
+        </dt>
+        <dd class="col-sm-4">
+            @Html.DisplayFor(model => model.Justification)
+        </dd>
+    </dl>
+
+    <div class="col-md-8">
+        <form asp-action="ChangeStatusDDCS">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="@Model.Id" />
+            <div class="row">
+               
+                <div class="form-group">
+                    <label asp-for="ApprovalStatus" class="control-label"></label>
+                    <select asp-for="ApprovalStatus" class="form-control" asp-items="ViewBag.Approval"></select>
+                    <span asp-validation-for="ApprovalStatus" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="Verify" class="btn btn-primary" />
+                <a role="button" class="btn btn-sm btn-outline-secondary" asp-action="VerifyByDDCS">Back to List</a>
+            </div>
+        </form>
+    </div>
+</div>
+

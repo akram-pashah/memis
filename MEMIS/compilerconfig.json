@@ -1,0 +1,14 @@
+﻿[
+  {
+    "outputFile": "wwwroot/sass/style.css",
+    "inputFile": "wwwroot/sass/style.scss"
+  },
+  {
+    "outputFile": "wwwroot/sass/_init.css",
+    "inputFile": "wwwroot/sass/_init.scss"
+  },
+  {
+    "outputFile": "wwwroot/sass/plugins.css",
+    "inputFile": "wwwroot/sass/plugins.scss"
+  }
+]

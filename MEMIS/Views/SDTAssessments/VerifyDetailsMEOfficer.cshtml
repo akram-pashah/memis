@@ -1,0 +1,121 @@
+﻿@model MEMIS.Data.SDTAssessment
+
+@{
+    ViewData["Title"] = " Verify Details";
+}
+
+<div>
+    <h4>SDTM&E Framework</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.SDTMasterFk.ServiceDeliveryTimeline)
+        </dt>
+        <dd class="col-sm-4">
+            @Html.DisplayFor(model => model.SDTMasterFk.ServiceDeliveryTimeline)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.SDTMasterFk.Measure)
+        </dt>
+        <dd class="col-sm-4">
+            @Html.DisplayFor(model => model.SDTMasterFk.Measure)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.SDTMasterFk.EvaluationPeriod)
+        </dt>
+        <dd class="col-sm-4">
+            @Html.DisplayFor(model => model.SDTMasterFk.EvaluationPeriod)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Month)
+        </dt>
+        <dd class="col-sm-4">
+            @Html.DisplayFor(model => model.Month)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Numerator)
+        </dt>
+        <dd class="col-sm-4">
+            @Html.DisplayFor(model => model.Numerator)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.ImplementedTimeline)
+        </dt>
+        <dd class="col-sm-4">
+            @Html.DisplayFor(model => model.ImplementedTimeline)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Denominator)
+        </dt>
+        <dd class="col-sm-4">
+            @Html.DisplayFor(model => model.Denominator)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Rate)
+        </dt>
+        <dd class="col-sm-4">
+            @Html.DisplayFor(model => model.Rate)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.ProportionTimeline)
+        </dt>
+        <dd class="col-sm-4">
+            @Html.DisplayFor(model => model.ProportionTimeline)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Target)
+        </dt>
+        <dd class="col-sm-4">
+            @Html.DisplayFor(model => model.Target)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.AchivementStatus)
+        </dt>
+        <dd class="col-sm-4">
+            @Html.DisplayFor(model => model.AchivementStatus)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Variance)
+        </dt>
+        <dd class="col-sm-4">
+            @Html.DisplayFor(model => model.Variance)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Rating)
+        </dt>
+        <dd class="col-sm-4">
+            @Html.DisplayFor(model => model.Rating)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Justification)
+        </dt>
+        <dd class="col-sm-4">
+            @Html.DisplayFor(model => model.Justification)
+        </dd>
+    </dl>
+
+    <div class="col-md-8">
+        <form asp-action="ChangeStatusMEOfficer">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="@Model.Id" />
+            <div class="row">
+                <div class="form-group">
+                    <label asp-for="MEOfficerComment" class="control-label"></label>
+                    <textarea asp-for="MEOfficerComment" class="form-control" style="height:100px"></textarea>
+                    <span asp-validation-for="MEOfficerComment" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="ApprovalStatusMEOFfficer" class="control-label"></label>
+                    <select asp-for="ApprovalStatusMEOFfficer" class="form-control" asp-items="ViewBag.Approval"></select>
+                    <span asp-validation-for="ApprovalStatusMEOFfficer" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="Verify" class="btn btn-primary" />
+                <a role="button" class="btn btn-sm btn-outline-secondary" asp-action="VerifyByMEOfficer">Back to List</a>
+            </div>
+        </form>
+    </div>
+</div>
+

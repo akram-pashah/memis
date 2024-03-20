@@ -1,0 +1,160 @@
+﻿@model IEnumerable<MEMIS.Data.DepartmentPlan>
+
+@{
+    ViewData["Title"] = "Department Work Plan Director Verification";
+    Layout = "~/Views/Shared/_PlanningLayout.cshtml";
+}
+
+<h1>Department Work Plan Director Verification</h1>
+
+ 
+<table class="table">
+    <thead>
+        <tr>
+            <th></th>
+            <th>
+                @Html.DisplayNameFor(model => model.strategicObjective)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.strategicIntervention)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.StrategicAction)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.activity)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.outputIndicator)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.baseline)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.budgetCode)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.unitCost)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Q1Target)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Q1Budget)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Q2Target)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Q2Budget)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Q3Target)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Q3Budget)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Q4Target)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Q4Budget)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.comparativeTarget)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.justification)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.budgetAmount)
+            </th>
+            
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+                <td>
+                    <input type="checkbox" value="@item.intDeptPlan" />
+                </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.strategicObjective)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.strategicIntervention)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.StrategicAction)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.activity)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.outputIndicator)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.baseline)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.budgetCode)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.unitCost)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Q1Target)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Q1Budget)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Q2Target)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Q2Budget)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Q3Target)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Q3Budget)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Q4Target)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Q4Budget)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.comparativeTarget)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.justification)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.budgetAmount)
+            </td>
+           
+        </tr>
+}
+    </tbody>
+</table>
+<div class="col-md-3">
+    <div class="row">
+        <div class="col-md-6">
+            <select name="apprStatus" class="w-100">
+                <option value="4">Verified</option>
+                <option value="5">Rejected</option>
+            </select>
+        </div>
+    </div>
+    <div class="row mt-2">
+        <div class="col-md-6">
+            <div class="form-group">
+                <input type="submit" value="Submit" class="btn btn-primary w-100" />
+            </div>
+        </div>
+
+    </div>
+</div>

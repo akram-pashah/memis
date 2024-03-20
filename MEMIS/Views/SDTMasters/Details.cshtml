@@ -1,0 +1,61 @@
+﻿@model MEMIS.Data.SDTMaster
+
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Views/Shared/_MELayout.cshtml";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>SDTMaster</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.ServiceDeliveryTimeline)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.ServiceDeliveryTimeline)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Measure)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Measure)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.EvaluationPeriod)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.EvaluationPeriod)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Target)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Target)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Numerator)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Numerator)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Denominator)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Denominator)
+        </dd>
+        <dt class = "col-sm-2">
+            Department
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.DepartmentFk.deptName)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>

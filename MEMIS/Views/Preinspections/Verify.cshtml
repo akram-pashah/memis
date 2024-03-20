@@ -1,0 +1,166 @@
+﻿@using MEMIS.Data;
+@model cloudscribe.Pagination.Models.PagedResult<Preinspection>
+
+@{
+    ViewData["Title"] = "Verify"; 
+    Layout = "~/Views/Shared/_GISLayout.cshtml";
+}
+<style>
+    .content {
+        width: calc(100% - 280px);
+    }
+
+    table {
+        font-size: 12px;
+    }
+</style>
+<h1>Verify</h1>
+<div id='myModal' class='modal'>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div id='myModalContent'></div>
+        </div>
+    </div>
+
+</div>
+<div style="width:100%; overflow-x:auto;">
+    <table class="table table-striped table-bordered table-hover dt-responsive nowrap">
+
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Data[0].InspectionDate)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Data[0].Applicant)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Data[0].Business)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Data[0].Road)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Data[0].Zone)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Data[0].Village)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Data[0].Country)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Data[0].Telephone)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Data[0].Email)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Data[0].ProductClassification)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Data[0].NearestPharmaName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Data[0].NearestPharmaRoad)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Data[0].NearestDrugShopName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Data[0].NearestDrugShopRoad)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Data[0].comments)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Data[0].InspectorId)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Data[0].ApprovalStatus)
+                </th>
+
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Data)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.InspectionDate)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Applicant)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Business)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Road)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Zone)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Village)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Country)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Telephone)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Email)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ProductClassification)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.NearestPharmaName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.NearestPharmaRoad)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.NearestDrugShopName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.NearestDrugShopRoad)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.comments)
+                    </td>
+                    <td>
+                        @if (@ViewBag.Users.FindByIdAsync(item.InspectorId).Result != null)
+                        {
+                            @ViewBag.Users.FindByIdAsync(item.InspectorId).Result.UserName
+                        }
+                    </td>
+                    <td>
+                        @Enum.GetName(typeof(MEMIS.EnumApprovalStatus), item.ApprovalStatus)
+                    </td>
+
+                    <td>
+                        <a asp-action="VerifyStatus" class="modaltest" asp-route-id="@item.Id">Verify</a> |
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <cs-pager cs-paging-pagenumber="@Model.PageNumber"
+              cs-paging-totalitems="@Model.TotalItems"
+              cs-paging-pagesize="@Model.PageSize"
+              cs-pagenumber-param="pagenumber"
+              asp-controller="PreInspections"
+              asp-action="Index"
+              cs-pager-li-current-class="page-item active"
+              cs-pager-li-other-class="page-item"
+              cs-pager-li-non-active-class="page-item disabled"
+              cs-pager-link-current-class="page-link"
+              cs-pager-link-other-class="page-link"></cs-pager>
+</div>
+
+
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

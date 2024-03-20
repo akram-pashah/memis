@@ -1,0 +1,214 @@
+﻿@model MEMIS.Models.KPIAssessmentDto
+
+@{
+	ViewData["Title"] = "Create";
+	Layout = "~/Views/Shared/_MELayout.cshtml";
+}
+
+<h5>New Assessment</h5>
+<hr />
+<div class="row">
+	<div class="col-md-12">
+		<form asp-action="Create">
+			<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+			<input type="hidden" asp-for="KPIMasterId"  value="@Model.KPIMasterFk.Id" />
+			
+			<div class="row m-t-10"> 
+				<div class="col-md-6">
+					<div class="form-group">
+						<label asp-for="FY" class="control-label"></label>
+						<select asp-for="FY" class="form-control form-control-sm" asp-items="ViewBag.FYear"></select>
+					</div>
+				</div>
+			</div>
+			<div class="row m-t-10">
+				<div class="col-md-6">
+					<div class="form-group">
+						<label asp-for="KPIMasterFk.PerformanceIndicator" class="control-label"></label> 
+						<textarea asp-for="KPIMasterFk.PerformanceIndicator" class="form-control form-control-sm" readonly></textarea>
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="form-group">
+						<label asp-for="FrequencyofReporting" class="control-label"></label>
+						<select asp-for="FrequencyofReporting" class="form-control form-control-sm" asp-items="ViewBag.FrequencyofReporting"></select>
+					</div>
+				</div> 
+			</div> 
+			<div class="row m-t-10">
+				<div class="col-md-6">
+					<div class="form-group">
+						<label asp-for="@Model.IndicatorFormulae" class="control-label"></label>
+						<input asp-for="KPIMasterFk.IndicatorFormulae" class="form-control form-control-sm" readonly />
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="form-group">
+						<label asp-for="@Model.IndicatorDefinition" class="control-label"></label>
+						<input asp-for="KPIMasterFk.IndicatorFormulae" class="form-control form-control-sm" readonly />
+					</div>
+				</div>
+			</div>
+
+			<div class="row m-t-10">
+				<div class="col-md-6">
+					<div class="form-group">
+						<label class="control-label">SDT Master Numerator : @Model.KPIMasterFk.IndicatorFormulae</label>
+						<input asp-for="Numerator" class="form-control form-control-sm" aria-describedby="SDTMasterNumeratorBlock" />
+						<div id="SDTMasterNumeratorBlock" class="form-text">
+							
+						</div>
+						@*<small class="text-muted">SDT Master Numerator :@Model.SDTMasterFk.Numerator</small>*@
+						<span asp-validation-for="Numerator" class="text-danger"></span>
+					</div>
+				</div> 
+				<div class="col-md-6">
+					<div class="form-group">
+						<label class="control-label">SDT Master Denominator : @Model.KPIMasterFk.IndicatorDefinition</label>
+						<input asp-for="Denominator" class="form-control form-control-sm" aria-describedby="SDTMasterDenominatorBlock" />
+						<div id="SDTMasterDenominatorBlock" class="form-text">
+						</div>
+						<small class="text-muted">SDT Master Denominator : @Model.KPIMasterFk.IndicatorDefinition</small>
+						<span asp-validation-for="Denominator" class="text-danger"></span>
+					</div>
+				</div>
+			</div>
+
+			<div class="row m-t-10">
+				<div class="col-md-6">
+					<div class="form-group">
+						<label asp-for="Target" class="control-label"></label>
+						<input asp-for="Target" value="@Model.KPIMasterFk.FY1" class="form-control form-control-sm" readonly />
+						<span asp-validation-for="Target" class="text-danger"></span>
+					</div>
+
+				</div>
+
+				<div class="col-md-6">
+					<div class="form-group">
+						<label asp-for="Rate" class="control-label"></label>
+						<input asp-for="Rate" class="form-control form-control-sm" readonly />
+						<span asp-validation-for="Rate" class="text-danger"></span>
+					</div>
+
+				</div>
+			</div>
+			 
+			<div class="row m-t-10">
+				<div class="col-md-6">
+					<div class="form-group">
+						<label asp-for="Achieved" class="control-label"></label>
+						<select asp-for="Achieved" class="form-control form-control-sm readonly" asp-items="ViewBag.AchievementStatus" readonly>
+							<option value="">Select Achivement Status</option>
+						</select>
+						<span asp-validation-for="Achieved" class="text-danger"></span>
+					</div>
+				</div>
+
+				<div class="col-md-6">
+					<div class="form-group">
+						<label asp-for="Justification" class="control-label"></label>
+						<textarea asp-for="Justification" class="form-control form-control-sm"></textarea>
+						<span asp-validation-for="Justification" class="text-danger"></span>
+					</div>
+				</div>
+			</div>
+
+			<div class="row m-t-10">
+				<div class="col-md-6">
+					<div class="form-group">
+						<label asp-for="KPIMasterFk.ResponsibleParty" class="control-label"></label>
+						<input asp-for="KPIMasterFk.ResponsibleParty" class="form-control form-control-sm" readonly />
+						<span asp-validation-for="KPIMasterFk.ResponsibleParty" class="text-danger"></span>
+					</div>
+
+				</div>
+				
+			</div>
+
+			<div class="row m-t-10">
+				<div class="col-md-12 text-center">
+					<div class="form-group">
+						<button type="submit" class="btn btn-sm btn-outline-primary">Save</button>
+						<button type="reset" class="btn btn-sm btn-outline-secondary">Clear</button>
+						<a role="button" class="btn btn-sm btn-outline-secondary" asp-action="Index">Back to List</a>
+					</div>
+				</div>
+			</div>
+
+
+		</form>
+	</div>
+</div>
+
+@functions
+{
+	 
+	public string getAchievement(string achieve)
+	{
+		foreach (var nachieve in ListHelper.AchievementStatus())
+		{
+			if (nachieve.Value == achieve)
+			{
+				return nachieve.Text;
+			}
+		}
+		return "NA";
+	}
+	public string GetFrequencyofReporting(int reporting)
+	{
+		foreach (var nreporting in ListHelper.FrequencyofReporting())
+		{
+			if (Convert.ToInt32(nreporting.Value) == reporting)
+			{
+				return nreporting.Text;
+			}
+		}
+		return "NA";
+	}
+}
+@section Scripts {
+	@{
+		await Html.RenderPartialAsync("_ValidationScriptsPartial");
+	}
+	<script>
+
+		$(function () {
+
+			//Numerator,Denominator Change
+			$("#Numerator,#Denominator").keyup(function () {
+				let nr = Number($("#Numerator").val());
+				let dr = Number($("#Denominator").val());
+				let rate = parseFloat(nr / dr).toFixed(2);
+				if (isNaN(rate) || !isFinite(rate))
+					rate = 0;
+				$("#Rate").val(rate); 
+				calculateAchivementStatus();
+			}); 
+			//Achivement Status Calculation
+			let calculateAchivementStatus = ()=>{
+				let impTl = Number($("#Rate").val());
+				let target = Number($("#Target").val());
+				let variance = ((impTl - target) / target)*100; 
+
+				if (impTl <= target){
+					$("#Achieved").val("1.0");
+					$("#Achieved").val(1.0).css('background-color', '#00b050');
+				}
+				else if (impTl > target && variance <= 10) {
+					$("#Achieved").val("0.5");
+					$("#Achieved").val(0.5).css('background-color', '#fefe00');
+				}
+				else if (impTl > target && variance > 10) {
+					$("#Achieved").val("0.25");
+					$("#Achieved").val(0.25).css('background-color', '#fd0000');
+				}
+				else{
+					$("#Achieved").val("");
+					$("#Achieved").val("").css('background-color', '#e9ecef');
+				}
+			}
+		});
+
+	</script>
+}

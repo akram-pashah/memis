@@ -1,0 +1,70 @@
+﻿@model MEMIS.Data.StrategicPlan
+
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Views/Shared/_PlanningLayout.cshtml";
+}
+
+<h1>Edit</h1>
+
+<h4>StrategicPlan</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <div class="form-group">
+                <label asp-for="ndp" class="control-label"></label>
+                <input asp-for="ndp" class="form-control" />
+                <span asp-validation-for="ndp" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="program" class="control-label"></label>
+                <input asp-for="program" class="form-control" />
+                <span asp-validation-for="program" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="programObjective" class="control-label"></label>
+                <input asp-for="programObjective" class="form-control" />
+                <span asp-validation-for="programObjective" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="subProgram" class="control-label"></label>
+                <input asp-for="subProgram" class="form-control" />
+                <span asp-validation-for="subProgram" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="focusArea" class="control-label"></label>
+                <input asp-for="focusArea" class="form-control" />
+                <span asp-validation-for="focusArea" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="strategicObjective" class="control-label"></label>
+                <input asp-for="strategicObjective" class="form-control" />
+                <span asp-validation-for="strategicObjective" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="strategicIntervention" class="control-label"></label>
+                <input asp-for="strategicIntervention" class="form-control" />
+                <span asp-validation-for="strategicIntervention" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="StrategicAction" class="control-label"></label>
+                <input asp-for="StrategicAction" class="form-control" />
+                <span asp-validation-for="StrategicAction" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

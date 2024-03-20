@@ -1,0 +1,157 @@
+﻿@model MEMIS.Data.RelocationPharma
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Views/Shared/_GISLayout.cshtml";
+}
+
+<div>
+    <h4>Preinspection</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.InspectionDate)
+        </dt>
+        <dd class="col-sm-4">
+            @Html.DisplayFor(model => model.InspectionDate)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Applicant)
+        </dt>
+        <dd class="col-sm-4">
+            @Html.DisplayFor(model => model.Applicant)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Business)
+        </dt>
+        <dd class="col-sm-4">
+            @Html.DisplayFor(model => model.Business)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.CRoad)
+        </dt>
+        <dd class="col-sm-4">
+            @Html.DisplayFor(model => model.CRoad)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.CZone)
+        </dt>
+        <dd class="col-sm-4">
+            @Html.DisplayFor(model => model.CZone)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.CVillage)
+        </dt>
+        <dd class="col-sm-4">
+            @Html.DisplayFor(model => model.CVillage)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.DistrictId)
+        </dt>
+        <dd class="col-sm-4">
+            @Html.DisplayFor(model => model.District.Name)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.CCountry)
+        </dt>
+        <dd class="col-sm-4">
+            @Html.DisplayFor(model => model.CCountry)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.CTelephone)
+        </dt>
+        <dd class="col-sm-4">
+            @Html.DisplayFor(model => model.CTelephone)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.CEmail)
+        </dt>
+        <dd class="col-sm-4">
+            @Html.DisplayFor(model => model.CEmail)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.CGPS)
+        </dt>
+        <dd class="col-sm-4">
+            @Html.DisplayFor(model => model.CGPS)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.PRoad)
+        </dt>
+        <dd class="col-sm-4">
+            @Html.DisplayFor(model => model.PRoad)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.PZone)
+        </dt>
+        <dd class="col-sm-4">
+            @Html.DisplayFor(model => model.PZone)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.PVillage)
+        </dt>
+        <dd class="col-sm-4">
+            @Html.DisplayFor(model => model.PVillage)
+        </dd> 
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.PCountry)
+        </dt>
+        <dd class="col-sm-4">
+            @Html.DisplayFor(model => model.PCountry)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.PTelephone)
+        </dt>
+        <dd class="col-sm-4">
+            @Html.DisplayFor(model => model.PTelephone)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.PEmail)
+        </dt>
+        <dd class="col-sm-4">
+            @Html.DisplayFor(model => model.PEmail)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.PGPS)
+        </dt>
+        <dd class="col-sm-4">
+            @Html.DisplayFor(model => model.PGPS)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.ProductClassification)
+        </dt>
+        <dd class="col-sm-4">
+            @Enum.GetName(typeof(MEMIS.EnumProductClassification), Model.ProductClassification)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.ProductClassification)
+        </dt>
+        <dd class="col-sm-4">
+            @Enum.GetName(typeof(MEMIS.EnumCategoryOfPremises), Model.CategoryOfpremises)
+        </dd> 
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.comments)
+        </dt>
+        <dd class="col-sm-4">
+            @Html.DisplayFor(model => model.comments)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.InspectorId)
+        </dt>
+        <dd class="col-sm-4">
+            @if (@ViewBag.Users.FindByIdAsync(Model.InspectorId).Result != null)
+            {
+                @ViewBag.Users.FindByIdAsync(Model.InspectorId).Result.UserName
+            }
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.ApprovalStatusInspector)
+        </dt>
+        <dd class="col-sm-4">
+            @Enum.GetName(typeof(MEMIS.EnumApprovalStatus), Model.ApprovalStatusInspector)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>

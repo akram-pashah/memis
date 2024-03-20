@@ -1,0 +1,207 @@
+﻿@model MEMIS.Data.ActivityAssessment
+
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Views/Shared/_MELayout.cshtml";
+}
+
+<h1>Edit</h1>
+
+<h4>ActivityAssessment</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="intDeptPlan" />
+            <div class="form-group">
+                <label asp-for="strategicObjective" class="control-label"></label>
+                <input asp-for="strategicObjective" class="form-control" />
+                <span asp-validation-for="strategicObjective" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="strategicIntervention" class="control-label"></label>
+                <input asp-for="strategicIntervention" class="form-control" />
+                <span asp-validation-for="strategicIntervention" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="StrategicAction" class="control-label"></label>
+                <input asp-for="StrategicAction" class="form-control" />
+                <span asp-validation-for="StrategicAction" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="activity" class="control-label"></label>
+                <input asp-for="activity" class="form-control" />
+                <span asp-validation-for="activity" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="outputIndicator" class="control-label"></label>
+                <input asp-for="outputIndicator" class="form-control" />
+                <span asp-validation-for="outputIndicator" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="baseline" class="control-label"></label>
+                <input asp-for="baseline" class="form-control" />
+                <span asp-validation-for="baseline" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="budgetCode" class="control-label"></label>
+                <input asp-for="budgetCode" class="form-control" />
+                <span asp-validation-for="budgetCode" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="unitCost" class="control-label"></label>
+                <input asp-for="unitCost" class="form-control" />
+                <span asp-validation-for="unitCost" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="comparativeTarget" class="control-label"></label>
+                <input asp-for="comparativeTarget" class="form-control" />
+                <span asp-validation-for="comparativeTarget" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="justification" class="control-label"></label>
+                <input asp-for="justification" class="form-control" />
+                <span asp-validation-for="justification" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="budgetAmount" class="control-label"></label>
+                <input asp-for="budgetAmount" class="form-control" />
+                <span asp-validation-for="budgetAmount" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Q1Target" class="control-label"></label>
+                <input asp-for="Q1Target" class="form-control" />
+                <span asp-validation-for="Q1Target" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Q1Budget" class="control-label"></label>
+                <input asp-for="Q1Budget" class="form-control" />
+                <span asp-validation-for="Q1Budget" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Q1Actual" class="control-label"></label>
+                <input asp-for="Q1Actual" class="form-control" />
+                <span asp-validation-for="Q1Actual" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Q1AmtSpent" class="control-label"></label>
+                <input asp-for="Q1AmtSpent" class="form-control" />
+                <span asp-validation-for="Q1AmtSpent" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Q1Justification" class="control-label"></label>
+                <input asp-for="Q1Justification" class="form-control" />
+                <span asp-validation-for="Q1Justification" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Q2Target" class="control-label"></label>
+                <input asp-for="Q2Target" class="form-control" />
+                <span asp-validation-for="Q2Target" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Q2Budget" class="control-label"></label>
+                <input asp-for="Q2Budget" class="form-control" />
+                <span asp-validation-for="Q2Budget" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Q2Actual" class="control-label"></label>
+                <input asp-for="Q2Actual" class="form-control" />
+                <span asp-validation-for="Q2Actual" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Q2AmtSpent" class="control-label"></label>
+                <input asp-for="Q2AmtSpent" class="form-control" />
+                <span asp-validation-for="Q2AmtSpent" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Q2Justification" class="control-label"></label>
+                <input asp-for="Q2Justification" class="form-control" />
+                <span asp-validation-for="Q2Justification" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Q3Target" class="control-label"></label>
+                <input asp-for="Q3Target" class="form-control" />
+                <span asp-validation-for="Q3Target" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Q3Budget" class="control-label"></label>
+                <input asp-for="Q3Budget" class="form-control" />
+                <span asp-validation-for="Q3Budget" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Q3Actual" class="control-label"></label>
+                <input asp-for="Q3Actual" class="form-control" />
+                <span asp-validation-for="Q3Actual" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Q3AmtSpent" class="control-label"></label>
+                <input asp-for="Q3AmtSpent" class="form-control" />
+                <span asp-validation-for="Q3AmtSpent" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Q3Justification" class="control-label"></label>
+                <input asp-for="Q3Justification" class="form-control" />
+                <span asp-validation-for="Q3Justification" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Q4Target" class="control-label"></label>
+                <input asp-for="Q4Target" class="form-control" />
+                <span asp-validation-for="Q4Target" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Q4Budget" class="control-label"></label>
+                <input asp-for="Q4Budget" class="form-control" />
+                <span asp-validation-for="Q4Budget" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Q4Actual" class="control-label"></label>
+                <input asp-for="Q4Actual" class="form-control" />
+                <span asp-validation-for="Q4Actual" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Q4AmtSpent" class="control-label"></label>
+                <input asp-for="Q4AmtSpent" class="form-control" />
+                <span asp-validation-for="Q4AmtSpent" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Q4Justification" class="control-label"></label>
+                <input asp-for="Q4Justification" class="form-control" />
+                <span asp-validation-for="Q4Justification" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="AnnualAchievement" class="control-label"></label>
+                <input asp-for="AnnualAchievement" class="form-control" />
+                <span asp-validation-for="AnnualAchievement" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="TotAmtSpent" class="control-label"></label>
+                <input asp-for="TotAmtSpent" class="form-control" />
+                <span asp-validation-for="TotAmtSpent" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ImpStatusId" class="control-label"></label>
+                <select asp-for="ImpStatusId" class="form-select" asp-items="ViewBag.ImpStatusId"></select>
+                <span asp-validation-for="ImpStatusId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="AnnualJustification" class="control-label"></label>
+                <input asp-for="AnnualJustification" class="form-control" />
+                <span asp-validation-for="AnnualJustification" class="text-danger"></span>
+            </div>
+             <div class="row mt-2">
+                <div class="form-group">
+                    <input type="submit" value="Save" class="btn btn-primary " />
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

@@ -1,0 +1,143 @@
+﻿@{
+    ViewData["Title"] = "Home";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MEMIS::@ViewData["Title"]</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/MEMIS.styles.css" asp-append-version="true" />
+    <link href="~/css/login-new.css" rel="stylesheet" />
+</head>
+<body>
+    <div class="row">
+        <div class="col-md-3">
+            <a href="/Login/PlanHome">
+                <div class="card">
+                    <dic class="card-header" style="text-decoration:none !important;">
+                        Planning
+                    </dic>
+                    <div class="card-body">
+                        @*   //     <i class="fa fa-light fa-list-check fa-2xl"></i>*@
+                        <i class="fa fa-solid fa-memo-circle-check fa-2xl"></i>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div class="col-md-3">
+            <a href="/Login/MEHome">
+                <div class="card">
+                    <dic class="card-header">
+                        M & E
+                    </dic>
+                    <div class="card-body">
+                        <i class="fa fa-solid fa-memo-circle-check fa-2xl"></i>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div class="col-md-3">
+            <a href="/Login/RiskHome">
+                <div class="card">
+                    <dic class="card-header">
+                        Risk Management
+                    </dic>
+                    <div class="card-body">
+                        <i class="fa fa-solid fa-memo-circle-check fa-2xl"></i>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+    <div class="row  " style="margin-top:30px;">
+        <div class="col-md-3">
+            <a href="/Login/ProjectHome">
+                <div class="card">
+                    <dic class="card-header">
+                        Project Management
+                    </dic>
+                    <div class="card-body">
+                        <i class="fa fa-solid fa-memo-circle-check fa-2xl"></i>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div class="col-md-3">
+            <a href="/Login/GISHome">
+                <div class="card">
+                    <dic class="card-header">
+                        GIS
+                    </dic>
+                    <div class="card-body">
+                        <i class="fa fa-solid fa-memo-circle-check fa-2xl"></i>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div class="col-md-3">
+            <a href="/Login/AdminHome">
+                <div class="card">
+                    <dic class="card-header">
+                        Settings
+                    </dic>
+                    <div class="card-body">
+                        <i class="fa fa-solid fa-memo-circle-check fa-2xl"></i>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+   @* <div class="row  " style="margin-top:30px;">
+        <div class="col-md-3">
+            <a href="/Login/RiskHome">
+                <div class="card">
+                    <dic class="card-header">
+                        Risk Identification
+                    </dic>
+                    <div class="card-body">
+                        <i class="fa fa-solid fa-memo-circle-check fa-2xl"></i>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div class="col-md-3">
+            <a href="/SDTMasters">
+                <div class="card">
+                    <dic class="card-header">
+                        SDT Masters
+                    </dic>
+                    <div class="card-body">
+                        <i class="fa fa-solid fa-memo-circle-check fa-2xl"></i>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-md-3">
+            <a href="/SDTAssessments">
+                <div class="card">
+                    <dic class="card-header">
+                        SDT Assessment
+                    </dic>
+                    <div class="card-body">
+                        <i class="fa fa-solid fa-memo-circle-check fa-2xl"></i>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>*@
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $(".sect-right").toggleClass("fade");
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,30 @@
+﻿@model MEMIS.Data.Region
+
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Views/Shared/_PlanningLayout.cshtml";
+}
+ 
+
+<div>
+    <h4>Region</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.regionCode)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.regionCode)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.regionName)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.regionName)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model?.intRegion">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>

@@ -1,0 +1,568 @@
+﻿@model MEMIS.Models.ProjectInitiationDetailsDto
+
+@{
+	ViewData["Title"] = "Create";
+	Layout = "~/Views/Shared/_ProjectLayout.cshtml";
+}
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "__AjaxAntiForgeryForm" }))
+{
+	@Html.AntiForgeryToken();
+}
+
+<h5>Project Management Details</h5>
+<hr />
+<div class="row">
+	<div class="col-md-12">
+
+		<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+		<form id="project-initiation" asp-action="Create">
+			<div class="row">
+				<div class="col-md-2">
+					<label class="control-label">Project </label>
+				</div>
+				<div class="col-md-3">
+					<select class="form-control form-control-sm" name="ProjectInitiationId" id="ProjectInitiationId" asp-items="ViewBag.ProjectInitiations">
+						<option value="">Select Project</option>
+					</select>
+				</div>
+			</div>
+		</form>
+
+		<div class="row mt-4">
+			<div class="col-md-12">
+				<ul class="nav nav-tabs" id="myTab" role="tablist">
+					<li class="nav-item" role="presentation">
+						<button class="nav-link active" id="activity-tab" data-bs-toggle="tab" data-bs-target="#activity" type="button" role="tab" aria-controls="activity" aria-selected="true">Activity Plan</button>
+					</li>
+					<li class="nav-item" role="presentation">
+						<button class="nav-link" id="risk-tab" data-bs-toggle="tab" data-bs-target="#risk" type="button" role="tab" aria-controls="risk" aria-selected="false">Risk Identified</button>
+					</li>
+					<li class="nav-item" role="presentation">
+						<button class="nav-link" id="payment-tab" data-bs-toggle="tab" data-bs-target="#payment" type="button" role="tab" aria-controls="payment" aria-selected="false">Payment Schedule</button>
+					</li>
+					<li class="nav-item" role="presentation">
+						<button class="nav-link" id="others-tab" data-bs-toggle="tab" data-bs-target="#others" type="button" role="tab" aria-controls="others" aria-selected="false">Others</button>
+					</li>
+					<li class="nav-item" role="presentation">
+						<button class="nav-link" id="submittracker-tab" data-bs-toggle="tab" data-bs-target="#submittracker" type="button" role="tab" aria-controls="others" aria-selected="false">Submittal Tracker</button>
+					</li>
+					<li class="nav-item" role="presentation">
+						<button class="nav-link" id="issuelog-tab" data-bs-toggle="tab" data-bs-target="#issuelog" type="button" role="tab" aria-controls="others" aria-selected="false">Issue Log</button>
+					</li>
+					<li class="nav-item" role="presentation">
+						<button class="nav-link" id="monitoring-tab" data-bs-toggle="tab" data-bs-target="#monitoring" type="button" role="tab" aria-controls="others" aria-selected="false">Monitoring and Control</button>
+					</li>
+					<li class="nav-item" role="presentation">
+						<button class="nav-link" id="stakeholder-tab" data-bs-toggle="tab" data-bs-target="#stakeholder" type="button" role="tab" aria-controls="others" aria-selected="false">Stakeholder Management</button>
+					</li>
+				</ul>
+				<div class="tab-content" id="myTabContent">
+					<div class="tab-pane fade show active" id="activity" role="tabpanel" aria-labelledby="activity-tab">
+						<form asp-action="AddActivity">
+							<table class="table table-striped table-hover dt-responsive nowrap tbl-activity-plan">
+								<thead>
+									<tr>
+										<th>
+											@Html.DisplayNameFor(model => model.ActivityPlans[0].Activity)
+										</th>
+										<th>
+											@Html.DisplayNameFor(model => model.ActivityPlans[0].StartDate)
+										</th>
+										<th>
+											@Html.DisplayNameFor(model => model.ActivityPlans[0].EndDate)
+										</th>
+										<th width="8%">
+											@Html.DisplayName("Days")
+										</th>
+										<th>
+											@Html.DisplayNameFor(model => model.ActivityPlans[0].Person)
+										</th>
+										<th>
+											@Html.DisplayNameFor(model => model.ActivityPlans[0].Cost)
+										</th>
+										<th></th>
+									</tr>
+								</thead>
+								<tbody>
+									@foreach (var item in Model.ActivityPlans)
+									{
+										<tr data-item-id="@item.Id">
+											<td>
+												@Html.DisplayFor(m => item.Activity)
+											</td>
+											<td>
+												@{
+													string StartDate = String.Format("{0:dd/MMM/yyyy}", item.StartDate);
+												}
+												@Html.DisplayFor(m => StartDate)
+											</td>
+											<td>
+												@{
+													string EndDate = String.Format("{0:dd/MMM/yyyy}", item.EndDate);
+												}
+												@Html.DisplayFor(m => EndDate)
+											</td>
+
+											<td>
+												@Html.DisplayFor(m => (item.EndDate.Date - item.StartDate.Date).Days)
+											</td>
+
+											<td>
+												@Html.DisplayFor(m => item.Person)
+											</td>
+											<td>
+												@{
+													string cost = String.Format("₹{0:#,0.00}", item.Cost);
+												}
+												@Html.DisplayFor(m => cost)
+											</td>
+											<td>
+												<button class="btn btn-sm btn-danger delete-activity" type="button" title="Delete" data-item-id="@item.Id"><i class='bx bx-trash-alt'></i> Delete</button>
+											</td>
+										</tr>
+									}
+									<tr>
+										<td>
+											<input type="hidden" asp-for="ActivityPlan.ProjectInitiationId" value="@Model.ProjectInitId" />
+											<input type="hidden" asp-for="ActivityPlan.Id" value="0" />
+											<input type="text" class="form-control form-control-sm" asp-for="ActivityPlan.Activity" required />
+										</td>
+										<td>
+											<input type="date" class="form-control form-control-sm" asp-for="ActivityPlan.StartDate" required />
+										</td>
+										<td>
+											<input type="date" class="form-control form-control-sm" asp-for="ActivityPlan.EndDate" required />
+										</td>
+										<td>
+											<input type="number" class="form-control form-control-sm text-right" id="days" readonly />
+										</td>
+										<td>
+											<input type="text" class="form-control form-control-sm" asp-for="ActivityPlan.Person" required />
+										</td>
+										<td>
+											<input type="number" class="form-control form-control-sm" asp-for="ActivityPlan.Cost" required />
+										</td>
+										<td>
+											<button class="btn btn-sm btn-primary" type="submit"><i class='bx bx-save'></i> Save</button>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</form>
+					</div>
+					<div class="tab-pane fade" id="risk" role="tabpanel" aria-labelledby="risk-tab">
+						<form asp-action="AddRiskIdentified">
+							<table class="table table-striped table-hover dt-responsive nowrap tbl-risk">
+								<thead>
+									<tr>
+										<th>
+											@Html.DisplayNameFor(model => model.ProjectRiskIdentifications[0].Risk)
+										</th>
+										<th>
+											@Html.DisplayNameFor(model => model.ProjectRiskIdentifications[0].Rank)
+										</th>
+
+										<th></th>
+									</tr>
+								</thead>
+								<tbody>
+									@foreach (var item in Model.ProjectRiskIdentifications)
+									{
+										<tr data-item-id="@item.Id">
+											<td>
+												@Html.DisplayFor(m => item.Risk)
+											</td>
+											<td>
+												@Enum.GetName(typeof(MEMIS.EnumRiskRank), item.Rank)
+											</td>
+											<td>
+												<button class="btn btn-sm btn-danger delete-risk" type="button" title="Delete" data-item-id="@item.Id"><i class='bx bx-trash-alt'></i> Delete</button>
+											</td>
+										</tr>
+									}
+									<tr>
+										
+										<td>
+											<input type="hidden" asp-for="RiskIdentification.ProjectInitiationId" value="@Model.ProjectInitId" />
+											<input type="hidden" asp-for="RiskIdentification.Id" value="0" />
+											<input type="text" class="form-control form-control-sm" asp-for="RiskIdentification.Risk" required />
+										</td>
+										<td>
+											<select class="form-control form-control-sm" asp-for="RiskIdentification.Rank" asp-items="ViewBag.RiskRank" required>
+												<option value="">Select Risk Rank</option>
+											</select>
+										</td>
+
+
+										<td>
+											<button class="btn btn-sm btn-primary" type="submit"><i class='bx bx-save'></i> Save</button>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</form>
+
+					</div>
+					<div class="tab-pane fade" id="payment" role="tabpanel" aria-labelledby="payment-tab">
+
+						<form asp-action="AddPaymentSchedule">
+							<table class="table table-striped table-hover dt-responsive nowrap tbl-payment-schedule">
+								<thead>
+									<tr>
+										<th>
+											@Html.DisplayNameFor(model => model.ProjectPayments[0].Amount)
+										</th>
+										<th>
+											@Html.DisplayNameFor(model => model.ProjectPayments[0].DueDate)
+										</th>
+										<th>
+											@Html.DisplayNameFor(model => model.ProjectPayments[0].Activity)
+										</th>
+
+										<th></th>
+									</tr>
+								</thead>
+								<tbody>
+									@foreach (var item in Model.ProjectPayments)
+									{
+										<tr data-item-id="@item.Id">
+											<td>
+												@{
+													string Amount = String.Format("{0:#,0.00}", item.Amount);
+												}
+												@Html.DisplayFor(m => Amount)
+											</td>
+											<td>
+												@{
+													string DueDate = String.Format("{0:dd/MMM/yyyy}", item.DueDate);
+												}
+												@Html.DisplayFor(m => DueDate)
+											</td>
+											<td>
+												@Html.DisplayFor(m => item.Activity)
+											</td>
+											<td>
+												<button class="btn btn-sm btn-light delete-payment" type="button" title="Delete" data-item-id="@item.Id"><i class='bx bx-trash-alt'></i></button>
+											</td>
+										</tr>
+									}
+									<tr>
+										<td>
+											<input type="hidden" asp-for="ProjectPayment.ProjectInitiationId" value="@Model.ProjectInitId" />
+											<input type="hidden" asp-for="ProjectPayment.Id" value="0" />
+											<input type="number" class="form-control form-control-sm" asp-for="ProjectPayment.Amount" required />
+										</td>
+										<td>
+											<input type="date" class="form-control form-control-sm" asp-for="ProjectPayment.DueDate" required />
+										</td>
+										<td>
+											<input type="text" class="form-control form-control-sm" asp-for="ProjectPayment.Activity" required />
+										</td>
+										<td>
+											<button class="btn btn-sm btn-primary" type="submit"><i class='bx bx-save'></i> Save</button>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</form>
+
+					</div>
+					<div class="tab-pane fade" id="others" role="tabpanel" aria-labelledby="others-tab">
+
+						<form asp-action="AddprojectOthersTab">
+							<table class="table table-striped table-hover dt-responsive nowrap tbl-others-schedule">
+								<thead>
+									<tr>
+										
+										<th>Resources Required</th>
+										<th>Attachments</th>
+
+										<th></th>
+									</tr>
+								</thead>
+								<tbody>
+									@foreach (var item in Model.ProjectOthersTabs)
+									{
+									<tr data-item-id="@item.Id">
+									<td>
+									@Html.DisplayFor(m => item.Resourses)
+									</td>
+									<td>
+									 @Html.DisplayFor(m => item.Attachment)
+									</td>
+									
+									<td>
+									<button class="btn btn-sm btn-light delete-payment" type="button" title="Delete" data-item-id="@item.Id"><i class='bx bx-trash-alt'></i></button>
+									</td>
+									</tr>
+									}
+									
+									<tr>
+										<td>
+											<input type="hidden" asp-for="ProjectOthersTab.ProjectInitiationId" value="@Model.ProjectInitId" />
+											<input type="hidden" asp-for="ProjectOthersTab.Id" value="1" />
+											<input type="text" class="form-control form-control-sm" asp-for="ProjectOthersTab.Resourses" />
+										</td>
+										<td>
+											<input type="file" for class="form-control form-control-sm" asp-for="ProjectOthersTab.Attachment" />
+										</td>
+
+										<td>
+											<button class="btn btn-sm btn-primary" type="submit"><i class='bx bx-save'></i> Save</button>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</form>
+					</div>
+					<div class="tab-pane fade" id="stakeholder" role="tabpanel" aria-labelledby="stakeholder-tab">
+						<form asp-action="AddStakeholder">
+							<table class="table table-striped table-hover dt-responsive nowrap tbl-stakeholder">
+								<thead>
+									<tr>
+										<th>
+											@Html.DisplayNameFor(model => model.StakeHolders[0].StakeholderName)
+										</th>
+										<th>
+											@Html.DisplayNameFor(model => model.StakeHolders[0].ContactPersonName)
+										</th>
+										<th>
+											@Html.DisplayNameFor(model => model.StakeHolders[0].ContactPersonEmail)
+										</th>
+										<th>
+											@Html.DisplayNameFor(model => model.StakeHolders[0].ContactPersonPhone)
+										</th>
+										<th>
+											@Html.DisplayNameFor(model => model.StakeHolders[0].ContactPersonAddress)
+										</th>
+										<th>
+											@Html.DisplayNameFor(model => model.StakeHolders[0].ContactPersonWebsite)
+										</th>
+										<th>
+											@Html.DisplayNameFor(model => model.StakeHolders[0].Impact)
+										</th>
+										<th>
+											@Html.DisplayNameFor(model => model.StakeHolders[0].Influence)
+										</th>
+										<th>
+											@Html.DisplayNameFor(model => model.StakeHolders[0].StakeHolderImportant)
+										</th>
+										<th>
+											@Html.DisplayNameFor(model => model.StakeHolders[0].StakeholderContribution)
+										</th>
+										<th>
+											@Html.DisplayNameFor(model => model.StakeHolders[0].Stakeholderblock)
+										</th>
+										<th>
+											@Html.DisplayNameFor(model => model.StakeHolders[0].StakeholderStrategy)
+										</th>
+
+										<th></th>
+									</tr>
+								</thead>
+								<tbody>
+									@foreach (var item in Model.StakeHolders)
+									{
+										<tr data-item-id="@item.Id">
+											<td>
+												@Html.DisplayFor(m => item.StakeholderName)
+											</td>
+											<td>
+												@Html.DisplayFor(m => item.ContactPersonName)
+											</td>
+											<td>
+												@Html.DisplayFor(m => item.ContactPersonEmail)
+											</td>
+											<td>
+												@Html.DisplayFor(m => item.ContactPersonPhone)
+											</td>
+											<td>
+												@Html.DisplayFor(m => item.ContactPersonAddress)
+											</td>
+											<td>
+												@Html.DisplayFor(m => item.ContactPersonWebsite)
+											</td>
+											<td>
+												@Enum.GetName(typeof(MEMIS.EnumImpact), item.Impact)
+											</td>
+											<td>
+												@Enum.GetName(typeof(MEMIS.EnumInfluence), item.Influence)
+											</td>
+											<td>
+												@Html.DisplayFor(m => item.StakeHolderImportant)
+											</td>
+											<td>
+												@Html.DisplayFor(m => item.StakeholderContribution)
+											</td>
+											<td>
+												@Html.DisplayFor(m => item.Stakeholderblock)
+											</td>
+											<td>
+												@Html.DisplayFor(m => item.StakeholderStrategy)
+											</td>
+											<td>
+												<button class="btn btn-sm btn-danger delete-stakeholder" type="button" title="Delete" data-item-id="@item.Id"><i class='bx bx-trash-alt'></i> Delete</button>
+											</td>
+										</tr>
+									}
+									<tr>
+
+										<td>
+											<input type="hidden" asp-for="StakeHolder.ProjectInitiationId" value="@Model.ProjectInitId" />
+											<input type="hidden" asp-for="StakeHolder.Id" value="0" />
+											<input type="text" class="form-control form-control-sm" asp-for="StakeHolder.StakeholderName" required />
+										</td>
+										<td> 
+											<input type="text" class="form-control form-control-sm" asp-for="StakeHolder.ContactPersonName" required />
+										</td>
+										<td> 
+											<input type="text" class="form-control form-control-sm" asp-for="StakeHolder.ContactPersonEmail" required />
+										</td>
+										<td> 
+											<input type="text" class="form-control form-control-sm" asp-for="StakeHolder.ContactPersonPhone" required />
+										</td>
+										<td> 
+											<input type="text" class="form-control form-control-sm" asp-for="StakeHolder.ContactPersonAddress" required />
+										</td>
+										<td>
+											<input type="text" class="form-control form-control-sm" asp-for="StakeHolder.ContactPersonWebsite" required />
+										</td>
+										<td>
+											<select class="form-control form-control-sm" asp-for="StakeHolder.Impact" asp-items="ViewBag.Impact" required>
+												<option value="">Select Impact</option>
+											</select>
+										</td>
+										<td>
+											<select class="form-control form-control-sm" asp-for="StakeHolder.Influence" asp-items="ViewBag.Influence" required>
+												<option value="">Select Influence</option>
+											</select>
+										</td>
+										<td>
+											<input type="text" class="form-control form-control-sm" asp-for="StakeHolder.StakeHolderImportant" required />
+										</td>
+										<td>
+											<input type="text" class="form-control form-control-sm" asp-for="StakeHolder.StakeholderContribution" required />
+										</td>
+										<td>
+											<input type="text" class="form-control form-control-sm" asp-for="StakeHolder.Stakeholderblock" required />
+										</td>
+										<td>
+											<input type="text" class="form-control form-control-sm" asp-for="StakeHolder.StakeholderStrategy" required />
+										</td>
+										<td>
+											<button class="btn btn-sm btn-primary" type="submit"><i class='bx bx-save'></i> Save</button>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</form>
+
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+@section Scripts {
+	@{
+		await Html.RenderPartialAsync("_ValidationScriptsPartial");
+	}
+	<script>
+
+		$(function () {
+			
+			//SUBMIT FORM ON PROJECT INITIATION
+			$("#ProjectInitiationId").change(function () {
+				if($(this).val() > 0)
+					$("#project-initiation").submit();
+			});
+
+			//ACTIVITY DELETE
+			$(".delete-activity").click(function () {
+				debugger;
+				let id = $(this).data("item-id");
+				let form = $('#__AjaxAntiForgeryForm');
+				let token = $('input[name="__RequestVerificationToken"]', form).val();
+				$.ajax({
+					type: 'POST',
+					url: 'DeleteActivity',
+					data: {
+						__RequestVerificationToken: token, 
+						id: id
+					},
+					success: function (data) {
+						$(".tbl-activity-plan tbody").find(`[data-item-id='${id}']`).remove();
+					},
+					error: function (e, r) {
+						console.log(e,r);
+					}
+				});
+			});
+
+			//RISK IDENTIFICATION DELETE
+			$(".delete-risk").click(function () {
+				let id = $(this).data("item-id");
+				let form = $('#__AjaxAntiForgeryForm');
+				let token = $('input[name="__RequestVerificationToken"]', form).val();
+				$.ajax({
+					type: 'POST',
+					url: 'DeleteRiskIdentification',
+					data: {
+						__RequestVerificationToken: token,
+						id: id
+					},
+					success: function (data) {
+						$(".tbl-risk tbody").find(`[data-item-id='${id}']`).remove();
+					},
+					error: function (e, r) {
+						console.log(e, r);
+					}
+				});
+			});
+
+			//PAYMENT SCHEDULE DELETE
+			$(".delete-payment").click(function () {
+				let id = $(this).data("item-id");
+				let form = $('#__AjaxAntiForgeryForm');
+				let token = $('input[name="__RequestVerificationToken"]', form).val();
+				$.ajax({
+					type: 'POST',
+					url: 'DeletePaymentSchedule',
+					data: {
+						__RequestVerificationToken: token,
+						id: id
+					},
+					success: function (data) {
+						$(".tbl-payment-schedule tbody").find(`[data-item-id='${id}']`).remove();
+					},
+					error: function (e, r) {
+						console.log(e, r);
+					}
+				});
+			});
+
+			$("#ActivityPlan_StartDate").change(function () {
+				
+				let startDate = $(this).val();
+				let endDate = $("#ActivityPlan_EndDate").val();
+				$("#ActivityPlan_EndDate").attr('min', startDate);
+				setDateDiff(startDate, endDate);
+			});
+
+			$("#ActivityPlan_EndDate").change(function () {
+				let startDate = $(ActivityPlan_StartDate).val();
+				let endDate = $(this).val();
+				setDateDiff(startDate, endDate);
+			});
+
+			let setDateDiff  = (start,end)=>{
+				let startDate = moment(start, "YYYY.MM.DD");
+				let endDate = moment(end, "YYYY.MM.DD");
+				$("#days").val(endDate.diff(startDate, 'days'));
+			}
+
+		});
+
+	</script>
+}

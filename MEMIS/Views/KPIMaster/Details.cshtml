@@ -1,0 +1,128 @@
+﻿@model MEMIS.Data.KPIMaster
+
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Views/Shared/_MELayout.cshtml";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>KPI  M&E Framework</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            Strategic Objective
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.StrategicPlanFk.strategicObjective)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.PerformanceIndicator)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.PerformanceIndicator)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.TypeofIndicator)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.TypeofIndicator)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.IndicatorFormulae)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.IndicatorFormulae)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.IndicatorDefinition)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.IndicatorDefinition)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.OriginalBaseline)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.OriginalBaseline)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Indicatorclassification)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Indicatorclassification)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.DataType)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.DataType)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Unitofmeasure)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Unitofmeasure)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.FrequencyofReporting)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.FrequencyofReporting)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.MeansofVerification)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.MeansofVerification)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.ResponsibleParty)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.ResponsibleParty)
+        </dd>
+       
+    </dl>
+</div>
+@functions
+{
+    public string GetTypeofIndicator(int type)
+    {
+        foreach (var ntype in ListHelper.TypeofIndicator())
+        {
+            if (Convert.ToInt32(ntype.Value) == type)
+            {
+                return ntype.Text;
+            }
+        }
+        return "NA";
+    }
+    public string GetIndicatorclassification(int classification)
+    {
+        foreach (var nclass in ListHelper.Indicatorclassification())
+        {
+            if (Convert.ToInt32(nclass.Value) == classification)
+            {
+                return nclass.Text;
+            }
+        }
+        return "NA";
+    }
+    public string GetFrequencyofReporting(int reporting)
+    {
+        foreach (var nreporting in ListHelper.FrequencyofReporting())
+        {
+            if (Convert.ToInt32(nreporting.Value) == reporting)
+            {
+                return nreporting.Text;
+            }
+        }
+        return "NA";
+    }
+}
+<div>
+    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>

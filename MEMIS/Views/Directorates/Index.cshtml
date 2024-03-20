@@ -1,0 +1,55 @@
+﻿@model List<MEMIS.Data.Directorate>
+
+<h1>Directorates</h1>
+@{
+    ViewData["Title"] = "Directorates";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+
+
+<p>
+    <a asp-action="Create" class="btn btn-sm btn-success"><i class="fa-solid fa-plus"></i> Create New</a>
+</p>
+
+@* <component type="typeof(Directorate)" render-mode="Server"/> *@
+
+<table class="table">
+    <thead>
+        <tr>
+             
+            <th>
+                Code
+            </th>
+            <th>
+                Name
+            </th>
+            
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+              
+                <td>
+                    @Html.DisplayFor(modelItem => item.dirCode)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.dirName)
+                </td>
+              
+                <td>
+                    <div class="btn-group btn-group-sm">
+                        <a asp-action="Edit" asp-route-id="@item.intDir" class="btn btn-sm btn-warning"><i class="fa-solid fa-pen-to-square"></i> Edit</a> |
+                        <a asp-action="Details" asp-route-id="@item.intDir" class="btn btn-sm btn-info"><i class="fa-solid fa-circle-info"></i> View</a> |
+                        <form asp-action="Delete" asp-route-id="@item.intDir">
+                            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure do you want to delete this record?')"><i class="fa-solid fa-trash"></i> Delete</button>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

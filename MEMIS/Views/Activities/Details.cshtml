@@ -1,0 +1,37 @@
+﻿@model MEMIS.Data.Activity
+
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Views/Shared/_PlanningLayout.cshtml";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>Activity</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.activityCode)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.activityCode)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.activityName)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.activityName)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.StrategicAction)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.StrategicAction.actionCode)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model?.intActivity">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>

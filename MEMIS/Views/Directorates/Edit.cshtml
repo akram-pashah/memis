@@ -1,0 +1,52 @@
+﻿@model MEMIS.Models.DirectorateDto
+
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+ 
+
+<h4>Directorates</h4>
+<hr />
+<div class="row">
+    <div class="col-md-3">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="IntDir" />
+            <div class="form-group">
+                <label asp-for="DirCode" class="control-label"></label>
+                <input asp-for="DirCode" class="form-control" />
+                <span asp-validation-for="DirCode" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DirName" class="control-label"></label>
+                <input asp-for="DirName" class="form-control" />
+                <span asp-validation-for="DirName" class="text-danger"></span>
+            </div>   
+            
+            <div class="form-group">
+                @Html.LabelFor(model => model.director)
+                @Html.DropDownList("director", new SelectList(ViewBag.Directors, "Value", "Text",Model.director), new { @class = "form-control", @required = "required" })
+                @Html.ValidationMessageFor(model => model.director, "", new { @class = "text-danger" })
+            </div>
+            
+            <div class="row mt-2">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <input type="submit" value="Save" class="btn btn-primary w-100" />
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <a asp-action="Index" class="btn btn-secondary w-100">Back to List</a>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+ 
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

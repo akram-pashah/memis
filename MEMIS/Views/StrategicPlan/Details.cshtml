@@ -1,0 +1,67 @@
+﻿@model MEMIS.Data.StrategicPlan
+
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Views/Shared/_PlanningLayout.cshtml";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>StrategicPlan</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.ndp)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.ndp)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.program)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.program)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.programObjective)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.programObjective)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.subProgram)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.subProgram)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.focusArea)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.focusArea)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.strategicObjective)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.strategicObjective)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.strategicIntervention)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.strategicIntervention)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.StrategicAction)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.StrategicAction)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>

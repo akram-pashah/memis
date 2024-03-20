@@ -1,0 +1,241 @@
+﻿@model IEnumerable<MEMIS.Data.ActivityAssessment>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_MELayout.cshtml";
+}
+
+<h1>Activity Assessment</h1>
+
+<p> 
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.strategicObjective)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.strategicIntervention)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.StrategicAction)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.activity)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.outputIndicator)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.baseline)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.budgetCode)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.unitCost)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.comparativeTarget)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.justification)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.budgetAmount)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Q1Target)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Q1Budget)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Q1Actual)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Q1AmtSpent)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Q1Justification)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Q2Target)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Q2Budget)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Q2Actual)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Q2AmtSpent)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Q2Justification)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Q3Target)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Q3Budget)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Q3Actual)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Q3AmtSpent)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Q3Justification)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Q4Target)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Q4Budget)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Q4Actual)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Q4AmtSpent)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Q4Justification)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AnnualAchievement)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TotAmtSpent)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ImplementationStatus)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AnnualJustification)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.strategicObjective)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.strategicIntervention)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.StrategicAction)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.activity)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.outputIndicator)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.baseline)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.budgetCode)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.unitCost)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.comparativeTarget)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.justification)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.budgetAmount)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Q1Target)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Q1Budget)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Q1Actual)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Q1AmtSpent)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Q1Justification)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Q2Target)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Q2Budget)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Q2Actual)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Q2AmtSpent)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Q2Justification)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Q3Target)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Q3Budget)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Q3Actual)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Q3AmtSpent)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Q3Justification)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Q4Target)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Q4Budget)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Q4Actual)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Q4AmtSpent)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Q4Justification)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AnnualAchievement)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TotAmtSpent)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ImplementationStatus.ImpStatusId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AnnualJustification)
+            </td>
+            <td>
+                 <div class="btn-group btn-group-sm">
+                        <a asp-action="Edit" asp-route-id="@item.intDeptPlan" class="btn btn-sm btn-warning"><i class="fa-solid fa-pen-to-square"></i> Edit</a> |
+                        <a asp-action="Details" asp-route-id="@item.intDeptPlan" class="btn btn-sm btn-info"><i class="fa-solid fa-circle-info"></i> View</a> |
+
+                    </div>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

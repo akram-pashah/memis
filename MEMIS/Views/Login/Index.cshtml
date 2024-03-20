@@ -1,0 +1,68 @@
+﻿@{
+    Layout = "";
+    ViewData["Title"] = "Login";
+}
+@model LoginAuth
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MEMIS::@ViewData["Title"]</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/MEMIS.styles.css" asp-append-version="true" />
+    <link href="~/css/login-new.css" rel="stylesheet" />
+</head>
+<body>
+    <div class="mt-0 ">
+        <div class="row">
+            <div class="col-lg-12  login-section ">
+                <div class="col-sm-12 col-md-12 col-lg-8 sect-left">
+                    <section class="login-logo"><img src="~/lib/images/logo.png" /></section>
+                    <section class="login-btn">
+                        <button type="button" id="login-btn" class="btn btn-primary">Login</button>
+                    </section>
+                </div>
+                <div class="col-sm-12 col-md-12 col-lg-4 sect-right">
+                    <div class="login-box">
+                        <h1 class="mb-3">Login</h1>
+
+                        <form method="post" asp-controller="Login" asp-action="Index">
+                            <div asp-validation-summary="All" class="text-danger"></div>
+                            <div class="mb-3">
+                                <label asp-for="fyear" class="control-label"></label> 
+                                @Html.DropDownList("FYear", new SelectList(ViewBag.FYear, "intyear", "yearcode"), new {style="width:150px;", @class = "form-control", @required = "required",@id="fyear" })
+                                <span asp-validation-for="fyear" class="text-danger"></span>
+                            </div>
+                            <div class="mb-3">
+                                <label class="col-form-label" asp-for="userName"></label>
+                                <input type="text" asp-for="userName" class="form-control w-100" />
+                                <span asp-validation-for="userName" class="text-danger"></span>
+                            </div>
+                            <div class="mb-3">
+                                <label class="col-form-label" asp-for="password"></label>
+                                <input type="password" asp-for="password" class="form-control w-100" />
+                                <span asp-validation-for="password" class="text-danger"></span>
+                            </div>
+                            <div class="mb-3">
+                                <button type="submit" class="btn btn-primary btn-lg">Login</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+     
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script type="text/javascript">
+        $(document).ready(function () { 
+                $(".sect-right").toggleClass("fade"); 
+        });
+    </script>
+</body>
+</html>

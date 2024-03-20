@@ -1,0 +1,31 @@
+﻿@model MEMIS.Data.FocusArea
+
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Views/Shared/_PlanningLayout.cshtml";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>FocusArea</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.FocusAreacode)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.FocusAreacode)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.FocusAreaName)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.FocusAreaName)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model?.intFocus">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>
