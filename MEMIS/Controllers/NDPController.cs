@@ -80,8 +80,18 @@ namespace MEMIS.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("id,Programme,ProgrammeObjective,SubProgramme,SubProgrammeObjective,ProgrammeIntervention")] NDP nDP)
         {
+            var file = Request.Form.Files;
             if (ModelState.IsValid)
             {
+                if (file != null && file.Count > 0)
+                {
+                    using (var memoryStream = new MemoryStream())
+                    {
+                        await file[0].CopyToAsync(memoryStream);
+                        nDP.FileContent = memoryStream.ToArray();
+                        nDP.FileName = file[0].FileName;
+                    }
+                }
                 _context.Add(nDP);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -116,11 +126,21 @@ namespace MEMIS.Controllers
             {
                 return NotFound();
             }
+            var file = Request.Form.Files;
 
             if (ModelState.IsValid)
             {
                 try
                 {
+                    if (file != null && file.Count > 0)
+                    {
+                        using (var memoryStream = new MemoryStream())
+                        {
+                            await file[0].CopyToAsync(memoryStream);
+                            nDP.FileContent = memoryStream.ToArray();
+                            nDP.FileName = file[0].FileName;
+                        }
+                    }
                     _context.Update(nDP);
                     await _context.SaveChangesAsync();
                 }
@@ -181,5 +201,18 @@ namespace MEMIS.Controllers
         {
           return (_context.NDP?.Any(e => e.id == id)).GetValueOrDefault();
         }
+
+        public async Task<IActionResult> Download(int id)
+        {
+            var nDP = await _context.NDP.FindAsync(id);
+            if (nDP == null || nDP.FileContent == null || nDP.FileContent.Length == 0)
+            {
+                return NotFound();
+            }
+
+            // Return the file as a stream
+            return File(nDP.FileContent, "application/octet-stream", nDP.FileName);
+        }
+
     }
 }

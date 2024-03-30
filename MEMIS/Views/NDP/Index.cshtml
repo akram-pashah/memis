@@ -8,11 +8,17 @@
     //Layout = "~/Views/Shared/_PlanningLayout.cshtml";
 }
 
-<h1>NDP</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
+
+<div class="row">
+    <div class="col">
+        <h1>NDP</h1>
+    </div>
+    <div class="col d-flex justify-content-end mb-3">
+        <a class="btn btn-info" asp-action="Create">Create New</a>
+    </div>
+</div>
+<br />
 <div style="width:100%; overflow-x:auto;">
     <table class="table table-striped table-bordered table-hover dt-responsive nowrap">
         <thead>
@@ -26,7 +32,6 @@
                 <th>
                     @Html.DisplayNameFor(model => model.Data[0].SubProgramme)
                 </th>
-                
                 <th>
                     @Html.DisplayNameFor(model => model.Data[0].SubProgrammeObjective)
                 </th>
@@ -34,9 +39,11 @@
                     @Html.DisplayNameFor(model => model.Data[0].ProgrammeIntervention)
                 </th>
                 <th>
-                    
+                    NDP File
                 </th>
-
+                <th>
+                    Actions
+                </th>
             </tr>
         </thead>
         <tbody>
@@ -52,17 +59,28 @@
                     <td>
                         @Html.DisplayFor(modelItem => item.SubProgramme)
                     </td>
-
                     <td>
                         @Html.DisplayFor(modelItem => item.SubProgrammeObjective)
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.ProgrammeIntervention)
-                    </td> 
+                    </td>
                     <td>
-                        <a asp-action="Edit" asp-route-id="@item.id">Edit</a> |
-                        <a asp-action="Details" asp-route-id="@item.id">Details</a> |
-                        <a asp-action="Delete" asp-route-id="@item.id">Delete</a>
+                        @if (!string.IsNullOrEmpty(item.FileName))
+                        {
+                            <a asp-action="Download" asp-controller="NDP" asp-route-id="@item.id" class="btn btn-primary">
+                                @Html.DisplayFor(modelItem => item.FileName)<span>  </span>  <i class="fas fa-download"></i>
+                            </a>
+                        }
+                        else
+                        {
+                            <span>No file uploaded</span>
+                        }
+                    </td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@item.id" class="btn btn-secondary">Edit</a>
+                        <a asp-action="Details" asp-route-id="@item.id" class="btn btn-info">Details</a>
+                        <a asp-action="Delete" asp-route-id="@item.id" class="btn btn-danger">Delete</a>
                     </td>
                 </tr>
             }

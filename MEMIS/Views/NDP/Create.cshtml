@@ -11,40 +11,50 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Create">
+        <form asp-action="Create" method="post" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="Programme" class="control-label"></label>
                 <input asp-for="Programme" class="form-control" />
                 <span asp-validation-for="Programme" class="text-danger"></span>                
             </div>
+            <br />
             <div class="form-group">
                 <label asp-for="ProgrammeObjective" class="control-label"></label>
                 <input asp-for="ProgrammeObjective" class="form-control" />
                 <span asp-validation-for="ProgrammeObjective" class="text-danger"></span>
             </div>
+            <br />
             <div class="form-group">
             <label asp-for="SubProgramme" class="control-label"></label>
             <input asp-for="SubProgramme" class="form-control" />
             <span asp-validation-for="SubProgramme" class="text-danger"></span>
-            </div> 
+            </div>
+            <br />
             <div class="form-group">
             <label asp-for="SubProgrammeObjective" class="control-label"></label>
             <input asp-for="SubProgrammeObjective" class="form-control" />
             <span asp-validation-for="SubProgrammeObjective" class="text-danger"></span>
             </div>
+            <br />
             <div class="form-group">
             <label asp-for="ProgrammeIntervention" class="control-label"></label>
             <input asp-for="ProgrammeIntervention" class="form-control" />
             <span asp-validation-for="ProgrammeIntervention" class="text-danger"></span>
             </div>
+            <br />
+            <div class="form-group">
+                <label asp-for="FileContent" class="control-label"></label>
+                <input asp-for="FileContent" type="file" class="form-control" />
+            </div>
+            <br />
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
-
+<br />
 <div>
     <a asp-action="Index">Back to List</a>
 </div>

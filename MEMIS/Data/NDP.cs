@@ -16,5 +16,10 @@ namespace MEMIS.Data
         [Display(Name = "Programme Intervention")]
         public string ProgrammeIntervention { get; set; }
 
+        [Display(Name = "File Upload")]
+        public byte[]? FileContent { get; set; }
+
+        [Display(Name = "File Name")]
+        public string? FileName { get; set; }
     }
 }
