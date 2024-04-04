@@ -9,6 +9,7 @@
 
 <h4>NDP</h4>
 <hr />
+
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Create" method="post" enctype="multipart/form-data">
@@ -41,11 +42,6 @@
             <label asp-for="ProgrammeIntervention" class="control-label"></label>
             <input asp-for="ProgrammeIntervention" class="form-control" />
             <span asp-validation-for="ProgrammeIntervention" class="text-danger"></span>
-            </div>
-            <br />
-            <div class="form-group">
-                <label asp-for="FileContent" class="control-label"></label>
-                <input asp-for="FileContent" type="file" class="form-control" />
             </div>
             <br />
             <div class="form-group">
