@@ -1,8 +1,9 @@
-﻿@model MEMIS.Data.NDP
+@model MEMIS.Data.NDP
 
 @{
-    ViewData["Title"] = "Edit";
-    //Layout = "~/Views/Shared/_PlanningLayout.cshtml";
+  ViewData["Title"] = "Edit";
+  //Layout = "~/Views/Shared/_PlanningLayout.cshtml";
+  Layout = "~/Pages/Shared/_ContentNavbarLayout.cshtml";
 }
 
 <h1>Edit</h1>
@@ -45,6 +46,26 @@
             </div>
             <br />
             <div class="form-group">
+                <label asp-for="FileContent" class="control-label"></label>
+                <input asp-for="FileContent" type="file" class="form-control" />
+            </div>
+            <br />
+            @if (Model.FileContent != null && Model.FileContent.Length > 0)
+            {
+                <div class="form-group">
+                    <label  class="control-label">Download file</label>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <a asp-action="Download" asp-controller="NDP" asp-route-id="@Model.id" class="btn btn-outline-primary">
+                                <i class="fas fa-download"></i> Download File
+                            </a>
+                        </div>
+                        <input type="text" class="form-control" value="@Model.FileName" readonly>
+                    </div>
+                </div>
+            }
+            <br />
+            <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
             </div>
         </form>
@@ -57,6 +78,6 @@
 
 @section Scripts {
     @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+//await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
 }

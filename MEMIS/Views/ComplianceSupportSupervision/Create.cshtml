@@ -1,8 +1,9 @@
-﻿
+
 @model MEMIS.Models.ComplianceSupportSupervisionDto
 @{
-	ViewData["Title"] = "Create";
-    //Layout = "~/Views/Shared/_GISLayout.cshtml";
+  ViewData["Title"] = "Create";
+  //Layout = "~/Views/Shared/_GISLayout.cshtml";
+  Layout = "~/Pages/Shared/_ContentNavbarLayout.cshtml";
 }
 
 <h5>Compliance Support Supervision</h5>
@@ -114,8 +115,8 @@
 	<a asp-action="Index">Back to List</a>
 </div>
 
-@section Scripts {
+@*@section Scripts {
 	@{
 		await Html.RenderPartialAsync("_ValidationScriptsPartial");
 	}
-}
+}*@

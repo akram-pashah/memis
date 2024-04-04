@@ -1,8 +1,9 @@
-﻿@model MEMIS.Models.ProjectInitiationDto
+@model MEMIS.Models.ProjectInitiationDto
 
 @{
-    ViewData["Title"] = "Project";
-    //Layout = "~/Views/Shared/_ProjectLayout.cshtml";
+  ViewData["Title"] = "Project";
+  //Layout = "~/Views/Shared/_ProjectLayout.cshtml";
+  Layout = "~/Pages/Shared/_ContentNavbarLayout.cshtml";
 }
 
 <h1>Create</h1>
@@ -104,5 +105,5 @@
             });
         });
     </script>
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @*@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}*@
 }

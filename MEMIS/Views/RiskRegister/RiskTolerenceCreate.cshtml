@@ -1,8 +1,9 @@
-﻿@model MEMIS.Models.Risk.RiskRegisterDto
+@model MEMIS.Models.Risk.RiskRegisterDto
 
 @{
-    ViewData["Title"] = "Risk Tolerence/Apetite";
-    //Layout = "~/Views/Shared/_RiskLayout.cshtml";
+  ViewData["Title"] = "Risk Tolerence/Apetite";
+  //Layout = "~/Views/Shared/_RiskLayout.cshtml";
+  Layout = "~/Pages/Shared/_ContentNavbarLayout.cshtml";
 }
  
 
@@ -151,5 +152,5 @@
     }
 
 </script>
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @*@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}*@
 }

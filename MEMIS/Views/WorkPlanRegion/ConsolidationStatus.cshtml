@@ -1,8 +1,9 @@
-﻿@model MEMIS.Models.DeptPlanDto
+@model MEMIS.Models.DeptPlanDto
 
 @{
-    ViewData["Title"] = "Work Plan Consolidation";
-    //Layout = "~/Views/Shared/_PlanningLayout.cshtml";
+  ViewData["Title"] = "Work Plan Consolidation";
+  //Layout = "~/Views/Shared/_PlanningLayout.cshtml";
+  Layout = "~/Pages/Shared/_ContentNavbarLayout.cshtml";
 } 
 <h1>Work Plan Consolidation [M & E Officer]</h1>
 <hr />
@@ -133,5 +134,5 @@
      
 
 </script>
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @*@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}*@
 }

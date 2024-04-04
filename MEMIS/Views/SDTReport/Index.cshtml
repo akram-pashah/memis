@@ -1,12 +1,13 @@
-﻿@using MEMIS.Data.Risk;
+@using MEMIS.Data.Risk;
 @using System.Security.Claims;
 @using Microsoft.AspNetCore.Identity;
 
 @model cloudscribe.Pagination.Models.PagedResult<MEMIS.Models.Report.SDTReportModel>
 
 @{
-    ViewData["Title"] = "Report";
-    //Layout = "~/Views/Shared/_MELayout.cshtml";
+  ViewData["Title"] = "Report";
+  //Layout = "~/Views/Shared/_MELayout.cshtml";
+  Layout = "~/Pages/Shared/_ContentNavbarLayout.cshtml";
 }
 <style>
     .content {

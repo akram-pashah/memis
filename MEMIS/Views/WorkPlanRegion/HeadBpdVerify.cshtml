@@ -1,9 +1,10 @@
-﻿@using MEMIS.Data;
+@using MEMIS.Data;
 @model cloudscribe.Pagination.Models.PagedResult<DeptPlan>
 
 @{
-    ViewData["Title"] = "Work Plan Verification [Head BPD]";
-    //Layout = "~/Views/Shared/_PlanningLayout.cshtml";
+  ViewData["Title"] = "Work Plan Verification [Head BPD]";
+  //Layout = "~/Views/Shared/_PlanningLayout.cshtml";
+  Layout = "~/Pages/Shared/_ContentNavbarLayout.cshtml";
 }
 <style>
     .content {
@@ -179,5 +180,5 @@
 
 
     </script>
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @*@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}*@
 }

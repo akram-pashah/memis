@@ -1,8 +1,9 @@
-﻿@model MEMIS.Models.DeptPlanDto
+@model MEMIS.Models.DeptPlanDto
 
 @{
-    ViewData["Title"] = "Department Plan";
-    //Layout = "~/Views/Shared/_PlanningLayout.cshtml";
+  ViewData["Title"] = "Department Plan";
+  //Layout = "~/Views/Shared/_PlanningLayout.cshtml";
+  Layout = "~/Pages/Shared/_ContentNavbarLayout.cshtml";
 } 
 <h4>Department Plan</h4>
 <hr />
@@ -163,5 +164,5 @@
     }
 
 </script>
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @*@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}*@
 }

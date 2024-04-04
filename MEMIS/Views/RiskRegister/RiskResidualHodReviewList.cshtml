@@ -1,9 +1,10 @@
-﻿@using MEMIS.Data.Risk;
+@using MEMIS.Data.Risk;
 @model cloudscribe.Pagination.Models.PagedResult<RiskRegister>
 
 @{
-    ViewData["Title"] = "Risk Residual Assessment Review";
-    //Layout = "~/Views/Shared/_RiskLayout.cshtml";
+  ViewData["Title"] = "Risk Residual Assessment Review";
+  //Layout = "~/Views/Shared/_RiskLayout.cshtml";
+  Layout = "~/Pages/Shared/_ContentNavbarLayout.cshtml";
 }
 <style>
     .content {
@@ -188,5 +189,5 @@
 
 
     </script>
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @*@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}*@
 }

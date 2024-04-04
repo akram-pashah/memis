@@ -1,9 +1,10 @@
-﻿@using MEMIS.Data;
+@using MEMIS.Data;
 @model cloudscribe.Pagination.Models.PagedResult<RelocationPharma>
 
 @{
-    ViewData["Title"] = "Verify";
-    //Layout = "~/Views/Shared/_GISLayout.cshtml";
+  ViewData["Title"] = "Verify";
+  //Layout = "~/Views/Shared/_GISLayout.cshtml";
+  Layout = "~/Pages/Shared/_ContentNavbarLayout.cshtml";
 }
 <style>
     .content {
@@ -142,4 +143,4 @@
 </div>
 
 
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @*@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}*@

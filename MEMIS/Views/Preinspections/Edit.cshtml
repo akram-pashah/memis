@@ -1,8 +1,9 @@
-﻿@model MEMIS.Models.PreinspectionDto
+@model MEMIS.Models.PreinspectionDto
 
 @{
-	ViewData["Title"] = "Edit";
-    //Layout = "~/Views/Shared/_GISLayout.cshtml";
+  ViewData["Title"] = "Edit";
+  //Layout = "~/Views/Shared/_GISLayout.cshtml";
+  Layout = "~/Pages/Shared/_ContentNavbarLayout.cshtml";
 }
 
 <h5>Preinspection</h5>
@@ -137,6 +138,6 @@
 
 @section Scripts {
 	@{
-		await Html.RenderPartialAsync("_ValidationScriptsPartial");
+//await Html.RenderPartialAsync("_ValidationScriptsPartial");
 	}
 }

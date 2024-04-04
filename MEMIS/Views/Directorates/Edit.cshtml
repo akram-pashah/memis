@@ -1,8 +1,9 @@
-﻿@model MEMIS.Models.DirectorateDto
+@model MEMIS.Models.DirectorateDto
 
 @{
-    ViewData["Title"] = "Edit";
-    //Layout = "~/Views/Shared/_AdminLayout.cshtml";
+  ViewData["Title"] = "Edit";
+  //Layout = "~/Views/Shared/_AdminLayout.cshtml";
+  Layout = "~/Pages/Shared/_ContentNavbarLayout.cshtml";
 }
  
 
@@ -48,5 +49,5 @@
  
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @*@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}*@
 }

@@ -1,8 +1,9 @@
-﻿@model MEMIS.Models.DeptPlanDto
+@model MEMIS.Models.DeptPlanDto
 
 @{
-    ViewData["Title"] = "Department Plan";
-    //Layout = "~/Views/Shared/_PlanningLayout.cshtml";
+  ViewData["Title"] = "Department Plan";
+  //Layout = "~/Views/Shared/_PlanningLayout.cshtml";
+  Layout = "~/Pages/Shared/_ContentNavbarLayout.cshtml";
 } 
 <h4>Department Plan</h4>
 <hr />
@@ -120,48 +121,48 @@
 <div>
     <a asp-action="Index">Back to List</a>
 </div>
-
-@section Scripts {
-
 <script>
 
-    window.addEventListener('load', function () {
-        GetData();
-    })
+  window.addEventListener('load', function () {
+    GetData();
+  })
 
-    $("#RiskConsequenceId").change(function () {
-        if ($('option:selected', this).val() != 0) {
-            GetData();
-        }
-        
-    });
-    $("#RiskLikelihoodId").change(function () {
-        if ($('option:selected', this).val() != 0) {
-            GetData();
-        }
-
-    });
-
-    function GetData() {
-        if (document.getElementById("RiskConsequenceId").value != 0 && document.getElementById("RiskLikelihoodId").value != 0) {
-            $.ajax({
-                url: '/RiskIdentifications/GetRiskMatrix',
-                type: 'GET',
-                data: { RCId: document.getElementById("RiskConsequenceId").value, RLId: document.getElementById("RiskLikelihoodId").value },
-                dataType: 'json',
-                success: function (data) {
-                    document.getElementById('RiskRank').value = data.riskValue;
-                    document.getElementById('RiskScore').value = data.riskRank;
-                    document.getElementById('EvalCriteria').value = data.evaluationCriteria;
-                },
-                error: function (error) {
-                    //log or alert the error
-                }
-            });
-        }
-        
+  $("#RiskConsequenceId").change(function () {
+    if ($('option:selected', this).val() != 0) {
+      GetData();
     }
 
+  });
+  $("#RiskLikelihoodId").change(function () {
+    if ($('option:selected', this).val() != 0) {
+      GetData();
+    }
+
+  });
+
+  function GetData() {
+    if (document.getElementById("RiskConsequenceId").value != 0 && document.getElementById("RiskLikelihoodId").value != 0) {
+      $.ajax({
+        url: '/RiskIdentifications/GetRiskMatrix',
+        type: 'GET',
+        data: { RCId: document.getElementById("RiskConsequenceId").value, RLId: document.getElementById("RiskLikelihoodId").value },
+        dataType: 'json',
+        success: function (data) {
+          document.getElementById('RiskRank').value = data.riskValue;
+          document.getElementById('RiskScore').value = data.riskRank;
+          document.getElementById('EvalCriteria').value = data.evaluationCriteria;
+        },
+        error: function (error) {
+          //log or alert the error
+        }
+      });
+    }
+
+  }
+
 </script>
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+@section Scripts {
+
+
+    @*@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}*@
 }

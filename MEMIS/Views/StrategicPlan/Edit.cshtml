@@ -1,8 +1,9 @@
-﻿@model MEMIS.Data.StrategicPlan
+@model MEMIS.Data.StrategicPlan
 
 @{
-    ViewData["Title"] = "Edit";
-    //Layout = "~/Views/Shared/_PlanningLayout.cshtml";
+  ViewData["Title"] = "Edit";
+  //Layout = "~/Views/Shared/_PlanningLayout.cshtml";
+  Layout = "~/Pages/Shared/_ContentNavbarLayout.cshtml";
 }
 
 <h1>Edit</h1>
@@ -66,5 +67,5 @@
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @*@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}*@
 }

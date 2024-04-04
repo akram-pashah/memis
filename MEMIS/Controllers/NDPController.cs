@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MEMIS.Data;
 using cloudscribe.Pagination.Models;
-using MEMIS.ViewModels;
 
 namespace MEMIS.Controllers
 {
@@ -23,9 +22,6 @@ namespace MEMIS.Controllers
         // GET: NDP
         public  IActionResult Index(int pageNumber = 1)
         {
-            string financialYear = HttpContext.Session.GetString("FYEAR");
-            NDPViewModel viewModel = new NDPViewModel();
-            NDPFile nDPFile = new NDPFile();
             int pageSize = 10;
             var offset = (pageSize * pageNumber) - pageSize;
             if (_context.NDP != null)
@@ -42,16 +38,15 @@ namespace MEMIS.Controllers
                     PageSize = pageSize
 
                 };
-                viewModel.NDP = result;
-                viewModel.NDPFile = _context.NDPFile.Where(x => x.FinancialYear == int.Parse(financialYear)).OrderByDescending(x => x.CreatedDate).FirstOrDefault();
-
-                return View(viewModel);
+                return View(result);
             }
             else
             {
                 return Problem("Entity set 'AppDbContext.NDP'  is null.");
             }
-            
+            //return _context.NDP != null ? 
+            //            View(await _context.NDP.ToListAsync()) :
+            //            Problem("Entity set 'AppDbContext.NDP'  is null.");
         }
 
         // GET: NDP/Details/5
@@ -85,8 +80,18 @@ namespace MEMIS.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("id,Programme,ProgrammeObjective,SubProgramme,SubProgrammeObjective,ProgrammeIntervention")] NDP nDP)
         {
+            var file = Request.Form.Files;
             if (ModelState.IsValid)
             {
+                if (file != null && file.Count > 0)
+                {
+                    using (var memoryStream = new MemoryStream())
+                    {
+                        await file[0].CopyToAsync(memoryStream);
+                        nDP.FileContent = memoryStream.ToArray();
+                        nDP.FileName = file[0].FileName;
+                    }
+                }
                 _context.Add(nDP);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -121,11 +126,21 @@ namespace MEMIS.Controllers
             {
                 return NotFound();
             }
+            var file = Request.Form.Files;
 
             if (ModelState.IsValid)
             {
                 try
                 {
+                    if (file != null && file.Count > 0)
+                    {
+                        using (var memoryStream = new MemoryStream())
+                        {
+                            await file[0].CopyToAsync(memoryStream);
+                            nDP.FileContent = memoryStream.ToArray();
+                            nDP.FileName = file[0].FileName;
+                        }
+                    }
                     _context.Update(nDP);
                     await _context.SaveChangesAsync();
                 }
@@ -189,41 +204,14 @@ namespace MEMIS.Controllers
 
         public async Task<IActionResult> Download(int id)
         {
-            var ndpFile = await _context.NDPFile.FindAsync(id);
-            if (ndpFile == null || ndpFile.FileContent == null || ndpFile.FileContent.Length == 0)
+            var nDP = await _context.NDP.FindAsync(id);
+            if (nDP == null || nDP.FileContent == null || nDP.FileContent.Length == 0)
             {
                 return NotFound();
             }
 
             // Return the file as a stream
-            return File(ndpFile.FileContent, "application/octet-stream", ndpFile.FileName);
-        }
-
-        public async Task<IActionResult> UploadFile()
-        {
-            var file = Request.Form.Files;
-            string financialYear = HttpContext.Session.GetString("FYEAR");
-
-            NDPFile nDPFile = new NDPFile();
-
-            if (ModelState.IsValid)
-            {
-                if (file != null && file.Count > 0)
-                {
-                    using (var memoryStream = new MemoryStream())
-                    {
-                        await file[0].CopyToAsync(memoryStream);
-                        nDPFile.FileContent = memoryStream.ToArray();
-                        nDPFile.FileName = file[0].FileName;
-                        nDPFile.FinancialYear = int.Parse(financialYear);
-                        nDPFile.CreatedDate = DateTime.Now;
-                    }
-                }
-                _context.Add(nDPFile);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            return View();
+            return File(nDP.FileContent, "application/octet-stream", nDP.FileName);
         }
 
     }

@@ -1,8 +1,9 @@
-﻿@model MEMIS.Models.RegionDto
+@model MEMIS.Models.RegionDto
 
 @{
-    ViewData["Title"] = "Create";
-    //Layout = "~/Views/Shared/_PlanningLayout.cshtml";
+  ViewData["Title"] = "Create";
+  //Layout = "~/Views/Shared/_PlanningLayout.cshtml";
+  Layout = "~/Pages/Shared/_ContentNavbarLayout.cshtml";
 }
  
 
@@ -54,5 +55,5 @@
  
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @*@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}*@
 }

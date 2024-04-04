@@ -1,8 +1,9 @@
-﻿@model MEMIS.Models.ProjectInitiationDetailsDto
+@model MEMIS.Models.ProjectInitiationDetailsDto
 
 @{
 	ViewData["Title"] = "Create";
 	//Layout = "~/Views/Shared/_ProjectLayout.cshtml";
+	Layout = "~/Pages/Shared/_ContentNavbarLayout.cshtml";
 }
 @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "__AjaxAntiForgeryForm" }))
 {
@@ -466,7 +467,7 @@
 
 @section Scripts {
 	@{
-		await Html.RenderPartialAsync("_ValidationScriptsPartial");
+//await Html.RenderPartialAsync("_ValidationScriptsPartial");
 	}
 	<script>
 

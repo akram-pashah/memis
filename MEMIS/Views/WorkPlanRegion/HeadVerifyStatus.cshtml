@@ -1,8 +1,9 @@
-﻿@model MEMIS.Models.DeptPlanDto
+@model MEMIS.Models.DeptPlanDto
 
 @{
-    ViewData["Title"] = "Department Plan Verification [HOD]";
-    //Layout = "~/Views/Shared/_PlanningLayout.cshtml";
+  ViewData["Title"] = "Department Plan Verification [HOD]";
+  //Layout = "~/Views/Shared/_PlanningLayout.cshtml";
+  Layout = "~/Pages/Shared/_ContentNavbarLayout.cshtml";
 }
  
 
@@ -133,5 +134,5 @@
 @section Scripts { 
 <script> 
 </script>
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @*@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}*@
 }

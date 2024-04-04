@@ -1,9 +1,10 @@
-﻿@model MEMIS.Models.Risk.RiskResidualDto
+@model MEMIS.Models.Risk.RiskResidualDto
 
 
 @{
-    ViewData["Title"] = "Risk Residual Assessment Verification [Director]";
-    //Layout = "~/Views/Shared/_RiskLayout.cshtml";
+  ViewData["Title"] = "Risk Residual Assessment Verification [Director]";
+  //Layout = "~/Views/Shared/_RiskLayout.cshtml";
+  Layout = "~/Pages/Shared/_ContentNavbarLayout.cshtml";
 }
  
 
@@ -202,5 +203,5 @@
     }
 
 </script>
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @*@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}*@
 }

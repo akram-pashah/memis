@@ -1,8 +1,9 @@
-﻿@model MEMIS.Data.ActivityAssessment
+@model MEMIS.Data.ActivityAssessment
 
 @{
-    ViewData["Title"] = "Create";
-    //Layout = "~/Views/Shared/_MELayout.cshtml";
+  ViewData["Title"] = "Create";
+  //Layout = "~/Views/Shared/_MELayout.cshtml";
+  Layout = "~/Pages/Shared/_ContentNavbarLayout.cshtml";
 }
 
 <h1>Create</h1>
@@ -198,6 +199,6 @@
     <a asp-action="Index">Back to List</a>
 </div>
 
-@section Scripts {
+@*@section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}
+}*@

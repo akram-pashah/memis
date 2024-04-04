@@ -1,8 +1,9 @@
-﻿@model MEMIS.Models.SDTAssessmentDto
+@model MEMIS.Models.SDTAssessmentDto
 
 @{
 	ViewData["Title"] = "Create";
 	//Layout = "~/Views/Shared/_MELayout.cshtml";
+	Layout = "~/Pages/Shared/_ContentNavbarLayout.cshtml";
 }
 
 <h5>New Assessment</h5>
@@ -166,7 +167,7 @@
 
 @section Scripts {
 	@{
-		await Html.RenderPartialAsync("_ValidationScriptsPartial");
+//await Html.RenderPartialAsync("_ValidationScriptsPartial");
 	}
 	<script>
 

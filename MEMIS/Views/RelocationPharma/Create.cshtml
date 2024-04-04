@@ -1,8 +1,9 @@
-﻿@model MEMIS.Models.RelocationPhramaDto
+@model MEMIS.Models.RelocationPhramaDto
 
 @{
-	ViewData["Title"] = "Create";
-    //Layout = "~/Views/Shared/_GISLayout.cshtml";
+  ViewData["Title"] = "Create";
+  //Layout = "~/Views/Shared/_GISLayout.cshtml";
+  Layout = "~/Pages/Shared/_ContentNavbarLayout.cshtml";
 }
 
 <h5>Relocation Pharma</h5>
@@ -139,6 +140,6 @@
 
 @section Scripts {
 	@{
-		await Html.RenderPartialAsync("_ValidationScriptsPartial");
+//await Html.RenderPartialAsync("_ValidationScriptsPartial");
 	}
 }

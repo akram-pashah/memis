@@ -1,10 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
-using Newtonsoft.Json.Linq;
-using static System.Net.Mime.MediaTypeNames;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace MEMIS
 {
-    public class ListHelper
+  public class ListHelper
     {
         public static List<SelectListItem> ProjectType()
         {

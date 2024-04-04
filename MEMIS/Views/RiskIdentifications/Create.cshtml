@@ -1,11 +1,12 @@
-﻿@model MEMIS.Models.Risk.RiskIdentificationCreateEditDto
+@model MEMIS.Models.Risk.RiskIdentificationCreateEditDto
 @using MEMIS.Data.Risk;
 @using System.Security.Claims;
 @using Microsoft.AspNetCore.Identity;
 @using MEMIS.Components
 @{
-    ViewData["Title"] = "Create";
-    //Layout = "~/Views/Shared/_RiskLayout.cshtml";
+  ViewData["Title"] = "Create";
+  //Layout = "~/Views/Shared/_RiskLayout.cshtml";
+  Layout = "~/Pages/Shared/_ContentNavbarLayout.cshtml";
 }
 
 <h1>Create</h1>
@@ -147,5 +148,5 @@
     }
 
 </script>
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @*@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}*@
 }

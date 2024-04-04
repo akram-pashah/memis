@@ -1,8 +1,9 @@
-﻿@model MEMIS.Models.EnforcementDto
+@model MEMIS.Models.EnforcementDto
 
 @{
-	ViewData["Title"] = "Edit";
-    //Layout = "~/Views/Shared/_GISLayout.cshtml";
+  ViewData["Title"] = "Edit";
+  //Layout = "~/Views/Shared/_GISLayout.cshtml";
+  Layout = "~/Pages/Shared/_ContentNavbarLayout.cshtml";
 }
 
 <h4>Renewal</h4>
@@ -101,6 +102,6 @@
 
 @section Scripts {
 	@{
-		await Html.RenderPartialAsync("_ValidationScriptsPartial");
+//await Html.RenderPartialAsync("_ValidationScriptsPartial");
 	}
 }

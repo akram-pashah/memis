@@ -1,8 +1,9 @@
-﻿@model MEMIS.Models.KPIMasterCreateEditDto
+@model MEMIS.Models.KPIMasterCreateEditDto
 
 @{
-    ViewData["Title"] = "Create";
-    //Layout = "~/Views/Shared/_MELayout.cshtml";
+  ViewData["Title"] = "Create";
+  //Layout = "~/Views/Shared/_MELayout.cshtml";
+  Layout = "~/Pages/Shared/_ContentNavbarLayout.cshtml";
 }
 
 <h1>Create</h1>
@@ -102,5 +103,5 @@
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @*@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}*@
 }

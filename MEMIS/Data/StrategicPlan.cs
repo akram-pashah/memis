@@ -1,9 +1,8 @@
-﻿using Microsoft.AspNetCore.Razor.Language.Extensions;
 using System.ComponentModel.DataAnnotations;
 
 namespace MEMIS.Data
 {
-    public class StrategicPlan
+  public class StrategicPlan
     {
         [Key] 
         public int Id { get; set; } 

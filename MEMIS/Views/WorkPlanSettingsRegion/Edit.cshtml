@@ -1,8 +1,9 @@
-﻿@model MEMIS.Data.WorkPlanSettingsRegion
+@model MEMIS.Data.WorkPlanSettingsRegion
 
 @{
-    ViewData["Title"] = "Work Plan Settings [Region]";
-    //Layout = "~/Views/Shared/_PlanningLayout.cshtml";
+  ViewData["Title"] = "Work Plan Settings [Region]";
+  //Layout = "~/Views/Shared/_PlanningLayout.cshtml";
+  Layout = "~/Pages/Shared/_ContentNavbarLayout.cshtml";
 } 
 <h4>Work Plan Settings [Region]</h4>
 <hr />
@@ -173,5 +174,5 @@
     }
 </script>
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @*@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}*@
 }
