@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MEMIS.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240328131237_NDPFileUpload")]
-    partial class NDPFileUpload
+    [Migration("20240330061700_NDPFile")]
+    partial class NDPFile
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -1099,10 +1099,6 @@ namespace MEMIS.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"), 1L, 1);
 
-                    b.Property<byte[]>("FileContent")
-                        .IsRequired()
-                        .HasColumnType("varbinary(max)");
-
                     b.Property<string>("Programme")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -1152,6 +1148,33 @@ namespace MEMIS.Migrations
                     b.HasKey("ID");
 
                     b.ToTable("NDP_HD");
+                });
+
+            modelBuilder.Entity("MEMIS.Data.NDPFile", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<DateTime?>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<byte[]>("FileContent")
+                        .IsRequired()
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<string>("FileName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("FinancialYear")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("NDPFile");
                 });
 
             modelBuilder.Entity("MEMIS.Data.Preinspection", b =>

@@ -37,6 +37,7 @@ namespace MEMIS.Controllers
         var user = await _userManager.FindByNameAsync(model.userName);
         if (user != null)
         {
+          HttpContext.Session.SetString("FYEAR", model.fyear.ToString());
           var signInResult = await _signInManager.PasswordSignInAsync(user, model.password, false, false);
           if (signInResult.Succeeded)
           {
