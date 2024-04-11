@@ -17,135 +17,150 @@
     }
 </style>
 
-<p>
-    <a role="button" class="btn btn-sm btn-outline-primary" asp-action="Create">Create New</a>
-</p>
-<div style="width:100%; overflow-x:auto;">
-    <table class="table table-striped table-bordered table-hover dt-responsive nowrap">
-
-        <thead>
-            <tr>
-                <th>
-                    @Html.DisplayNameFor(model => model.Data[0].InspectionDate)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Data[0].Applicant)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Data[0].Business)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Data[0].PRoad)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Data[0].PZone)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Data[0].PVillage)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Data[0].PCountry)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Data[0].PTelephone)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Data[0].PEmail)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Data[0].ProductClassification)
-                </th>
-                 
-                <th>
-                    @Html.DisplayNameFor(model => model.Data[0].CategoryOfpremises)
-                </th>
-               
-                
-                <th>
-                    @Html.DisplayNameFor(model => model.Data[0].comments)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Data[0].InspectorId)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Data[0].ApprovalStatusInspector)
-                </th>
-
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model.Data)
-            {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.InspectionDate)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Applicant)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Business)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.PRoad)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.PZone)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.PVillage)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.PCountry)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.PTelephone)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.PEmail)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.ProductClassification)
-                </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.CategoryOfpremises)
-                    </td>
-                
-                
-                <td>
-                    @Html.DisplayFor(modelItem => item.comments)
-                </td>
-                <td>
-
-                        @if (@ViewBag.Users.FindByIdAsync(item.InspectorId).Result != null)
-                        {
-                            @ViewBag.Users.FindByIdAsync(item.InspectorId).Result.UserName
-                        }
-                        
-                    </td>
-                <td>
-                    @Enum.GetName(typeof(MEMIS.EnumApprovalStatus), item.ApprovalStatusInspector)
-                </td>
-
-                <td>
-                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-                </td>
-            </tr>
-            }
-        </tbody>
-    </table>
-    <cs-pager cs-paging-pagenumber="@Model.PageNumber"
-              cs-paging-totalitems="@Model.TotalItems"
-              cs-paging-pagesize="@Model.PageSize"
-              cs-pagenumber-param="pagenumber"
-              asp-controller="PreInspections"
-              asp-action="Index"
-              cs-pager-li-current-class="page-item active"
-              cs-pager-li-other-class="page-item"
-              cs-pager-li-non-active-class="page-item disabled"
-              cs-pager-link-current-class="page-link"
-              cs-pager-link-other-class="page-link"></cs-pager>
+<div class="row">
+    <div class="col d-flex justify-content-end mb-3">
+        <a class="btn btn-info" asp-action="Create">Create New</a>
+    </div>
 </div>
+
+<div class="card">
+  <div class="card-body">
+        <div style="width:100%; overflow-x:auto;">
+            <table class="table table-striped table-bordered table-hover dt-responsive nowrap">
+                <thead class="table-active">
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Data[0].InspectionDate)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Data[0].Applicant)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Data[0].Business)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Data[0].PRoad)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Data[0].PZone)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Data[0].PVillage)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Data[0].PCountry)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Data[0].PTelephone)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Data[0].PEmail)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Data[0].ProductClassification)
+                        </th>
+
+                        <th>
+                            @Html.DisplayNameFor(model => model.Data[0].CategoryOfpremises)
+                        </th>
+
+
+                        <th>
+                            @Html.DisplayNameFor(model => model.Data[0].comments)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Data[0].InspectorId)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Data[0].ApprovalStatusInspector)
+                        </th>
+
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Data)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.InspectionDate)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Applicant)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Business)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.PRoad)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.PZone)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.PVillage)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.PCountry)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.PTelephone)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.PEmail)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ProductClassification)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.CategoryOfpremises)
+                            </td>
+
+
+                            <td>
+                                @Html.DisplayFor(modelItem => item.comments)
+                            </td>
+                            <td>
+
+                                @if (@ViewBag.Users.FindByIdAsync(item.InspectorId).Result != null)
+                                {
+                                    @ViewBag.Users.FindByIdAsync(item.InspectorId).Result.UserName
+                                }
+
+                            </td>
+                            <td>
+                                @Enum.GetName(typeof(MEMIS.EnumApprovalStatus), item.ApprovalStatusInspector)
+                            </td>
+
+                            <td>
+                                <div class="btn-group" role="group" aria-label="Actions">
+                                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-secondary" data-toggle="tooltip" data-placement="top" title="Edit">
+                                        <i class='bx bx-edit'></i>
+                                    </a>
+                                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info" data-toggle="tooltip" data-placement="top" title="Details">
+                                        <i class='bx bx-detail'></i>
+                                    </a>
+                                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger" data-toggle="tooltip" data-placement="top" title="Delete">
+                                        <i class='bx bx-message-square-x'></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            <cs-pager cs-paging-pagenumber="@Model.PageNumber"
+                      cs-paging-totalitems="@Model.TotalItems"
+                      cs-paging-pagesize="@Model.PageSize"
+                      cs-pagenumber-param="pagenumber"
+                      asp-controller="PreInspections"
+                      asp-action="Index"
+                      cs-pager-li-current-class="page-item active"
+                      cs-pager-li-other-class="page-item"
+                      cs-pager-li-non-active-class="page-item disabled"
+                      cs-pager-link-current-class="page-link"
+                      cs-pager-link-other-class="page-link"></cs-pager>
+        </div>
+    </div>
+</div>
+
