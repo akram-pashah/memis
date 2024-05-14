@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+https://go.microsoft.com/fwlink/?LinkID=208121.
+-->
+<Project>
+  <PropertyGroup>
+    <TimeStampOfAssociatedLegacyPublishXmlFile />
+    <_PublishTargetUrl>D:\Sreejith\Published\NDA\MEMIS</_PublishTargetUrl>
+    <History>True|2024-04-17T09:20:13.0712742Z;True|2024-04-06T10:24:19.4146396+03:00;</History>
+    <LastFailureDetails />
+  </PropertyGroup>
+  <ItemGroup>
+    <DestinationConnectionStrings Include="DefaultConnection">
+      <Value>Server=.%3bInitial Catalog=NDAMEMIS%3bUser Id=NDAMEMIS%3bPassword=admin2o23%3bIntegrated Security=false%3bConnect Timeout=200%3b pooling=%27true%27%3b Max Pool Size=200%3bTrustServerCertificate=True%3b</Value>
+    </DestinationConnectionStrings>
+  </ItemGroup>
+</Project>

@@ -4,6 +4,7 @@ using MEMIS.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MEMIS.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240503091924_activityassesbudgetcode")]
+    partial class activityassesbudgetcode
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -70,9 +73,6 @@ namespace MEMIS.Migrations
                     b.Property<int?>("Quarter")
                         .HasColumnType("int");
 
-                    b.Property<int?>("actType")
-                        .HasColumnType("int");
-
                     b.Property<double?>("baseline")
                         .HasColumnType("float");
 
@@ -91,9 +91,6 @@ namespace MEMIS.Migrations
                     b.Property<int?>("intActivity")
                         .HasColumnType("int");
 
-                    b.Property<Guid?>("intDept")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<int?>("intIntervention")
                         .HasColumnType("int");
 
@@ -109,8 +106,6 @@ namespace MEMIS.Migrations
                     b.HasIndex("intAction");
 
                     b.HasIndex("intActivity");
-
-                    b.HasIndex("intDept");
 
                     b.HasIndex("intIntervention");
 
@@ -3060,17 +3055,11 @@ namespace MEMIS.Migrations
                         .WithMany()
                         .HasForeignKey("intActivity");
 
-                    b.HasOne("MEMIS.Data.Department", "DepartmentFk")
-                        .WithMany()
-                        .HasForeignKey("intDept");
-
                     b.HasOne("MEMIS.Data.StrategicIntervention", "StrategicIntervention")
                         .WithMany()
                         .HasForeignKey("intIntervention");
 
                     b.Navigation("ActivityFk");
-
-                    b.Navigation("DepartmentFk");
 
                     b.Navigation("StrategicAction");
 
