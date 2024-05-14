@@ -1,586 +1,643 @@
 @{
-    TempData.Keep();
-    string? currentPage = ViewContext.HttpContext.Request.Path;
+  TempData.Keep();
+  string? currentPage = ViewContext.HttpContext.Request.Path;
 }
 
 <!-- Menu -->
 @* ! Do this simple *@
 <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
 
-    @* ! Hide app brand if navbar-full *@
-    <div class='app-brand demo @((@ViewData["navbarFull"] != null && Convert.ToBoolean(@ViewData["navbarFull"])) ? "d-xl-none" : "")'>
-        <a asp-controller="Dashboards" asp-action="Index" class="app-brand-link">
-            <span class="app-brand-logo demo">
-                <img src="~/img/logos/logo.png" />
-                @*@await Html.PartialAsync("../_Partials/_Macros")*@
-            </span>
-            <span class="app-brand-text demo menu-text fw-bold ms-2">@TempData.Peek("appName")</span>
+  @* ! Hide app brand if navbar-full *@
+  <div
+    class='app-brand demo @((@ViewData["navbarFull"] != null && Convert.ToBoolean(@ViewData["navbarFull"])) ? "d-xl-none" : "")'>
+    <a asp-controller="Dashboards" asp-action="Index" class="app-brand-link">
+      <span class="app-brand-logo demo">
+        <img src="~/img/logos/logo.png" />
+        @*@await Html.PartialAsync("../_Partials/_Macros")*@
+      </span>
+      <span class="app-brand-text demo menu-text fw-bold ms-2">@TempData.Peek("appName")</span>
+    </a>
+
+    <a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto d-block d-xl-none">
+      <i class="bx bx-chevron-left bx-sm align-middle"></i>
+    </a>
+  </div>
+
+  <div class="menu-inner-shadow"></div>
+
+  @* ! Full version menu-items *@
+<ul class="menu-inner py-1">
+  <!-- Dashboards -->
+  <li class='menu-item@(currentPage.EndsWith("/") || currentPage.StartsWith("/NDP") || currentPage.StartsWith("/ProgramImplementationPlans") || currentPage.StartsWith("/FocusAreas") || currentPage.StartsWith("/StrategicObjectives") || currentPage.StartsWith("/StrategicInterventions") || currentPage.StartsWith("/StrategicActions") || currentPage.StartsWith("/Activities") || currentPage.StartsWith("/AnnualImplemtationPlans") || currentPage.StartsWith("/DeptPlan") ? " active open" : "")'>
+    <a href="javascript:void(0);" class="menu-link menu-toggle">
+      <i class="menu-icon tf-icons bx bx-home-circle"></i>
+      <div>Planning</div>
+      @*<div class="badge bg-danger rounded-pill ms-auto">5</div>*@
+    </a>
+    <ul class="menu-sub">
+      <li class='menu-item@(currentPage == "/NDP" ? " active" : "")'>
+        <a asp-controller="NDP" asp-action="Index" class="menu-link">
+          <div>NDP</div>
         </a>
-
-        <a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto d-block d-xl-none">
-            <i class="bx bx-chevron-left bx-sm align-middle"></i>
+      </li>
+      <li class='menu-item@(currentPage == "/ProgramImplementationPlans" ? " active" : "")'>
+        <a asp-controller="ProgramImplementationPlans" asp-action="Index" class="menu-link">
+          <div>Programme Implementation Plan</div>
         </a>
-    </div>
-
-    <div class="menu-inner-shadow"></div>
-
-    @* ! Full version menu-items *@
-    <ul class="menu-inner py-1">
-        <!-- Dashboards -->
-        <li class='menu-item@(currentPage.EndsWith("/") || currentPage.StartsWith("/NDP") || currentPage.StartsWith("/ProgramImplementationPlans") || currentPage.StartsWith("/FocusAreas") || currentPage.StartsWith("/StrategicObjectives") || currentPage.StartsWith("/StrategicInterventions") || currentPage.StartsWith("/StrategicActions") || currentPage.StartsWith("/Activities") || currentPage.StartsWith("/AnnualImplemtationPlans") || currentPage.StartsWith("/DeptPlan") ? " active open" : "")'>
-            <a href="javascript:void(0);" class="menu-link menu-toggle">
-                <i class="menu-icon tf-icons bx bx-home-circle"></i>
-                <div>Planning</div>
-                @*<div class="badge bg-danger rounded-pill ms-auto">5</div>*@
+      </li>
+      <li class='menu-item@(currentPage == "/FocusAreas" ? " active" : "")'>
+        <a asp-controller="FocusAreas" asp-action="Index" class="menu-link">
+          <div>Focus Area</div>
+        </a>
+      </li>
+      <li class='menu-item@(currentPage == "/StrategicObjectives" ? " active" : "")'>
+        <a asp-controller="StrategicObjectives" asp-action="Index" class="menu-link">
+          <div>Strategic Objective</div>
+        </a>
+      </li>
+      <li class='menu-item@(currentPage == "/StrategicInterventions" ? " active" : "")'>
+        <a asp-controller="StrategicInterventions" asp-action="Index" class="menu-link">
+          <div>Strategic Intervention</div>
+        </a>
+      </li>
+      <li class='menu-item@(currentPage == "/StrategicActions" ? " active" : "")'>
+        <a asp-controller="StrategicActions" asp-action="Index" class="menu-link">
+          <div>Strategic Action</div>
+        </a>
+      </li>
+      <li class='menu-item@(currentPage == "/Activities" ? " active" : "")'>
+        <a asp-controller="Activities" asp-action="Index" class="menu-link">
+          <div>Activity</div>
+        </a>
+      </li>
+      <li class='menu-item@(currentPage == "/AnnualImplemtationPlans" ? " active" : "")'>
+        <a asp-controller="AnnualImplemtationPlans" asp-action="Index" class="menu-link">
+          <div>Annualised Implementation Plan</div>
+        </a>
+      </li>
+      <li class='menu-item@(currentPage.StartsWith("/DeptPlan") ? " active open" : "")'>
+        <a href="javascript:void(0);" class="menu-link menu-toggle">
+          <div>Department Work Plan</div>
+        </a>
+        <ul class="menu-sub">
+          <li class='menu-item@(currentPage == "/DeptPlan" ? " active" : "")'>
+            <a asp-controller="DeptPlan" asp-action="Index" class="menu-link">
+              <div>Department Work Plan Setting</div>
             </a>
-            <ul class="menu-sub">
-                <li class='menu-item@(currentPage == "/NDP" ? " active" : "")'>
-                    <a asp-controller="NDP" asp-action="Index" class="menu-link">
-                        <div>NDP</div>
-                    </a>
-                </li>
-                <li class='menu-item@(currentPage == "/ProgramImplementationPlans" ? " active" : "")'>
-                    <a asp-controller="ProgramImplementationPlans" asp-action="Index" class="menu-link">
-                        <div>Programme Implementation Plan</div>
-                    </a>
-                </li>
-                <li class='menu-item@(currentPage == "/FocusAreas" ? " active" : "")'>
-                    <a asp-controller="FocusAreas" asp-action="Index" class="menu-link">
-                        <div>Focus Area</div>
-                    </a>
-                </li>
-                <li class='menu-item@(currentPage == "/StrategicObjectives" ? " active" : "")'>
-                    <a asp-controller="StrategicObjectives" asp-action="Index" class="menu-link">
-                        <div>Strategic Objective</div>
-                    </a>
-                </li>
-                <li class='menu-item@(currentPage == "/StrategicInterventions" ? " active" : "")'>
-                    <a asp-controller="StrategicInterventions" asp-action="Index" class="menu-link">
-                        <div>Strategic Intervention</div>
-                    </a>
-                </li>
-                <li class='menu-item@(currentPage == "/StrategicActions" ? " active" : "")'>
-                    <a asp-controller="StrategicActions" asp-action="Index" class="menu-link">
-                        <div>Strategic Action</div>
-                    </a>
-                </li>
-                <li class='menu-item@(currentPage == "/Activities" ? " active" : "")'>
-                    <a asp-controller="Activities" asp-action="Index" class="menu-link">
-                        <div>Activity</div>
-                    </a>
-                </li>
-                <li class='menu-item@(currentPage == "/AnnualImplemtationPlans" ? " active" : "")'>
-                    <a asp-controller="AnnualImplemtationPlans" asp-action="Index" class="menu-link">
-                        <div>Annualised Implementation Plan</div>
-                    </a>
-                </li>
-                <li class='menu-item@(currentPage.StartsWith("/ActivityAssess") ? " active open" : "")'>
+          </li>
+          <li class='menu-item@(currentPage == "/DeptPlan/Verify" ? " active" : "")'>
+            <a asp-controller="DeptPlan" asp-action="Verify" class="menu-link">
+              <div>Department Work Plan Verification</div>
+            </a>
+          </li>
+          <li class='menu-item@(currentPage == "/DeptPlan/DirVerify" ? " active" : "")'>
+            <a asp-controller="DeptPlan" asp-action="DirVerify" class="menu-link">
+              <div>Department Work Plan Director Verification</div>
+            </a>
+          </li>
+          <li class='menu-item@(currentPage == "/DeptPlan/Consolidation" ? " active" : "")'>
+            <a asp-controller="DeptPlan" asp-action="Consolidation" class="menu-link">
+              <div>Work Plan Consolidation [M&E Coordinator]</div>
+            </a>
+          </li>
+          <li class='menu-item@(currentPage == "/DeptPlan/HeadBpdVerify" ? " active" : "")'>
+            <a asp-controller="DeptPlan" asp-action="HeadBpdVerify" class="menu-link">
+              <div>Work Plan Verification [Head BPD]</div>
+            </a>
+          </li>
+          <li class='menu-item@(currentPage == "/DeptPlan/DirAppr" ? " active" : "")'>
+            <a asp-controller="DeptPlan" asp-action="DirAppr" class="menu-link">
+              <div>Work Plan Approval [Director DCS]</div>
+            </a>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+
+  <!-- Layouts -->
+  <li class='menu-item@(currentPage.EndsWith("/") ||  currentPage.StartsWith("/ActivityAssessment") 
+      ||  currentPage.StartsWith("/SDTMasters") ||  currentPage.StartsWith("/SDTAssessments")  || currentPage.StartsWith("/KPIMaster")
+      || currentPage.StartsWith("/KPIAssessment") || currentPage.StartsWith("/KPIAssessment/VerifyByHOD") || currentPage.StartsWith("/KPIAssessment/VerifyByDirector") || currentPage.StartsWith("/KPIAssessment/VerifyByMEOfficer")
+      || currentPage.StartsWith("/KPIAssessment/VerifyByHBPD") || currentPage.StartsWith("/KPIAssessment/VerifyByDDCS") ? " active open" : "")'>
+
+    <a href="javascript:void(0);" class="menu-link menu-toggle">
+      <i class="menu-icon tf-icons bx bx-layout"></i>
+      <div>M & E</div>
+    </a>
+
+    <ul class="menu-sub">
+
+                <li class='menu-item@(currentPage.StartsWith("/ActivityAssessment") ? " active open" : "")'>
                     <a href="javascript:void(0);" class="menu-link menu-toggle">
-                        <i class="menu-icon tf-icons bx bx-dock-top"></i>
-                        <div>Department Work Plan</div>
+                        <div>Department Assessment</div>
                     </a>
                     <ul class="menu-sub">
-                        <li class='menu-item@(currentPage == "/ActivityAsses" ? " active" : "")'>
-                            <a asp-controller="ActivityAsses" asp-action="Index" class="menu-link">
-                                <div>Department Work Plan Setting</div>
+                        @if (User.IsInRole("M&E Coordinator") || User.IsInRole("SuperAdmin"))
+                        {
+                            <li class='menu-item@(currentPage == "/ActivityAssessment" ? " active" : "")'>
+                                <a asp-controller="ActivityAssessment" asp-action="Index" class="menu-link">
+                                    <div>Department Assessment</div>
+                                </a>
+                            </li>
+                        }
+                        @if (User.IsInRole("Head of Department") || User.IsInRole("SuperAdmin"))
+                        {
+                            <li class='menu-item@(currentPage == "/ActivityAssessment/HodVerification" ? " active" : "")'>
+                                <a asp-controller="ActivityAssessment" asp-action="HodVerification" class="menu-link">
+                                    <div>Assessment Verification by HOD</div>
+                                </a>
+                            </li>
+                        }
+                        @if (User.IsInRole("Director") || User.IsInRole("SuperAdmin"))
+                        {
+                            <li class='menu-item@(currentPage == "/ActivityAssessment/VerificationDir" ? " active" : "")'>
+                                <a asp-controller="ActivityAssessment" asp-action="VerificationDir" class="menu-link">
+                                    <div>Assessment Verification by Director</div>
+                                </a>
+                            </li>
+                        }
+                        @if (User.IsInRole("M&E Officer") || User.IsInRole("SuperAdmin"))
+                        {
+                            <li class='menu-item@(currentPage == "/ActivityAssessment/Consolidation" ? " active" : "")'>
+                                <a asp-controller="ActivityAssessment" asp-action="Consolidation" class="menu-link">
+                                    <div>Consolidation by M&E Officer</div>
+                                </a>
+                            </li>
+                        }
+                        @if (User.IsInRole("Head BPD") || User.IsInRole("SuperAdmin"))
+                        {
+                            <li class='menu-item@(currentPage == "/ActivityAssessment/VerificationBpd" ? " active" : "")'>
+                                <a asp-controller="ActivityAssessment" asp-action="VerificationBpd" class="menu-link">
+                                    <div>Head BPD Verification</div>
+                                </a>
+                            </li>
+                        }
+                        @if (User.IsInRole("Director (DCS)") || User.IsInRole("SuperAdmin"))
+                        {
+                            <li class='menu-item@(currentPage == "/ActivityAssessment/Approval" ? " active" : "")'>
+                                <a asp-controller="ActivityAssessment" asp-action="Approval" class="menu-link">
+                                    <div>Approval by Director (DCS)</div>
+                                </a>
+                            </li>
+                        }
+                    </ul>
+                </li>
+
+      @if (User.IsInRole("M&E Officer") || User.IsInRole("SuperAdmin"))
+      {
+        <li class='menu-item@(currentPage == "/SDTMasters" ? " active" : "")'>
+        <a asp-controller="SDTMasters" asp-action="index" class="menu-link">
+          <div>SDT Master</div>
+        </a>
+         </li>
+      }
+
+                <li class='menu-item@(currentPage.StartsWith("/SDTAssessments") ? " active open" : "")'>
+                    <a href="javascript:void(0);" class="menu-link menu-toggle">
+                        <div>SDT Assessment</div>
+                    </a>
+                    <ul class="menu-sub">
+                        @if (User.IsInRole("M&E Coordinator") || User.IsInRole("SuperAdmin"))
+                        {
+                            <li class='menu-item@(currentPage == "/SDTAssessments" ? " active" : "")'>
+                                <a asp-controller="SDTAssessments" asp-action="index" class="menu-link">
+                                    <div>SDT Assessment</div>
+                                </a>
+                            </li>
+                        }
+                        @if (User.IsInRole("Head of Department") || User.IsInRole("SuperAdmin"))
+                        {
+                            <li class='menu-item@(currentPage == "/SDTAssessments/VerifyByHOD" ? " active" : "")'>
+                                <a asp-controller="SDTAssessments" asp-action="VerifyByHOD" class="menu-link">
+                                    <div>HOD Verification</div>
+                                </a>
+                            </li>
+                        }
+                        @if (User.IsInRole("Director") || User.IsInRole("SuperAdmin"))
+                        {
+                            <li class='menu-item@(currentPage == "/SDTAssessments/VerifyByDirector" ? " active" : "")'>
+                                <a asp-controller="SDTAssessments" asp-action="VerifyByDirector" class="menu-link">
+                                    <div>Director Verification</div>
+                                </a>
+                            </li>
+                        }
+                        @if (User.IsInRole("M&E Officer") || User.IsInRole("SuperAdmin"))
+                        {
+                            <li class='menu-item@(currentPage == "/SDTAssessments/VerifyByMEOfficer" ? " active" : "")'>
+                                <a asp-controller="SDTAssessments" asp-action="VerifyByMEOfficer" class="menu-link">
+                                    <div>M & E Officer Verification</div>
+                                </a>
+                            </li>
+                        }
+                        @if (User.IsInRole("Head BPD") || User.IsInRole("SuperAdmin"))
+                        {
+                            <li class='menu-item@(currentPage == "/SDTAssessments/VerifyByHBPD" ? " active" : "")'>
+                                <a asp-controller="SDTAssessments" asp-action="VerifyByHBPD" class="menu-link">
+                                    <div>Head BPD Verification</div>
+                                </a>
+                            </li>
+                        }
+                        @if (User.IsInRole("Director (DCS)") || User.IsInRole("SuperAdmin"))
+                        {
+                            <li class='menu-item@(currentPage == "/SDTAssessments/VerifyByDDCS" ? " active" : "")'>
+                                <a asp-controller="SDTAssessments" asp-action="VerifyByDDCS" class="menu-link">
+                                    <div>Director DCS Verification</div>
+                                </a>
+                            </li>
+                        }
+                    </ul>
+                </li>
+
+
+      @if (User.IsInRole("M&E Officer") || User.IsInRole("SuperAdmin"))
+      {
+         <li class='menu-item@(currentPage == "/KPIMaster" ? " active" : "")'>
+        <a asp-controller="KPIMaster" asp-action="index" class="menu-link">
+          <div>KPI M & E Framework</div>
+        </a>
+         </li>
+      }
+
+                <li class='menu-item@(currentPage.StartsWith("/KPIAssessment") ? " active open" : "")'>
+                    <a href="javascript:void(0);" class="menu-link menu-toggle">
+                        <div>KPI Assessment</div>
+                    </a>
+                    <ul class="menu-sub">
+                        @if (User.IsInRole("M&E Coordinator") || User.IsInRole("SuperAdmin"))
+                        {
+                            <li class='menu-item@(currentPage == "/KPIAssessment" ? " active" : "")'>
+                                <a asp-controller="KPIAssessment" asp-action="index" class="menu-link">
+                                    <div>KPI Assessment</div>
+                                </a>
+                            </li>
+                        }
+                        @if (User.IsInRole("Head of Department") || User.IsInRole("SuperAdmin"))
+                        {
+                            <li class='menu-item@(currentPage == "/KPIAssessment/VerifyByHOD" ? " active" : "")'>
+                                <a asp-controller="KPIAssessment" asp-action="VerifyByHOD" class="menu-link">
+                                    <div>HOD Verification</div>
+                                </a>
+                            </li>
+                        }
+                        @if (User.IsInRole("Director") || User.IsInRole("SuperAdmin"))
+                        {
+                            <li class='menu-item@(currentPage == "/KPIAssessment/VerifyByDirector" ? " active" : "")'>
+                                <a asp-controller="KPIAssessment" asp-action="VerifyByDirector" class="menu-link">
+                                    <div>Director Verification</div>
+                                </a>
+                            </li>
+                        }
+                        @if (User.IsInRole("M&E Officer") || User.IsInRole("SuperAdmin"))
+                        {
+                            <li class='menu-item@(currentPage == "/KPIAssessment/VerifyByMEOfficer" ? " active" : "")'>
+                                <a asp-controller="KPIAssessment" asp-action="VerifyByMEOfficer" class="menu-link">
+                                    <div>M & E Officer Verification</div>
+                                </a>
+                            </li>
+                        }
+                        @if (User.IsInRole("Head BPD") || User.IsInRole("SuperAdmin"))
+                        {
+                            <li class='menu-item@(currentPage == "/KPIAssessment/VerifyByHBPD" ? " active" : "")'>
+                                <a asp-controller="KPIAssessment" asp-action="VerifyByHBPD" class="menu-link">
+                                    <div>Head BPD Verification</div>
+                                </a>
+                            </li>
+                        }
+                        @if (User.IsInRole("Director (DCS)") || User.IsInRole("SuperAdmin"))
+                        {
+                            <li class='menu-item@(currentPage == "/KPIAssessment/VerifyByDDCS" ? " active" : "")'>
+                                <a asp-controller="KPIAssessment" asp-action="VerifyByDDCS" class="menu-link">
+                                    <div>Director DCS Verification</div>
+                                </a>
+                            </li>
+                        }
+                    </ul>
+                </li>
+    </ul>
+  </li>
+
+  <!-- Front Pages -->
+  <li class='menu-item@( currentPage.EndsWith("/") || currentPage.StartsWith("/RiskIdentifications") || currentPage.StartsWith("/RiskRegister")  ? " active open" : "")'>
+
+    <a href="javascript:void(0);" class="menu-link menu-toggle">
+      <i class="menu-icon tf-icons bx bx-store"></i>
+      <div>Risk Management</div>
+    </a>
+    <ul class="menu-sub">
+
+                <li class='menu-item@(currentPage.StartsWith("/RiskIdentifications") ? " active open" : "")'>
+                    <a href="javascript:void(0);" class="menu-link menu-toggle">
+                        <div>Risk Identification</div>
+                    </a>
+                    <ul class="menu-sub">
+                        <li class='menu-item@(currentPage == "/RiskIdentifications" ? " active" : "")'>
+                            <a asp-controller="RiskIdentifications" asp-action="index" class="menu-link">
+                                <div>Risk and Opportunities Assessment</div>
                             </a>
                         </li>
-                        <li class='menu-item@(currentPage == "/ActivityAsses/AllocatetoRegion" ? " active" : "")'>
-                            <a asp-controller="ActivityAsses" asp-action="AllocatetoRegion"   class="menu-link">
-                                <div>Allocate to Region</div>
+                        <li class='menu-item@(currentPage == "/RiskIdentifications/Verify" ? " active" : "")'>
+                            <a asp-controller="RiskIdentifications" asp-action="Verify" class="menu-link">
+                                <div>Risk and Opportunities Assessment Review</div>
                             </a>
                         </li>
-                        <li class='menu-item@(currentPage == "/DeptPlan/Verify" ? " active" : "")'>
-                            <a asp-controller="DeptPlan" asp-action="Verify" class="menu-link">
-                                <div>Department Work Plan Verification</div>
+                        <li class='menu-item@(currentPage == "/RiskIdentifications/DirVerify" ? " active" : "")'>
+                            <a asp-controller="RiskIdentifications" asp-action="DirVerify" class="menu-link">
+                                <div>Risk and Opportunities Assessment Verification [Director]</div>
                             </a>
                         </li>
-                        <li class='menu-item@(currentPage == "/DeptPlan/DirVerify" ? " active" : "")'>
-                            <a asp-controller="DeptPlan" asp-action="DirVerify" class="menu-link">
-                                <div>Department Work Plan Director Verification</div>
-                            </a>
-                        </li>
-                        <li class='menu-item@(currentPage == "/DeptPlan/Consolidation" ? " active" : "")'>
-                            <a asp-controller="DeptPlan" asp-action="Consolidation" class="menu-link">
-                                <div>Work Plan Consolidation [M&E Coordinator]</div>
-                            </a>
-                        </li>
-                        <li class='menu-item@(currentPage == "/DeptPlan/HeadBpdVerify" ? " active" : "")'>
-                            <a asp-controller="DeptPlan" asp-action="HeadBpdVerify" class="menu-link">
-                                <div>Work Plan Verification [Head BPD]</div>
-                            </a>
-                        </li>
-                        <li class='menu-item@(currentPage == "/DeptPlan/DirAppr" ? " active" : "")'>
-                            <a asp-controller="DeptPlan" asp-action="DirAppr" class="menu-link">
-                                <div>Work Plan Approval [Director DCS]</div>
+                        <li class='menu-item@(currentPage == "/RiskIdentifications/RmoVerify" ? " active" : "")'>
+                            <a asp-controller="RiskIdentifications" asp-action="RmoVerify" class="menu-link">
+                                <div>Risk and Opportunities Assessment Approval [RMO]</div>
                             </a>
                         </li>
                     </ul>
                 </li>
-            </ul>
-        </li>
 
-        <!-- Layouts -->
-        <li class='menu-item@(currentPage.EndsWith("/") ||  currentPage.StartsWith("/ActivityAssessment") || currentPage.StartsWith("/ActivityAssessment/HodVerification")|| currentPage.StartsWith("/ActivityAssessment/VerificationDir")
-      || currentPage.StartsWith("/ActivityAssessment/Consolidation") || currentPage.StartsWith("/ActivityAssessment/VerificationBpd") || currentPage.StartsWith("/ActivityAssessment/Approval")
-      ||  currentPage.StartsWith("/SDTMasters") ||  currentPage.StartsWith("/SDTAssessments") ||  currentPage.StartsWith("/SDTAssessments/VerifyByHOD") ||  currentPage.StartsWith("/SDTAssessments/VerifyByDirector")
-      || currentPage.StartsWith("/SDTAssessments/VerifyByMEOfficer") || currentPage.StartsWith("/SDTAssessments/VerifyByHBPD") || currentPage.StartsWith("/SDTAssessments/VerifyByDDCS")  || currentPage.StartsWith("/KPIMaster")
-      || currentPage.StartsWith("/KPIAssessment") || currentPage.StartsWith("/KPIAssessment/VerifyByHOD") || currentPage.StartsWith("/KPIAssessment/VerifyByDirector") || currentPage.StartsWith("/KPIAssessment/VerifyByMEOfficer")
-      || currentPage.StartsWith("/KPIAssessment/VerifyByHBPD") || currentPage.StartsWith("/KPIAssessment/VerifyByDDCS") ? " active open" : "")'>
-
-            <a href="javascript:void(0);" class="menu-link menu-toggle">
-                <i class="menu-icon tf-icons bx bx-layout"></i>
-                <div>M & E</div>
-            </a>
-
-            <ul class="menu-sub">
-
-
-                @if (User.IsInRole("M&E Coordinator") || User.IsInRole("SuperAdmin"))
-                {
-                    <li class='menu-item@(currentPage == "/ActivityAssessment" ? " active" : "")'>
-                        <a asp-controller="ActivityAssessment" asp-action="Index" class="menu-link">
-                            <div>Department Assessment</div>
-                        </a>
-                    </li>
-                }
-                @if (User.IsInRole("Head of Department") || User.IsInRole("SuperAdmin"))
-                {
-                    <li class='menu-item@(currentPage == "/ActivityAssessment/HodVerification" ? " active" : "")'>
-                        <a asp-controller="ActivityAssessment" asp-action="HodVerification" class="menu-link">
-                            <div>Assessment Verification by HOD</div>
-                        </a>
-                    </li>
-                }
-                @if (User.IsInRole("Director") || User.IsInRole("SuperAdmin"))
-                {
-                    <li class='menu-item@(currentPage == "/ActivityAssessment/VerificationDir" ? " active" : "")'>
-                        <a asp-controller="ActivityAssessment" asp-action="VerificationDir" class="menu-link">
-                            <div>Assessment Verification by Director</div>
-                        </a>
-                    </li>
-                }
-                @if (User.IsInRole("M&E Officer") || User.IsInRole("SuperAdmin"))
-                {
-                    <li class='menu-item@(currentPage == "/ActivityAssessment/Consolidation" ? " active" : "")'>
-                        <a asp-controller="ActivityAssessment" asp-action="Consolidation" class="menu-link">
-                            <div>Consolidation by M&E Officer</div>
-                        </a>
-                    </li>
-                }
-                @if (User.IsInRole("Head BPD") || User.IsInRole("SuperAdmin"))
-                {
-                    <li class='menu-item@(currentPage == "/ActivityAssessment/VerificationBpd" ? " active" : "")'>
-                        <a asp-controller="ActivityAssessment" asp-action="VerificationBpd" class="menu-link">
-                            <div>Head BPD Verification</div>
-                        </a>
-                    </li>
-                }
-                @if (User.IsInRole("Director (DCS)") || User.IsInRole("SuperAdmin"))
-                {
-                    <li class='menu-item@(currentPage == "/ActivityAssessment/Approval" ? " active" : "")'>
-                        <a asp-controller="ActivityAssessment" asp-action="Approval" class="menu-link">
-                            <div>Approval by Director (DCS)</div>
-                        </a>
-                    </li>
-                }
-                @if (User.IsInRole("M&E Officer") || User.IsInRole("SuperAdmin"))
-                {
-                    <li class='menu-item@(currentPage == "/SDTMasters" ? " active" : "")'>
-                        <a asp-controller="SDTMasters" asp-action="index" class="menu-link">
-                            <div>SDT Master</div>
-                        </a>
-                    </li>
-                }
-                @if (User.IsInRole("M&E Coordinator") || User.IsInRole("SuperAdmin"))
-                {
-                    <li class='menu-item@(currentPage == "/SDTAssessments" ? " active" : "")'>
-                        <a asp-controller="SDTAssessments" asp-action="index" class="menu-link">
-                            <div>SDT Assessment</div>
-                        </a>
-                    </li>
-                }
-                @if (User.IsInRole("Head of Department") || User.IsInRole("SuperAdmin"))
-                {
-                    <li class='menu-item@(currentPage == "/SDTAssessments/VerifyByHOD" ? " active" : "")'>
-                        <a asp-controller="SDTAssessments" asp-action="VerifyByHOD" class="menu-link">
-                            <div>HOD Verification</div>
-                        </a>
-                    </li>
-                }
-                @if (User.IsInRole("Director") || User.IsInRole("SuperAdmin"))
-                {
-                    <li class='menu-item@(currentPage == "/SDTAssessments/VerifyByDirector" ? " active" : "")'>
-                        <a asp-controller="SDTAssessments" asp-action="VerifyByDirector" class="menu-link">
-                            <div>Director Verification</div>
-                        </a>
-                    </li>
-                }
-                @if (User.IsInRole("M&E Officer") || User.IsInRole("SuperAdmin"))
-                {
-                    <li class='menu-item@(currentPage == "/SDTAssessments/VerifyByMEOfficer" ? " active" : "")'>
-                        <a asp-controller="SDTAssessments" asp-action="VerifyByMEOfficer" class="menu-link">
-                            <div>M & E Officer Verification</div>
-                        </a>
-                    </li>
-                }
-                @if (User.IsInRole("Head BPD") || User.IsInRole("SuperAdmin"))
-                {
-                    <li class='menu-item@(currentPage == "/SDTAssessments/VerifyByHBPD" ? " active" : "")'>
-                        <a asp-controller="SDTAssessments" asp-action="VerifyByHBPD" class="menu-link">
-                            <div>Head BPD Verification</div>
-                        </a>
-                    </li>
-                }
-                @if (User.IsInRole("Director (DCS)") || User.IsInRole("SuperAdmin"))
-                {
-                    <li class='menu-item@(currentPage == "/SDTAssessments/VerifyByDDCS" ? " active" : "")'>
-                        <a asp-controller="SDTAssessments" asp-action="VerifyByDDCS" class="menu-link">
-                            <div>Director DCS Verification</div>
-                        </a>
-                    </li>
-                }
-                @if (User.IsInRole("M&E Officer") || User.IsInRole("SuperAdmin"))
-                {
-                    <li class='menu-item@(currentPage == "/KPIMaster" ? " active" : "")'>
-                        <a asp-controller="KPIMaster" asp-action="index" class="menu-link">
-                            <div>KPI M & E Framework</div>
-                        </a>
-                    </li>
-                }
-                @if (User.IsInRole("M&E Coordinator") || User.IsInRole("SuperAdmin"))
-                {
-                    <li class='menu-item@(currentPage == "/KPIAssessment" ? " active" : "")'>
-                        <a asp-controller="KPIAssessment" asp-action="index" class="menu-link">
-                            <div>KPI Assessment</div>
-                        </a>
-                    </li>
-                }
-                @if (User.IsInRole("Head of Department") || User.IsInRole("SuperAdmin"))
-                {
-                    <li class='menu-item@(currentPage == "/KPIAssessment/VerifyByHOD" ? " active" : "")'>
-                        <a asp-controller="KPIAssessment" asp-action="VerifyByHOD" class="menu-link">
-                            <div>HOD Verification</div>
-                        </a>
-                    </li>
-                }
-                @if (User.IsInRole("Director") || User.IsInRole("SuperAdmin"))
-                {
-                    <li class='menu-item@(currentPage == "/KPIAssessment/VerifyByDirector" ? " active" : "")'>
-                        <a asp-controller="KPIAssessment" asp-action="VerifyByDirector" class="menu-link">
-                            <div>Director Verification</div>
-                        </a>
-                    </li>
-                }
-                @if (User.IsInRole("M&E Officer") || User.IsInRole("SuperAdmin"))
-                {
-                    <li class='menu-item@(currentPage == "/KPIAssessment/VerifyByMEOfficer" ? " active" : "")'>
-                        <a asp-controller="KPIAssessment" asp-action="VerifyByMEOfficer" class="menu-link">
-                            <div>M & E Officer Verification</div>
-                        </a>
-                    </li>
-                }
-                @if (User.IsInRole("Head BPD") || User.IsInRole("SuperAdmin"))
-                {
-                    <li class='menu-item@(currentPage == "/KPIAssessment/VerifyByHBPD" ? " active" : "")'>
-                        <a asp-controller="KPIAssessment" asp-action="VerifyByHBPD" class="menu-link">
-                            <div>Head BPD Verification</div>
-                        </a>
-                    </li>
-                }
-                @if (User.IsInRole("Director (DCS)") || User.IsInRole("SuperAdmin"))
-                {
-                    <li class='menu-item@(currentPage == "/KPIAssessment/VerifyByDDCS" ? " active" : "")'>
-                        <a asp-controller="KPIAssessment" asp-action="VerifyByDDCS" class="menu-link">
-                            <div>Director DCS Verification</div>
-                        </a>
-                    </li>
-                }
-            </ul>
-        </li>
-
-        <!-- Front Pages -->
-        <li class='menu-item@( currentPage.EndsWith("/") || currentPage.StartsWith("/RiskIdentifications") || currentPage.StartsWith("/RiskIdentifications/Verify") || currentPage.StartsWith("/RiskIdentifications/DirVerify")
-      || currentPage.StartsWith("/RiskIdentifications/RmoVerify")  || currentPage.StartsWith("/RiskRegister") || currentPage.StartsWith("/RiskRegister/RiskTolerence") || currentPage.StartsWith("/RiskRegister/RiskTreatmentList")
-      ||  currentPage.StartsWith("/RiskRegister/RiskTreatmentHodReviewList") ||  currentPage.StartsWith("/RiskRegister/RiskTreatmentDirVerifyList") ||  currentPage.StartsWith("/RiskRegister/RiskTreatmentRmoVerifyList")
-      ||  currentPage.StartsWith("/RiskRegister/RiskMonitoringList") ||  currentPage.StartsWith("/RiskRegister/RiskMonitoringHodReviewList") ||  currentPage.StartsWith("/RiskRegister/RiskMonitoringDirVerifyList")
-      ||  currentPage.StartsWith("/RiskRegister/RiskMonitoringRmoVerifyList") ||  currentPage.StartsWith("/RiskRegister/RiskResidaualList") ||  currentPage.StartsWith("/RiskRegister/RiskResidaualHodReviewList")
-      ||  currentPage.StartsWith("/RiskRegister/RiskResidualDirVerifyList") ||  currentPage.StartsWith("/RiskRegister/RiskResidualRmoVerifyList") ? " active open" : "")'>
-
-            <a href="javascript:void(0);" class="menu-link menu-toggle">
-                <i class="menu-icon tf-icons bx bx-store"></i>
-                <div>Risk Management</div>
-            </a>
-            <ul class="menu-sub">
-                <li class='menu-item@(currentPage == "/RiskIdentifications" ? " active" : "")'>
-                    <a asp-controller="RiskIdentifications" asp-action="index" class="menu-link">
-                        <div>Risk and Opportunities Assessment</div>
-                    </a>
-                </li>
-                <li class='menu-item@(currentPage == "/RiskIdentifications/Verify" ? " active" : "")'>
-                    <a asp-controller="RiskIdentifications" asp-action="Verify" class="menu-link">
-                        <div>Risk and Opportunities Assessment Review</div>
-                    </a>
-                </li>
-                <li class='menu-item@(currentPage == "/RiskIdentifications/DirVerify" ? " active" : "")'>
-                    <a asp-controller="RiskIdentifications" asp-action="DirVerify" class="menu-link">
-                        <div>Risk and Opportunities Assessment Verification [Director]</div>
-                    </a>
-                </li>
-                <li class='menu-item@(currentPage == "/RiskIdentifications/RmoVerify" ? " active" : "")'>
-                    <a asp-controller="RiskIdentifications" asp-action="RmoVerify" class="menu-link">
-                        <div>Risk and Opportunities Assessment Approval [RMO]</div>
-                    </a>
-                </li>
-                <li class='menu-item@(currentPage == "/RiskRegister" ? " active" : "")'>
-                    <a asp-controller="RiskRegister" asp-action="index" class="menu-link">
+                <li class='menu-item@(currentPage.StartsWith("/RiskRegister") ? " active open" : "")'>
+                    <a href="javascript:void(0);" class="menu-link menu-toggle">
                         <div>Risk Register</div>
                     </a>
+                    <ul class="menu-sub">
+                        <li class='menu-item@(currentPage == "/RiskRegister" ? " active" : "")'>
+                            <a asp-controller="RiskRegister" asp-action="index" class="menu-link">
+                                <div>Risk Register</div>
+                            </a>
+                        </li>
+                        <li class='menu-item@(currentPage == "/RiskRegister/RiskTolerence" ? " active" : "")'>
+                            <a asp-controller="RiskRegister" asp-action="RiskTolerence" class="menu-link">
+                                <div>Risk Tolerence/Apetite</div>
+                            </a>
+                        </li>
+                        <li class='menu-item@(currentPage == "/RiskRegister/RiskTreatmentList" ? " active" : "")'>
+                            <a asp-controller="RiskRegister" asp-action="RiskTreatmentList" class="menu-link">
+                                <div>Risk Treatment</div>
+                            </a>
+                        </li>
+                        <li class='menu-item@(currentPage == "/RiskRegister/RiskTreatmentHodReviewList" ? " active" : "")'>
+                            <a asp-controller="RiskRegister" asp-action="RiskTreatmentHodReviewList" class="menu-link">
+                                <div>Risk Treatment Review</div>
+                            </a>
+                        </li>
+                        <li class='menu-item@(currentPage == "/RiskRegister/RiskTreatmentDirVerifyList" ? " active" : "")'>
+                            <a asp-controller="RiskRegister" asp-action="RiskTreatmentDirVerifyList" class="menu-link">
+                                <div>Risk Treatment Verification [Director]</div>
+                            </a>
+                        </li>
+                        <li class='menu-item@(currentPage == "/RiskRegister/RiskTreatmentRmoVerifyList" ? " active" : "")'>
+                            <a asp-controller="RiskRegister" asp-action="RiskTreatmentRmoVerifyList" class="menu-link">
+                                <div>Risk Treatment Approval [RMO]</div>
+                            </a>
+                        </li>
+                        <li class='menu-item@(currentPage == "/RiskRegister/RiskMonitoringList" ? " active" : "")'>
+                            <a asp-controller="RiskRegister" asp-action="RiskMonitoringList" class="menu-link">
+                                <div>Risk Monitoring</div>
+                            </a>
+                        </li>
+                        <li class='menu-item@(currentPage == "/RiskRegister/RiskMonitoringHodReviewList" ? " active" : "")'>
+                            <a asp-controller="RiskRegister" asp-action="RiskMonitoringHodReviewList" class="menu-link">
+                                <div>Risk Monitoring Review</div>
+                            </a>
+                        </li>
+                        <li class='menu-item@(currentPage == "/RiskRegister/RiskMonitoringDirVerifyList" ? " active" : "")'>
+                            <a asp-controller="RiskRegister" asp-action="RiskMonitoringDirVerifyList" class="menu-link">
+                                <div>Risk Monitoring Verification [Director]</div>
+                            </a>
+                        </li>
+                        <li class='menu-item@(currentPage == "/RiskRegister/RiskMonitoringRmoVerifyList" ? " active" : "")'>
+                            <a asp-controller="RiskRegister" asp-action="RiskMonitoringRmoVerifyList" class="menu-link">
+                                <div>Risk Monitoring Approval [RMO]</div>
+                            </a>
+                        </li>
+                        <li class='menu-item@(currentPage == "/RiskRegister/RiskResidualList" ? " active" : "")'>
+                            <a asp-controller="RiskRegister" asp-action="RiskResidualList" class="menu-link">
+                                <div>Residual Assessment</div>
+                            </a>
+                        </li>
+                        <li class='menu-item@(currentPage == "/RiskRegister/RiskResidualHodReviewList" ? " active" : "")'>
+                            <a asp-controller="RiskRegister" asp-action="RiskResidualHodReviewList" class="menu-link">
+                                <div>Residual Assessment Review</div>
+                            </a>
+                        </li>
+                        <li class='menu-item@(currentPage == "/RiskRegister/RiskResidualDirVerifyList" ? " active" : "")'>
+                            <a asp-controller="RiskRegister" asp-action="RiskResidualDirVerifyList" class="menu-link">
+                                <div>Residual Assessment Verification [Director]</div>
+                            </a>
+                        </li>
+                        <li class='menu-item@(currentPage == "/RiskRegister/RiskResidualRmoVerifyList" ? " active" : "")'>
+                            <a asp-controller="RiskRegister" asp-action="RiskResidualRmoVerifyList" class="menu-link">
+                                <div>Residual Assessment Approval [RMO]</div>
+                            </a>
+                        </li>
+                    </ul>
                 </li>
-                <li class='menu-item@(currentPage == "/RiskRegister/RiskTolerence" ? " active" : "")'>
-                    <a asp-controller="RiskRegister" asp-action="RiskTolerence" class="menu-link">
-                        <div>Risk Tolerence/Apetite</div>
-                    </a>
-                </li>
-                <li class='menu-item@(currentPage == "/RiskRegister/RiskTreatmentList" ? " active" : "")'>
-                    <a asp-controller="RiskRegister" asp-action="RiskTreatmentList" class="menu-link">
-                        <div>Risk Treatment</div>
-                    </a>
-                </li>
-                <li class='menu-item@(currentPage == "/RiskRegister/RiskTreatmentHodReviewList" ? " active" : "")'>
-                    <a asp-controller="RiskRegister" asp-action="RiskTreatmentHodReviewList" class="menu-link">
-                        <div>Risk Treatment Review</div>
-                    </a>
-                </li>
-                <li class='menu-item@(currentPage == "/RiskRegister/RiskTreatmentDirVerifyList" ? " active" : "")'>
-                    <a asp-controller="RiskRegister" asp-action="RiskTreatmentDirVerifyList" class="menu-link">
-                        <div>Risk Treatment Verification [Director]</div>
-                    </a>
-                </li>
-                <li class='menu-item@(currentPage == "/RiskRegister/RiskTreatmentRmoVerifyList" ? " active" : "")'>
-                    <a asp-controller="RiskRegister" asp-action="RiskTreatmentRmoVerifyList" class="menu-link">
-                        <div>Risk Treatment Approval [RMO]</div>
-                    </a>
-                </li>
-                <li class='menu-item@(currentPage == "/RiskRegister/RiskMonitoringList" ? " active" : "")'>
-                    <a asp-controller="RiskRegister" asp-action="RiskMonitoringList" class="menu-link">
-                        <div>Risk Monitoring</div>
-                    </a>
-                </li>
-                <li class='menu-item@(currentPage == "/RiskRegister/RiskMonitoringHodReviewList" ? " active" : "")'>
-                    <a asp-controller="RiskRegister" asp-action="RiskMonitoringHodReviewList" class="menu-link">
-                        <div>Risk Monitoring Review</div>
-                    </a>
-                </li>
-                <li class='menu-item@(currentPage == "/RiskRegister/RiskMonitoringDirVerifyList" ? " active" : "")'>
-                    <a asp-controller="RiskRegister" asp-action="RiskMonitoringDirVerifyList" class="menu-link">
-                        <div>Risk Monitoring Verification [Director]</div>
-                    </a>
-                </li>
-                <li class='menu-item@(currentPage == "/RiskRegister/RiskMonitoringRmoVerifyList" ? " active" : "")'>
-                    <a asp-controller="RiskRegister" asp-action="RiskMonitoringRmoVerifyList" class="menu-link">
-                        <div>Risk Monitoring Approval [RMO]</div>
-                    </a>
-                </li>
-                <li class='menu-item@(currentPage == "/RiskRegister/RiskResidualList" ? " active" : "")'>
-                    <a asp-controller="RiskRegister" asp-action="RiskResidualList" class="menu-link">
-                        <div>Residual Assessment</div>
-                    </a>
-                </li>
-                <li class='menu-item@(currentPage == "/RiskRegister/RiskResidualHodReviewList" ? " active" : "")'>
-                    <a asp-controller="RiskRegister" asp-action="RiskResidualHodReviewList" class="menu-link">
-                        <div>Residual Assessment Review</div>
-                    </a>
-                </li>
-                <li class='menu-item@(currentPage == "/RiskRegister/RiskResidualDirVerifyList" ? " active" : "")'>
-                    <a asp-controller="RiskRegister" asp-action="RiskResidualDirVerifyList" class="menu-link">
-                        <div>Residual Assessment Verification [Director]</div>
-                    </a>
-                </li>
-                <li class='menu-item@(currentPage == "/RiskRegister/RiskResidualRmoVerifyList" ? " active" : "")'>
-                    <a asp-controller="RiskRegister" asp-action="RiskResidualRmoVerifyList" class="menu-link">
-                        <div>Residual Assessment Approval [RMO]</div>
-                    </a>
-                </li>
-            </ul>
-        </li>
+    </ul>
+  </li>
 
-        <li class='menu-item@(currentPage.EndsWith("/") ||  currentPage.StartsWith("/ProjectInitiation")||  currentPage.StartsWith("/ProjectInitiation/add") ? " active open" : "")'>
-            <a href="javascript:void(0);" class="menu-link menu-toggle">
-                <i class="menu-icon tf-icons bx bx-dock-top"></i>
-                <div>Project Management</div>
-            </a>
-            <ul class="menu-sub">
-                <li class='menu-item@(currentPage == "/ProjectInitiation" ? " active" : "")'>
-                    <a asp-controller="ProjectInitiation" asp-action="Index" class="menu-link">
-                        <div>Project Initiation</div>
-                    </a>
-                </li>
-                <li class='menu-item@(currentPage == "/ProjectInitiation/add" ? " active" : "")'>
-                    <a asp-controller="ProjectInitiation" asp-action="add" class="menu-link">
-                        <div>Project Management</div>
-                    </a>
-                </li>
-            </ul>
-        </li>
-        <li class='menu-item@(currentPage.EndsWith("/") || currentPage.StartsWith("/PreInspections") || currentPage.StartsWith("/PreInspections/Verify") || currentPage.StartsWith("/PreInspectionsPharma")
+  <li class='menu-item@(currentPage.EndsWith("/") ||  currentPage.StartsWith("/ProjectInitiation")||  currentPage.StartsWith("/ProjectInitiation/add") ? " active open" : "")'>
+    <a href="javascript:void(0);" class="menu-link menu-toggle">
+      <i class="menu-icon tf-icons bx bx-dock-top"></i>
+      <div>Project Management</div>
+    </a>
+    <ul class="menu-sub">
+      <li class='menu-item@(currentPage == "/ProjectInitiation" ? " active" : "")'>
+        <a asp-controller="ProjectInitiation" asp-action="Index"  class="menu-link" >
+          <div>Project Initiation</div>
+        </a>
+      </li>
+      <li class='menu-item@(currentPage == "/ProjectInitiation/add" ? " active" : "")'>
+        <a asp-controller="ProjectInitiation" asp-action="add" class="menu-link" >
+          <div>Project Management</div>
+        </a>
+      </li>
+    </ul>
+  </li>
+  <li class='menu-item@(currentPage.EndsWith("/") || currentPage.StartsWith("/PreInspections") || currentPage.StartsWith("/PreInspections/Verify") || currentPage.StartsWith("/PreInspectionsPharma")
 || currentPage.StartsWith("/PreInspectionsPharma/HeadVerify") || currentPage.StartsWith("/PreInspectionsPharma/DirVerify") || currentPage.StartsWith("/PreinspectionNewManUnit") || currentPage.StartsWith("/RelocationPharma")
 || currentPage.StartsWith("/RelocationPharma/HeadVerify") || currentPage.StartsWith("/RelocationPharma/DirVerify") || currentPage.StartsWith("/RelocationDrugShop") || currentPage.StartsWith("/RelocationDrugShop/HeadVerify")
 || currentPage.StartsWith("/RelocationDrugShop/DirVerify") || currentPage.StartsWith("/ComplianceSupportSupervision") || currentPage.StartsWith("/renewal") || currentPage.StartsWith("/enforcement") || currentPage.StartsWith("/gpp")
  || currentPage.StartsWith("/gdp") || currentPage.StartsWith("/ComplianceSupportSupervision") || currentPage.StartsWith("/ComplianceSupportSupervision")? " active open" : "")'>
 
-            <a href="javascript:void(0);" class="menu-link menu-toggle">
-                <i class="menu-icon tf-icons bx bx-lock-open-alt"></i>
-                <div>GIS</div>
-            </a>
-            <ul class="menu-sub">
-                <li class='menu-item@(currentPage == "/PreInspections" ? " active" : "")'>
-                    <a asp-controller="PreInspections" asp-action="Index" class="menu-link">
-                        <div>Preinspection [New Drug Shop]</div>
+    <a href="javascript:void(0);" class="menu-link menu-toggle">
+      <i class="menu-icon tf-icons bx bx-lock-open-alt"></i>
+      <div>GIS</div>
+    </a>
+    <ul class="menu-sub">
+
+                <li class='menu-item@(currentPage.StartsWith("/PreInspections") ? " active open" : "")'>
+                    <a href="javascript:void(0);" class="menu-link menu-toggle">
+                        <div>Pre Inspection</div>
                     </a>
+                    <ul class="menu-sub">
+                        <li class='menu-item@(currentPage == "/PreInspections" ? " active" : "")'>
+                            <a asp-controller="PreInspections" asp-action="Index" class="menu-link">
+                                <div>Preinspection [New Drug Shop]</div>
+                            </a>
+                        </li>
+                        <li class='menu-item@(currentPage == "/PreInspections/Verify" ? " active" : "")'>
+                            <a asp-controller="PreInspections" asp-action="Verify" class="menu-link">
+                                <div>Preinspection [New Drug Shop] Verification</div>
+                            </a>
+                        </li>
+                        <li class='menu-item@(currentPage == "/PreInspectionsPharma" ? " active" : "")'>
+                            <a asp-controller="PreInspectionsPharma" asp-action="Index" class="menu-link">
+                                <div>Preinspection [New Pharmacy]</div>
+                            </a>
+                        </li>
+                        <li class='menu-item@(currentPage == "/PreInspectionsPharma/HeadVerify" ? " active" : "")'>
+                            <a asp-controller="PreInspectionsPharma" asp-action="HeadVerify" class="menu-link">
+                                <div>Preinspection [New Pharmacy] Head of Region</div>
+                            </a>
+                        </li>
+                        <li class='menu-item@(currentPage == "/PreInspectionsPharma/DirVerify" ? " active" : "")'>
+                            <a asp-controller="PreInspectionsPharma" asp-action="DirVerify" class="menu-link">
+                                <div>Preinspection [New Pharmacy] Director Approval</div>
+                            </a>
+                        </li>
+                        <li class='menu-item@(currentPage == "/PreinspectionNewManUnit" ? " active" : "")'>
+                            <a asp-controller="PreinspectionNewManUnit" asp-action="Index" class="menu-link">
+                                <div>Preinspection [New Manufacturing Unit]</div>
+                            </a>
+                        </li>
+                    </ul>
                 </li>
-                <li class='menu-item@(currentPage == "/PreInspections/Verify" ? " active" : "")'>
-                    <a asp-controller="PreInspections" asp-action="Verify" class="menu-link">
-                        <div>Preinspection [New Drug Shop] Verification</div>
+
+                <li class='menu-item@(currentPage.StartsWith("/RelocationPharma") ? " active open" : "")'>
+                    <a href="javascript:void(0);" class="menu-link menu-toggle">
+                        <div>Relocation Pharma</div>
                     </a>
+                    <ul class="menu-sub">
+                        <li class='menu-item@(currentPage == "/RelocationPharma" ? " active" : "")'>
+                            <a asp-controller="RelocationPharma" asp-action="Index" class="menu-link">
+                                <div>Relocation [Pharmacy]</div>
+                            </a>
+                        </li>
+                        <li class='menu-item@(currentPage == "/RelocationPharma/HeadVerify" ? " active" : "")'>
+                            <a asp-controller="RelocationPharma" asp-action="HeadVerify" class="menu-link">
+                                <div>Relocation [Pharmacy] Head of Region</div>
+                            </a>
+                        </li>
+                        <li class='menu-item@(currentPage == "/RelocationPharma/DirVerify" ? " active" : "")'>
+                            <a asp-controller="RelocationPharma" asp-action="DirVerify" class="menu-link">
+                                <div>Relocation [Pharmacy] Director Approval</div>
+                            </a>
+                        </li>
+                    </ul>
                 </li>
-                <li class='menu-item@(currentPage == "/PreInspectionsPharma" ? " active" : "")'>
-                    <a asp-controller="PreInspectionsPharma" asp-action="Index" class="menu-link">
-                        <div>Preinspection [New Pharmacy]</div>
+
+                <li class='menu-item@(currentPage.StartsWith("/RelocationDrugShop") ? " active open" : "")'>
+                    <a href="javascript:void(0);" class="menu-link menu-toggle">
+                        <div>Relocation Drug Shop</div>
                     </a>
+                    <ul class="menu-sub">
+                        <li class='menu-item@(currentPage == "/RelocationDrugShop" ? " active" : "")'>
+                            <a asp-controller="RelocationDrugShop" asp-action="Index" class="menu-link">
+                                <div>Relocation [Drug Shop]</div>
+                            </a>
+                        </li>
+                        <li class='menu-item@(currentPage == "/RelocationDrugShop/HeadVerify" ? " active" : "")'>
+                            <a asp-controller="RelocationDrugShop" asp-action="HeadVerify" class="menu-link">
+                                <div>Relocation [Drug Shop] Head of Region</div>
+                            </a>
+                        </li>
+                        <li class='menu-item@(currentPage == "/RelocationDrugShop/DirVerify" ? " active" : "")'>
+                            <a asp-controller="RelocationDrugShop" asp-action="DirVerify" class="menu-link">
+                                <div>Relocation [Drug Shop] Director Approval</div>
+                            </a>
+                        </li>
+                    </ul>
                 </li>
-                <li class='menu-item@(currentPage == "/PreInspectionsPharma/HeadVerify" ? " active" : "")'>
-                    <a asp-controller="PreInspectionsPharma" asp-action="HeadVerify" class="menu-link">
-                        <div>Preinspection [New Pharmacy] Head of Region</div>
-                    </a>
-                </li>
-                <li class='menu-item@(currentPage == "/PreInspectionsPharma/DirVerify" ? " active" : "")'>
-                    <a asp-controller="PreInspectionsPharma" asp-action="DirVerify" class="menu-link">
-                        <div>Preinspection [New Pharmacy] Director Approval</div>
-                    </a>
-                </li>
-                <li class='menu-item@(currentPage == "/PreinspectionNewManUnit" ? " active" : "")'>
-                    <a asp-controller="PreinspectionNewManUnit" asp-action="Index" class="menu-link">
-                        <div>Preinspection [New Manufacturing Unit]</div>
-                    </a>
-                </li>
-                <li class='menu-item@(currentPage == "/RelocationPharma" ? " active" : "")'>
-                    <a asp-controller="RelocationPharma" asp-action="Index" class="menu-link">
-                        <div>Relocation [Pharmacy]</div>
-                    </a>
-                </li>
-                <li class='menu-item@(currentPage == "/RelocationPharma/HeadVerify" ? " active" : "")'>
-                    <a asp-controller="RelocationPharma" asp-action="HeadVerify" class="menu-link">
-                        <div>Relocation [Pharmacy] Head of Region</div>
-                    </a>
-                </li>
-                <li class='menu-item@(currentPage == "/RelocationPharma/DirVerify" ? " active" : "")'>
-                    <a asp-controller="RelocationPharma" asp-action="DirVerify" class="menu-link">
-                        <div>Relocation [Pharmacy] Director Approval</div>
-                    </a>
-                </li>
-                <li class='menu-item@(currentPage == "/RelocationDrugShop" ? " active" : "")'>
-                    <a asp-controller="RelocationDrugShop" asp-action="Index" class="menu-link">
-                        <div>Relocation [Drug Shop]</div>
-                    </a>
-                </li>
-                <li class='menu-item@(currentPage == "/RelocationDrugShop/HeadVerify" ? " active" : "")'>
-                    <a asp-controller="RelocationDrugShop" asp-action="HeadVerify" class="menu-link">
-                        <div>Relocation [Drug Shop] Head of Region</div>
-                    </a>
-                </li>
-                <li class='menu-item@(currentPage == "/RelocationDrugShop/DirVerify" ? " active" : "")'>
-                    <a asp-controller="RelocationDrugShop" asp-action="DirVerify" class="menu-link">
-                        <div>Relocation [Drug Shop] Director Approval</div>
-                    </a>
-                </li>
-                <li class='menu-item@(currentPage == "/ComplianceSupportSupervision" ? " active" : "")'>
-                    <a asp-controller="ComplianceSupportSupervision" asp-action="Index" class="menu-link">
-                        <div>Compliance Support Supervision</div>
-                    </a>
-                </li>
-                <li class='menu-item@(currentPage == "/renewal" ? " active" : "")'>
-                    <a asp-controller="renewal" asp-action="Index" class="menu-link">
-                        <div>Renewal</div>
-                    </a>
-                </li>
-                <li class='menu-item@(currentPage == "/enforcement" ? " active" : "")'>
-                    <a asp-controller="enforcement" asp-action="Index" class="menu-link">
-                        <div>Enforcement</div>
-                    </a>
-                </li>
-                <li class='menu-item@(currentPage == "/gpp" ? " active" : "")'>
-                    <a asp-controller="gpp" asp-action="Index" class="menu-link">
-                        <div>GPP</div>
-                    </a>
-                </li>
-                <li class='menu-item@(currentPage == "/gdp" ? " active" : "")'>
-                    <a asp-controller="gdp" asp-action="Index" class="menu-link">
-                        <div>GDP</div>
-                    </a>
-                </li>
-                <li class='menu-item@(currentPage == "/ComplianceSupportSupervision" ? " active" : "")'>
-                    <a asp-controller="ComplianceSupportSupervision" asp-action="Index" class="menu-link">
-                        <div>Herbal Inspection</div>
-                    </a>
-                </li>
-                <li class='menu-item@(currentPage == "/ComplianceSupportSupervision" ? " active" : "")'>
-                    <a asp-controller="ComplianceSupportSupervision" asp-action="Index" class="menu-link">
-                        <div>Post Market Surveillance Activity</div>
-                    </a>
-                </li>
-                <li class='menu-item@(currentPage == "/ComplianceSupportSupervision" ? " active" : "")'>
-                    <a asp-controller="ComplianceSupportSupervision" asp-action="Index" class="menu-link">
-                        <div>Radio Talk Shows</div>
-                    </a>
-                </li>
-                <li class='menu-item@(currentPage == "/ComplianceSupportSupervision" ? " active" : "")'>
-                    <a asp-controller="ComplianceSupportSupervision" asp-action="Index" class="menu-link">
-                        <div>Sensitization Meetings</div>
-                    </a>
-                </li>
-            </ul>
-        </li>
-        <li class='menu-item@(currentPage.EndsWith("/") || currentPage.StartsWith("/directorates") || currentPage.StartsWith("/departments") || currentPage.StartsWith("/regions")
-      || currentPage.StartsWith("/login/register")  || currentPage.StartsWith("/rolemanager")  || currentPage.StartsWith("/userroles") ? " active open" : "")'>
-            <a href="javascript:void(0);" class="menu-link menu-toggle">
-                <i class="menu-icon tf-icons bx bx-cube-alt"></i>
-                <div>Settings</div>
-            </a>
-            <ul class="menu-sub">
-                <li class='menu-item@(currentPage == "/directorates" ? " active" : "")'>
-                    <a asp-controller="directorates" asp-action="Index" class="menu-link">
-                        <div>Directorates</div>
-                    </a>
-                </li>
-                <li class='menu-item@(currentPage == "/departments" ? " active" : "")'>
-                    <a asp-controller="departments" asp-action="Index" class="menu-link">
-                        <div>Departments</div>
-                    </a>
-                </li>
-                <li class='menu-item@(currentPage == "/regions" ? " active" : "")'>
-                    <a asp-controller="regions" asp-action="Index" class="menu-link">
-                        <div>Regions</div>
-                    </a>
-                </li>
-                <li class='menu-item@(currentPage == "/login/register" ? " active" : "")'>
-                    <a asp-controller="login" asp-action="register" class="menu-link">
-                        <div>User Management</div>
-                    </a>
-                </li>
-                <li class='menu-item@(currentPage == "/rolemanager" ? " active" : "")'>
-                    <a asp-controller="rolemanager" asp-action="index" class="menu-link">
-                        <div>User Roles</div>
-                    </a>
-                </li>
-                <li class='menu-item@(currentPage == "/userroles" ? " active" : "")'>
-                    <a asp-controller="userroles" asp-action="index" class="menu-link">
-                        <div>Manage User Roles</div>
-                    </a>
-                </li>
-            </ul>
-        </li>
+
+
+
+
+               
+      <li class='menu-item@(currentPage == "/ComplianceSupportSupervision" ? " active" : "")'>
+        <a asp-controller="ComplianceSupportSupervision" asp-action="Index" class="menu-link" >
+          <div>Compliance Support Supervision</div>
+        </a>
+      </li>
+      <li class='menu-item@(currentPage == "/renewal" ? " active" : "")'>
+        <a asp-controller="renewal" asp-action="Index"  class="menu-link" >
+          <div>Renewal</div>
+        </a>
+      </li>
+      <li class='menu-item@(currentPage == "/enforcement" ? " active" : "")'>
+        <a  asp-controller="enforcement" asp-action="Index"  class="menu-link" >
+          <div>Enforcement</div>
+        </a>
+      </li>
+      <li class='menu-item@(currentPage == "/gpp" ? " active" : "")'>
+        <a asp-controller="gpp" asp-action="Index" class="menu-link" >
+          <div>GPP</div>
+        </a>
+      </li>
+      <li class='menu-item@(currentPage == "/gdp" ? " active" : "")'>
+        <a asp-controller="gdp" asp-action="Index" class="menu-link" >
+          <div>GDP</div>
+        </a>
+      </li>
+      <li class='menu-item@(currentPage == "/ComplianceSupportSupervision" ? " active" : "")'>
+        <a asp-controller="ComplianceSupportSupervision" asp-action="Index"  class="menu-link" >
+          <div>Herbal Inspection</div>
+        </a>
+      </li>
+      <li class='menu-item@(currentPage == "/ComplianceSupportSupervision" ? " active" : "")'>
+        <a asp-controller="ComplianceSupportSupervision" asp-action="Index"  class="menu-link" >
+          <div>Post Market Surveillance Activity</div>
+        </a>
+      </li>
+      <li class='menu-item@(currentPage == "/ComplianceSupportSupervision" ? " active" : "")'>
+        <a asp-controller="ComplianceSupportSupervision" asp-action="Index"  class="menu-link" >
+          <div>Radio Talk Shows</div>
+        </a>
+      </li>
+      <li class='menu-item@(currentPage == "/ComplianceSupportSupervision" ? " active" : "")'>
+        <a asp-controller="ComplianceSupportSupervision" asp-action="Index"  class="menu-link" >
+          <div>Sensitization Meetings</div>
+        </a>
+      </li>
     </ul>
+  </li>
+  <li class='menu-item@(currentPage.EndsWith("/") || currentPage.StartsWith("/directorates") || currentPage.StartsWith("/departments") || currentPage.StartsWith("/regions")
+      || currentPage.StartsWith("/login/register")  || currentPage.StartsWith("/rolemanager")  || currentPage.StartsWith("/userroles") ? " active open" : "")'>
+    <a href="javascript:void(0);" class="menu-link menu-toggle">
+      <div>Settings</div>
+    </a>
+    <ul class="menu-sub">
+      <li class='menu-item@(currentPage == "/directorates" ? " active" : "")'>
+        <a asp-controller="directorates" asp-action="Index"  class="menu-link" >
+          <div>Directorates</div>
+        </a>
+      </li>
+      <li class='menu-item@(currentPage == "/departments" ? " active" : "")'>
+        <a  asp-controller="departments" asp-action="Index" class="menu-link" >
+          <div>Departments</div>
+        </a>
+      </li>
+      <li class='menu-item@(currentPage == "/regions" ? " active" : "")'>
+        <a  asp-controller="regions" asp-action="Index"  class="menu-link" >
+          <div>Regions</div>
+        </a>
+      </li>
+      <li class='menu-item@(currentPage == "/login/register" ? " active" : "")'>
+        <a asp-controller="login" asp-action="register" class="menu-link" >
+          <div>User Management</div>
+        </a>
+      </li>
+      <li class='menu-item@(currentPage == "/rolemanager" ? " active" : "")'>
+        <a asp-controller="rolemanager" asp-action="index" class="menu-link" >
+          <div>User Roles</div>
+        </a>
+      </li>
+      <li class='menu-item@(currentPage == "/userroles" ? " active" : "")'>
+        <a asp-controller="userroles" asp-action="index" class="menu-link" >
+          <div>Manage User Roles</div>
+        </a>
+      </li>
+    </ul>
+  </li>
+</ul>
 
 </aside>
 <!-- / Menu -->

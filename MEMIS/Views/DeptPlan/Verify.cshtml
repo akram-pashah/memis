@@ -43,7 +43,7 @@
       <div class="card-body">
         <div style="width:100%; overflow-x:auto;">
           <table id="DeptPlantable" class="table table-striped table-bordered table-hover dt-responsive nowrap">
-            <thead>
+            <thead class="table-active">
               <tr>
                 @*<th>
                 Select
@@ -109,7 +109,7 @@
                   @Html.DisplayNameFor(model => model.Data[0].budgetAmount)
                 </th>
                 <th>Department</th>
-                <th></th>
+                <th>Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -185,8 +185,14 @@
                   </td>
 
                   <td>
-                    <a asp-action="Details" asp-route-id="@item.intActivity">Details</a> |
-                    <a asp-action="HeadVerifyStatus" asp-route-id="@item.intActivity" asp-route-IsVerified="True">Verify</a>
+                    <div class="btn-group" role="group" aria-label="Actions">
+                      <a asp-action="Details" asp-route-id="@item.intActivity" class="btn btn-info" data-toggle="tooltip" data-placement="top" title="Details">
+                        <i class='bx bx-detail'></i>
+                      </a>
+                      <a asp-action="HeadVerifyStatus" asp-route-id="@item.intActivity" asp-route-IsVerified="True" class="btn btn-warning" data-toggle="tooltip" data-placement="top" title="Verify">
+                        <i class='bx bx-check'></i>
+                      </a>
+                    </div>
                   </td>
 
                 </tr>
