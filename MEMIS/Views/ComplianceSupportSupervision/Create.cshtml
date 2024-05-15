@@ -19,98 +19,115 @@
                 <input asp-for="InspectionDate" class="form-control" />
                 <span asp-validation-for="InspectionDate" class="text-danger"></span>
             </div>
+            <br />
             <div class="form-group">
                 <label asp-for="GPS" class="control-label"></label>
                 <input asp-for="GPS" class="form-control" />
                 <span asp-validation-for="GPS" class="text-danger"></span>
             </div>
+            <br />
             <div class="form-group">
                 <label asp-for="intRegion" class="control-label"></label>
                 <select asp-for="intRegion" class="form-control" asp-items="ViewBag.intRegion"></select>
             </div>
+            <br />
             <div class="form-group">
-                <label asp-for="DistrictId" class="control-label"></label>
+                <label asp-for="DistrictId" class="control-label">District ID</label>
                 <select asp-for="DistrictId" class="form-control" asp-items="ViewBag.DistrictId"></select>
-            </div> 
+            </div>
+            <br />
             <div class="form-group">
-                <label asp-for="FacilityName" class="control-label"></label>
+                <label asp-for="FacilityName" class="control-label">Facility Name</label>
                 <input asp-for="FacilityName" class="form-control" />
                 <span asp-validation-for="FacilityName" class="text-danger"></span>
             </div>
+            <br />
             <div class="form-group">
                 <label asp-for="FacilityStatus" class="control-label"></label>
                 <select asp-for="FacilityStatus" class="form-control" asp-items="ViewBag.FacilityStatus"></select>
                 <span asp-validation-for="FacilityStatus" class="text-danger"></span>
             </div>
+            <br />
             <div class="form-group">
                 <label asp-for="FacilityPersonType" class="control-label"></label>
                 <select asp-for="FacilityPersonType" class="form-control" asp-items="ViewBag.PersonFoundatFacility"></select>
                 <span asp-validation-for="FacilityPersonType" class="text-danger"></span>
             </div>
+            <br />
             <div class="form-group">
-                <label asp-for="PersonName" class="control-label"></label>
+                <label asp-for="PersonName" class="control-label">Person Name</label>
                 <input asp-for="PersonName" class="form-control" />
                 <span asp-validation-for="PersonName" class="text-danger"></span>
             </div>
+            <br />
             <div class="form-group">
                 <label asp-for="Contact" class="control-label"></label>
                 <input asp-for="Contact" class="form-control" />
                 <span asp-validation-for="Contact" class="text-danger"></span>
             </div>
+            <br />
             <div class="form-group">
                 <label asp-for="Qualifications" class="control-label"></label>
                 <input asp-for="Qualifications" class="form-control" />
                 <span asp-validation-for="Qualifications" class="text-danger"></span>
             </div>
+            <br />
             <div class="form-group">
                 <label asp-for="CategoryOfpremises" class="control-label"></label>
                 <select asp-for="CategoryOfpremises" class="form-control" asp-items="ViewBag.Category"></select>
                 <span asp-validation-for="CategoryOfpremises" class="text-danger"></span>
             </div>
-           
+           <br />
 
             <div class="form-group">
                 <label asp-for="LicenseStatus" class="control-label"></label>
                 <select asp-for="LicenseStatus" class="form-control" asp-items="ViewBag.LicenseStatus"></select>
                 <span asp-validation-for="LicenseStatus" class="text-danger"></span>
             </div>
+            <br />
             <div class="form-group">
                 <label asp-for="CategoryStatus" class="control-label"></label>
                 <select asp-for="CategoryStatus" class="form-control" asp-items="ViewBag.CategoryofDrugs"></select>
                 <span asp-validation-for="CategoryStatus" class="text-danger"></span>
             </div>
+            <br />
             <div class="form-group">
                 <label asp-for="PremisesCondition" class="control-label"></label>
                 <select asp-for="PremisesCondition" class="form-control" asp-items="ViewBag.Category"></select>
                 <span asp-validation-for="PremisesCondition" class="text-danger"></span>
             </div>
+            <br />
             <div class="form-group">
                 <label asp-for="RecordKeeping" class="control-label"></label>
                 <select asp-for="RecordKeeping" class="form-control" asp-items="ViewBag.RecordKeeping"></select>
                 <span asp-validation-for="RecordKeeping" class="text-danger"></span>
             </div>
+            <br />
             <div class="form-group">
                 <label asp-for="ClassofDrugs" class="control-label"></label>
                 <select asp-for="ClassofDrugs" class="form-control" asp-items="ViewBag.ClassofDrugs"></select>
                 <span asp-validation-for="ClassofDrugs" class="text-danger"></span>
-            </div> 
+            </div>
+            <br />
             <div class="form-group">
                 <label asp-for="UnregisteredDrugs" class="control-label"></label>
                 <select asp-for="UnregisteredDrugs" class="form-control" asp-items="ViewBag.UnregisteredDrugs"></select>
                 <span asp-validation-for="UnregisteredDrugs" class="text-danger"></span>
             </div>
+            <br />
             <div class="form-group">
                 <label asp-for="CompAction" class="control-label"></label>
                 <select asp-for="CompAction" class="form-control" asp-items="ViewBag.ComplianceAction"></select>
                 <span asp-validation-for="CompAction" class="text-danger"></span>
-            </div> 
+            </div>
+            <br />
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
-
+<br />
 <div>
 	<a asp-action="Index">Back to List</a>
 </div>

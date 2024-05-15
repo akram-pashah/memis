@@ -5,27 +5,31 @@
   //Layout = "~/Views/Shared/_PlanningLayout.cshtml";
   Layout = "~/Pages/Shared/_ContentNavbarLayout.cshtml";
 }
- 
 
-<div>
-    <h4>Region</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.regionCode)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.regionCode)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.regionName)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.regionName)
-        </dd>
-    </dl>
-</div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.intRegion">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+<h1>Details</h1>
+
+<div class="card">
+    <div class="card-header">
+    <h2 class="card-title">Region</h2>
+    </div>
+    <div class="card-body">
+        <dl class="row">
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.regionCode)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.regionCode)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.regionName)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.regionName)
+            </dd>
+        </dl>
+    </div>
+    <div class="card-footer">
+        <a role="button" class="btn btn-sm btn-outline-primary" asp-action="Edit" asp-route-id="@Model?.intRegion">Edit</a> |
+        <a role="button" class="btn btn-sm btn-outline-secondary" asp-action="Index">Back to List</a>
+    </div>
 </div>

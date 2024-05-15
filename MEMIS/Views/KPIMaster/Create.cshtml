@@ -17,79 +17,95 @@
                 <label asp-for="StrategicObjective" class="control-label"></label>
                 <select asp-for="StrategicObjective" class="form-control" asp-items="ViewBag.StrategicObjective"></select>
             </div>
+            <br />
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="PerformanceIndicator" class="control-label"></label>
                 <textarea asp-for="PerformanceIndicator" class="form-control" style="height:100px"></textarea>
                 <span asp-validation-for="PerformanceIndicator" class="text-danger"></span>
             </div>
+            <br />
             <div class="form-group">
                 <label asp-for="TypeofIndicator" class="control-label"></label>
                 <select asp-for="TypeofIndicator" class="form-control form-control-sm" asp-items="ViewBag.TypeofIndicator"></select>
             </div>
+            <br />
             <div class="form-group">
                 <label asp-for="IndicatorFormulae" class="control-label"></label>
                 <textarea asp-for="IndicatorFormulae" class="form-control" style="height:100px"></textarea>
                 <span asp-validation-for="IndicatorFormulae" class="text-danger"></span>
             </div>
+            <br />
             <div class="form-group">
                 <label asp-for="IndicatorDefinition" class="control-label"></label>
                 <textarea asp-for="IndicatorDefinition" class="form-control" style="height:100px"></textarea>
                 <span asp-validation-for="IndicatorDefinition" class="text-danger"></span>
             </div>
+            <br />
             <div class="form-group">
                 <label asp-for="OriginalBaseline" class="control-label"></label>
                 <input asp-for="OriginalBaseline" class="form-control" />
                 <span asp-validation-for="OriginalBaseline" class="text-danger"></span>
             </div>
+            <br />
             <div class="form-group">
                 <label asp-for="Indicatorclassification" class="control-label"></label>
                 <select asp-for="Indicatorclassification" class="form-control form-control-sm" asp-items="ViewBag.Indicatorclassification"></select>
             </div>
+            <br />
             <div class="form-group">
                 <label asp-for="DataType" class="control-label"></label>
                 <input asp-for="DataType" class="form-control" />
                 <span asp-validation-for="DataType" class="text-danger"></span>
             </div>
+            <br />
             <div class="form-group">
                 <label asp-for="FrequencyofReporting" class="control-label"></label>
                 <select asp-for="FrequencyofReporting" class="form-control form-control-sm" asp-items="ViewBag.FrequencyofReporting"></select>
             </div>
+            <br />
             <div class="form-group">
-                <label asp-for="FY1" class="control-label"></label>
+                <label asp-for="FY1" class="control-label">FY 1</label>
                 <input asp-for="FY1" class="form-control" />
                 <span asp-validation-for="FY1" class="text-danger"></span>
             </div>
+            <br />
             <div class="form-group">
-                <label asp-for="FY2" class="control-label"></label>
+                <label asp-for="FY2" class="control-label">FY 2</label>
                 <input asp-for="FY2" class="form-control" />
                 <span asp-validation-for="FY2" class="text-danger"></span>
             </div>
+            <br />
              <div class="form-group">
-                <label asp-for="FY3" class="control-label"></label>
+                <label asp-for="FY3" class="control-label">FY 3</label>
                 <input asp-for="FY3" class="form-control" />
                 <span asp-validation-for="FY3" class="text-danger"></span>
             </div>
+            <br />
             <div class="form-group">
-                <label asp-for="FY4" class="control-label"></label>
+                <label asp-for="FY4" class="control-label">FY 4</label>
                 <input asp-for="FY4" class="form-control" />
                 <span asp-validation-for="FY4" class="text-danger"></span>
             </div>
+            <br />
             <div class="form-group">
-                <label asp-for="FY5" class="control-label"></label>
+                <label asp-for="FY5" class="control-label">FY 5</label>
                 <input asp-for="FY5" class="form-control" />
                 <span asp-validation-for="FY5" class="text-danger"></span>
             </div>
+            <br />
             <div class="form-group">
                 <label asp-for="MeansofVerification" class="control-label"></label>
                 <textarea asp-for="MeansofVerification" class="form-control" style="height:100px"></textarea>
                 <span asp-validation-for="MeansofVerification" class="text-danger"></span>
             </div>
+            <br />
             <div class="form-group">
                 <label asp-for="ResponsibleParty" class="control-label"></label>
                 <input asp-for="ResponsibleParty" class="form-control" />
                 <span asp-validation-for="ResponsibleParty" class="text-danger"></span>
             </div>
+            <br />
            
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
@@ -97,7 +113,7 @@
         </form>
     </div>
 </div>
-
+<br />
 <div>
     <a asp-action="Index">Back to List</a>
 </div>

@@ -20,23 +20,26 @@
                 <input asp-for="actionCode" class="form-control" />
                 <span asp-validation-for="actionCode" class="text-danger"></span>
             </div>
+            <br />
             <div class="form-group">
                 <label asp-for="actionName" class="control-label"></label>
                 <input asp-for="actionName" class="form-control" />
                 <span asp-validation-for="actionName" class="text-danger"></span>
             </div>
+            <br />
             <div class="form-group">
                 <label asp-for="intIntervention" class="control-label"></label>
                 <select asp-for="intIntervention" class="form-control" asp-items="ViewBag.intIntervention"></select>
                 <span asp-validation-for="intIntervention" class="text-danger"></span>
             </div>
+            <br />
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
-
+<br />
 <div>
     <a asp-action="Index">Back to List</a>
 </div>
