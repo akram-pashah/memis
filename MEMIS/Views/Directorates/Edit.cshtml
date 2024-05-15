@@ -6,7 +6,7 @@
   Layout = "~/Pages/Shared/_ContentNavbarLayout.cshtml";
 }
  
-
+<h1>Edit</h1>
 <h4>Directorates</h4>
 <hr />
 <div class="row">
@@ -19,18 +19,19 @@
                 <input asp-for="DirCode" class="form-control" />
                 <span asp-validation-for="DirCode" class="text-danger"></span>
             </div>
+            <br />
             <div class="form-group">
                 <label asp-for="DirName" class="control-label"></label>
                 <input asp-for="DirName" class="form-control" />
                 <span asp-validation-for="DirName" class="text-danger"></span>
             </div>   
-            
+            <br />
             <div class="form-group">
                 @Html.LabelFor(model => model.director)
                 @Html.DropDownList("director", new SelectList(ViewBag.Directors, "Value", "Text",Model.director), new { @class = "form-control", @required = "required" })
                 @Html.ValidationMessageFor(model => model.director, "", new { @class = "text-danger" })
             </div>
-            
+            <br />
             <div class="row mt-2">
                 <div class="col-md-6">
                     <div class="form-group">

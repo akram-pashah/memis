@@ -1,6 +1,7 @@
 @model MEMIS.Models.DirectorateDto
 
-<h1>Directorate</h1>
+<h1>Create</h1>
+<h4>Directorate</h4>
 @{
   ViewData["Title"] = "Create";
   //Layout = "~/Views/Shared/_AdminLayout.cshtml";
@@ -17,20 +18,20 @@
         @Html.EditorFor(model => model.DirCode, new { htmlAttributes = new { @class = "form-control" } })
         @Html.ValidationMessageFor(model => model.DirCode, "", new { @class = "text-danger" })
     </div>
-
+    <br />
     <div class="form-group">
         @Html.LabelFor(model => model.DirName)
         @Html.EditorFor(model => model.DirName, new { htmlAttributes = new { @class = "form-control" } })
         @Html.ValidationMessageFor(model => model.DirName, "", new { @class = "text-danger" })
     </div>
-
+    <br />
     <div class="form-group">
         @Html.LabelFor(model => model.director)
         @Html.DropDownList("director", new SelectList(ViewBag.Directors, "Value", "Text"), new { @class = "form-control", @required = "required" })
        @* @Html.DropDownListFor(model => model.director, ViewBag.Directors as SelectList, new { @class = "form-control" })*@
         @Html.ValidationMessageFor(model => model.director, "", new { @class = "text-danger" })
     </div>
-
+    <br />
     <div class="form-group">
         <input type="submit" value="Create" class="btn btn-primary" />
     </div>

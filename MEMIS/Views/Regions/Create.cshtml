@@ -6,7 +6,7 @@
   Layout = "~/Pages/Shared/_ContentNavbarLayout.cshtml";
 }
  
-
+<h1>Create</h1>
 <h4>Region</h4>
 <hr />
 <div class="row">
@@ -18,24 +18,27 @@
                 <input asp-for="regionCode" class="form-control" />
                 <span asp-validation-for="regionCode" class="text-danger"></span>
             </div>
+            <br />
             <div class="form-group">
                 <label asp-for="regionName" class="control-label"></label>
                 <input asp-for="regionName" class="form-control" />
                 <span asp-validation-for="regionName" class="text-danger"></span>
             </div>
-            
+            <br />
             <div class="form-group">
                 @Html.LabelFor(model => model.intHead)
                 @Html.DropDownList("intHead", new SelectList(ViewBag.hor, "Value", "Text"), new { @class = "form-control", @required = "required" })
                 @* @Html.DropDownListFor(model => model.director, ViewBag.Directors as SelectList, new { @class = "form-control" })*@
                 @Html.ValidationMessageFor(model => model.intHead, "", new { @class = "text-danger" })
             </div>
+            <br />
             <div class="form-group">
                 @Html.LabelFor(model => model.regCoordinator)
                 @Html.DropDownList("regCoordinator", new SelectList(ViewBag.regCord, "Value", "Text"), new { @class = "form-control", @required = "required" })
                 @* @Html.DropDownListFor(model => model.director, ViewBag.Directors as SelectList, new { @class = "form-control" })*@
                 @Html.ValidationMessageFor(model => model.regCoordinator, "", new { @class = "text-danger" })
             </div>
+            <br />
             <div class="row mt-2">
                 <div class="col-md-6">
                     <div class="form-group">

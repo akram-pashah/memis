@@ -5,8 +5,8 @@
   //Layout = "~/Views/Shared/_GISLayout.cshtml";
   Layout = "~/Pages/Shared/_ContentNavbarLayout.cshtml";
 }
-
-<h5>Preinspection</h5>
+<h1>Edit</h1>
+<h4>PreInspection</h4>
 <hr />
 <div class="row">
 
@@ -19,51 +19,61 @@
                 <input asp-for="InspectionDate" class="form-control" />
                 <span asp-validation-for="InspectionDate" class="text-danger"></span>
             </div>
+            <br />
             <div class="form-group">
-                <label asp-for="Applicant" class="control-label"></label>
+                <label asp-for="Applicant" class="control-label">Applicant Name</label>
                 <input asp-for="Applicant" class="form-control" />
                 <span asp-validation-for="Applicant" class="text-danger"></span>
             </div>
+            <br />
             <div class="form-group">
                 <label asp-for="Business" class="control-label"></label>
                 <input asp-for="Business" class="form-control" />
                 <span asp-validation-for="Business" class="text-danger"></span>
             </div>
+            <br />
             <div class="form-group">
                 <label asp-for="Road" class="control-label"></label>
                 <input asp-for="Road" class="form-control" />
                 <span asp-validation-for="Road" class="text-danger"></span>
             </div>
+            <br />
             <div class="form-group">
                 <label asp-for="Zone" class="control-label"></label>
                 <input asp-for="Zone" class="form-control" />
                 <span asp-validation-for="Zone" class="text-danger"></span>
             </div>
+            <br />
             <div class="form-group">
                 <label asp-for="Village" class="control-label"></label>
                 <input asp-for="Village" class="form-control" />
                 <span asp-validation-for="Village" class="text-danger"></span>
             </div>
+            <br />
             <div class="form-group">
-                <label asp-for="DistrictId" class="control-label"></label>
+                <label asp-for="DistrictId" class="control-label">District ID</label>
                 <select asp-for="DistrictId" class="form-control" asp-items="ViewBag.DistrictId"></select>
                 <span asp-validation-for="DistrictId" class="text-danger"></span>
             </div>
+            <br />
             <div class="form-group">
                 <label asp-for="Country" class="control-label"></label>
                 <input asp-for="Country" class="form-control" />
                 <span asp-validation-for="Country" class="text-danger"></span>
             </div>
+            <br />
             <div class="form-group">
                 <label asp-for="Telephone" class="control-label"></label>
                 <input asp-for="Telephone" class="form-control" />
                 <span asp-validation-for="Telephone" class="text-danger"></span>
             </div>
+            <br />
             <div class="form-group">
                 <label asp-for="Email" class="control-label"></label>
                 <input asp-for="Email" class="form-control" />
                 <span asp-validation-for="Email" class="text-danger"></span>
             </div>
+            <br />
             <div class="form-group">
                 <label asp-for="Latitude" class="control-label"></label>
                 <div class="input-group">
@@ -72,6 +82,7 @@
                 </div>
                 <span asp-validation-for="Latitude" class="text-danger"></span>
             </div>
+            <br />
             <div class="form-group">
                 <label asp-for="Longitude" class="control-label"></label>
                 <div class="input-group">
@@ -79,59 +90,68 @@
                 </div>
                 <span asp-validation-for="Longitude" class="text-danger"></span>
             </div>
+            <br />
             <div class="form-group">
                 <label asp-for="ProductClassification" class="control-label"></label>
                 <select asp-for="ProductClassification" class="form-control" asp-items="ViewBag.ProductClassification"></select>
                 <span asp-validation-for="ProductClassification" class="text-danger"></span>
             </div>
+            <br />
             <div class="form-group">
                 <label asp-for="NearestPharmaName" class="control-label"></label>
                 <input asp-for="NearestPharmaName" class="form-control" />
                 <span asp-validation-for="NearestPharmaName" class="text-danger"></span>
             </div>
+            <br />
             <div class="form-group">
                 <label asp-for="NearestPharmaRoad" class="control-label"></label>
                 <input asp-for="NearestPharmaRoad" class="form-control" />
                 <span asp-validation-for="NearestPharmaRoad" class="text-danger"></span>
             </div>
+            <br />
             <div class="form-group">
                 <label asp-for="NearestPharmaDistance" class="control-label"></label>
                 <input asp-for="NearestPharmaDistance" class="form-control" />
                 <span asp-validation-for="NearestPharmaDistance" class="text-danger"></span>
             </div>
+            <br />
             <div class="form-group">
                 <label asp-for="NearestDrugShopName" class="control-label"></label>
                 <input asp-for="NearestDrugShopName" class="form-control" />
                 <span asp-validation-for="NearestDrugShopName" class="text-danger"></span>
             </div>
+            <br />
             <div class="form-group">
                 <label asp-for="NearestDrugShopRoad" class="control-label"></label>
                 <input asp-for="NearestDrugShopRoad" class="form-control" />
                 <span asp-validation-for="NearestDrugShopRoad" class="text-danger"></span>
             </div>
+            <br />
             <div class="form-group">
                 <label asp-for="NearestDrugShopDistance" class="control-label"></label>
                 <input asp-for="NearestDrugShopDistance" class="form-control" />
                 <span asp-validation-for="NearestDrugShopDistance" class="text-danger"></span>
             </div>
+            <br />
             <div class="form-group">
                 <label asp-for="comments" class="control-label"></label>
                 <input asp-for="comments" class="form-control" />
                 <span asp-validation-for="comments" class="text-danger"></span>
             </div>
+            <br />
             <div class="form-group" hidden>
                 <label asp-for="ApprovalStatus" class="control-label"></label>
                 <input asp-for="ApprovalStatus" class="form-control" />
                 <span asp-validation-for="ApprovalStatus" class="text-danger"></span>
             </div>
-
+            <br />
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
-
+<br />
 <div>
 	<a asp-action="Index">Back to List</a>
 </div>
