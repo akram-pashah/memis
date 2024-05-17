@@ -17,62 +17,75 @@
                 <label asp-for="intIntervention" class="control-label"></label>
                 @Html.DropDownList("intIntervention", new SelectList(ViewBag.StrategicIntervention, "intIntervention", "InterventionName"), new { @class = "form-control", @required = "required" })                
             </div>
+            <br />
             <div class="form-group">
                 <label asp-for="intAction" class="control-label"></label>
                 @Html.DropDownList("StrategicObjective", new SelectList(ViewBag.StrategicAction, "intAction", "actionName"), new { @class = "form-control", @required = "required" })                
             </div>
+            <br />
             <div class="form-group">
                 <label asp-for="intActivity" class="control-label"></label>
                 @Html.DropDownList("StrategicObjective", new SelectList(ViewBag.Activity, "intActivity", "activityName"), new { @class = "form-control", @required = "required" })                 
             </div>
+            <br />
             <div class="form-group">
                 <label asp-for="outputIndicator" class="control-label"></label>
                 <input asp-for="outputIndicator" class="form-control" />
                 <span asp-validation-for="outputIndicator" class="text-danger"></span>
             </div>
+            <br />
             <div class="form-group">
                 <label asp-for="baseline" class="control-label"></label>
-                <input asp-for="baseline" class="form-control" />
+                <input asp-for="baseline" class="form-control" type="number" />
                 <span asp-validation-for="baseline" class="text-danger"></span>
             </div>
+            <br />
             <div class="form-group">
                 <label asp-for="budgetCode" class="control-label"></label>
-                <input asp-for="budgetCode" class="form-control" />
+                <input asp-for="budgetCode" class="form-control" type="number" />
                 <span asp-validation-for="budgetCode" class="text-danger"></span>
             </div>
+            <br />
             <div class="form-group">
                 <label asp-for="comparativeTarget" class="control-label"></label>
-                <input asp-for="comparativeTarget" class="form-control" />
+                <input asp-for="comparativeTarget" class="form-control" type="number" />
                 <span asp-validation-for="comparativeTarget" class="text-danger"></span>
             </div>
+            <br />
             <div class="form-group">
                 <label asp-for="justification" class="control-label"></label>
                 <input asp-for="justification" class="form-control" />
                 <span asp-validation-for="justification" class="text-danger"></span>
             </div>
+            <br />
             <div class="form-group">
                 <label asp-for="budgetAmount" class="control-label"></label>
-                <input asp-for="budgetAmount" class="form-control" />
+                <input asp-for="budgetAmount" class="form-control" type="number" />
                 <span asp-validation-for="budgetAmount" class="text-danger"></span>
             </div>
+            <br />
             <div class="form-group">
                 <label asp-for="Quarter" class="control-label"></label>
                 <input asp-for="Quarter" class="form-control" />
                 <span asp-validation-for="Quarter" class="text-danger"></span>
             </div>
+            <br />
             <div class="form-group">
                 <label asp-for="QTarget" class="control-label"></label>
-                <input asp-for="QTarget" class="form-control" />
+                <input asp-for="QTarget" class="form-control" type="number" />
                 <span asp-validation-for="QTarget" class="text-danger"></span>
             </div>
+            <br />
             <div class="form-group">
                 <label asp-for="QBudget" class="control-label"></label>
-                <input asp-for="QBudget" class="form-control" />
+                <input asp-for="QBudget" class="form-control" type="number" />
                 <span asp-validation-for="QBudget" class="text-danger"></span>
             </div>
+            <br />
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
             </div>
+            <br />
         </form>
     </div>
 </div> 

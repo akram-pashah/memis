@@ -16,13 +16,13 @@ using MEMIS.Models.Risk;
 
 namespace MEMIS.Controllers
 {
-  [Authorize]
+  //[Authorize]
   public class ActivityAssesController : Controller
   {
-    private readonly Data.AppDbContext _context;
+    private readonly AppDbContext _context;
     private readonly UserManager<ApplicationUser> _userManager;
 
-    public ActivityAssesController(Data.AppDbContext context, UserManager<ApplicationUser> userManager)
+    public ActivityAssesController(AppDbContext context, UserManager<ApplicationUser> userManager)
     {
       _context = context;
       _userManager = userManager;
@@ -699,6 +699,7 @@ namespace MEMIS.Controllers
         intActivity = deptPlan.intActivity,
         outputIndicator = deptPlan.outputIndicator,
         baseline = deptPlan.baseline,
+        budgetCode = deptPlan.budgetCode,
         Quarter = deptPlan.Quarter,
         QTarget = deptPlan.QTarget,
         QBudget = deptPlan.QBudget,
@@ -722,27 +723,35 @@ namespace MEMIS.Controllers
         return NotFound();
       }
 
+      var original = _context.ActivityAssess.Where(x => x.intAssess == id).FirstOrDefault();
+      if(original == null)
+      {
+        return NotFound();
+      }
+
       if (ModelState.IsValid)
       {
         try
         {
-          ActivityAssess rd = new ActivityAssess
-          {
-            intAssess = deptPlan.intAssess,
-            intIntervention = deptPlan.intIntervention,
-            intAction = deptPlan.intAction,
-            intActivity = deptPlan.intActivity,
-            outputIndicator = deptPlan.outputIndicator,
-            budgetCode = deptPlan.budgetCode,
-            baseline = deptPlan.baseline,
-            Quarter = deptPlan.Quarter,
-            QTarget = deptPlan.QTarget,
-            QBudget = deptPlan.QBudget,
-            comparativeTarget = deptPlan.comparativeTarget,
-            justification = deptPlan.justification,
-            budgetAmount = deptPlan.budgetAmount,
-          };
-          _context.Update(rd);
+
+          //ActivityAssess rd = new ActivityAssess
+          //{
+          //  intAssess = deptPlan.intAssess,
+          //  intIntervention = deptPlan.intIntervention,
+          //  intAction = deptPlan.intAction,
+          //  intActivity = deptPlan.intActivity,
+          //  outputIndicator = deptPlan.outputIndicator,
+          //  budgetCode = deptPlan.budgetCode,
+          //  baseline = deptPlan.baseline,
+          //  Quarter = deptPlan.Quarter,
+          //  QTarget = deptPlan.QTarget,
+          //  QBudget = deptPlan.QBudget,
+          //  comparativeTarget = deptPlan.comparativeTarget,
+          //  justification = deptPlan.justification,
+          //  budgetAmount = deptPlan.budgetAmount,
+          //};
+          //_context.Update(rd);
+          _context.Entry(original).State = EntityState.Modified;
           await _context.SaveChangesAsync();
         }
         catch (DbUpdateConcurrencyException)
@@ -778,8 +787,14 @@ namespace MEMIS.Controllers
       {
         return NotFound();
       }
-      ViewBag.Users = _userManager;
-      return View(deptPlan);
+      if (deptPlan != null)
+      {
+        _context.ActivityAssess.Remove(deptPlan);
+      }
+
+      await _context.SaveChangesAsync();
+      //ViewBag.Users = _userManager;
+      return View(nameof(Index));
     }
 
 

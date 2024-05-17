@@ -74,18 +74,18 @@
                         <div>Annualised Implementation Plan</div>
                     </a>
                 </li>
-                <li class='menu-item@(currentPage.StartsWith("/ActivityAssess") ? " active open" : "")'>
+                <li class='menu-item@(currentPage.StartsWith("/ActivityAsses") ? " active open" : "")'>
                     <a href="javascript:void(0);" class="menu-link menu-toggle">
                         <div>Department Work Plan</div>
                     </a>
                     <ul class="menu-sub">
-                        <li class='menu-item@(currentPage == "/ActivityAssess" ? " active" : "")'>
-                            <a asp-controller="ActivityAssess" asp-action="Index" class="menu-link">
-                                <div>Department Work Plan Setting</div>
+                        <li class='menu-item@(currentPage == "/ActivityAsses" ? " active" : "")'>
+                            <a asp-controller="ActivityAsses" asp-action="Index" class="menu-link">
+                                <div>ActivityAssess</div>
                             </a>
                         </li>
-                        <li class='menu-item@(currentPage == "/ActivityAssess/AllocatetoRegion" ? " active" : "")'>
-                            <a asp-controller="ActivityAssess" asp-action="AllocatetoRegion" class="menu-link">
+                        <li class='menu-item@(currentPage == "/ActivityAsses/AllocatetoRegion" ? " active" : "")'>
+                            <a asp-controller="ActivityAsses" asp-action="AllocatetoRegion" class="menu-link">
                                 <div>Allocate To Region</div>
                             </a>
                         </li>

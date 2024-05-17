@@ -117,6 +117,44 @@ namespace MEMIS.Migrations
                     b.ToTable("ActivityAssess");
                 });
 
+            modelBuilder.Entity("MEMIS.Data.ActivityAssessRegion", b =>
+                {
+                    b.Property<int>("intRegionAssess")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("intRegionAssess"));
+
+                    b.Property<int?>("ApprStatus")
+                        .HasColumnType("int");
+
+                    b.Property<double?>("QBudget")
+                        .HasColumnType("float");
+
+                    b.Property<double?>("QTarget")
+                        .HasColumnType("float");
+
+                    b.Property<int?>("Quarter")
+                        .HasColumnType("int");
+
+                    b.Property<double?>("budgetAmount")
+                        .HasColumnType("float");
+
+                    b.Property<int?>("intAssess")
+                        .HasColumnType("int");
+
+                    b.Property<Guid?>("intRegion")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("intRegionAssess");
+
+                    b.HasIndex("intAssess");
+
+                    b.HasIndex("intRegion");
+
+                    b.ToTable("ActivityAssessRegion");
+                });
+
             modelBuilder.Entity("MEMIS.Data.ActivityAssessment", b =>
                 {
                     b.Property<int>("intDeptPlan")
@@ -3075,6 +3113,21 @@ namespace MEMIS.Migrations
                     b.Navigation("StrategicAction");
 
                     b.Navigation("StrategicIntervention");
+                });
+
+            modelBuilder.Entity("MEMIS.Data.ActivityAssessRegion", b =>
+                {
+                    b.HasOne("MEMIS.Data.ActivityAssess", "ActivityAssess")
+                        .WithMany()
+                        .HasForeignKey("intAssess");
+
+                    b.HasOne("MEMIS.Data.Region", "Region")
+                        .WithMany()
+                        .HasForeignKey("intRegion");
+
+                    b.Navigation("ActivityAssess");
+
+                    b.Navigation("Region");
                 });
 
             modelBuilder.Entity("MEMIS.Data.ActivityAssessment", b =>

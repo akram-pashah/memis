@@ -1,0 +1,103 @@
+@model MEMIS.Data.ActivityAssess
+
+@{
+    ViewData["Title"] = "Details";
+    //Layout = "~/Views/Shared/_PlanningLayout.cshtml";
+    Layout = "~/Pages/Shared/_ContentNavbarLayout.cshtml";
+}
+
+<h1>Details</h1>
+
+<div class="card">
+    <div class="card-header">
+        <h2 class="card-title">NDP</h2>
+    </div>
+    <div class="card-body">
+        <dl class="row">
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.StrategicIntervention)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.StrategicIntervention)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.StrategicAction)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.StrategicAction)
+            </dd>
+
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.intActivity)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.intActivity)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.outputIndicator)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.outputIndicator)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.baseline)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.baseline)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.budgetCode)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.budgetCode)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.comparativeTarget)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.comparativeTarget)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.justification)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.justification)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.budgetAmount)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.budgetAmount)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Quarter)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Quarter)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.QTarget)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.QTarget)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.QBudget)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.QBudget)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.intDept)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.intDept)
+            </dd>
+        </dl>
+    </div>
+    <div class="card-footer">
+        <a role="button" class="btn btn-sm btn-outline-primary" asp-action="Edit" asp-route-id="@Model?.intAssess">Edit</a> |
+        <a role="button" class="btn btn-sm btn-outline-secondary" asp-action="Index">Back to    List</a>
+    </div>
+</div>
+

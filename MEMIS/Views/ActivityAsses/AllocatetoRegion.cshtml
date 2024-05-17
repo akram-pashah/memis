@@ -39,13 +39,34 @@
             {
                 <tr>
                     <td>
-                        @Html.DisplayFor(modelItem => item.StrategicIntervention.InterventionName)
+                        @if (item.StrategicIntervention != null)
+                        {
+                            @Html.DisplayFor(modelItem => item.StrategicIntervention.InterventionName)
+                        }
+                        else
+                        {
+                            <p>N/A</p>
+                        }
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.StrategicAction.actionName)
+                        @if (item.StrategicAction != null)
+                        {
+                            @Html.DisplayFor(modelItem => item.StrategicAction.actionName)
+                        }
+                        else
+                        {
+                            <p>N/A</p>
+                        }
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.ActivityFk.activityName)
+                        @if (item.ActivityFk != null)
+                        {
+                            @Html.DisplayFor(modelItem => item.ActivityFk.activityName)
+                        }
+                        else
+                        {
+                            <p>N/A</p>
+                        }
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.outputIndicator)

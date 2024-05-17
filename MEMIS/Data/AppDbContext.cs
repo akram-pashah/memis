@@ -40,6 +40,8 @@ namespace MEMIS.Data
     public DbSet<Master.ImplementationStatus> ImplementationStatus { get; set; }
     public DbSet<ActivityAssessment>? ActivityAssessment { get; set; }
 
+    public DbSet<ActivityAssessRegion> ActivityAssessRegion { get; set; }
+
     public DbSet<RiskIdent> RiskIdent { get; set; }
     public DbSet<Cause>? Cause { get; set; }
     public DbSet<RiskIdentification>? RiskIdentifications { get; set; }
