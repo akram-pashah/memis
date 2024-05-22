@@ -90,26 +90,56 @@ namespace MEMIS.Controllers
       var offset = (pageSize * pageNumber) - pageSize;
       if (_context.ActivityAssess != null && _context.Departments != null)
       {
-        //var consolidatedDeptPlanViewModels = _context.Departments.Select(x => new ConsolidatedDeptPlanViewModel()
-        //{
-        //  Department = x,
-        //  AllocatedActivityAssesses = _context.ActivityAssess.Where(x => x.intDept == x.intDept && x.actType == 1).ToList(),
-        //  ActivityAssesses = _context.ActivityAssess.Where(x => x.intDept == x.intDept && x.actType != 1).ToList(),
-        //  BudgetCost = _context.ActivityAssess.Where(x => x.intDept == x.intDept && x.actType == 1).Sum(x => x.budgetAmount)
-        //}).Skip(offset)
-        //    .Take(pageSize);
-
-        var dat = _context.ActivityAssess.Include(m => m.StrategicAction).Include(m => m.StrategicIntervention).Include(m => m.ActivityFk).Include(m => m.DepartmentFk)
-            .Skip(offset)
+        var consolidatedDeptPlanViewModels = _context.Departments.Select(x => new ConsolidatedDeptPlanViewModel()
+        {
+          Department = x,
+          AllocatedActivityAssesses = _context.ActivityAssess.Where(x => x.intDept == x.intDept && x.actType == 1).ToList(),
+          ActivityAssesses = _context.ActivityAssess.Where(x => x.intDept == x.intDept && x.actType != 1).ToList(),
+          BudgetCost = _context.ActivityAssess.Where(x => x.intDept == x.intDept && x.actType == 1).Sum(x => x.budgetAmount)
+        }).Skip(offset)
             .Take(pageSize);
+
+        var groupedData = await _context.ActivityAssess.Include(a => a.DepartmentFk)
+            .Where(a => a.actType == 1)
+            .GroupBy(a => a.intDept)
+            .Select(g => new ActivityAssess
+            {
+              intDept = g.Key,
+              budgetAmount = g.Sum(a => a.budgetAmount),
+              QTarget = g.Sum(a => a.QTarget),
+              comparativeTarget = g.Sum(a => a.comparativeTarget),
+              StrategicIntervention = g.FirstOrDefault().StrategicIntervention,
+              StrategicAction = g.FirstOrDefault().StrategicAction,
+              ActivityFk = g.FirstOrDefault().ActivityFk,
+              outputIndicator = g.FirstOrDefault().outputIndicator,
+              baseline = g.FirstOrDefault().baseline,
+              justification = g.FirstOrDefault().justification,
+              Quarter = g.FirstOrDefault().Quarter,
+              QBudget = g.FirstOrDefault().QBudget,
+              ApprStatus = g.FirstOrDefault().ApprStatus,
+              actType = g.FirstOrDefault().actType
+            })
+            .ToListAsync();
+
+        // Fetch the data where actType is not equal to 1
+        var nonAllocatedData = await _context.ActivityAssess.Include(a => a.DepartmentFk)
+            .Where(a => a.actType != 1)
+            .Skip(offset)
+            .Take(pageSize)
+            .ToListAsync();
+
+        // Combine both datasets
+        var combinedData = (groupedData).Concat(nonAllocatedData).ToList();
 
         var result = new PagedResult<ActivityAssess>
         {
-          Data = await dat.AsNoTracking().ToListAsync(),
+          Data = combinedData,
           TotalItems = _context.ActivityAssess.Count(),
           PageNumber = pageNumber,
           PageSize = pageSize
         };
+
+
         var totalAllocatedBudget = await _context.ActivityAssess
             .Where(a => a.actType == 1)
             .SumAsync(a => a.budgetAmount ?? 0);
