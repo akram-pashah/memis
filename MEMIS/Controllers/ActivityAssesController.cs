@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using MEMIS.Models.Risk;
+using MEMIS.ViewModels;
 
 namespace MEMIS.Controllers
 {
@@ -73,6 +74,7 @@ namespace MEMIS.Controllers
           PageSize = pageSize
 
         };
+        
         ViewBag.Users = _userManager;
         return View(result);
       }
@@ -81,6 +83,48 @@ namespace MEMIS.Controllers
         return Problem("Entity set 'AppDbContext.ActivityAssess'  is null.");
       }
     }
+
+    public async Task<IActionResult> ConsolidatedDeptPlan(int pageNumber = 1)
+    {
+      int pageSize = 10;
+      var offset = (pageSize * pageNumber) - pageSize;
+      if (_context.ActivityAssess != null && _context.Departments != null)
+      {
+        //var consolidatedDeptPlanViewModels = _context.Departments.Select(x => new ConsolidatedDeptPlanViewModel()
+        //{
+        //  Department = x,
+        //  AllocatedActivityAssesses = _context.ActivityAssess.Where(x => x.intDept == x.intDept && x.actType == 1).ToList(),
+        //  ActivityAssesses = _context.ActivityAssess.Where(x => x.intDept == x.intDept && x.actType != 1).ToList(),
+        //  BudgetCost = _context.ActivityAssess.Where(x => x.intDept == x.intDept && x.actType == 1).Sum(x => x.budgetAmount)
+        //}).Skip(offset)
+        //    .Take(pageSize);
+
+        var dat = _context.ActivityAssess.Include(m => m.StrategicAction).Include(m => m.StrategicIntervention).Include(m => m.ActivityFk).Include(m => m.DepartmentFk)
+            .Skip(offset)
+            .Take(pageSize);
+
+        var result = new PagedResult<ActivityAssess>
+        {
+          Data = await dat.AsNoTracking().ToListAsync(),
+          TotalItems = _context.ActivityAssess.Count(),
+          PageNumber = pageNumber,
+          PageSize = pageSize
+        };
+        var totalAllocatedBudget = await _context.ActivityAssess
+            .Where(a => a.actType == 1)
+            .SumAsync(a => a.budgetAmount ?? 0);
+
+        ViewBag.TotalAllocatedBudget = totalAllocatedBudget;
+        ViewBag.Users = _userManager;
+        return View(result);
+      }
+      else
+      {
+        return Problem("Entity set 'AppDbContext.ActivityAssess'  is null.");
+      }
+    }
+
+
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> AllocatetoRegion(int id,ActivityAssess dto)
@@ -630,8 +674,6 @@ namespace MEMIS.Controllers
       ViewBag.Users = _userManager;
       return View(deptPlan);
     }
-
-
     public async Task<IActionResult> Create()
     {
 
