@@ -46,7 +46,7 @@
             <th>
               @Html.DisplayNameFor(model => model.Data[0].RiskDescription)
             </th>
-            <th>
+            @* <th>
               @Html.DisplayNameFor(model => model.Data[0].Events)
             </th>
             <th>
@@ -57,7 +57,7 @@
             </th>
             <th>
               @Html.DisplayNameFor(model => model.Data[0].RiskConsequence)
-            </th>
+            </th> *@
             <th>
               @Html.DisplayNameFor(model => model.Data[0].RiskOwner)
             </th>
@@ -92,7 +92,7 @@
         <td>
           @Html.DisplayFor(modelItem => item.RiskDescription)
         </td>
-        <td>
+        @* <td>
           @Html.DisplayFor(modelItem => item.Events)
         </td>
         <td>
@@ -103,7 +103,7 @@
         </td>
         <td>
           @Html.DisplayFor(modelItem => item.RiskConsequence)
-        </td>
+        </td> *@
         <td>
           @ViewBag.Users.FindByIdAsync(item.RiskOwner).Result.UserName
         </td>

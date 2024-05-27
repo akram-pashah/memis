@@ -75,17 +75,25 @@ namespace MEMIS.Data
     public DbSet<StakeHolder>? StakeHolder { get; set; }
 
     public DbSet<MEMIS.Data.Activity>? Activity { get; set; }
+    public DbSet<RiskDetail> RiskDetails { get; set; }
 
 
-    ////protected override void OnModelCreating(ModelBuilder modelBuilder)
-    ////{
-    ////    Boolean achStatus = false;
-    ////    SDTAssessmentDto sDTAssessmentDto = new SDTAssessmentDto();
-    ////    achStatus = sDTAssessmentDto.ShouldValidateJustification();
-    ////    modelBuilder.Entity<SDTAssessmentDto>()
-    ////        .Property(s => s.Justification)
-    ////        .IsRequired(achStatus);
-    ////}
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+      modelBuilder.Entity<RiskIdentification>()
+                .HasMany(r => r.RiskDetails)
+                .WithOne(rd => rd.RiskIdentification)
+                .HasForeignKey(rd => rd.RiskId);
+
+      base.OnModelCreating(modelBuilder);
+
+      //Boolean achStatus = false;
+      //SDTAssessmentDto sDTAssessmentDto = new SDTAssessmentDto();
+      //achStatus = sDTAssessmentDto.ShouldValidateJustification();
+      //modelBuilder.Entity<SDTAssessmentDto>()
+      //    .Property(s => s.Justification)
+      //    .IsRequired(achStatus);
+    }
 
   }
 }

@@ -43,7 +43,7 @@
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.RiskDescription)
         </dd>
-        <dt class="col-sm-2">
+        @* <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Events)
         </dt>
         <dd class="col-sm-10">
@@ -66,7 +66,7 @@
         </dt>
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.RiskConsequence)
-        </dd>
+        </dd> *@
         <dt class="col-sm-2">
             @ViewBag.Users.FindByIdAsync(Model.RiskOwner).Result.UserName
         </dt>
