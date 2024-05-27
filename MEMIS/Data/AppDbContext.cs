@@ -76,6 +76,10 @@ namespace MEMIS.Data
 
     public DbSet<MEMIS.Data.Activity>? Activity { get; set; }
     public DbSet<RiskDetail> RiskDetails { get; set; }
+    public DbSet<Event> Events { get; set; }
+    public DbSet<RiskSource> RiskSources { get; set; }
+    public DbSet<RiskCause> RiskCauses { get; set; }
+    public DbSet<RiskConsequenceDetails> RiskConsequenceDetails { get; set; }
 
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -84,6 +88,26 @@ namespace MEMIS.Data
                 .HasMany(r => r.RiskDetails)
                 .WithOne(rd => rd.RiskIdentification)
                 .HasForeignKey(rd => rd.RiskId);
+
+      modelBuilder.Entity<RiskIdentification>()
+                .HasMany(r => r.Events)
+                .WithOne(e => e.RiskIdentification)
+                .HasForeignKey(e => e.RiskId);
+
+      modelBuilder.Entity<RiskIdentification>()
+          .HasMany(r => r.RiskSources)
+          .WithOne(rs => rs.RiskIdentification)
+          .HasForeignKey(rs => rs.RiskId);
+
+      modelBuilder.Entity<RiskIdentification>()
+          .HasMany(r => r.RiskCauses)
+          .WithOne(rc => rc.RiskIdentification)
+          .HasForeignKey(rc => rc.RiskId);
+
+      modelBuilder.Entity<RiskIdentification>()
+          .HasMany(r => r.RiskConsequenceDetails)
+          .WithOne(rc => rc.RiskIdentification)
+          .HasForeignKey(rc => rc.RiskId);
 
       base.OnModelCreating(modelBuilder);
 

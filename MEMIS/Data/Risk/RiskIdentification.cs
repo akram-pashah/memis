@@ -30,9 +30,17 @@ namespace MEMIS.Data.Risk
     public bool IsVerified { get; set; }
     public int ApprStatus { get; set; } = 0;
     public ICollection<RiskDetail> RiskDetails { get; set; }
+    public ICollection<Event> Events { get; set; }
+    public ICollection<RiskSource> RiskSources { get; set; }
+    public ICollection<RiskCause> RiskCauses { get; set; }
+    public ICollection<RiskConsequenceDetails> RiskConsequenceDetails { get; set; }
     public RiskIdentification()
     {
       RiskDetails = new HashSet<RiskDetail>();
+      Events = new HashSet<Event>();
+      RiskSources = new HashSet<RiskSource>();
+      RiskCauses = new HashSet<RiskCause>();
+      RiskConsequenceDetails = new HashSet<RiskConsequenceDetails>();
     }
   }
   public class Causes
