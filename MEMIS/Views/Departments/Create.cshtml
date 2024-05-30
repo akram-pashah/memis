@@ -26,13 +26,13 @@
             <br />
             <div class="form-group">
                 <label asp-for="intDir" class="control-label"></label>
-                @Html.DropDownList("intDir", new SelectList(ViewBag.DirectorateList, "intDir", "dirName"), new { @class = "form-control", @required = "required" })
+                @Html.DropDownList("intDir", new SelectList(ViewBag.DirectorateList, "intDir", "dirName"), new { @class = "form-control form-select", @required = "required" })
                 <span asp-validation-for="intDir" class="text-danger"></span>
             </div>
             <br />
             <div class="form-group">
                 @Html.LabelFor(model => model.intHod)
-                @Html.DropDownList("intHod", new SelectList(ViewBag.hod, "Value", "Text"), new { @class = "form-control", @required = "required" })
+                @Html.DropDownList("intHod", new SelectList(ViewBag.hod, "Value", "Text"), new { @class = "form-control form-select", @required = "required" })
                 @* @Html.DropDownListFor(model => model.director, ViewBag.Directors as SelectList, new { @class = "form-control" })*@
                 @Html.ValidationMessageFor(model => model.intHod, "", new { @class = "text-danger" })
             </div>

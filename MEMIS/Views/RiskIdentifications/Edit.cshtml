@@ -2,7 +2,6 @@
 
 @{
   ViewData["Title"] = "Edit";
-  //Layout = "~/Views/Shared/_RiskLayout.cshtml";
   Layout = "~/Pages/Shared/_ContentNavbarLayout.cshtml";
 }
 
@@ -21,18 +20,19 @@
                 <span asp-validation-for="IdentifiedDate" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="FocusArea" class="control-label"></label>
-                @Html.DropDownList("FocusArea", new SelectList(ViewBag.StrategicPlanList, "Id", "focusArea", Model.FocusArea), new { @class = "form-control selectpicker", @required = "required" })
+                <label asp-for="FocusArea" class="control-label">Focus Area</label>
+                @Html.DropDownList("FocusArea", new SelectList(ViewBag.FocusArea, "intFocus", "FocusAreaName"), new { @class = "form-control form-select selectpicker", @required = "required" })
                 <span asp-validation-for="FocusArea" class="text-danger"></span>
             </div>
+            <br />
             <div class="form-group">
-                <label asp-for="StrategicObjective" class="control-label"></label>
-                @Html.DropDownList("StrategicObjective", new SelectList(ViewBag.StrategicPlanList, "Id", "strategicObjective", Model.StrategicObjective), new { @class = "form-control", @required = "required" })
+                <label asp-for="StrategicObjective" class="control-label">Strategic Objective</label>
+                @Html.DropDownList("StrategicObjective", new SelectList(ViewBag.StrategicPlanList, "intObjective", "ObjectiveName"), new { @class = "form-control form-select", @required = "required" })
                 <span asp-validation-for="StrategicObjective" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Activity" class="control-label"></label>
-                @Html.DropDownList("Activity", new SelectList(ViewBag.ActivityList, "intActivity", "activityName", Model.Activity), new { @class = "form-control", @required = "required" })
+                @Html.DropDownList("Activity", new SelectList(ViewBag.ActivityList, "intActivity", "activityName", Model.Activity), new { @class = "form-control form-select", @required = "required" })
                 <span asp-validation-for="Activity" class="text-danger"></span>
             </div>
            
@@ -41,34 +41,222 @@
                 <input asp-for="RiskDescription" class="form-control" />
                 <span asp-validation-for="RiskDescription" class="text-danger"></span>
             </div>
+            <br />
             <div class="form-group">
-                <label asp-for="Events" class="control-label"></label>
-                <input asp-for="Events" class="form-control" />
-                <span asp-validation-for="Events" class="text-danger"></span>
+                <label asp-for="Events" class="control-label">Events</label>
+                <div class="accordion" id="accordionExample">
+                    <div class="card accordion-item">
+                        <h2 class="accordion-header" id="headingOne">
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="newEventDescription" aria-label="Text input with segmented dropdown button">
+                                <button type="button" class="btn btn-outline-primary" onclick="addEvent()">
+                                    <i class="bx bx-plus-circle"></i>
+                                </button>
+                                <button type="button" class="btn btn-outline-primary" data-bs-toggle="collapse" data-bs-target="#accordionOne" aria-expanded="true" aria-controls="accordionOne">
+                                    <i class="bx bx-collapse-alt"></i>
+                                </button>
+                            </div>
+                        </h2>
+                        <span id="eventValidation" class="text-danger"></span>
+                        <div id="accordionOne" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+                            <div class="accordion-body" id="collapsedocument">
+                                <table class="table table-striped table-bordered" id="eventsTable">
+                                    <thead class="thead-dark">
+                                        <tr>
+                                            <th>Id</th>
+                                            <th>Event</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @for (int i = 0; i < Model.Events.Count; i++)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    @(i + 1)
+                                                </td>
+                                                <td>
+                                                    <input type="hidden" asp-for="Events[i].EventId" />
+                                                    <input type="hidden" asp-for="Events[i].RiskId" />
+                                                    <input asp-for="Events[i].Description" class="form-control" />
+                                                </td>
+                                                <td>
+                                                    <a class="btn btn-danger delete-btn" onclick="removeEvent(this)" data-toggle="tooltip" data-placement="top" title="Delete"><i class="bx bx-message-square-x"></i></a>
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
+            <br />
             <div class="form-group">
-                <label asp-for="RiskSource" class="control-label"></label>
-                <input asp-for="RiskSource" class="form-control" />
-                <span asp-validation-for="RiskSource" class="text-danger"></span>
+                <label asp-for="RiskSource" class="control-label">Risk Source</label>
+                <div class="accordion" id="accordionExample1">
+                    <div class="card accordion-item">
+                        <h2 class="accordion-header" id="headingOne">
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="RiskSourceInput" aria-label="Text input with segmented dropdown button">
+                                <button type="button" class="btn btn-outline-primary" onclick="addRiskSource()">
+                                    <i class="bx bx-plus-circle"></i>
+                                </button>
+                                <button type="button" class="btn btn-outline-primary" data-bs-toggle="collapse" data-bs-target="#accordionTwo" aria-expanded="true" aria-controls="accordionTwo">
+                                    <i class="bx bx-collapse-alt"></i>
+                                </button>
+                            </div>
+                        </h2>
+                        <span id="RiskSourceValidation" class="text-danger"></span>
+                        <div id="accordionTwo" class="accordion-collapse collapse" data-bs-parent="#accordionExample1">
+                            <div class="accordion-body" id="collapsedocument">
+                                <table class="table table-striped table-bordered" id="riskSourceTable">
+                                    <thead class="thead-dark">
+                                        <tr>
+                                            <th>Id</th>
+                                            <th>Risk Source</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @for (int i = 0; i < Model.RiskSource.Count; i++)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    @(i + 1)
+                                                </td>
+                                                <td>
+                                                    <input type="hidden" asp-for="RiskSource[i].RiskSourceId" />
+                                                    <input type="hidden" asp-for="RiskSource[i].RiskId" />
+                                                    <input asp-for="RiskSource[i].Description" class="form-control" />
+                                                </td>
+                                                <td>
+                                                    <a class="btn btn-danger delete-btn" onclick="removeEvent(this)" data-toggle="tooltip" data-placement="top" title="Delete"><i class="bx bx-message-square-x"></i></a>
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                @* <span asp-validation-for="RiskSource" class="text-danger"></span> *@
             </div>
+            <br />
             <div class="form-group">
-                <label asp-for="RiskCause" class="control-label"></label>
-                <input asp-for="RiskCause" class="form-control" />
-                <span asp-validation-for="RiskCause" class="text-danger"></span>
+                <label asp-for="RiskCause" class="control-label">Risk Cause</label>
+                <div class="accordion" id="RiskCauseaccordion">
+                    <div class="card accordion-item">
+                        <h2 class="accordion-header" id="headingOne">
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="RiskCauseInput" aria-label="Text input with segmented dropdown button">
+                                <button type="button" class="btn btn-outline-primary" onclick="addRiskCause()">
+                                    <i class="bx bx-plus-circle"></i>
+                                </button>
+                                <button type="button" class="btn btn-outline-primary" data-bs-toggle="collapse" data-bs-target="#accordionThree" aria-expanded="true"
+                                        aria-controls="accordionThree">
+                                    <i class="bx bx-collapse-alt"></i>
+                                </button>
+                            </div>
+                        </h2>
+                        <span id="RiskCauseValidation" class="text-danger"></span>
+                        <div id="accordionThree" class="accordion-collapse collapse" data-bs-parent="#RiskCauseaccordion">
+                            <div class="accordion-body" id="collapsedocument">
+                                <table class="table table-striped table-bordered" id="riskCauseTable">
+                                    <thead class="thead-dark">
+                                        <tr>
+                                            <th>Id</th>
+                                            <th>Risk Cause</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @for (int i = 0; i < Model.RiskCause.Count; i++)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    @(i + 1)
+                                                </td>
+                                                <td>
+                                                    <input type="hidden" asp-for="RiskCause[i].RiskCauseId" />
+                                                    <input asp-for="RiskCause[i].Description" class="form-control" />
+                                                </td>
+                                                <td>
+                                                    <a class="btn btn-danger delete-btn" onclick="removeEvent(this)" data-toggle="tooltip" data-placement="top" title="Delete"><i class="bx bx-message-square-x"></i></a>
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                @* <span asp-validation-for="RiskCause" class="text-danger"></span> *@
             </div>
+            <br />
             <div class="form-group">
-                <label asp-for="RiskConsequence" class="control-label"></label>
-                <input asp-for="RiskConsequence" class="form-control" />
-                <span asp-validation-for="RiskConsequence" class="text-danger"></span>
+                <label asp-for="RiskConsequence" class="control-label">Risk Consequence</label>
+                <div class="accordion" id="RiskConsequenceaccordion">
+                    <div class="card accordion-item">
+                        <h2 class="accordion-header" id="headingOne">
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="RiskConsequenceInput" aria-label="Text input with segmented dropdown button">
+                                <button type="button" class="btn btn-outline-primary" onclick="addRiskConsequence()">
+                                    <i class="bx bx-plus-circle"></i>
+                                </button>
+                                <button type="button" class="btn btn-outline-primary" data-bs-toggle="collapse" data-bs-target="#accordionFour" aria-expanded="true"
+                                        aria-controls="accordionFour">
+                                    <i class="bx bx-collapse-alt"></i>
+                                </button>
+                            </div>
+                        </h2>
+                        <span id="RiskConsequenceValidation" class="text-danger"></span>
+                        <div id="accordionFour" class="accordion-collapse collapse" data-bs-parent="#RiskConsequenceaccordion">
+                            <div class="accordion-body" id="collapsedocument">
+                                <table class="table table-striped table-bordered" id="riskConsequenceTable">
+                                    <thead class="thead-dark">
+                                        <tr>
+                                            <th>Id</th>
+                                            <th>Risk Consequences</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @for (int i = 0; i < Model.RiskConsequence.Count; i++)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    @(i + 1)
+                                                </td>
+                                                <td>
+                                                    <input type="hidden" asp-for="RiskConsequence[i].RiskConsequenceId" />
+                                                    <input asp-for="RiskConsequence[i].Description" class="form-control" />
+                                                </td>
+                                                <td>
+                                                    <a class="btn btn-danger delete-btn" onclick="removeEvent(this)" data-toggle="tooltip" data-placement="top" title="Delete"><i class="bx bx-message-square-x"></i></a>
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                @* <span asp-validation-for="RiskConsequence" class="text-danger" ></span> *@
             </div>
+            <br />
             <div class="form-group">
                 <label asp-for="RiskConsequenceId" class="control-label"></label>
-                @Html.DropDownList("RiskConsequenceId", ViewBag.RiskConsequenceList as SelectList, new { @class = "form-control" })
+                @Html.DropDownList("RiskConsequenceId", ViewBag.RiskConsequenceList as SelectList, new { @class = "form-control form-select" })
                 <span asp-validation-for="RiskConsequenceId" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="RiskLikelihoodId" class="control-label"></label>
-                @Html.DropDownList("RiskLikelihoodId", ViewBag.RiskLikelihoodList as SelectList, new { @class = "form-control" })
+                @Html.DropDownList("RiskLikelihoodId", ViewBag.RiskLikelihoodList as SelectList, new { @class = "form-control form-select" })
                 <span asp-validation-for="RiskLikelihoodId" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -101,6 +289,9 @@
 <div>
     <a asp-action="Index">Back to List</a>
 </div>
+
+<script src="~/js/riskidentification.js"></script>
+
 
 @section Scripts {
     <script>
@@ -138,6 +329,145 @@
         }
 
     }
+
+        function addEvent() {
+            var description = $('#newEventDescription').val();
+            if (description.trim() === "") {
+                $('#eventValidation').text("Event cannot be empty.");
+                return;
+            } else {
+                $('#eventValidation').text("");
+            }
+
+            var index = $('#eventsTable tbody tr').length;
+            var row = `
+                        <tr>
+                            <td>${index + 1}</td>
+                            <td>
+                                <input name="Events[${index}].Description" class="form-control" value="${description}" />
+                            </td>
+                            <td>
+                                <a class="btn btn-danger delete-btn" onclick="removeEvent(this)" data-toggle="tooltip" data-placement="top" title="Delete">
+                                    <i class="bx bx-message-square-x"></i>
+                                </a>
+                            </td>
+                        </tr>`;
+            $('#eventsTable tbody').append(row);
+            $('#newEventDescription').val(''); // Clear the input field after adding
+        }
+
+        function removeEvent(button) {
+            $(button).closest('tr').remove();
+            // Re-index the rows after removing to ensure correct form submission
+            $('#eventsTable tbody tr').each(function (index, tr) {
+                $(tr).find('input[name^="Events["]').each(function () {
+                    var name = $(this).attr('name');
+                    var newName = name.replace(/Events\[\d+\]/, `Events[${index}]`);
+                    $(this).attr('name', newName);
+                });
+                // Update row numbering
+                $(tr).find('td:first').text(index + 1);
+            });
+        }
+
+        function addRiskSource() {
+            var desc = $('#RiskSourceInput').val();
+            if (desc.trim() === "") {
+                $('#RiskSourceValidation').text("Risk Source cannot be empty.");
+                return;
+            } else {
+                $('#RiskSourceValidation').text("");
+            }
+            var index = $('#riskSourceTable tbody tr').length;
+                    var row = `<tr>
+                                    <td>
+                                    <input asp-for="RiskSource[${index}].Description" value="${desc}" class="form-control" />
+                                    </td>
+                                    <td>
+                                    <a class="btn btn-danger delete-btn" onclick="removeRiskSource(this)" data-toggle="tooltip" data-placement="top" title="Delete"><i class="bx bx-message-square-x"></i></a>
+                                    </td>
+                                </tr>`
+            $('#riskSourceTable tbody').append(row);
+        }
+
+        function removeRiskSource(button) {
+            $(button).closest('tr').remove();
+            $('#riskSourceTable tbody tr').each(function (index, tr) {
+                $(tr).find('input[name^="RiskSource["]').each(function () {
+                    var name = $(this).attr('name');
+                    var newName = name.replace(/RiskSource\[\d+\]/, `RiskSource[${index}]`);
+                    $(this).attr('name', newName);
+                });
+                // Update row numbering
+                $(tr).find('td:first').text(index + 1);
+            });
+        }
+
+        function addRiskConsequence() {
+            var desc = $('#RiskConsequenceInput').val();
+            if (desc.trim() === "") {
+                $('#RiskConsequenceValidation').text("Risk Consequence cannot be empty.");
+                return;
+            } else {
+                $('#RiskConsequenceValidation').text("");
+            }
+            var index = $('#riskConsequenceTable tbody tr').length;
+                    var row = `<tr>
+                                    <td>
+                                    <input asp-for="RiskConsequence[${index}].Description" value="${desc}" class="form-control" />
+                                    </td>
+                                    <td>
+                                    <a class="btn btn-danger delete-btn" onclick="removeRiskConsequence(this)" data-toggle="tooltip" data-placement="top" title="Delete"><i class="bx bx-message-square-x"></i></a>
+                                    </td>
+                                </tr>`
+            $('#riskConsequenceTable tbody').append(row);
+        }
+
+        function removeRiskConsequence(button) {
+            $(button).closest('tr').remove();
+            $('#riskConsequenceTable tbody tr').each(function (index, tr) {
+                $(tr).find('input[name^="RiskConsequence["]').each(function () {
+                    var name = $(this).attr('name');
+                    var newName = name.replace(/RiskConsequence\[\d+\]/, `RiskConsequence[${index}]`);
+                    $(this).attr('name', newName);
+                });
+                // Update row numbering
+                $(tr).find('td:first').text(index + 1);
+            });
+        }
+
+        function addRiskCause() {
+            var desc = $('#RiskCauseInput').val();
+            if (desc.trim() === "") {
+                $('#RiskCauseValidation').text("Risk Cause cannot be empty.");
+                return;
+            } else {
+                $('#RiskCauseValidation').text("");
+            }
+            var index = $('#riskCauseTable tbody tr').length;
+            var row = ` <tr>
+                                 <td>
+                                 <input asp-for="RiskCause[${index}].Description" value="${desc}" class="form-control" />
+                                 </td>
+                                 <td>
+                                 <a class="btn btn-danger delete-btn" onclick="removeRiskCause(this)" data-toggle="tooltip" data-placement="top" title="Delete"><i class="bx bx-message-square-x"></i></a>
+                                 </td>
+                         </tr>`
+            $('#riskCauseTable tbody').append(row);
+        }
+
+        function removeRiskCause(button) {
+            $(button).closest('tr').remove();
+            $('#riskCauseTable tbody tr').each(function (index, tr) {
+                $(tr).find('input[name^="RiskCause["]').each(function () {
+                    var name = $(this).attr('name');
+                    var newName = name.replace(/RiskCause\[\d+\]/, `RiskCause[${index}]`);
+                    $(this).attr('name', newName);
+                });
+                // Update row numbering
+                $(tr).find('td:first').text(index + 1);
+            });
+        }
 
     </script>
     @*@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}*@

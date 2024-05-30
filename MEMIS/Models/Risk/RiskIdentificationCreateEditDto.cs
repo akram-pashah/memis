@@ -1,4 +1,4 @@
-﻿using MEMIS.Data.Risk;
+using MEMIS.Data.Risk;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -21,13 +21,13 @@ namespace MEMIS.Models.Risk
         [Required]
         public string RiskDescription { get; set; }
         [Required]
-        public string Events { get; set; }
+        public List<Event> Events { get; set; } = new List<Event>();
         [Required]
-        public string RiskSource { get; set; }
+        public List<RiskSource> RiskSource { get; set; } = new List<RiskSource>();
         [Required]
-        public string RiskCause { get; set; }
+        public List<RiskCause> RiskCause { get; set; } = new List<RiskCause>();
         [Required]
-        public string RiskConsequence { get; set; }
+        public List<RiskConsequenceDetails> RiskConsequence { get; set; } = new List<RiskConsequenceDetails>();
 
         [Required]
         [Range(1, 5, ErrorMessage = "Please select correct value")]

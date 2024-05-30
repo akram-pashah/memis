@@ -27,14 +27,14 @@
             <br />
             <div class="form-group">
                 @Html.LabelFor(model => model.intHead)
-                @Html.DropDownList("intHead", new SelectList(ViewBag.hor, "Value", "Text"), new { @class = "form-control", @required = "required" })
+                @Html.DropDownList("intHead", new SelectList(ViewBag.hor, "Value", "Text"), new { @class = "form-control form-select", @required = "required" })
                 @* @Html.DropDownListFor(model => model.director, ViewBag.Directors as SelectList, new { @class = "form-control" })*@
                 @Html.ValidationMessageFor(model => model.intHead, "", new { @class = "text-danger" })
             </div>
             <br />
             <div class="form-group">
                 @Html.LabelFor(model => model.regCoordinator)
-                @Html.DropDownList("regCoordinator", new SelectList(ViewBag.regCord, "Value", "Text"), new { @class = "form-control", @required = "required" })
+                @Html.DropDownList("regCoordinator", new SelectList(ViewBag.regCord, "Value", "Text"), new { @class = "form-control form-select", @required = "required" })
                 @* @Html.DropDownListFor(model => model.director, ViewBag.Directors as SelectList, new { @class = "form-control" })*@
                 @Html.ValidationMessageFor(model => model.regCoordinator, "", new { @class = "text-danger" })
             </div>

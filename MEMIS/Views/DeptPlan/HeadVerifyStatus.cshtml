@@ -17,19 +17,19 @@
             <input type="hidden" asp-for="intActivity" />
             <div class="form-group">
                 <label asp-for="StrategicObjective" class="control-label"></label>
-                @Html.DropDownList("StrategicObjective", new SelectList(ViewBag.StrategicPlanList, "Id", "strategicObjective", Model.StrategicObjective), new { @class = "form-control", @required = "required" })
+                @Html.DropDownList("StrategicObjective", new SelectList(ViewBag.StrategicPlanList, "Id", "strategicObjective", Model.StrategicObjective), new { @class = "form-control form-select", @required = "required" })
                 <span asp-validation-for="StrategicObjective" class="text-danger"></span>
             </div>
             <br />
             <div class="form-group">
                 <label asp-for="strategicIntervention" class="control-label"></label>
-                @Html.DropDownList("strategicIntervention", new SelectList(ViewBag.StrategicPlanList, "Id", "strategicIntervention", Model.strategicIntervention), new { @class = "form-control", @required = "required" })
+                @Html.DropDownList("strategicIntervention", new SelectList(ViewBag.StrategicPlanList, "Id", "strategicIntervention", Model.strategicIntervention), new { @class = "form-control form-select", @required = "required" })
                 <span asp-validation-for="strategicIntervention" class="text-danger"></span>
             </div>
             <br />
             <div class="form-group">
                 <label asp-for="StrategicAction" class="control-label"></label>
-                @Html.DropDownList("StrategicAction", new SelectList(ViewBag.StrategicPlanList, "Id", "StrategicAction", Model.StrategicAction), new { @class = "form-control", @required = "required" })
+                @Html.DropDownList("StrategicAction", new SelectList(ViewBag.StrategicPlanList, "Id", "StrategicAction", Model.StrategicAction), new { @class = "form-control form-select", @required = "required" })
                 <span asp-validation-for="StrategicAction" class="text-danger"></span>
             </div>
             <br />
@@ -131,7 +131,7 @@
             <br />
             <div class="form-group">
                 <label asp-for="DepartmentId" class="control-label">Department ID</label>
-                @Html.DropDownList("DepartmentId", new SelectList(ViewBag.DeptList, "intDept", "deptName"), new { @class = "form-control", @required = "required" })
+                @Html.DropDownList("DepartmentId", new SelectList(ViewBag.DeptList, "intDept", "deptName"), new { @class = "form-control form-select", @required = "required" })
                 <span asp-validation-for="DepartmentId" class="text-danger"></span>
             </div>
             <br />

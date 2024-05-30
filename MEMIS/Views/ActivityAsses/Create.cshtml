@@ -15,17 +15,17 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="intIntervention" class="control-label"></label>
-                @Html.DropDownList("intIntervention", new SelectList(ViewBag.StrategicIntervention, "intIntervention", "InterventionName"), new { @class = "form-control", @required = "required" })                
+                @Html.DropDownList("intIntervention", new SelectList(ViewBag.StrategicIntervention, "intIntervention", "InterventionName"), new { @class = "form-control form-select", @required = "required" })
             </div>
             <br/>
             <div class="form-group">
                 <label asp-for="intAction" class="control-label"></label>
-                @Html.DropDownList("StrategicObjective", new SelectList(ViewBag.StrategicAction, "intAction", "actionName"), new { @class = "form-control", @required = "required" })                
+                @Html.DropDownList("StrategicObjective", new SelectList(ViewBag.StrategicAction, "intAction", "actionName"), new { @class = "form-control form-select", @required = "required" })
             </div>
             <br />
             <div class="form-group">
                 <label asp-for="intActivity" class="control-label"></label>
-                @Html.DropDownList("StrategicObjective", new SelectList(ViewBag.Activity, "intActivity", "activityName"), new { @class = "form-control", @required = "required" })                 
+                @Html.DropDownList("StrategicObjective", new SelectList(ViewBag.Activity, "intActivity", "activityName"), new { @class = "form-control form-select", @required = "required" })
             </div>
             <br />
             <div class="form-group">

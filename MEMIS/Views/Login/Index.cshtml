@@ -1,4 +1,4 @@
-﻿@{
+@{
     Layout = "";
     ViewData["Title"] = "Login";
 }
@@ -32,7 +32,7 @@
                             <div asp-validation-summary="All" class="text-danger"></div>
                             <div class="mb-3">
                                 <label asp-for="fyear" class="control-label"></label> 
-                                @Html.DropDownList("FYear", new SelectList(ViewBag.FYear, "intyear", "yearcode"), new {style="width:150px;", @class = "form-control", @required = "required",@id="fyear" })
+                                @Html.DropDownList("FYear", new SelectList(ViewBag.FYear, "intyear", "yearcode"), new { style = "width:150px;", @class = "form-control form-select", @required = "required", @id = "fyear" })
                                 <span asp-validation-for="fyear" class="text-danger"></span>
                             </div>
                             <div class="mb-3">
@@ -59,6 +59,7 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/riskidentification.js" asp-append-version="true"></script>
     <script type="text/javascript">
         $(document).ready(function () { 
                 $(".sect-right").toggleClass("fade"); 

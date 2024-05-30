@@ -21,17 +21,17 @@
             </div>
             <div class="form-group">
                 <label asp-for="FocusArea" class="control-label"></label>
-                @Html.DropDownList("FocusArea", new SelectList(ViewBag.FocusArea, "intFocus", "FocusAreaName"), new { @class = "form-control selectpicker", @required = "required" })
+                @Html.DropDownList("FocusArea", new SelectList(ViewBag.FocusArea, "intFocus", "FocusAreaName"), new { @class = "form-control form-select selectpicker", @required = "required" })
                 <span asp-validation-for="FocusArea" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="StrategicObjective" class="control-label"></label>
-                @Html.DropDownList("StrategicObjective", new SelectList(ViewBag.StrategicPlanList, "intObjective", "ObjectiveName"), new { @class = "form-control", @required = "required" })
+                @Html.DropDownList("StrategicObjective", new SelectList(ViewBag.StrategicPlanList, "intObjective", "ObjectiveName"), new { @class = "form-control form-select form-select", @required = "required" })
                 <span asp-validation-for="StrategicObjective" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Activity" class="control-label"></label>
-                @Html.DropDownList("Activity", new SelectList(ViewBag.ActivityList, "intActivity", "activityName"), new { @class = "form-control", @required = "required" })
+                @Html.DropDownList("Activity", new SelectList(ViewBag.ActivityList, "intActivity", "activityName"), new { @class = "form-control form-select", @required = "required" })
                 <span asp-validation-for="Activity" class="text-danger"></span>
             </div>
            
@@ -62,12 +62,12 @@
             </div>
             <div class="form-group">
                 <label asp-for="RiskConsequenceId" class="control-label"></label>
-                @Html.DropDownList("RiskConsequenceId", ViewBag.RiskConsequenceList as SelectList, new { @class = "form-control" })
+                @Html.DropDownList("RiskConsequenceId", ViewBag.RiskConsequenceList as SelectList, new { @class = "form-control form-select" })
                 <span asp-validation-for="RiskConsequenceId" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="RiskLikelihoodId" class="control-label"></label>
-                @Html.DropDownList("RiskLikelihoodId", ViewBag.RiskLikelihoodList as SelectList, new { @class = "form-control" })
+                @Html.DropDownList("RiskLikelihoodId", ViewBag.RiskLikelihoodList as SelectList, new { @class = "form-control form-select" })
                 <span asp-validation-for="RiskLikelihoodId" class="text-danger"></span>
             </div>
             <div class="form-group">

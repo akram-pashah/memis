@@ -28,7 +28,7 @@
             <br />
             <div class="form-group">
                 @Html.LabelFor(model => model.director)
-                @Html.DropDownList("director", new SelectList(ViewBag.Directors, "Value", "Text",Model.director), new { @class = "form-control", @required = "required" })
+                @Html.DropDownList("director", new SelectList(ViewBag.Directors, "Value", "Text", Model.director), new { @class = "form-control form-select", @required = "required" })
                 @Html.ValidationMessageFor(model => model.director, "", new { @class = "text-danger" })
             </div>
             <br />
