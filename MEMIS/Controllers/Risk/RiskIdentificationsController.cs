@@ -439,13 +439,17 @@ namespace MEMIS.Controllers.Risk
             ViewBag.StrategicPlanList = _context.StrategicObjective == null ? new List<StrategicObjective>() : await _context.StrategicObjective.ToListAsync();
             ViewBag.FocusArea   = _context.FocusArea == null ? new List<FocusArea>() : await _context.FocusArea.ToListAsync();
             ViewBag.ActivityList = _context.Activity == null ? new List<Activity>() : await _context.Activity.ToListAsync();
-            return View();
+            RiskIdentificationCreateEditDto riskIdentificationCreateEditDto = new RiskIdentificationCreateEditDto();
+            return View(riskIdentificationCreateEditDto);
         }
 
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-public async Task<IActionResult> Create(RiskIdentificationCreateEditDto dto)
+    public async Task<IActionResult> Create([Bind(
+          "IdentifiedDate,StrategicObjective,FocusArea,Activity,BudgetCode" +
+          ",RiskDescription,Events,RiskSource,RiskCause,RiskConsequence,RiskConsequenceId," +
+          "RiskLikelihoodId,RiskScore,RiskRank,EvalCriteria,IsVerified,EventsList")]RiskIdentificationCreateEditDto dto)
 {
     if (ModelState.IsValid && dto.RiskConsequenceId != 0 && dto.RiskLikelihoodId != 0)
     {
@@ -465,6 +469,11 @@ public async Task<IActionResult> Create(RiskIdentificationCreateEditDto dto)
             StrategicObjective = dto.StrategicObjective,
         };
         _context.Add(riskIdentification);
+        await _context.SaveChangesAsync();
+        dto.Events.ForEach(ev => ev.RiskId = riskIdentification.RiskId);
+        dto.RiskCause.ForEach(ev => ev.RiskId = riskIdentification.RiskId);
+        dto.RiskSource.ForEach(ev => ev.RiskId = riskIdentification.RiskId);
+        dto.RiskConsequence.ForEach(ev => ev.RiskId = riskIdentification.RiskId);
         _context.Events.AddRange(dto.Events);
         _context.RiskCauses.AddRange(dto.RiskCause);
         _context.RiskSources.AddRange(dto.RiskSource);
@@ -544,19 +553,19 @@ public async Task<IActionResult> Create(RiskIdentificationCreateEditDto dto)
                     {
                         Activity = riskIdentification.Activity,
                         EvalCriteria = riskIdentification.EvalCriteria,
-                        //Events = riskIdentification.Events,
+                        Events = riskIdentification.Events,
                         FocusArea = riskIdentification.FocusArea,
                         IdentifiedDate = riskIdentification.IdentifiedDate,
                         IsVerified = riskIdentification.IsVerified,
-                        //RiskCause = riskIdentification.RiskCause,
-                        //RiskConsequence = riskIdentification.RiskConsequence,
+                        RiskCauses = riskIdentification.RiskCause,
+                        RiskConsequenceDetails = riskIdentification.RiskConsequence,
                         RiskConsequenceId = riskIdentification.RiskConsequenceId,
                         RiskDescription = riskIdentification.RiskDescription,
                         RiskLikelihoodId = riskIdentification.RiskLikelihoodId,
                         RiskOwner = User.FindFirstValue(ClaimTypes.NameIdentifier),
                         RiskRank = riskIdentification.RiskRank,
                         RiskScore = riskIdentification.RiskScore,
-                        //RiskSource = riskIdentification.RiskSource,
+                        RiskSources = riskIdentification.RiskSource,
                         StrategicObjective = riskIdentification.StrategicObjective,
                         RiskId = riskIdentification.RiskId
                     };
@@ -661,7 +670,8 @@ public async Task<IActionResult> Create(RiskIdentificationCreateEditDto dto)
         {
             if (_context.RiskMatrixes != null)
             {
-                return _context.RiskMatrixes.Where(e => e.RiskConsequenceId == RCId && e.RiskLikelihoodId == RLId).FirstOrDefault();
+                var risk = _context.RiskMatrixes.Where(e => e.RiskConsequenceId == RCId && e.RiskLikelihoodId == RLId).FirstOrDefault();
+                 return risk;
             }
             else
             {

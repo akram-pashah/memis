@@ -19,6 +19,7 @@
                 <input asp-for="IdentifiedDate" class="form-control" />
                 <span asp-validation-for="IdentifiedDate" class="text-danger"></span>
             </div>
+            <br/>
             <div class="form-group">
                 <label asp-for="FocusArea" class="control-label">Focus Area</label>
                 @Html.DropDownList("FocusArea", new SelectList(ViewBag.FocusArea, "intFocus", "FocusAreaName"), new { @class = "form-control form-select selectpicker", @required = "required" })
@@ -30,12 +31,13 @@
                 @Html.DropDownList("StrategicObjective", new SelectList(ViewBag.StrategicPlanList, "intObjective", "ObjectiveName"), new { @class = "form-control form-select", @required = "required" })
                 <span asp-validation-for="StrategicObjective" class="text-danger"></span>
             </div>
+            <br />
             <div class="form-group">
                 <label asp-for="Activity" class="control-label"></label>
                 @Html.DropDownList("Activity", new SelectList(ViewBag.ActivityList, "intActivity", "activityName", Model.Activity), new { @class = "form-control form-select", @required = "required" })
                 <span asp-validation-for="Activity" class="text-danger"></span>
             </div>
-           
+            <br />
             <div class="form-group">
                 <label asp-for="RiskDescription" class="control-label"></label>
                 <input asp-for="RiskDescription" class="form-control" />
@@ -120,7 +122,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @for (int i = 0; i < Model.RiskSource.Count; i++)
+                                        @for (int i = 0; i < Model.RiskSource?.Count; i++)
                                         {
                                             <tr>
                                                 <td>
@@ -173,7 +175,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @for (int i = 0; i < Model.RiskCause.Count; i++)
+                                        @for (int i = 0; i < Model.RiskCause?.Count; i++)
                                         {
                                             <tr>
                                                 <td>
@@ -225,7 +227,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @for (int i = 0; i < Model.RiskConsequence.Count; i++)
+                                        @for (int i = 0; i < Model.RiskConsequence?.Count; i++)
                                         {
                                             <tr>
                                                 <td>
@@ -254,49 +256,93 @@
                 @Html.DropDownList("RiskConsequenceId", ViewBag.RiskConsequenceList as SelectList, new { @class = "form-control form-select" })
                 <span asp-validation-for="RiskConsequenceId" class="text-danger"></span>
             </div>
+            <br />
             <div class="form-group">
                 <label asp-for="RiskLikelihoodId" class="control-label"></label>
                 @Html.DropDownList("RiskLikelihoodId", ViewBag.RiskLikelihoodList as SelectList, new { @class = "form-control form-select" })
                 <span asp-validation-for="RiskLikelihoodId" class="text-danger"></span>
             </div>
+            <br />
             <div class="form-group">
                 <label asp-for="RiskScore" class="control-label"></label>
                 <input asp-for="RiskScore" class="form-control" required readonly/>
                 <span asp-validation-for="RiskScore" class="text-danger"></span>
             </div>
+            <br />
             <div class="form-group">
                 <label asp-for="RiskRank" class="control-label"></label>
                 <input asp-for="RiskRank" class="form-control" required readonly/>
                 <span asp-validation-for="RiskRank" class="text-danger"></span>
             </div>
+            <br />
             <div class="form-group">
                 <label asp-for="EvalCriteria" class="control-label"></label>
                 <textarea asp-for="EvalCriteria" class="form-control" style="height:150px" required readonly></textarea>
                 <span asp-validation-for="EvalCriteria" class="text-danger"></span>
             </div>
+            <br />
             <div class="form-group form-check" hidden>
                 <label class="form-check-label">
                     <input class="form-check-input" asp-for="IsVerified" /> @Html.DisplayNameFor(model => model.IsVerified)
                 </label>
             </div>
+            <br />
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
-
+<br />
 <div>
     <a asp-action="Index">Back to List</a>
 </div>
 
-<script src="~/js/riskidentification.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
 
-@section Scripts {
-    <script>
+<script>
 
-    
+    $(document).ready(function () {
+        $("#RiskConsequenceId").change(function () {
+            console.log("RiskConsequenceId changed, value: " + $('option:selected', this).val());
+            if ($('option:selected', this).val() != 0) {
+                GetData();
+            }
+        });
+        function GetData() {
+            var riskConsequenceId = document.getElementById("RiskConsequenceId").value;
+            var riskLikelihoodId = document.getElementById("RiskLikelihoodId").value;
+
+            if (riskConsequenceId != 0 && riskLikelihoodId != 0) {
+                console.log("Making AJAX request with RCId: " + riskConsequenceId + " and RLId: " + riskLikelihoodId);
+                $.ajax({
+                    url: '/RiskIdentifications/GetRiskMatrix',
+                    type: 'GET',
+                    data: {
+                        RCId: riskConsequenceId,
+                        RLId: riskLikelihoodId
+                    },
+                    dataType: 'json',
+                    success: function (data) {
+                        console.log("AJAX success:", data);
+                        document.getElementById('RiskRank').value = data?.riskValue;
+                        document.getElementById('RiskScore').value = data?.riskRank;
+                        document.getElementById('EvalCriteria').value = data?.evaluationCriteria;
+                    },
+                    error: function (error) {
+                        console.error("AJAX error:", error);
+                        alert("An error occurred while fetching data. Please try again.");
+                    }
+                });
+            }
+        }
+    })
+
+    window.addEventListener('load', function () {
+        GetData();
+    })
+
     $("#RiskConsequenceId").change(function () {
         if ($('option:selected', this).val() != 0) {
             GetData();
@@ -309,6 +355,7 @@
         }
 
     });
+
 
     function GetData() {
         if (document.getElementById("RiskConsequenceId").value != 0 && document.getElementById("RiskLikelihoodId").value != 0) {
@@ -329,146 +376,178 @@
         }
 
     }
-
-        function addEvent() {
-            var description = $('#newEventDescription').val();
-            if (description.trim() === "") {
-                $('#eventValidation').text("Event cannot be empty.");
-                return;
-            } else {
-                $('#eventValidation').text("");
-            }
-
-            var index = $('#eventsTable tbody tr').length;
-            var row = `
-                        <tr>
-                            <td>${index + 1}</td>
-                            <td>
-                                <input name="Events[${index}].Description" class="form-control" value="${description}" />
-                            </td>
-                            <td>
-                                <a class="btn btn-danger delete-btn" onclick="removeEvent(this)" data-toggle="tooltip" data-placement="top" title="Delete">
-                                    <i class="bx bx-message-square-x"></i>
-                                </a>
-                            </td>
-                        </tr>`;
-            $('#eventsTable tbody').append(row);
-            $('#newEventDescription').val(''); // Clear the input field after adding
+    function addEvent() {
+        var description = $('#newEventDescription').val();
+        if (description.trim() === "") {
+            $('#eventValidation').text("Event cannot be empty.");
+            return;
+        } else {
+            $('#eventValidation').text("");
         }
+        var $tableBody = $('#eventsTable tbody');
+        var index;
 
-        function removeEvent(button) {
-            $(button).closest('tr').remove();
-            // Re-index the rows after removing to ensure correct form submission
-            $('#eventsTable tbody tr').each(function (index, tr) {
-                $(tr).find('input[name^="Events["]').each(function () {
-                    var name = $(this).attr('name');
-                    var newName = name.replace(/Events\[\d+\]/, `Events[${index}]`);
-                    $(this).attr('name', newName);
-                });
-                // Update row numbering
-                $(tr).find('td:first').text(index + 1);
+        if ($tableBody.find('tr:first').text().trim() === "No data available in table") {
+            $tableBody.find('tr:first').remove();
+            index = 0;
+        } else {
+            index = $tableBody.find('tr').length;
+        }
+        var row = `
+                                    <tr>
+                                        <td>${index + 1}</td>
+                                        <td>
+                                            <input name="Events[${index}].Description" class="form-control" value="${description}" />
+                                        </td>
+                                        <td>
+                                            <a class="btn btn-danger delete-btn" onclick="removeEvent(this)" data-toggle="tooltip" data-placement="top" title="Delete">
+                                                <i class="bx bx-message-square-x"></i>
+                                            </a>
+                                        </td>
+                                    </tr>`;
+        $('#eventsTable tbody').append(row);
+        $('#newEventDescription').val(''); // Clear the input field after adding
+    }
+
+    function removeEvent(button) {
+        $(button).closest('tr').remove();
+        // Re-index the rows after removing to ensure correct form submission
+        $('#eventsTable tbody tr').each(function (index, tr) {
+            $(tr).find('input[name^="Events["]').each(function () {
+                var name = $(this).attr('name');
+                var newName = name.replace(/Events\[\d+\]/, `Events[${index}]`);
+                $(this).attr('name', newName);
             });
-        }
+            // Update row numbering
+            $(tr).find('td:first').text(index + 1);
+        });
+    }
 
-        function addRiskSource() {
-            var desc = $('#RiskSourceInput').val();
-            if (desc.trim() === "") {
-                $('#RiskSourceValidation').text("Risk Source cannot be empty.");
-                return;
-            } else {
-                $('#RiskSourceValidation').text("");
-            }
-            var index = $('#riskSourceTable tbody tr').length;
-                    var row = `<tr>
-                                    <td>
-                                    <input asp-for="RiskSource[${index}].Description" value="${desc}" class="form-control" />
-                                    </td>
-                                    <td>
-                                    <a class="btn btn-danger delete-btn" onclick="removeRiskSource(this)" data-toggle="tooltip" data-placement="top" title="Delete"><i class="bx bx-message-square-x"></i></a>
-                                    </td>
-                                </tr>`
-            $('#riskSourceTable tbody').append(row);
+    function addRiskSource() {
+        var desc = $('#RiskSourceInput').val();
+        if (desc.trim() === "") {
+            $('#RiskSourceValidation').text("Risk Source cannot be empty.");
+            return;
+        } else {
+            $('#RiskSourceValidation').text("");
         }
+        var $tableBody = $('#riskSourceTable tbody');
+        var index;
 
-        function removeRiskSource(button) {
-            $(button).closest('tr').remove();
-            $('#riskSourceTable tbody tr').each(function (index, tr) {
-                $(tr).find('input[name^="RiskSource["]').each(function () {
-                    var name = $(this).attr('name');
-                    var newName = name.replace(/RiskSource\[\d+\]/, `RiskSource[${index}]`);
-                    $(this).attr('name', newName);
-                });
-                // Update row numbering
-                $(tr).find('td:first').text(index + 1);
+        if ($tableBody.find('tr:first').text().trim() === "No data available in table") {
+            $tableBody.find('tr:first').remove();
+            index = 0;
+        } else {
+            index = $tableBody.find('tr').length;
+        }
+        var row = `<tr>
+                                               <td>${index + 1}</td>
+                                                <td>
+                                                    <input name="RiskSource[${index}].Description" value="${desc}" class="form-control" />
+                                                </td>
+                                                <td>
+                                                <a class="btn btn-danger delete-btn" onclick="removeRiskSource(this)" data-toggle="tooltip" data-placement="top" title="Delete"><i class="bx bx-message-square-x"></i></a>
+                                                </td>
+                                            </tr>`
+        $('#riskSourceTable tbody').append(row);
+    }
+
+    function removeRiskSource(button) {
+        $(button).closest('tr').remove();
+        $('#riskSourceTable tbody tr').each(function (index, tr) {
+            $(tr).find('input[name^="RiskSource["]').each(function () {
+                var name = $(this).attr('name');
+                var newName = name.replace(/RiskSource\[\d+\]/, `RiskSource[${index}]`);
+                $(this).attr('name', newName);
             });
-        }
+            // Update row numbering
+            $(tr).find('td:first').text(index + 1);
+        });
+    }
 
-        function addRiskConsequence() {
-            var desc = $('#RiskConsequenceInput').val();
-            if (desc.trim() === "") {
-                $('#RiskConsequenceValidation').text("Risk Consequence cannot be empty.");
-                return;
-            } else {
-                $('#RiskConsequenceValidation').text("");
-            }
-            var index = $('#riskConsequenceTable tbody tr').length;
-                    var row = `<tr>
-                                    <td>
-                                    <input asp-for="RiskConsequence[${index}].Description" value="${desc}" class="form-control" />
-                                    </td>
-                                    <td>
-                                    <a class="btn btn-danger delete-btn" onclick="removeRiskConsequence(this)" data-toggle="tooltip" data-placement="top" title="Delete"><i class="bx bx-message-square-x"></i></a>
-                                    </td>
-                                </tr>`
-            $('#riskConsequenceTable tbody').append(row);
+    function addRiskConsequence() {
+        var desc = $('#RiskConsequenceInput').val();
+        if (desc.trim() === "") {
+            $('#RiskConsequenceValidation').text("Risk Consequence cannot be empty.");
+            return;
+        } else {
+            $('#RiskConsequenceValidation').text("");
         }
+        var $tableBody = $('#riskConsequenceTable tbody');
+        var index;
 
-        function removeRiskConsequence(button) {
-            $(button).closest('tr').remove();
-            $('#riskConsequenceTable tbody tr').each(function (index, tr) {
-                $(tr).find('input[name^="RiskConsequence["]').each(function () {
-                    var name = $(this).attr('name');
-                    var newName = name.replace(/RiskConsequence\[\d+\]/, `RiskConsequence[${index}]`);
-                    $(this).attr('name', newName);
-                });
-                // Update row numbering
-                $(tr).find('td:first').text(index + 1);
+        if ($tableBody.find('tr:first').text().trim() === "No data available in table") {
+            $tableBody.find('tr:first').remove();
+            index = 0;
+        } else {
+            index = $tableBody.find('tr').length;
+        }
+        var row = `<tr>
+                         <td>${index + 1}</td>
+                                                <td>
+                                                    <input name="RiskConsequence[${index}].Description" value="${desc}" class="form-control" />
+                                                </td>
+                                                <td>
+                                                <a class="btn btn-danger delete-btn" onclick="removeRiskConsequence(this)" data-toggle="tooltip" data-placement="top" title="Delete"><i class="bx bx-message-square-x"></i></a>
+                                                </td>
+                                            </tr>`
+        $('#riskConsequenceTable tbody').append(row);
+    }
+
+    function removeRiskConsequence(button) {
+        $(button).closest('tr').remove();
+        $('#riskConsequenceTable tbody tr').each(function (index, tr) {
+            $(tr).find('input[name^="RiskConsequence["]').each(function () {
+                var name = $(this).attr('name');
+                var newName = name.replace(/RiskConsequence\[\d+\]/, `RiskConsequence[${index}]`);
+                $(this).attr('name', newName);
             });
-        }
+            // Update row numbering
+            $(tr).find('td:first').text(index + 1);
+        });
+    }
 
-        function addRiskCause() {
-            var desc = $('#RiskCauseInput').val();
-            if (desc.trim() === "") {
-                $('#RiskCauseValidation').text("Risk Cause cannot be empty.");
-                return;
-            } else {
-                $('#RiskCauseValidation').text("");
-            }
-            var index = $('#riskCauseTable tbody tr').length;
-            var row = ` <tr>
-                                 <td>
-                                 <input asp-for="RiskCause[${index}].Description" value="${desc}" class="form-control" />
-                                 </td>
-                                 <td>
-                                 <a class="btn btn-danger delete-btn" onclick="removeRiskCause(this)" data-toggle="tooltip" data-placement="top" title="Delete"><i class="bx bx-message-square-x"></i></a>
-                                 </td>
-                         </tr>`
-            $('#riskCauseTable tbody').append(row);
+    function addRiskCause() {
+        var desc = $('#RiskCauseInput').val();
+        if (desc.trim() === "") {
+            $('#RiskCauseValidation').text("Risk Cause cannot be empty.");
+            return;
+        } else {
+            $('#RiskCauseValidation').text("");
         }
+        var $tableBody = $('#riskCauseTable tbody');
+        var index;
 
-        function removeRiskCause(button) {
-            $(button).closest('tr').remove();
-            $('#riskCauseTable tbody tr').each(function (index, tr) {
-                $(tr).find('input[name^="RiskCause["]').each(function () {
-                    var name = $(this).attr('name');
-                    var newName = name.replace(/RiskCause\[\d+\]/, `RiskCause[${index}]`);
-                    $(this).attr('name', newName);
-                });
-                // Update row numbering
-                $(tr).find('td:first').text(index + 1);
+        if ($tableBody.find('tr:first').text().trim() === "No data available in table") {
+            $tableBody.find('tr:first').remove();
+            index = 0;
+        } else {
+            index = $tableBody.find('tr').length;
+        }
+        var row = ` <tr>
+                         <td>${index + 1}</td>
+                                             <td>
+                                                 <input name="RiskCause[${index}].Description" value="${desc}" class="form-control" />
+                                             </td>
+                                             <td>
+                                             <a class="btn btn-danger delete-btn" onclick="removeRiskCause(this)" data-toggle="tooltip" data-placement="top" title="Delete"><i class="bx bx-message-square-x"></i></a>
+                                             </td>
+                                     </tr>`
+        $('#riskCauseTable tbody').append(row);
+    }
+
+    function removeRiskCause(button) {
+        $(button).closest('tr').remove();
+        $('#riskCauseTable tbody tr').each(function (index, tr) {
+            $(tr).find('input[name^="RiskCause["]').each(function () {
+                var name = $(this).attr('name');
+                var newName = name.replace(/RiskCause\[\d+\]/, `RiskCause[${index}]`);
+                $(this).attr('name', newName);
             });
-        }
+            // Update row numbering
+            $(tr).find('td:first').text(index + 1);
+        });
+    }
 
-    </script>
-    @*@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}*@
-}
+</script>
+

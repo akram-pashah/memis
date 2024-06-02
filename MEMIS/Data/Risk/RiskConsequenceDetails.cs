@@ -11,6 +11,6 @@ namespace MEMIS.Data.Risk
 
     [ForeignKey("RiskIdentification")]
     public int RiskId { get; set; }
-    public RiskIdentification RiskIdentification { get; set; }
+    public RiskIdentification? RiskIdentification { get; set; }
   }
 }

@@ -1,4 +1,4 @@
-﻿using MEMIS.Data.Risk;
+using MEMIS.Data.Risk;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;

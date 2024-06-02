@@ -21,13 +21,13 @@ namespace MEMIS.Models.Risk
         [Required]
         public string RiskDescription { get; set; }
         [Required]
-        public List<Event> Events { get; set; } = new List<Event>();
+        public List<Event> Events { get; set; } 
         [Required]
-        public List<RiskSource> RiskSource { get; set; } = new List<RiskSource>();
+        public List<RiskSource> RiskSource { get; set; } 
         [Required]
-        public List<RiskCause> RiskCause { get; set; } = new List<RiskCause>();
+        public List<RiskCause> RiskCause { get; set; }
         [Required]
-        public List<RiskConsequenceDetails> RiskConsequence { get; set; } = new List<RiskConsequenceDetails>();
+        public List<RiskConsequenceDetails> RiskConsequence { get; set; } 
 
         [Required]
         [Range(1, 5, ErrorMessage = "Please select correct value")]

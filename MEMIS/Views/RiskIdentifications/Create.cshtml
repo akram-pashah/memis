@@ -13,13 +13,7 @@
 
 <h4>Risk and Opportunities Assessment</h4>
 <hr />
-@* <component type="typeof(MyGrid)" render-mode="ServerPrerendered" />
-<component type="typeof(RiskCreate)" render-mode="ServerPrerendered" /> *@
 
- 
-@* <div class="row">
-    @(await Html.RenderComponentAsync<RiskIdentificate>(RenderMode.Static))
-</div> *@
 <div class="row">
     <div class="col-md-6">
         <form asp-action="Create">
@@ -132,7 +126,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @for (int i = 0; i < Model.RiskSource.Count; i++)
+                                        @for (int i = 0; i < Model.RiskSource?.Count; i++)
                                         {
                                             <tr>
                                                 <td>
@@ -185,7 +179,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @for (int i = 0; i < Model.RiskCause.Count; i++)
+                                        @for (int i = 0; i < Model.RiskCause?.Count; i++)
                                         {
                                             <tr>
                                                 <td>
@@ -193,6 +187,7 @@
                                                 </td>
                                                 <td>
                                                     <input type="hidden" asp-for="RiskCause[i].RiskCauseId" />
+                                                    <input type="hidden" asp-for="RiskSource[i].RiskId" />
                                                     <input asp-for="RiskCause[i].Description" class="form-control" />
                                                 </td>
                                                 <td>
@@ -237,7 +232,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @for (int i = 0; i < Model.RiskConsequence.Count; i++)
+                                        @for (int i = 0; i < Model.RiskConsequence?.Count; i++)
                                         {
                                             <tr>
                                                 <td>
@@ -245,6 +240,7 @@
                                                 </td>
                                                 <td>
                                                     <input type="hidden" asp-for="RiskConsequence[i].RiskConsequenceId" />
+                                                    <input type="hidden" asp-for="RiskSource[i].RiskId" />
                                                     <input asp-for="RiskConsequence[i].Description" class="form-control" />
                                                 </td>
                                                 <td>
@@ -261,7 +257,7 @@
                 @* <span asp-validation-for="RiskConsequence" class="text-danger" ></span> *@
             </div>
             <br />
-            <div class="form-group">
+            <div class="form-group" >
                 <label asp-for="RiskConsequenceId" class="control-label">Risk Consequence Id</label>
                 @Html.DropDownList("RiskConsequenceId", ViewBag.RiskConsequenceList as SelectList, new { @class = "form-control form-select" })
                 <span asp-validation-for="RiskConsequenceId" class="text-danger"></span>
@@ -275,26 +271,23 @@
             <br />
             <div class="form-group">
                 <label asp-for="RiskScore" class="control-label">Risk Score</label>
-                <input asp-for="RiskScore" class="form-control"  required readonly/>
+                <input asp-for="RiskScore" id="RiskScore" class="form-control" required readonly />
                 <span asp-validation-for="RiskScore" class="text-danger"></span>
             </div>
             <br />
             <div class="form-group">
                 <label asp-for="RiskRank" class="control-label">Risk Rank</label>
-                <input asp-for="RiskRank" class="form-control" required readonly/>
+                <input asp-for="RiskRank" id="RiskRank" class="form-control" required readonly />
                 <span asp-validation-for="RiskRank" class="text-danger"></span>
             </div>
             <br />
             <div class="form-group">
                 <label asp-for="EvalCriteria" class="control-label">Eval Criteria</label>
-                <textarea asp-for="EvalCriteria" class="form-control" style="height:150px"  required readonly></textarea>
+                <textarea asp-for="EvalCriteria" id="EvalCriteria" class="form-control" style="height:150px" required readonly></textarea>
                 <span asp-validation-for="EvalCriteria" class="text-danger"></span>
             </div>
             <br />
-            <input type="hidden" id="eventsArrayInput" name="Events" />
-            <input type="hidden" id="RiskSourceArrayInput" name="RiskSource" />
-            <input type="hidden" id="RiskCauseArrayInput" name="RiskCause" />
-            <input type="hidden" id="RiskConsequenceArrayInput" name="RiskConsequence" />
+           
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
@@ -305,12 +298,45 @@
 <div>
     <a asp-action="Index">Back to List</a>
 </div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
-<script src="~/js/riskidentification.js"></script>
-
-
-@section Scripts {
 <script>
+
+  $(document).ready(function () {
+            $("#RiskConsequenceId").change(function () {
+                console.log("RiskConsequenceId changed, value: " + $('option:selected', this).val());
+                if ($('option:selected', this).val() != 0) {
+                    GetData();
+                }
+            });
+            function GetData() {
+                var riskConsequenceId = document.getElementById("RiskConsequenceId").value;
+                var riskLikelihoodId = document.getElementById("RiskLikelihoodId").value;
+
+                if (riskConsequenceId != 0 && riskLikelihoodId != 0) {
+                    console.log("Making AJAX request with RCId: " + riskConsequenceId + " and RLId: " + riskLikelihoodId);
+                    $.ajax({
+                        url: '/RiskIdentifications/GetRiskMatrix',
+                        type: 'GET',
+                        data: {
+                            RCId: riskConsequenceId,
+                            RLId: riskLikelihoodId
+                        },
+                        dataType: 'json',
+                        success: function (data) {
+                            console.log("AJAX success:", data);
+                            document.getElementById('RiskRank').value = data?.riskValue;
+                            document.getElementById('RiskScore').value = data?.riskRank;
+                            document.getElementById('EvalCriteria').value = data?.evaluationCriteria;
+                        },
+                        error: function (error) {
+                            console.error("AJAX error:", error);
+                            alert("An error occurred while fetching data. Please try again.");
+                        }
+                    });
+                }
+            }
+        })
 
     window.addEventListener('load', function () {
         GetData();
@@ -357,8 +383,15 @@
             } else {
                 $('#eventValidation').text("");
             }
+            var $tableBody = $('#eventsTable tbody');
+            var index;
 
-            var index = $('#eventsTable tbody tr').length;
+            if ($tableBody.find('tr:first').text().trim() === "No data available in table") {
+                $tableBody.find('tr:first').remove();
+                index = 0;
+            } else {
+                index = $tableBody.find('tr').length;
+            }
             var row = `
                                 <tr>
                                     <td>${index + 1}</td>
@@ -397,10 +430,19 @@
             } else {
                 $('#RiskSourceValidation').text("");
             }
-            var index = $('#riskSourceTable tbody tr').length;
+            var $tableBody = $('#riskSourceTable tbody');
+            var index;
+
+            if ($tableBody.find('tr:first').text().trim() === "No data available in table") {
+                $tableBody.find('tr:first').remove();
+                index = 0;
+            } else {
+                index = $tableBody.find('tr').length;
+            }
             var row = `<tr>
+                                           <td>${index + 1}</td>
                                             <td>
-                                            <input asp-for="RiskSource[${index}].Description" value="${desc}" class="form-control" />
+                                                <input name="RiskSource[${index}].Description" value="${desc}" class="form-control" />
                                             </td>
                                             <td>
                                             <a class="btn btn-danger delete-btn" onclick="removeRiskSource(this)" data-toggle="tooltip" data-placement="top" title="Delete"><i class="bx bx-message-square-x"></i></a>
@@ -430,10 +472,19 @@
             } else {
                 $('#RiskConsequenceValidation').text("");
             }
-            var index = $('#riskConsequenceTable tbody tr').length;
+            var $tableBody = $('#riskConsequenceTable tbody');
+            var index;
+
+            if ($tableBody.find('tr:first').text().trim() === "No data available in table") {
+                $tableBody.find('tr:first').remove();
+                index = 0;
+            } else {
+                index = $tableBody.find('tr').length;
+            }
             var row = `<tr>
+                     <td>${index + 1}</td>
                                             <td>
-                                            <input asp-for="RiskConsequence[${index}].Description" value="${desc}" class="form-control" />
+                                                <input name="RiskConsequence[${index}].Description" value="${desc}" class="form-control" />
                                             </td>
                                             <td>
                                             <a class="btn btn-danger delete-btn" onclick="removeRiskConsequence(this)" data-toggle="tooltip" data-placement="top" title="Delete"><i class="bx bx-message-square-x"></i></a>
@@ -463,10 +514,19 @@
             } else {
                 $('#RiskCauseValidation').text("");
             }
-            var index = $('#riskCauseTable tbody tr').length;
+            var $tableBody = $('#riskCauseTable tbody');
+            var index;
+
+            if ($tableBody.find('tr:first').text().trim() === "No data available in table") {
+                $tableBody.find('tr:first').remove();
+                index = 0;
+            } else {
+                index = $tableBody.find('tr').length;
+            }
             var row = ` <tr>
+                     <td>${index + 1}</td>
                                          <td>
-                                         <input asp-for="RiskCause[${index}].Description" value="${desc}" class="form-control" />
+                                             <input name="RiskCause[${index}].Description" value="${desc}" class="form-control" />
                                          </td>
                                          <td>
                                          <a class="btn btn-danger delete-btn" onclick="removeRiskCause(this)" data-toggle="tooltip" data-placement="top" title="Delete"><i class="bx bx-message-square-x"></i></a>
@@ -489,5 +549,4 @@
         }
 
 </script>
-    @*@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}*@
-}
+
