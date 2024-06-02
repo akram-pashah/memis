@@ -508,19 +508,19 @@ namespace MEMIS.Controllers.Risk
             {
                 Activity = riskIdentification.Activity,
                 EvalCriteria = riskIdentification.EvalCriteria,
-                Events = _context.Events.Where(x => x.RiskId == id).ToListAsync().Result,
+                Events = await _context.Events.Where(x => x.RiskId == id).ToListAsync(),
                 FocusArea = (int)riskIdentification.FocusArea,
                 IdentifiedDate = riskIdentification.IdentifiedDate,
                 IsVerified = riskIdentification.IsVerified,
-                RiskCause =  _context.RiskCauses.Where(x => x.RiskId == id).ToListAsync().Result,
-                RiskConsequence =  _context.RiskConsequenceDetails.Where(x => x.RiskId == id).ToListAsync().Result,
+                RiskCause = await _context.RiskCauses.Where(x => x.RiskId == id).ToListAsync(),
+                RiskConsequence = await _context.RiskConsequenceDetails.Where(x => x.RiskId == id).ToListAsync(),
                 RiskConsequenceId = riskIdentification.RiskConsequenceId,
                 RiskDescription = riskIdentification.RiskDescription,
                 RiskId = riskIdentification.RiskId,
                 RiskLikelihoodId = riskIdentification.RiskLikelihoodId,
                 RiskRank = riskIdentification.RiskRank,
                 RiskScore = riskIdentification.RiskScore,
-                RiskSource = _context.RiskSources.Where(x => x.RiskId == id).ToListAsync().Result,
+                RiskSource = await _context.RiskSources.Where(x => x.RiskId == id).ToListAsync(),
                 StrategicObjective = (int)riskIdentification.StrategicObjective,
 
             };

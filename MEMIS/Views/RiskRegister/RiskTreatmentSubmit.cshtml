@@ -1,25 +1,25 @@
-@model MEMIS.Models.Risk.RiskTreatmentDto
+@model MEMIS.Data.Risk.RiskRegister
 
 
 @{
-  ViewData["Title"] = "Risk Treatment";
-  //Layout = "~/Views/Shared/_RiskLayout.cshtml";
-  Layout = "~/Pages/Shared/_ContentNavbarLayout.cshtml";
+    ViewData["Title"] = "Risk Treatment";
+    //Layout = "~/Views/Shared/_RiskLayout.cshtml";
+    Layout = "~/Pages/Shared/_ContentNavbarLayout.cshtml";
 }
- 
+<script src="~/js/ui-modals.js"></script>
 
 <h4>Risk Treatment</h4>
 <hr />
 <div class="row">
     <div class="col-md-6">
-        
-        <form asp-action="RiskTreatmentSubmit">
+
+        <form asp-action="RiskTreatmentSubmit" class="needs-validation was-validated" novalidate="">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="RiskRefID" />
             <input type="hidden" asp-for="RiskId" />
             <div class="form-group">
                 <label asp-for="IdentifiedDate" class="control-label"></label>
-                <input asp-for="IdentifiedDate"  class="form-control" />
+                <input asp-for="IdentifiedDate" class="form-control" />
                 <span asp-validation-for="IdentifiedDate" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -36,7 +36,7 @@
                 <label asp-for="Activity" class="control-label"></label>
                 @Html.DropDownList("Activity", new SelectList(ViewBag.ActivityList, "intActivity", "activityName"), new { @class = "form-control form-select", @required = "required" })
                 <span asp-validation-for="Activity" class="text-danger"></span>
-            </div> 
+            </div>
             <div class="form-group">
                 <label asp-for="RiskDescription" class="control-label"></label>
                 <input asp-for="RiskDescription" class="form-control" />
@@ -74,60 +74,113 @@
             </div>
             <div class="form-group">
                 <label asp-for="RiskScore" class="control-label"></label>
-                <input asp-for="RiskScore" class="form-control"  required readonly/>
+                <input asp-for="RiskScore" class="form-control" required readonly />
                 <span asp-validation-for="RiskScore" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="RiskRank" class="control-label"></label>
-                <input asp-for="RiskRank" class="form-control" required readonly/>
+                <input asp-for="RiskRank" class="form-control" required readonly />
                 <span asp-validation-for="RiskRank" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="EvalCriteria" class="control-label"></label>
-                <textarea asp-for="EvalCriteria" class="form-control" style="height:150px"  required readonly></textarea>
+                <textarea asp-for="EvalCriteria" class="form-control" style="height:150px" required readonly></textarea>
                 <span asp-validation-for="EvalCriteria" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="riskTolerence" class="control-label"></label>
                 <select asp-for="riskTolerence" class="form-control" asp-items="ViewBag.RiskRank"></select>
                 <span asp-validation-for="riskTolerence" class="text-danger"></span>
-            </div>             
+            </div>
             <div class="form-group">
                 <label asp-for="riskTolerenceJustification" class="control-label"></label>
                 <input asp-for="riskTolerenceJustification" class="form-control" />
                 <span asp-validation-for="riskTolerenceJustification" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="AdditionalMitigation" class="control-label"></label>
-                <input asp-for="AdditionalMitigation" class="form-control" />
-                <span asp-validation-for="AdditionalMitigation" class="text-danger"></span>
+            <!-- Modal Trigger -->
 
-            </div>
-            <div class="form-group">
-                <label asp-for="ExpectedDate" class="control-label"></label>
-                <input asp-for="ExpectedDate" class="form-control" />
-                <span asp-validation-for="ExpectedDate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ResourcesRequired" class="control-label"></label>
-                <input asp-for="ResourcesRequired" class="form-control" />
-                <span asp-validation-for="ResourcesRequired" class="text-danger"></span>
-            </div> 
+            <button type="button" class="btn btn-secondary float-end" data-bs-toggle="modal" data-bs-target="#riskTreatmentModal">
+                Add Risk Treatment Plan
+            </button>
+            <br />
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
         </form>
+
+        @{
+            var viewData = new ViewDataDictionary(ViewData);
+            viewData["RiskRefID"] = Model.RiskRefID;
+        }
+
+        @Html.Partial("_TreatmentPlanForm", new MEMIS.Data.Risk.RiskTreatmentPlan(), viewData)
+        <!-- Risk Treatment Plan Grid -->
+        @* <table class="table table-bordered" id="riskTreatmentTable">
+            <thead>
+                <tr>
+                    <th>Treatment Action</th>
+                    <th>Indicator Description</th>
+                    <th>Baseline</th>
+                    <th>Cumulative Target</th>
+                    <th>Frequency of Reporting</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table> *@
+
+        <!-- Modal -->
+
+    </div>
+    <div class="col-md-6">
+        <div class="card" id="treatmentPlanGrid">
+            @Html.Partial("_TreatmentPlanGrid", Model.RiskTreatmentPlans)
+        </div>
     </div>
 </div>
 
 <div>
     <a asp-action="Index">Back to List</a>
 </div>
-
-@section Scripts {
-
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
 <script>
 
+    $(document).ready(function () {
+        $('#addRiskTreatment').on('click', function () {
+            var form = $('#treatmentPlanForm');
+            if (form[0].checkValidity()) {
+                $.ajax({
+                    url: '@Url.Action("AddTreatmentPlan", "Risk")',
+                    type: 'POST',
+                    data: form.serialize(),
+                    success: function (result) {
+                        $('#riskTreatmentModal').modal('hide');
+                        $('#treatmentPlanGrid').html(result);
+                    },
+                    error: function (error) {
+                        // Handle error
+                    }
+                });
+            } else {
+                form.addClass('was-validated');
+            }
+        });
+
+        // $(document).on('click', '.remove-treatment', function () {
+        //     var id = $(this).data('id');
+        //     $.ajax({
+        //         url: '@Url.Action("RemoveTreatmentPlan", "Risk")/' + id,
+        //         type: 'POST',
+        //         success: function (result) {
+        //             $('#treatmentPlanGrid').html(result);
+        //         },
+        //         error: function (error) {
+        //             // Handle error
+        //         }
+        //     });
+        // });
+    });
     window.addEventListener('load', function () {
         GetData();
     })
@@ -136,7 +189,7 @@
         if ($('option:selected', this).val() != 0) {
             GetData();
         }
-        
+
     });
     $("#RiskLikelihoodId").change(function () {
         if ($('option:selected', this).val() != 0) {
@@ -162,9 +215,7 @@
                 }
             });
         }
-        
+
     }
 
 </script>
-    @*@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}*@
-}

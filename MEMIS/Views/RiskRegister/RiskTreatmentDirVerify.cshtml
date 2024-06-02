@@ -97,7 +97,7 @@
                 <input asp-for="riskTolerenceJustification" class="form-control" />
                 <span asp-validation-for="riskTolerenceJustification" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            @* <div class="form-group">
                 <label asp-for="AdditionalMitigation" class="control-label"></label>
                 <input asp-for="AdditionalMitigation" class="form-control" />
                 <span asp-validation-for="AdditionalMitigation" class="text-danger"></span>
@@ -112,7 +112,7 @@
                 <label asp-for="ResourcesRequired" class="control-label"></label>
                 <input asp-for="ResourcesRequired" class="form-control" />
                 <span asp-validation-for="ResourcesRequired" class="text-danger"></span>
-            </div>
+            </div> *@
             <div class="form-group">
                 <label asp-for="ApprStatus" class="control-label"></label>
                 <select asp-for="ApprStatus" class="form-control" asp-items="ViewBag.Approval"></select>

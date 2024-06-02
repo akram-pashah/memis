@@ -2,17 +2,17 @@
 
 
 @{
-  ViewData["Title"] = "Risk Residual Assessment Verification [RMO]";
-  //Layout = "~/Views/Shared/_RiskLayout.cshtml";
-  Layout = "~/Pages/Shared/_ContentNavbarLayout.cshtml";
+    ViewData["Title"] = "Risk Residual Assessment Verification [RMO]";
+    //Layout = "~/Views/Shared/_RiskLayout.cshtml";
+    Layout = "~/Pages/Shared/_ContentNavbarLayout.cshtml";
 }
- 
+
 
 <h4>Risk Residual Assessment Verification [RMO]</h4>
 <hr />
 <div class="row">
     <div class="col-md-6">
-        
+
         <form asp-action="RiskResidualRmoVerify">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="RiskRefID" />
@@ -36,7 +36,7 @@
                 <label asp-for="Activity" class="control-label"></label>
                 @Html.DropDownList("Activity", new SelectList(ViewBag.ActivityList, "intActivity", "activityName"), new { @class = "form-control form-select", @required = "required" })
                 <span asp-validation-for="Activity" class="text-danger"></span>
-            </div> 
+            </div>
             <div class="form-group">
                 <label asp-for="RiskDescription" class="control-label"></label>
                 <input asp-for="RiskDescription" class="form-control" />
@@ -91,28 +91,28 @@
                 <label asp-for="riskTolerence" class="control-label"></label>
                 <select asp-for="riskTolerence" class="form-control" asp-items="ViewBag.RiskRank"></select>
                 <span asp-validation-for="riskTolerence" class="text-danger"></span>
-            </div>             
+            </div>
             <div class="form-group">
                 <label asp-for="riskTolerenceJustification" class="control-label"></label>
                 <input asp-for="riskTolerenceJustification" class="form-control" />
                 <span asp-validation-for="riskTolerenceJustification" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="AdditionalMitigation" class="control-label"></label>
-                <input asp-for="AdditionalMitigation" class="form-control" />
-                <span asp-validation-for="AdditionalMitigation" class="text-danger"></span>
+            <label asp-for="AdditionalMitigation" class="control-label"></label>
+            <input asp-for="AdditionalMitigation" class="form-control" />
+            <span asp-validation-for="AdditionalMitigation" class="text-danger"></span>
 
             </div>
             <div class="form-group">
-                <label asp-for="ExpectedDate" class="control-label"></label>
-                <input asp-for="ExpectedDate" class="form-control" />
-                <span asp-validation-for="ExpectedDate" class="text-danger"></span>
+            <label asp-for="ExpectedDate" class="control-label"></label>
+            <input asp-for="ExpectedDate" class="form-control" />
+            <span asp-validation-for="ExpectedDate" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="ResourcesRequired" class="control-label"></label>
-                <input asp-for="ResourcesRequired" class="form-control" />
-                <span asp-validation-for="ResourcesRequired" class="text-danger"></span>
-            </div>
+            <label asp-for="ResourcesRequired" class="control-label"></label>
+            <input asp-for="ResourcesRequired" class="form-control" />
+            <span asp-validation-for="ResourcesRequired" class="text-danger"></span>
+                            </div>
             <div class="form-group">
                 <label asp-for="ActionTaken" class="control-label"></label>
                 <input asp-for="ActionTaken" class="form-control" />
@@ -162,45 +162,45 @@
 
 @section Scripts {
 
-<script>
+    <script>
 
-    window.addEventListener('load', function () {
-        GetData();
-    })
-
-    $("#RiskConsequenceId").change(function () {
-        if ($('option:selected', this).val() != 0) {
+        window.addEventListener('load', function () {
             GetData();
-        }
-        
-    });
-    $("#RiskLikelihoodId").change(function () {
-        if ($('option:selected', this).val() != 0) {
-            GetData();
+        })
+
+        $("#RiskConsequenceId").change(function () {
+            if ($('option:selected', this).val() != 0) {
+                GetData();
+            }
+
+        });
+        $("#RiskLikelihoodId").change(function () {
+            if ($('option:selected', this).val() != 0) {
+                GetData();
+            }
+
+        });
+
+        function GetData() {
+            if (document.getElementById("RiskConsequenceId").value != 0 && document.getElementById("RiskLikelihoodId").value != 0) {
+                $.ajax({
+                    url: '/RiskIdentifications/GetRiskMatrix',
+                    type: 'GET',
+                    data: { RCId: document.getElementById("RiskConsequenceId").value, RLId: document.getElementById("RiskLikelihoodId").value },
+                    dataType: 'json',
+                    success: function (data) {
+                        document.getElementById('RiskRank').value = data.riskValue;
+                        document.getElementById('RiskScore').value = data.riskRank;
+                        document.getElementById('EvalCriteria').value = data.evaluationCriteria;
+                    },
+                    error: function (error) {
+                        //log or alert the error
+                    }
+                });
+            }
+
         }
 
-    });
-
-    function GetData() {
-        if (document.getElementById("RiskConsequenceId").value != 0 && document.getElementById("RiskLikelihoodId").value != 0) {
-            $.ajax({
-                url: '/RiskIdentifications/GetRiskMatrix',
-                type: 'GET',
-                data: { RCId: document.getElementById("RiskConsequenceId").value, RLId: document.getElementById("RiskLikelihoodId").value },
-                dataType: 'json',
-                success: function (data) {
-                    document.getElementById('RiskRank').value = data.riskValue;
-                    document.getElementById('RiskScore').value = data.riskRank;
-                    document.getElementById('EvalCriteria').value = data.evaluationCriteria;
-                },
-                error: function (error) {
-                    //log or alert the error
-                }
-            });
-        }
-        
-    }
-
-</script>
+    </script>
     @*@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}*@
 }

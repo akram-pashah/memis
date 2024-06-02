@@ -1,0 +1,67 @@
+@model MEMIS.Data.Risk.RiskTreatmentPlan
+@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@
+<div class="modal fade" id="riskTreatmentModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <form asp-action="AddTreatmentPlan" class="needs-validation was-validated" novalidate="">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel1">Add Risk Treatment Plan</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="RiskRefID" name="RiskRefID" value="@ViewBag.RiskRefID" />
+                    <div class="row">
+                        <div class="col mb-3">
+                            <label class="form-label" for="treatmentAction">Treatment Action</label>
+                            <input type="text" class="form-control" id="treatmentAction" name="TreatmentAction" placeholder="Treatment Action" required="">
+                            <div class="valid-feedback"> Looks good! </div>
+                            <div class="invalid-feedback"> This field is required. </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col mb-3">
+                            <label class="form-label" for="indicatorDescription">Indicator Description</label>
+                            <input type="text" class="form-control" id="indicatorDescription" name="IndicatorDescription" placeholder="Description" required="">
+                            <div class="valid-feedback"> Looks good! </div>
+                            <div class="invalid-feedback"> This field is required. </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col mb-3">
+                            <label class="form-label" for="baseline">Baseline</label>
+                            <input type="number" class="form-control" id="baseline" name="Baseline" placeholder="Baseline" required="">
+                            <div class="valid-feedback"> Looks good! </div>
+                            <div class="invalid-feedback"> This field is required. </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col mb-3">
+                            <label class="form-label" for="cumulativeTarget">Cumulative Target</label>
+                            <input type="number" class="form-control" id="cumulativeTarget" name="CumulativeTarget" placeholder="Cumulative Target" required="">
+                            <div class="valid-feedback"> Looks good! </div>
+                            <div class="invalid-feedback"> This field is required. </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col mb-3">
+                            <label class="form-label" for="frequencyOfReporting">Frequency of Reporting</label>
+                            <select class="form-select" name="FrequencyOfReporting" id="frequencyOfReporting" require="">
+                                <option value="Monthly">Monthly</option>
+                                <option value="Quarterly">Quarterly</option>
+                                <option value="Annually">Annually</option>
+                            </select>
+                            <div class="valid-feedback"> Looks good! </div>
+                            <div class="invalid-feedback"> This field is required. </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Add</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

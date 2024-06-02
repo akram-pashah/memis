@@ -4,6 +4,7 @@ using MEMIS.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MEMIS.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240531040008_AddRiskTreatmentPlan")]
+    partial class AddRiskTreatmentPlan
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -2449,6 +2452,9 @@ namespace MEMIS.Migrations
                     b.Property<DateTime?>("ActualDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("AdditionalMitigation")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int?>("ApprStatus")
                         .HasColumnType("int");
 
@@ -2459,6 +2465,9 @@ namespace MEMIS.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime?>("ExpectedDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<int?>("FocusArea")
                         .HasColumnType("int");
 
@@ -2466,6 +2475,9 @@ namespace MEMIS.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Opportunity")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ResourcesRequired")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("ReviewDate")
@@ -2585,7 +2597,7 @@ namespace MEMIS.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
-                    b.Property<int?>("RiskRefID")
+                    b.Property<int>("RiskRefID")
                         .HasColumnType("int");
 
                     b.Property<string>("TreatmentAction")
@@ -3779,7 +3791,9 @@ namespace MEMIS.Migrations
                 {
                     b.HasOne("MEMIS.Data.Risk.RiskRegister", "RiskRegister")
                         .WithMany("RiskTreatmentPlans")
-                        .HasForeignKey("RiskRefID");
+                        .HasForeignKey("RiskRefID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("RiskRegister");
                 });
