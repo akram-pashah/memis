@@ -77,6 +77,12 @@
             </div>
             <br />
             <div class="form-group">
+                <label asp-for="IdentifiedRisks" class="control-label"></label>
+                <input asp-for="IdentifiedRisks" class="form-control" type="text" />
+                <span asp-validation-for="IdentifiedRisks" class="text-danger"></span>
+            </div>
+            <br />
+            <div class="form-group">
                 <label asp-for="QBudget" class="control-label"></label>
                 <input asp-for="QBudget" class="form-control" type="number"/>
                 <span asp-validation-for="QBudget" class="text-danger"></span>

@@ -61,6 +61,9 @@ namespace MEMIS.Migrations
                     b.Property<int?>("ApprStatus")
                         .HasColumnType("int");
 
+                    b.Property<string>("IdentifiedRisks")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<double?>("QBudget")
                         .HasColumnType("float");
 

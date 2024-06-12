@@ -39,6 +39,10 @@
 
     <!-- Include Scripts for customizer, helper, analytics, config -->
     @await Html.PartialAsync("Sections/_ScriptsIncludes")
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/js/jquery.dataTables.min.js"></script>
+    <link href="~/css/jquery.dataTables.css" rel="stylesheet" />
 
 </head>
 
@@ -58,21 +62,17 @@
 
     <!-- Main JS-->
     <script src='~/js/main.js'></script>
-
-    <!-- Page Scripts-->
-    @RenderSection("PageScripts", required: false)
-
-    <!-- Place this tag in your head or just before your close body tag. -->
-    @*<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>*@
-    @*<script src="~/js/site.js" asp-append-version="true"></script>*@
-    <script src="~/js/form-validation.js"></script>
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+    // <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/js/jquery.dataTables.min.js"></script>
+    <link href="~/css/jquery.dataTables.css" rel="stylesheet" />
 
     <script type="text/javascript">
         $(document).ready(function () {
             initializeDataTable();
 
             function initializeDataTable() {
-                if ($.fn.DataTable.isDataTable('.table')) {
+                if ($.fn.DataTable?.isDataTable('.table')) {
                     $('.table').DataTable().destroy();
                 }
                 $('.table').DataTable();
@@ -92,6 +92,15 @@
             window.reinitializeDataTable = reinitializeDataTable;
         });
     </script>
+    <!-- Page Scripts-->
+    @RenderSection("PageScripts", required: false)
+
+    <!-- Place this tag in your head or just before your close body tag. -->
+    @*<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>*@
+    @*<script src="~/js/site.js" asp-append-version="true"></script>*@
+    <script src="~/js/form-validation.js"></script>
+
+    
     <script type="text/javascript">
         $(document).ready(function () {
             $('select').each(function () {

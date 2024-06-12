@@ -40,6 +40,8 @@ namespace MEMIS.Data
     public double? QBudget { get; set; }
     [Display(Name = "Appral Status")]
     public int? ApprStatus { get; set; } = 0;
+    [Display(Name = "Identified Risks")]
+    public string? IdentifiedRisks { get; set; }
 
     [Display(Name = "Responsible Party")]
     public virtual Guid? intDept { get; set; }
