@@ -28,7 +28,7 @@
 					<label class="control-label">Project </label>
 				</div>
 				<div class="col-md-3">
-					<select class="form-control form-control-sm" name="ProjectInitiationId" id="ProjectInitiationId" asp-items="ViewBag.ProjectInitiations">
+                    <select class="form-control form-control-sm" asp-for="ProjectInitId" name="ProjectInitId" id="ProjectInitiationId" asp-items="ViewBag.ProjectInitiations" onchange="updateHiddenFields()">
 						<option value="">Select Project</option>
 					</select>
 				</div>
@@ -279,8 +279,8 @@
 					</div>
 					<div class="tab-pane fade" id="others" role="tabpanel" aria-labelledby="others-tab">
 
-						<form asp-action="AddprojectOthersTab">
-							<table class="table table-striped table-hover dt-responsive nowrap tbl-others-schedule">
+                                <form asp-action="AddprojectOthersTab" method="post" enctype="multipart/form-data">
+                                    <table id="othersTable" class="table table-striped table-hover dt-responsive nowrap tbl-others-schedule">
 								<thead>
 									<tr>
 										
@@ -298,18 +298,18 @@
 									@Html.DisplayFor(m => item.Resourses)
 									</td>
 									<td>
-									 @Html.DisplayFor(m => item.Attachment)
-									</td>
+                                        <a href="@Url.Action("Download", "ProjectInitiation", new { id = item.Id })">Download</a>
+                                    </td>
 									
 									<td>
-									<button class="btn btn-sm btn-light delete-payment" type="button" title="Delete" data-item-id="@item.Id"><i class='bx bx-trash-alt'></i></button>
+                                                        <button class="btn btn-sm btn-light delete-payment" onclick="deleteItem(@item.Id)" type="button" title="Delete" data-item-id="@item.Id"><i class='bx bx-trash-alt'></i></button>
 									</td>
 									</tr>
 									}
 									
 									<tr>
 										<td>
-											<input type="hidden" asp-for="ProjectOthersTab.ProjectInitiationId" value="@Model.ProjectInitId" />
+                                            <input type="hidden" asp-for="ProjectOthersTab.ProjectInitiationId" name="ProjectOthersTab.ProjectInitiationId" value="@Model.ProjectInitId" />
 											<input type="hidden" asp-for="ProjectOthersTab.Id" value="1" />
 											<input type="text" class="form-control form-control-sm" asp-for="ProjectOthersTab.Resourses" />
 										</td>
@@ -481,9 +481,47 @@
 //await Html.RenderPartialAsync("_ValidationScriptsPartial");
 	}
 	<script>
+        
+        function updateHiddenFields() {
+            var selectedValue = document.getElementById("ProjectInitiationId").value;
+            document.querySelector('input[name="ProjectOthersTab.ProjectInitiationId"]').value = selectedValue;
+            $.ajax({
+                url: '@Url.Action("Create", "ProjectInitiation")',
+                type: 'POST',
+                data: { ProjectInitiationId: selectedValue },
+                success: function (data) {
+                    window.location.href = window.location.pathname + '/' + selectedValue;
+                },
+                error: function (e, r) {
+                    console.log(e, r);
+                }
+            });
+        }
+        function deleteItem(itemId) {
+            if (confirm("Are you sure you want to delete this item?")) {
+                let form = $('#__AjaxAntiForgeryForm');
+                let token = $('input[name="__RequestVerificationToken"]', form).val();
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("DeleteprojectOthersTabFile", "ProjectInitiation")',
+                    data: {
+                        id: itemId,
+                        __RequestVerificationToken: token
+                    },
+                    success: function (result) {
+                        // Remove the item from the table
+                        $('#othersTable tbody').find('tr[data-item-id="' + itemId + '"]').remove();
+                    },
+                    error: function (xhr, status, error) {
+                        console.error(xhr.responseText);
+                    }
+                });
+            }
+        }
+
 
 		$(function () {
-			
+
 			//SUBMIT FORM ON PROJECT INITIATION
 			$("#ProjectInitiationId").change(function () {
 				if($(this).val() > 0)
@@ -573,6 +611,8 @@
 				let endDate = moment(end, "YYYY.MM.DD");
 				$("#days").val(endDate.diff(startDate, 'days'));
 			}
+
+            
 
 		});
 

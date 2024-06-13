@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MEMIS.Data;
@@ -11,6 +11,7 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Identity;
 using MEMIS.Models.Project;
 using MEMIS.Data.Project;
+using MEMIS.Migrations;
 
 namespace MEMIS.Controllers
 {
@@ -41,7 +42,6 @@ namespace MEMIS.Controllers
 
 		public async Task<IActionResult> Add(int id = 0)
 		{
-
 			var others = _context.ProjectOthersTab.Where(m => m.ProjectInitiationId == id).ToList();
 			var activities = _context.ActivityPlans.Where(m => m.ProjectInitiationId == id).ToList();
 			var payments = _context.ProjectPayments.Where(m => m.ProjectInitiationId == id).ToList();
@@ -75,7 +75,17 @@ namespace MEMIS.Controllers
 			return View(x);
 		}
 
-		[HttpPost]
+         public FileResult Download(int id)
+         {
+           var other = _context.ProjectOthersTab.FirstOrDefault(m => m.Id == id);
+           if (other != null)
+           {
+             return File(other.Attachment, "application/octet-stream", other.FileName);
+           }
+           return null;
+         }
+
+    [HttpPost]
 		[ValidateAntiForgeryToken]
 		public async Task<IActionResult> AddActivity(ActivityPlanDto activityPlan)
 		{
@@ -221,20 +231,57 @@ namespace MEMIS.Controllers
 		[ValidateAntiForgeryToken]
 		public async Task<IActionResult> AddprojectOthersTab(ProjectOthersTabDto projectOthersTab)
 		{
-			if (ModelState.IsValid)
+            var file = Request.Form.Files;
+			if (projectOthersTab?.ProjectInitiationId != 0 && projectOthersTab?.Resourses != null)
 			{
-				ProjectOthersTab _data = new()
-				{
-					ProjectInitiationId = projectOthersTab.ProjectInitiationId,
-					Attachment = projectOthersTab.Attachment,
-					Resourses = projectOthersTab.Resourses,
-				};
-				_context.Add(_data);
-				await _context.SaveChangesAsync();
+                if(file != null && file.Count > 0)
+                {
+                  using(var memoryStream = new MemoryStream())
+                {
+                   await file[0].CopyToAsync(memoryStream);
+                    ProjectOthersTab _data = new()
+                    {
+                      FileName = file[0].FileName,
+                       ProjectInitiationId = projectOthersTab.ProjectInitiationId,
+                       Attachment = memoryStream.ToArray(),
+                       Resourses = projectOthersTab.Resourses,
+                    };
+                   _context.Add(_data);
+                    await _context.SaveChangesAsync();
+                }
+
+            }
 				return RedirectToAction(nameof(Add), new { id = projectOthersTab.ProjectInitiationId });
 			}
 			return RedirectToAction(nameof(Add));
 		}
+
+        [HttpPost]
+		[ValidateAntiForgeryToken]
+		public async Task<IActionResult> DeleteprojectOthersTabFile(int id)
+		{
+			if (_context.ProjectOthersTab == null)
+			{
+				return Problem("Entity set 'AppDbContext.ProjectPayments'  is null.");
+			}
+			var file = await _context.ProjectOthersTab.FindAsync(id);
+
+			if (file != null)
+			{
+				_context.ProjectOthersTab.Remove(file);
+			}
+
+			try
+			{
+				await _context.SaveChangesAsync();
+				return Ok();
+			}
+			catch (Exception ex)
+			{
+				return NotFound(ex.Message);
+			}
+		}
+    
 
 		[HttpPost]
 		[ValidateAntiForgeryToken]

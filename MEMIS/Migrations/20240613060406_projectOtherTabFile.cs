@@ -1,11 +1,13 @@
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
 namespace MEMIS.Migrations
 {
-    public partial class ProjectOtherstab2 : Migration
+    /// <inheritdoc />
+    public partial class projectOtherTabFile : Migration
     {
+        /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
@@ -15,7 +17,7 @@ namespace MEMIS.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Resourses = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Attachment = table.Column<byte[]>(type: "nvarchar(max)", nullable: false, defaultValue: new byte[0]),
+                    Attachment = table.Column<byte[]>(type: "varbinary(max)", nullable: false),
                     ProjectInitiationId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -35,6 +37,7 @@ namespace MEMIS.Migrations
                 column: "ProjectInitiationId");
         }
 
+        /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(

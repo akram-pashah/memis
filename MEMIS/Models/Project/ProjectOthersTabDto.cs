@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MEMIS.Models
@@ -11,7 +11,7 @@ namespace MEMIS.Models
 		public string Resourses { get; set; }
 
 		[Display(Name = "Attachment")]
-		public string Attachment { get; set; }
+		public byte[] Attachment { get; set; }
 
 		[Required]
 		public virtual int? ProjectInitiationId { get; set; }
