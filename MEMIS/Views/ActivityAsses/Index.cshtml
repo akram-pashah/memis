@@ -11,7 +11,10 @@
     <div class="col">
         <h3>Activity Assess</h3>
     </div>
-    <div class="col d-flex justify-content-end mb-3">
+    <div class="col-md-2">
+        <a class="btn btn-outline-success float-end float-right" asp-action="ExportToExcel" target="_blank">Export to Excel</a>
+    </div>
+    <div class="col-md-2 d-flex justify-content-end mb-3">
         <a class="btn btn-info" asp-action="Create">Create New</a>
     </div>
 </div>
@@ -47,6 +50,9 @@
                         </th>
                         <th>
                             @Html.DisplayNameFor(model => model.Data[0].Quarter)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Data[0].IdentifiedRisks)
                         </th>
                         <th>
                             @Html.DisplayNameFor(model => model.Data[0].QTarget)
@@ -110,6 +116,9 @@
                             </td>
                             <td>
                                 @Html.DisplayFor(modelItem => item.Quarter)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.IdentifiedRisks)
                             </td>
                             <td>
                                 @Html.DisplayFor(modelItem => item.QTarget)

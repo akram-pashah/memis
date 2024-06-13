@@ -1,0 +1,33 @@
+
+@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@model IEnumerable<MEMIS.Data.Risk.RiskTreatmentPlan>
+
+<div class="card-body">
+    <table class="table table-bordered" id="riskTreatmentTable">
+        <thead>
+            <tr>
+                <th>Treatment Action</th>
+                <th>Indicator Description</th>
+                <th>Baseline</th>
+                <th>Cumulative Target</th>
+                <th>Frequency of Reporting</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var plan in Model)
+            {
+                <tr>
+                    <td>@plan.TreatmentAction</td>
+                    <td>@plan.IndicatorDescription</td>
+                    <td>@plan.Baseline</td>
+                    <td>@plan.CumulativeTarget</td>
+                    <td>@plan.FrequencyOfReporting</td>
+                    <td><a asp-action="RemoveTreatmentPlan" asp-controller="RiskRegister" asp-route-id="@plan.TreatmentPlanId" class="btn btn-danger btn-sm remove-treatment" data-id="@plan.TreatmentPlanId">Remove</a></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

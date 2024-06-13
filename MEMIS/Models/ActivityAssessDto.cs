@@ -39,6 +39,8 @@ namespace MEMIS.Models
     public double? QTarget { get; set; }
     [Display(Name = "Quarterly Budget")]
     public double? QBudget { get; set; }
+    [Display(Name = "Identified Risks")]
+    public string? IdentifiedRisks { get; set; }
     [Display(Name = "Appral Status")]
     public int? ApprStatus { get; set; } = 0;
     [Display(Name = "Department")]

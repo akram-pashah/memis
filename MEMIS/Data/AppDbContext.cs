@@ -80,6 +80,7 @@ namespace MEMIS.Data
     public DbSet<RiskSource> RiskSources { get; set; }
     public DbSet<RiskCause> RiskCauses { get; set; }
     public DbSet<RiskConsequenceDetails> RiskConsequenceDetails { get; set; }
+    public DbSet<RiskTreatmentPlan> RiskTreatmentPlans { get; set; }
 
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -108,6 +109,11 @@ namespace MEMIS.Data
           .HasMany(r => r.RiskConsequenceDetails)
           .WithOne(rc => rc.RiskIdentification)
           .HasForeignKey(rc => rc.RiskId);
+
+      modelBuilder.Entity<RiskTreatmentPlan>()
+           .HasOne(t => t.RiskRegister)
+           .WithMany(r => r.RiskTreatmentPlans)
+           .HasForeignKey(t => t.RiskRefID);
 
       base.OnModelCreating(modelBuilder);
 

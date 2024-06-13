@@ -9,68 +9,107 @@
       data-template='vertical-menu-aspnet-core-mvc-template-free'>
 
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
 
-  @{
-    string title = ViewData["title"] as string ?? "";
-    string appName = TempData.Peek("appName") as string ?? "";
-    string productPage = TempData.Peek("productPage") as string ?? "";
-  }
-  <title>@title | @appName - Asp.Net Core MVC Free Admin Template</title>
-  <meta name="description" content="" />
+    @{
+        string title = ViewData["title"] as string ?? "";
+        string appName = TempData.Peek("appName") as string ?? "";
+        string productPage = TempData.Peek("productPage") as string ?? "";
+    }
+    <title>@title | @appName</title>
+    <meta name="description" content="" />
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/js/jquery.dataTables.min.js"></script>
+    <link href="~/css/jquery.dataTables.css" rel="stylesheet" />
 
-  <!-- Canonical SEO -->
-  <link rel="canonical" href='@productPage'>
-  <!-- Favicon -->
-  <link rel="icon" type="image/x-icon" href="~/img/favicon/favicon.ico" />
-  <!-- Core Styles -->
-  @await Html.PartialAsync("Sections/_Styles")
+    <!-- Canonical SEO -->
+    <link rel="canonical" href='@productPage'>
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="~/img/favicon/favicon.ico" />
+    <!-- Core Styles -->
+    @await Html.PartialAsync("Sections/_Styles")
 
-  <!-- Vendor Styles -->
-  @RenderSection("VendorStyles", required: false)
+    <!-- Vendor Styles -->
+    @RenderSection("VendorStyles", required: false)
 
-  <!-- Page Styles -->
-  @RenderSection("PageStyles", required: false)
+    <!-- Page Styles -->
+    @RenderSection("PageStyles", required: false)
 
-  <!-- Include Scripts for customizer, helper, analytics, config -->
-  @await Html.PartialAsync("Sections/_ScriptsIncludes")
-  
+    <!-- Include Scripts for customizer, helper, analytics, config -->
+    @await Html.PartialAsync("Sections/_ScriptsIncludes")
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/js/jquery.dataTables.min.js"></script>
+    <link href="~/css/jquery.dataTables.css" rel="stylesheet" />
+
 </head>
 
 <body>
-  <!-- Layout Content -->
-  @RenderBody()
-  <!--/ Layout Content -->
-  <!-- Core Scripts -->
-  @await Html.PartialAsync("Sections/_Scripts")
+    <!-- Layout Content -->
+    @RenderBody()
+    <!--/ Layout Content -->
+    <!-- Core Scripts -->
+    @await Html.PartialAsync("Sections/_Scripts")
 
-  <!-- Vendor Scripts -->
-  @RenderSection("VendorScripts", required: false)
-  @RenderSection("Scripts", required: false)
-
-
+    <!-- Vendor Scripts -->
+    @RenderSection("VendorScripts", required: false)
+    @RenderSection("Scripts", required: false)
 
 
-  <!-- Main JS-->
-  <script src='~/js/main.js'></script>
 
-  <!-- Page Scripts-->
-  @RenderSection("PageScripts", required: false)
 
-  <!-- Place this tag in your head or just before your close body tag. -->
-  <script async defer src="https://buttons.github.io/buttons.js"></script>
-  <script src="~/lib/jquery/dist/jquery.min.js"></script>
-  <script src="~/js/jquery.dataTables.min.js"></script>
-  <link href="~/css/jquery.dataTables.css" rel="stylesheet" />
-  @*<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>*@
-  @*<script src="~/js/site.js" asp-append-version="true"></script>*@
+    <!-- Main JS-->
+    <script src='~/js/main.js'></script>
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+    // <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/js/jquery.dataTables.min.js"></script>
+    <link href="~/css/jquery.dataTables.css" rel="stylesheet" />
 
-  <script type="text/javascript">
-    $(function () {
-      $('.table').DataTable();
-    });
-  </script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            initializeDataTable();
+
+            function initializeDataTable() {
+                if ($.fn.DataTable?.isDataTable('.table')) {
+                    $('.table').DataTable().destroy();
+                }
+                $('.table').DataTable();
+            }
+
+            function reinitializeDataTable() {
+                // Destroy and reinitialize DataTable
+                $('.table').DataTable().destroy();
+                $('.table').DataTable();
+            }
+
+            $(document).on('change', '.table', function () {
+                reinitializeDataTable();
+            });
+
+            window.initializeDataTable = initializeDataTable;
+            window.reinitializeDataTable = reinitializeDataTable;
+        });
+    </script>
+    <!-- Page Scripts-->
+    @RenderSection("PageScripts", required: false)
+
+    <!-- Place this tag in your head or just before your close body tag. -->
+    @*<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>*@
+    @*<script src="~/js/site.js" asp-append-version="true"></script>*@
+    <script src="~/js/form-validation.js"></script>
+
+    
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('select').each(function () {
+                if ($(this).find('option[value=""]').length === 0) {
+                    $(this).prepend('<option value="">Please select</option>');
+                }
+            });
+        });
+    </script>
 </body>
 
 </html>

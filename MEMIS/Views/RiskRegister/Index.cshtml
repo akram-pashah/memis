@@ -66,9 +66,9 @@
             <th>
               @Html.DisplayNameFor(model => model.Data[0].RiskLikelihoodId)
             </th>
-            <th>
+            @* <th>
               @Html.DisplayNameFor(model => model.Data[0].AdditionalMitigation)
-            </th>
+            </th> *@
             <th>
               @Html.DisplayNameFor(model => model.Data[0].Opportunity)
             </th>
@@ -119,9 +119,9 @@
         <td>
           @Enum.GetName(typeof(RiskLikelihood), item.RiskLikelihoodId)
         </td>
-        <td>
+       @*  <td>
           @Html.DisplayFor(modelItem => item.AdditionalMitigation)
-        </td>
+        </td> *@
         <td>
           @Html.DisplayFor(modelItem => item.Opportunity)
         </td>

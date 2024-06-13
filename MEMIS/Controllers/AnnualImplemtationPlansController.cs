@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -9,6 +9,7 @@ using MEMIS.Data;
 using cloudscribe.Pagination.Models;
 using MEMIS.Models;
 using Microsoft.AspNetCore.Identity;
+using MEMIS.Helpers.ExcelReports;
 
 namespace MEMIS.Controllers
 {
@@ -38,10 +39,26 @@ namespace MEMIS.Controllers
 
             return View(result);
         }
-        
 
-        // GET: AnnualImplemtationPlans/Details/5
-        public async Task<IActionResult> Details(int? id)
+    public async Task<IActionResult> ExportToExcel()
+    {
+      try
+      {
+        var list = await _context.AnnualImplemtationPlan.Include(a => a.ActivityFk).Include(a => a.DepartmentFk).Include(a => a.FocusAreaFk).Include(a => a.StrategicActionFk).Include(a => a.StrategicInterventionFk).Include(a => a.StrategicObjectiveFk).ToListAsync();
+        var stream = ExportHandler.StrategicImplementationPlanReport(list);
+        stream.Position = 0;
+        return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Strategic Implementation Plan.xlsx");
+      }
+      catch (Exception ex)
+      {
+
+        throw;
+      }
+    }
+
+
+    // GET: AnnualImplemtationPlans/Details/5
+    public async Task<IActionResult> Details(int? id)
         {
             if (id == null || _context.AnnualImplemtationPlan == null)
             {

@@ -34,10 +34,10 @@
 				<option value="">Select Department</option>
 			</select>
 		</div>
-		<div class="col-md-2">
+		<div class="col-md-1">
 			<label class="control-label">Month</label>
 		</div>
-		<div class="col-md-3">
+		<div class="col-md-2">
 			<select class="form-control form-control-sm" name="month" asp-items="ViewBag.Months">
 				<option value="">Select Month</option>
 			</select>
@@ -45,6 +45,9 @@
 		<div class="col-md-2">
 			<button type="submit" class="btn btn-sm btn-outline-primary">Search</button>
 		</div>
+        <div class="col-md-2">
+            <a class="btn btn-outline-success float-end float-right" asp-action="ExportToExcel" target="_blank">Export to Excel</a>
+        </div>
 	</div>
 </form>
 

@@ -61,6 +61,9 @@ namespace MEMIS.Migrations
                     b.Property<int?>("ApprStatus")
                         .HasColumnType("int");
 
+                    b.Property<string>("IdentifiedRisks")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<double?>("QBudget")
                         .HasColumnType("float");
 
@@ -2453,9 +2456,6 @@ namespace MEMIS.Migrations
                     b.Property<DateTime?>("ActualDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("AdditionalMitigation")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int?>("ApprStatus")
                         .HasColumnType("int");
 
@@ -2466,9 +2466,6 @@ namespace MEMIS.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime?>("ExpectedDate")
-                        .HasColumnType("datetime2");
-
                     b.Property<int?>("FocusArea")
                         .HasColumnType("int");
 
@@ -2476,9 +2473,6 @@ namespace MEMIS.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Opportunity")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ResourcesRequired")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("ReviewDate")
@@ -2573,6 +2567,44 @@ namespace MEMIS.Migrations
                     b.HasIndex("RiskId");
 
                     b.ToTable("RiskSources");
+                });
+
+            modelBuilder.Entity("MEMIS.Data.Risk.RiskTreatmentPlan", b =>
+                {
+                    b.Property<int>("TreatmentPlanId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TreatmentPlanId"));
+
+                    b.Property<long>("Baseline")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("CumulativeTarget")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("FrequencyOfReporting")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("IndicatorDescription")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<int?>("RiskRefID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("TreatmentAction")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.HasKey("TreatmentPlanId");
+
+                    b.HasIndex("RiskRefID");
+
+                    b.ToTable("RiskTreatmentPlan");
                 });
 
             modelBuilder.Entity("MEMIS.Data.SDTAssessment", b =>
@@ -3750,6 +3782,15 @@ namespace MEMIS.Migrations
                     b.Navigation("RiskIdentification");
                 });
 
+            modelBuilder.Entity("MEMIS.Data.Risk.RiskTreatmentPlan", b =>
+                {
+                    b.HasOne("MEMIS.Data.Risk.RiskRegister", "RiskRegister")
+                        .WithMany("RiskTreatmentPlans")
+                        .HasForeignKey("RiskRefID");
+
+                    b.Navigation("RiskRegister");
+                });
+
             modelBuilder.Entity("MEMIS.Data.SDTAssessment", b =>
                 {
                     b.HasOne("MEMIS.Data.SDTMaster", "SDTMasterFk")
@@ -3864,6 +3905,11 @@ namespace MEMIS.Migrations
                     b.Navigation("RiskDetails");
 
                     b.Navigation("RiskSources");
+                });
+
+            modelBuilder.Entity("MEMIS.Data.Risk.RiskRegister", b =>
+                {
+                    b.Navigation("RiskTreatmentPlans");
                 });
 #pragma warning restore 612, 618
         }

@@ -43,12 +43,12 @@ namespace MEMIS.Models.Risk
         [Required]
         public string? EvalCriteria { get; set; }
         public virtual int? RiskId { get; set; }  
-        [Display(Name = "Additional Mitigation Measure /Activities")]
-        public string? AdditionalMitigation { get; set; }
-        [Display(Name = "Resources Required for effective risk management")]
-        public string? ResourcesRequired { get; set; }
-        [Display(Name = "By when (expected date/period of implementation)")]
-        public DateTime? ExpectedDate { get; set; }
+        //[Display(Name = "Additional Mitigation Measure /Activities")]
+        //public string? AdditionalMitigation { get; set; }
+        //[Display(Name = "Resources Required for effective risk management")]
+        //public string? ResourcesRequired { get; set; }
+        //[Display(Name = "By when (expected date/period of implementation)")]
+        //public DateTime? ExpectedDate { get; set; }
         public int? ApprStatus { get; set; } = 0;
         [Display(Name = "Risk Tolerence/Apetite")]
         public int? riskTolerence { get; set; }

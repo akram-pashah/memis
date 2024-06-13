@@ -14,6 +14,7 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using MEMIS.Models.Risk;
 using MEMIS.ViewModels;
+using MEMIS.Helpers.ExcelReports;
 
 namespace MEMIS.Controllers
 {
@@ -56,6 +57,23 @@ namespace MEMIS.Controllers
         return Problem("Entity set 'AppDbContext.ActivityAssess'  is null.");
       }
     }
+
+    public async Task<IActionResult> ExportToExcel()
+    {
+      try
+      {
+        var list = await _context.ActivityAssess.Include(m => m.StrategicAction).Include(m => m.StrategicIntervention).Include(m => m.ActivityFk).ToListAsync();
+        var stream = ExportHandler.AnnualDetailedResultsFrameworkReport(list);
+        stream.Position = 0;
+        return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Annual Detailed Results Framework.xlsx");
+      }
+      catch (Exception ex)
+      {
+
+        throw;
+      }
+    }
+
     public async Task<IActionResult> AllocatetoRegion(int pageNumber = 1)
     {
       int pageSize = 10;
@@ -117,7 +135,8 @@ namespace MEMIS.Controllers
               Quarter = g.FirstOrDefault().Quarter,
               QBudget = g.FirstOrDefault().QBudget,
               ApprStatus = g.FirstOrDefault().ApprStatus,
-              actType = g.FirstOrDefault().actType
+              actType = g.FirstOrDefault().actType,
+              IdentifiedRisks = g.FirstOrDefault().IdentifiedRisks,
             })
             .ToListAsync();
 
@@ -738,6 +757,7 @@ namespace MEMIS.Controllers
           justification = dto.justification,
           budgetAmount = dto.budgetAmount,
           intDept = dto.intDept,
+          IdentifiedRisks = dto.IdentifiedRisks,
         };
         _context.Add(deptPlan);
         await _context.SaveChangesAsync();

@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MEMIS.Data;
@@ -6,6 +6,7 @@ using cloudscribe.Pagination.Models;
 using MEMIS.Models;
 using System.Collections.Generic;
 using System.Security.Claims;
+using MEMIS.Helpers.ExcelReports;
 
 namespace MEMIS.Controllers
 {
@@ -35,7 +36,23 @@ namespace MEMIS.Controllers
 			return View(result);
 		}
 
-		[HttpPost]
+    public async Task<IActionResult> ExportToExcel()
+    {
+      try
+      {
+        var list = await _context.SDTAssessment.Include(s => s.SDTMasterFk).Include(s => s.SDTMasterFk.DepartmentFk).ToListAsync();
+        var stream = ExportHandler.SDTQuarterlyPerformanceReport(list);
+        stream.Position = 0;
+        return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "SDT Quarterly Performances.xlsx");
+      }
+      catch (Exception ex)
+      {
+
+        throw;
+      }
+    }
+
+    [HttpPost]
 		public async Task<IActionResult> Index(int pageNumber = 1, int? month = null, string? deptCode = null)
 		{
 			int pageSize = 10;
