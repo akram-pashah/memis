@@ -21,7 +21,6 @@ namespace MEMIS.Data
     public DbSet<Directorate>? Directorates { get; set; }
     public DbSet<Department>? Departments { get; set; }
     public DbSet<DeptPlan>? DeptPlans { get; set; }
-
     public DbSet<NDP_HD>? NDP_HD { get; set; }
     public DbSet<NDP>? NDP { get; set; }
     public DbSet<NDPFile>? NDPFile { get; set; }
@@ -81,6 +80,7 @@ namespace MEMIS.Data
     public DbSet<RiskCause> RiskCauses { get; set; }
     public DbSet<RiskConsequenceDetails> RiskConsequenceDetails { get; set; }
     public DbSet<RiskTreatmentPlan> RiskTreatmentPlans { get; set; }
+    public DbSet<MonitoringAndControl> MonitoringAndControls { get; set; }
 
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

@@ -407,6 +407,7 @@
                                     </tr>`;
         $('#eventsTable tbody').append(row);
         $('#newEventDescription').val(''); // Clear the input field after adding
+        $('#accordionOne').addClass('show')
     }
 
     function removeEvent(button) {
@@ -450,6 +451,8 @@
                                                 </td>
                                             </tr>`
         $('#riskSourceTable tbody').append(row);
+        $('#RiskSourceInput').val('');
+        $('#accordionTwo').addClass('show');
     }
 
     function removeRiskSource(button) {
@@ -492,6 +495,8 @@
                                                 </td>
                                             </tr>`
         $('#riskConsequenceTable tbody').append(row);
+        $('#RiskConsequenceInput').val('');
+        $('#accordionFour').addClass('show');
     }
 
     function removeRiskConsequence(button) {
@@ -534,6 +539,8 @@
                                              </td>
                                      </tr>`
         $('#riskCauseTable tbody').append(row);
+        $('#RiskCauseInput').val('');
+        $('#accordionThree').addClass('show');
     }
 
     function removeRiskCause(button) {

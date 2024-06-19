@@ -606,6 +606,7 @@
         <li class='menu-item@(currentPage.EndsWith("/") || currentPage.StartsWith("/directorates") || currentPage.StartsWith("/departments") || currentPage.StartsWith("/regions")
       || currentPage.StartsWith("/login/register")  || currentPage.StartsWith("/rolemanager")  || currentPage.StartsWith("/userroles") ? " active open" : "")'>
             <a href="javascript:void(0);" class="menu-link menu-toggle">
+                <i class="menu-icon tf-icons bx bx-cog"></i>
                 <div>Settings</div>
             </a>
             <ul class="menu-sub">
@@ -637,6 +638,24 @@
                 <li class='menu-item@(currentPage == "/userroles" ? " active" : "")'>
                     <a asp-controller="userroles" asp-action="index" class="menu-link">
                         <div>Manage User Roles</div>
+                    </a>
+                </li>
+            </ul>
+        </li>
+        <li class="menu-item">
+            <a href="javascript:void(0);" class="menu-link menu-toggle">
+                <i class="menu-icon tf-icons bx bx-file"></i>
+                <div>Reports</div>
+            </a>
+            <ul class="menu-sub">
+                <li class='menu-item@(currentPage == "/planningIndex" ? " active" : "")'>
+                    <a asp-controller="Reports" asp-action="planningIndex" class="menu-link">
+                        <div>Planning Reports</div>
+                    </a>
+                </li>
+                <li class='menu-item@(currentPage == "/MandEIndex" ? " active" : "")'>
+                    <a asp-controller="Reports" asp-action="MandEIndex" class="menu-link">
+                        <div>M & E Reports</div>
                     </a>
                 </li>
             </ul>

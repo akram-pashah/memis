@@ -55,10 +55,10 @@
                         <h2 class="accordion-header" id="headingOne">
                             <div class="input-group">
                                 <input type="text" class="form-control" id="newEventDescription" aria-label="Text input with segmented dropdown button">
-                                <button type="button" class="btn btn-outline-primary" onclick="addEvent()">
+                                <button type="button" class="btn btn-outline-primary" onclick="addEvent()" >
                                     <i class="bx bx-plus-circle"></i>
                                 </button>
-                                <button type="button" class="btn btn-outline-primary" data-bs-toggle="collapse" data-bs-target="#accordionOne" aria-expanded="true" aria-controls="accordionOne">
+                                <button type="button" class="btn btn-outline-primary" data-bs-toggle="collapse" data-bs-target="#accordionOne" aria-expanded="false" aria-controls="accordionOne">
                                     <i class="bx bx-collapse-alt"></i>
                                 </button>
                             </div>
@@ -405,7 +405,8 @@
                                     </td>
                                 </tr>`;
             $('#eventsTable tbody').append(row);
-            $('#newEventDescription').val(''); // Clear the input field after adding
+            $('#newEventDescription').val('');
+            $('#accordionOne').addClass('show')
         }
 
         function removeEvent(button) {
@@ -449,6 +450,9 @@
                                             </td>
                                         </tr>`
             $('#riskSourceTable tbody').append(row);
+             $('#RiskSourceInput').val('');
+            $('#accordionTwo').addClass('show');
+      
         }
 
         function removeRiskSource(button) {
@@ -491,6 +495,8 @@
                                             </td>
                                         </tr>`
             $('#riskConsequenceTable tbody').append(row);
+            $('#RiskConsequenceInput').val('');
+            $('#accordionFour').addClass('show');
         }
 
         function removeRiskConsequence(button) {
@@ -533,6 +539,8 @@
                                          </td>
                                  </tr>`
             $('#riskCauseTable tbody').append(row);
+            $('#RiskCauseInput').val('');
+            $('#accordionThree').addClass('show');
         }
 
         function removeRiskCause(button) {

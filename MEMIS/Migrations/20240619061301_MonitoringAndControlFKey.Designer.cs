@@ -4,6 +4,7 @@ using MEMIS.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MEMIS.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240619061301_MonitoringAndControlFKey")]
+    partial class MonitoringAndControlFKey
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1614,43 +1617,40 @@ namespace MEMIS.Migrations
 
             modelBuilder.Entity("MEMIS.Data.Project.MonitoringAndControl", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                    b.Property<string>("TaskName")
+                        .HasColumnType("nvarchar(450)");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateOnly?>("CompletedDate")
+                    b.Property<DateOnly>("CompletedDate")
                         .HasColumnType("date");
 
-                    b.Property<long?>("Duration")
+                    b.Property<long>("Duration")
                         .HasColumnType("bigint");
 
-                    b.Property<DateOnly?>("EndDate")
+                    b.Property<DateOnly>("EndDate")
                         .HasColumnType("date");
 
                     b.Property<string>("ImplementationStatus")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateOnly?>("LateBy")
+                    b.Property<DateOnly>("LateBy")
                         .HasColumnType("date");
 
                     b.Property<string>("OverDue")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("ProjectInitiationId")
+                    b.Property<int?>("ProjectInitiationId")
                         .HasColumnType("int");
 
-                    b.Property<DateOnly?>("StartDate")
+                    b.Property<DateOnly>("StartDate")
                         .HasColumnType("date");
 
                     b.Property<string>("Status")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("TaskName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
+                    b.HasKey("TaskName");
 
                     b.HasIndex("ProjectInitiationId");
 
@@ -3593,9 +3593,7 @@ namespace MEMIS.Migrations
                 {
                     b.HasOne("MEMIS.Data.ProjectInitiation", "ProjectInitiationFk")
                         .WithMany()
-                        .HasForeignKey("ProjectInitiationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ProjectInitiationId");
 
                     b.Navigation("ProjectInitiationFk");
                 });

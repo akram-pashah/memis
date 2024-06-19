@@ -11,7 +11,6 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Identity;
 using MEMIS.Models.Project;
 using MEMIS.Data.Project;
-using MEMIS.Migrations;
 
 namespace MEMIS.Controllers
 {
@@ -47,12 +46,13 @@ namespace MEMIS.Controllers
 			var payments = _context.ProjectPayments.Where(m => m.ProjectInitiationId == id).ToList();
 			var ristIdentifications = _context.ProjectRiskIdentifications.Where(m => m.ProjectInitiationId == id).ToList();
 			var stakeholder = _context.StakeHolder.Where(m => m.ProjectInitiationId == id).ToList();
+			var monitoringAndControl = _context.MonitoringAndControls.Where(m => m.ProjectInitiationId == id).ToList();
 			ViewData["RiskRank"] = ListHelper.RiskRank();
 			ViewData["Impact"] = ListHelper.Impact();
 			ViewData["Influence"] = ListHelper.Influence();
 			ViewData["ProjectInitiations"] = new SelectList(_context.ProjectInitiations.OrderBy(d => d.Name), "Id", "Name", id);
 
-			return View("Create",new ProjectInitiationDetailsDto { ProjectInitId = id, ActivityPlans = activities, ProjectPayments = payments, ProjectRiskIdentifications = ristIdentifications, ProjectOthersTabs= others,StakeHolders=stakeholder });
+			return View("Create",new ProjectInitiationDetailsDto { ProjectInitId = id, ActivityPlans = activities, ProjectPayments = payments, ProjectRiskIdentifications = ristIdentifications, ProjectOthersTabs= others,StakeHolders=stakeholder , MonitoringAndControls  = monitoringAndControl });
 		}
 
 		[HttpPost]
@@ -63,12 +63,13 @@ namespace MEMIS.Controllers
 			var payments = _context.ProjectPayments.Where(m => m.ProjectInitiationId == ProjectInitiationId).ToList();
 			var ristIdentifications = _context.ProjectRiskIdentifications.Where(m => m.ProjectInitiationId == ProjectInitiationId).ToList();
 			var stakeholder = _context.StakeHolder.Where(m => m.ProjectInitiationId == ProjectInitiationId).ToList();
-
-			ViewData["RiskRank"] = ListHelper.RiskRank();
+            var monitoringAndControl = _context.MonitoringAndControls.Where(m => m.ProjectInitiationId == ProjectInitiationId).ToList();
+  
+            ViewData["RiskRank"] = ListHelper.RiskRank();
 			ViewData["Impact"] = ListHelper.Impact();
 			ViewData["Influence"] = ListHelper.Influence();
 			ViewData["ProjectInitiations"] = new SelectList(_context.ProjectInitiations.OrderBy(d => d.Name), "Id", "Name", ProjectInitiationId);
-			var x = new ProjectInitiationDetailsDto { ProjectInitId = ProjectInitiationId, ActivityPlans = activities, ProjectPayments = payments, ProjectRiskIdentifications = ristIdentifications , ProjectOthersTabs= others,StakeHolders=stakeholder};
+			var x = new ProjectInitiationDetailsDto { ProjectInitId = ProjectInitiationId, ActivityPlans = activities, ProjectPayments = payments, ProjectRiskIdentifications = ristIdentifications , ProjectOthersTabs= others,StakeHolders=stakeholder, MonitoringAndControls = monitoringAndControl };
 			//x.ActivityPlan = new ActivityPlanDto();
 			//x.ProjectRiskIdentification = new ProjectRiskIdentificationDto();
 			//x.ProjectPayment = new ProjectPaymentDto();
@@ -85,7 +86,7 @@ namespace MEMIS.Controllers
            return null;
          }
 
-    [HttpPost]
+        [HttpPost]
 		[ValidateAntiForgeryToken]
 		public async Task<IActionResult> AddActivity(ActivityPlanDto activityPlan)
 		{
@@ -225,6 +226,31 @@ namespace MEMIS.Controllers
 				return NotFound(ex.Message);
 			}
 		}
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		public async Task<IActionResult> DeleteMonitoringControl(int id)
+		{
+			if (_context.MonitoringAndControls == null)
+			{
+				return Problem("Entity set 'AppDbContext.MonitoringAndControls'  is null.");
+			}
+			var monitoring = await _context.MonitoringAndControls.FindAsync(id);
+
+			if (monitoring != null)
+			{
+				_context.MonitoringAndControls.Remove(monitoring);
+			}
+
+			try
+			{
+				await _context.SaveChangesAsync();
+				return Ok();
+			}
+			catch (Exception ex)
+			{
+				return NotFound(ex.Message);
+			}
+		}
 
 
 		[HttpPost]
@@ -255,6 +281,33 @@ namespace MEMIS.Controllers
 			}
 			return RedirectToAction(nameof(Add));
 		}
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddMonitoringAndControl(ProjectInitiationDetailsDto projectInitiationDto)
+        {
+            if(projectInitiationDto.MonitoringAndControl != null) {
+               var monitoringAndControlDto = projectInitiationDto.MonitoringAndControl;
+                MonitoringAndControl _data = new()
+              {
+                TaskName = monitoringAndControlDto.TaskName,
+                Duration = monitoringAndControlDto.Duration,
+                StartDate = monitoringAndControlDto.StartDate,
+                EndDate = monitoringAndControlDto.EndDate,
+                ImplementationStatus = monitoringAndControlDto.ImplementationStatus,
+                CompletedDate = monitoringAndControlDto.CompletedDate,
+                Status = monitoringAndControlDto.Status,
+                ProjectInitiationId = monitoringAndControlDto.ProjectInitiationId
+              };
+              	_context.Add(_data);
+				await _context.SaveChangesAsync();
+				return RedirectToAction(nameof(Add), new { id = monitoringAndControlDto.ProjectInitiationId });
+              
+            }
+           
+         return RedirectToAction(nameof(Add));
+    }
 
         [HttpPost]
 		[ValidateAntiForgeryToken]

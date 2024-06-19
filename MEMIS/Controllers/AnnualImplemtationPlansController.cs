@@ -44,7 +44,7 @@ namespace MEMIS.Controllers
     {
       try
       {
-        var list = await _context.AnnualImplemtationPlan.Include(a => a.ActivityFk).Include(a => a.DepartmentFk).Include(a => a.FocusAreaFk).Include(a => a.StrategicActionFk).Include(a => a.StrategicInterventionFk).Include(a => a.StrategicObjectiveFk).ToListAsync();
+        var list = await _context.ProgramImplementationPlan.ToListAsync();
         var stream = ExportHandler.StrategicImplementationPlanReport(list);
         stream.Position = 0;
         return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Strategic Implementation Plan.xlsx");
