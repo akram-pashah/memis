@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.Authorization;
 using MEMIS.Models.Risk;
 using MEMIS.ViewModels;
 using MEMIS.Helpers.ExcelReports;
+using Syncfusion.Blazor.Data;
 
 namespace MEMIS.Controllers
 {
@@ -93,6 +94,34 @@ namespace MEMIS.Controllers
 
         };
         
+        ViewBag.Users = _userManager;
+        return View(result);
+      }
+      else
+      {
+        return Problem("Entity set 'AppDbContext.ActivityAssess'  is null.");
+      }
+    }
+    public async Task<IActionResult> RegionalTarget(int pageNumber = 1)
+    {
+      int pageSize = 10;
+      Guid intReg =Guid.Parse(HttpContext.Session.GetString("intRegion"));
+      var offset = (pageSize * pageNumber) - pageSize;
+      if (_context.ActivityAssessRegion != null)
+      {
+        var dat = _context.ActivityAssessRegion.Include(r => r.ActivityAssessFk).ThenInclude(fk=>fk.ActivityFk).ThenInclude(fk => fk.StrategicAction).ThenInclude(fk => fk.StrategicIntervention).Where(m => m.intRegion == intReg)
+            .Skip(offset)
+            .Take(pageSize);
+
+        var result = new PagedResult<ActivityAssessRegion>
+        {
+          Data = await dat.AsNoTracking().ToListAsync(),
+          TotalItems = _context.ActivityAssessRegion.Count(),
+          PageNumber = pageNumber,
+          PageSize = pageSize
+
+        };
+
         ViewBag.Users = _userManager;
         return View(result);
       }

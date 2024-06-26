@@ -11,8 +11,8 @@ namespace MEMIS.Data
     [Display(Name = "Output Indicator")]
     public virtual int? intAssess { get; set; }
     [ForeignKey("intAssess")]
-    public virtual ActivityAssess? ActivityAssess { get; set; }
-    [Display(Name = "Strategic Action")]
+    public virtual ActivityAssess? ActivityAssessFk { get; set; }
+    [Display(Name = "Region")]
     public virtual Guid? intRegion { get; set; }
     [ForeignKey("intRegion")]
     public virtual Region? Region { get; set; }

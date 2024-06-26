@@ -43,6 +43,8 @@ namespace MEMIS.Controllers
           {
             // Authentication succeeded, retrieve user details
             HttpContext.Session.SetString("UserName", user.UserName);
+            HttpContext.Session.SetString("intDept", user.intDept.ToString());
+            HttpContext.Session.SetString("intRegion", user.intRegion.ToString());
 
             var roles = await _userManager.GetRolesAsync(user);
             var rolesString = string.Join(",", roles);
@@ -61,6 +63,7 @@ namespace MEMIS.Controllers
           }
           else
           {
+
             ModelState.AddModelError("", "Username or password incorrect!");
           }
         }
@@ -74,6 +77,7 @@ namespace MEMIS.Controllers
       {
         ModelState.AddModelError("", "Username or password incorrect!");
       }
+      ViewBag.FYear = _context.FYears == null ? new List<FYear>() : await _context.FYears.ToListAsync();
       return View();
     }
 
