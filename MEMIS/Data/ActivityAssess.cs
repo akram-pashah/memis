@@ -49,5 +49,8 @@ namespace MEMIS.Data
     public virtual Department? DepartmentFk { get; set; }
 
     public int? actType { get; set; } = 0;
+
+    public virtual ICollection<QuaterlyPlan> QuaterlyPlans { get; set; }
+
   }
 }

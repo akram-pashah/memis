@@ -369,6 +369,7 @@ namespace MEMIS
     {
       List<SelectListItem> results = new List<SelectListItem>
             {
+                new SelectListItem() { Text = "Select Quarter", Value = "" },
                 new SelectListItem() { Text = "Quarter 1", Value = "1" },
                 new SelectListItem() { Text = "Quarter 2", Value = "2" },
                 new SelectListItem() { Text = "Quarter 3", Value = "3" },
