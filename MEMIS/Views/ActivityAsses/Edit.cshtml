@@ -124,14 +124,15 @@
                                         <tr>
                                             <td>
                                                 @(i + 1)
-                                                <input asp-for="QuaterlyPlans[i].Id" hidden  class="form-control" />
-                                                <input asp-for="QuaterlyPlans[i].ActivityAccessId" hidden  class="form-control" />
+                                                <input asp-for="QuaterlyPlans[i].Id" class="form-control" hidden />
+                                                <input asp-for="QuaterlyPlans[i].DeptPlanId" class="form-control" hidden />
+                                                <input asp-for="QuaterlyPlans[i].ActivityAccessId" class="form-control" hidden />
                                             </td>
                                             <td>
-                                                <select asp-for="QuaterlyPlans[i].Quarter" readonly class="form-control" asp-items="ViewBag.Quarter"></select>
+                                                <select asp-for="QuaterlyPlans[i].Quarter"  class="form-control" asp-items="ViewBag.Quarter"></select>
                                             </td>
                                             <td>
-                                                <input asp-for="QuaterlyPlans[i].QTarget" readonly class="form-control" />
+                                                <input asp-for="QuaterlyPlans[i].QTarget" class="form-control" onchange="updateQBbudget(this)" />
                                             </td>
                                             <td>
                                                 <input asp-for="QuaterlyPlans[i].QBudget" readonly class="form-control" />
@@ -228,6 +229,16 @@
         $(button).closest('tr').remove();
     }
 
+
+    function updateQBbudget(input) {
+        var $row = $(input).closest('tr');
+        var qTarget = parseFloat($(input).val());
+        var unitCost = parseFloat($('#unitCost').val());
+        if (!isNaN(qTarget) && !isNaN(unitCost)) {
+            var qBudget = qTarget * unitCost;
+            $row.find('input[name$=".QBudget"]').val(qBudget); // Update QBudget input
+        }
+    }
     function SetBudgetValue() {
         var target = $('#QTarget').val();
         var budgetAmount = $('#budgetAmount').val();

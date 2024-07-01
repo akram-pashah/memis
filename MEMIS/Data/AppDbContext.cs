@@ -1,12 +1,8 @@
-using Microsoft.EntityFrameworkCore;
-using MEMIS.Models;
-using MEMIS.Data.Risk;
-using System.Diagnostics;
 using MEMIS.Data.Project;
-using MEMIS.Data.Planning;
-using MEMIS.Data;
+using MEMIS.Data.Risk;
+using MEMIS.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using System.IO.Compression;
+using Microsoft.EntityFrameworkCore;
 
 namespace MEMIS.Data
 {
@@ -119,6 +115,11 @@ namespace MEMIS.Data
            .HasOne(t => t.ActivityAssess)
            .WithMany(r => r.QuaterlyPlans)
            .HasForeignKey(t => t.ActivityAccessId);
+
+      modelBuilder.Entity<QuaterlyPlan>()
+           .HasOne(t => t.DeptPlan)
+           .WithMany(r => r.QuaterlyPlans)
+           .HasForeignKey(t => t.DeptPlanId);
 
       base.OnModelCreating(modelBuilder);
 

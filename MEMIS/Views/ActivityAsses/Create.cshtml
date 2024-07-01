@@ -124,6 +124,9 @@
                                             <tr>
                                                 <td>
                                                     @(i + 1)
+                                                    <input asp-for="QuaterlyPlans[i].Id" class="form-control" hidden />
+                                                    <input asp-for="QuaterlyPlans[i].DeptPlanId" class="form-control" hidden />
+                                                    <input asp-for="QuaterlyPlans[i].ActivityAccessId" class="form-control" hidden />
                                                 </td>
                                                 <td>
                                                     <select asp-for="QuaterlyPlans[i].Quarter" readonly class="form-control" asp-items="ViewBag.Quarter"></select>

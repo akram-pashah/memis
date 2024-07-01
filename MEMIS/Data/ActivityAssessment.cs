@@ -1,4 +1,4 @@
-﻿using MEMIS.Data.Master;
+using MEMIS.Data.Master;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -81,8 +81,6 @@ namespace MEMIS.Data
 
         [Display(Name = "Justification")]
         public string? AnnualJustification { get; set; }
-
-
        
     }
 }

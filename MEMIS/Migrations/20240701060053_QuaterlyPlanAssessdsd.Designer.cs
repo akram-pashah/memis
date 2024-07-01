@@ -4,6 +4,7 @@ using MEMIS.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MEMIS.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240701060053_QuaterlyPlanAssessdsd")]
+    partial class QuaterlyPlanAssessdsd
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1882,10 +1885,10 @@ namespace MEMIS.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
-                    b.Property<int?>("ActivityAccessId")
+                    b.Property<int>("ActivityAccessId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("DeptPlanId")
+                    b.Property<int>("DeptPlanId")
                         .HasColumnType("int");
 
                     b.Property<long?>("QActual")
@@ -3700,11 +3703,15 @@ namespace MEMIS.Migrations
                 {
                     b.HasOne("MEMIS.Data.ActivityAssess", "ActivityAssess")
                         .WithMany("QuaterlyPlans")
-                        .HasForeignKey("ActivityAccessId");
+                        .HasForeignKey("ActivityAccessId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("MEMIS.Data.DeptPlan", "DeptPlan")
                         .WithMany("QuaterlyPlans")
-                        .HasForeignKey("DeptPlanId");
+                        .HasForeignKey("DeptPlanId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("ActivityAssess");
 

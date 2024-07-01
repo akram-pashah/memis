@@ -12,9 +12,18 @@ namespace MEMIS.Data
     public long? QTarget { get; set; }
     public long? QBudget { get; set; }
 
+    public long? QActual { get; set; }
+
+    public long? QAmtSpent { get; set; }
+
+    public string? QJustification { get; set; }
+
     [ForeignKey("ActivityAssess")]
-    public int ActivityAccessId { get; set; }
+    public int? ActivityAccessId { get; set; }
     public ActivityAssess? ActivityAssess { get; set; }
+    [ForeignKey("QpDeptPlanID")]
+    public int? DeptPlanId { get; set; }
+    public DeptPlan? DeptPlan { get; set; }
 
   }
 }

@@ -1,4 +1,5 @@
-﻿using MEMIS.Data.Risk;
+using MEMIS.Data;
+using MEMIS.Data.Risk;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -54,5 +55,6 @@ namespace MEMIS.Models
         public bool IsVerified { get; set; }
         public int ApprStatus { get; set; } = 0;
         public virtual Guid? DepartmentId { get; set; }
+        public List<QuaterlyPlan> QuaterlyPlans { get; set; }
     }
 }

@@ -762,6 +762,7 @@ namespace MEMIS.Controllers
 
         };
         _context.Add(deptPlan);
+
         await _context.SaveChangesAsync();
         if(dto.QuaterlyPlans.Count > 0)
         {
@@ -769,6 +770,35 @@ namespace MEMIS.Controllers
           _context.QuaterlyPlans.AddRange(dto.QuaterlyPlans);
           _context.SaveChanges();
         }
+
+        DeptPlan dept = new DeptPlan()
+        {
+          intActivity = deptPlan.intActivity ?? 0,
+          //StrategicObjective = deptPlan.Str
+          strategicIntervention = deptPlan.intIntervention,
+          StrategicAction = deptPlan.intAction,
+          activity = deptPlan.intActivity?.ToString() ?? "",
+          outputIndicator = deptPlan.outputIndicator,
+          baseline = deptPlan.baseline,
+          budgetCode = deptPlan.budgetCode,
+          unitCost = deptPlan.QTarget,
+          Q1Target = dto.QuaterlyPlans.Where(x => x.Quarter == "1").Select(x => x.QTarget).FirstOrDefault(),
+          Q2Target = dto.QuaterlyPlans.Where( x=> x.Quarter == "2").Select(x => x.QTarget).FirstOrDefault(),
+          Q3Target = dto.QuaterlyPlans.Where( x=> x.Quarter == "3").Select(x => x.QTarget).FirstOrDefault(),
+          Q4Target = dto.QuaterlyPlans.Where( x=> x.Quarter == "4").Select(x => x.QTarget).FirstOrDefault(),
+          Q1Budget = dto.QuaterlyPlans.Where(x => x.Quarter == "1").Select(x => x.QBudget).FirstOrDefault(),
+          Q2Budget = dto.QuaterlyPlans.Where( x=> x.Quarter == "2").Select(x => x.QBudget).FirstOrDefault(),
+          Q3Budget = dto.QuaterlyPlans.Where( x=> x.Quarter == "3").Select(x => x.QBudget).FirstOrDefault(),
+          Q4Budget = dto.QuaterlyPlans.Where( x=> x.Quarter == "4").Select(x => x.QBudget).FirstOrDefault(),
+          comparativeTarget = dto.comparativeTarget,
+          justification = dto.justification,
+          budgetAmount = dto.budgetAmount,
+          IsVerified = false,
+          DepartmentId = dto.intDept,
+        };
+        _context.DeptPlans?.Add(dept);
+        _context.SaveChanges();
+
         return RedirectToAction(nameof(Index));
       }
       ViewBag.StrategicIntervention = _context.StrategicIntervention == null ? new List<StrategicIntervention>() : await _context.StrategicIntervention.ToListAsync();
@@ -808,6 +838,7 @@ namespace MEMIS.Controllers
         IdentifiedRisks = deptPlan.IdentifiedRisks,
         QuaterlyPlans = await _context.QuaterlyPlans.Where(x => x.ActivityAccessId == deptPlan.intAssess).ToListAsync()
       };
+      
       ViewBag.StrategicIntervention = _context.StrategicIntervention == null ? new List<StrategicIntervention>() : await _context.StrategicIntervention.ToListAsync();
       ViewBag.StrategicAction = _context.StrategicAction == null ? new List<StrategicAction>() : await _context.StrategicAction.ToListAsync();
       ViewBag.Activity = _context.Activity == null ? new List<Activity>() : await _context.Activity.ToListAsync();
@@ -816,7 +847,6 @@ namespace MEMIS.Controllers
 
       return View(dto);
     }
-
 
     [HttpPost]
     [ValidateAntiForgeryToken]
@@ -837,23 +867,6 @@ namespace MEMIS.Controllers
         try
         {
 
-          //ActivityAssess rd = new ActivityAssess
-          //{
-          //  intAssess = deptPlan.intAssess,
-          //  intIntervention = deptPlan.intIntervention,
-          //  intAction = deptPlan.intAction,
-          //  intActivity = deptPlan.intActivity,
-          //  outputIndicator = deptPlan.outputIndicator,
-          //  budgetCode = deptPlan.budgetCode,
-          //  baseline = deptPlan.baseline,
-          //  Quarter = deptPlan.Quarter,
-          //  QTarget = deptPlan.QTarget,
-          //  QBudget = deptPlan.QBudget,
-          //  comparativeTarget = deptPlan.comparativeTarget,
-          //  justification = deptPlan.justification,
-          //  budgetAmount = deptPlan.budgetAmount,
-          //};
-          //_context.Update(rd);
           if (deptPlan.QuaterlyPlans.Count > 0)
           {
             
@@ -874,6 +887,34 @@ namespace MEMIS.Controllers
           }
          
           _context.Entry(original).State = EntityState.Modified;
+          await _context.SaveChangesAsync();
+
+          DeptPlan dept = new DeptPlan()
+          {
+            intActivity = deptPlan.intActivity ?? 0,
+            //StrategicObjective = deptPlan.Str
+            strategicIntervention = deptPlan.intIntervention,
+            StrategicAction = deptPlan.intAction,
+            activity = deptPlan.intActivity?.ToString() ?? "",
+            outputIndicator = deptPlan.outputIndicator,
+            baseline = deptPlan.baseline,
+            budgetCode = deptPlan.budgetCode,
+            unitCost = deptPlan.QTarget,
+            Q1Target = deptPlan.QuaterlyPlans.Where(x => x.Quarter == "1").Select(x => x.QTarget).FirstOrDefault(),
+            Q2Target = deptPlan.QuaterlyPlans.Where(x => x.Quarter == "2").Select(x => x.QTarget).FirstOrDefault(),
+            Q3Target = deptPlan.QuaterlyPlans.Where(x => x.Quarter == "3").Select(x => x.QTarget).FirstOrDefault(),
+            Q4Target = deptPlan.QuaterlyPlans.Where(x => x.Quarter == "4").Select(x => x.QTarget).FirstOrDefault(),
+            Q1Budget = deptPlan.QuaterlyPlans.Where(x => x.Quarter == "1").Select(x => x.QBudget).FirstOrDefault(),
+            Q2Budget = deptPlan.QuaterlyPlans.Where(x => x.Quarter == "2").Select(x => x.QBudget).FirstOrDefault(),
+            Q3Budget = deptPlan.QuaterlyPlans.Where(x => x.Quarter == "3").Select(x => x.QBudget).FirstOrDefault(),
+            Q4Budget = deptPlan.QuaterlyPlans.Where(x => x.Quarter == "4").Select(x => x.QBudget).FirstOrDefault(),
+            comparativeTarget = deptPlan.comparativeTarget,
+            justification = deptPlan.justification,
+            budgetAmount = deptPlan.budgetAmount,
+            IsVerified = false,
+            DepartmentId = deptPlan.intDept,
+          };
+          _context.Entry(dept).State = EntityState.Modified;
           await _context.SaveChangesAsync();
         }
         catch (DbUpdateConcurrencyException)

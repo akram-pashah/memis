@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MEMIS.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240628043049_QuarterlyPlan")]
-    partial class QuarterlyPlan
+    [Migration("20240701061820_QPForeignKeyNUll")]
+    partial class QPForeignKeyNUll
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -1885,11 +1885,23 @@ namespace MEMIS.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
-                    b.Property<int>("ActivityAccessId")
+                    b.Property<int?>("ActivityAccessId")
                         .HasColumnType("int");
+
+                    b.Property<int?>("DeptPlanId")
+                        .HasColumnType("int");
+
+                    b.Property<long?>("QActual")
+                        .HasColumnType("bigint");
+
+                    b.Property<long?>("QAmtSpent")
+                        .HasColumnType("bigint");
 
                     b.Property<long?>("QBudget")
                         .HasColumnType("bigint");
+
+                    b.Property<string>("QJustification")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<long?>("QTarget")
                         .HasColumnType("bigint");
@@ -1900,6 +1912,8 @@ namespace MEMIS.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("ActivityAccessId");
+
+                    b.HasIndex("DeptPlanId");
 
                     b.ToTable("QuaterlyPlans");
                 });
@@ -3689,11 +3703,15 @@ namespace MEMIS.Migrations
                 {
                     b.HasOne("MEMIS.Data.ActivityAssess", "ActivityAssess")
                         .WithMany("QuaterlyPlans")
-                        .HasForeignKey("ActivityAccessId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ActivityAccessId");
+
+                    b.HasOne("MEMIS.Data.DeptPlan", "DeptPlan")
+                        .WithMany("QuaterlyPlans")
+                        .HasForeignKey("DeptPlanId");
 
                     b.Navigation("ActivityAssess");
+
+                    b.Navigation("DeptPlan");
                 });
 
             modelBuilder.Entity("MEMIS.Data.Region", b =>
@@ -3987,6 +4005,11 @@ namespace MEMIS.Migrations
                 });
 
             modelBuilder.Entity("MEMIS.Data.ActivityAssess", b =>
+                {
+                    b.Navigation("QuaterlyPlans");
+                });
+
+            modelBuilder.Entity("MEMIS.Data.DeptPlan", b =>
                 {
                     b.Navigation("QuaterlyPlans");
                 });
