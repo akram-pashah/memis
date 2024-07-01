@@ -121,6 +121,11 @@ namespace MEMIS.Data
            .WithMany(r => r.QuaterlyPlans)
            .HasForeignKey(t => t.DeptPlanId);
 
+      modelBuilder.Entity<QuaterlyPlan>()
+           .HasOne(t => t.ActivityAssessment)
+           .WithMany(r => r.QuaterlyPlans)
+           .HasForeignKey(t => t.ActivityAssessmentId);
+
       base.OnModelCreating(modelBuilder);
 
       //Boolean achStatus = false;
