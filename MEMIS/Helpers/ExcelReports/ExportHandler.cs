@@ -267,7 +267,7 @@ namespace MEMIS.Helpers.ExcelReports
         worksheet.Cell(1, 1).Value = "Month";
         worksheet.Cell(1, 2).Value = "SDT";
         worksheet.Cell(1, 3).Value = "SDT Numerator";
-        worksheet.Cell(1, 4).Value = "SDT Denominato";
+        worksheet.Cell(1, 4).Value = "SDT Denominator";
         worksheet.Cell(1, 5).Value = "Numerator Perf";
         worksheet.Cell(1, 6).Value = "Denominator Perf";
         worksheet.Cell(1, 7).Value = "Implemented Within Timeline";

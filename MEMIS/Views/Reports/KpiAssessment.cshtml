@@ -22,7 +22,7 @@
 @{
 }
 @using MEMIS.Data;
-@model List<SDTAssessment>
+@model List<KPIAssessment>
 @{
     ViewData["Title"] = "M&E Reports";
     //Layout = "~/Views/Shared/_PlanningLayout.cshtml";
@@ -36,8 +36,8 @@
 <div class="row">
     <div class="col-md-12">
         <ul class="nav nav-pills flex-column flex-md-row mb-3">
-            <li class="nav-item"><a class="nav-link active" href="javascript:void(0);">SDT Assessment</a></li>
-            <li class="nav-item"><a class="nav-link" href="KpiAssessment">KPI Assessment</a></li>
+            <li class="nav-item"><a class="nav-link" href="MandEIndex">SDT Assessment</a></li>
+            <li class="nav-item"><a class="nav-link active" href="javascript:void(0);">KPI Assessment</a></li>
         </ul>
 
         <div class="card mb-4">
@@ -50,50 +50,41 @@
 
             <div class="card-body">
                 <div style="width:100%; overflow-x:auto;">
-                    <table class="table table-striped table-bordered table-hover dt-responsive nowrap">
+                    <table class="table table-bordered table-hover dt-responsive nowrap">
                         <thead class="table-active">
                             <tr>
                                 <th>
-                                    Month
+                                    Financial Year
                                 </th>
                                 <th>
-                                    SDT
+                                    Performance Indicator
                                 </th>
                                 <th>
-                                    SDT Numerator
+                                    Frequency Of Reporting
                                 </th>
                                 <th>
-                                    SDT Denominator
+                                    Numerator Description
                                 </th>
                                 <th>
-                                    Numerator Perf
-                                </th>
-                                <th>
-                                    Denominator Perf
-                                </th>
-                                <th>
-                                    Implemented Within Timeline
-                                </th>
-                                <th>
-                                    Average Working Days
-                                </th>
-                                <th>
-                                    % Implemented Within Timeline
+                                    Denominator Description
                                 </th>
                                 <th>
                                     Target
                                 </th>
                                 <th>
-                                    Achievement Status
+                                    Numerator
                                 </th>
                                 <th>
-                                    % Variance
+                                    Denominator
                                 </th>
                                 <th>
-                                    Justification
+                                    Performance
                                 </th>
                                 <th>
                                     Rating
+                                </th>
+                                <th>
+                                    Justification
                                 </th>
                                 <th>
                                     Department
@@ -105,25 +96,22 @@
                             {
                                 <tr>
                                     <td>
-                                        @Html.DisplayFor(modelItem => item.Month)
+                                        @Html.DisplayFor(modelItem => item.FY)
                                     </td>
                                     <td>
-                                        @{
-                                            var ServiceDeliveryTimeline = item?.SDTMasterFk?.ServiceDeliveryTimeline ?? string.Empty;
-                                        }
-                                        @Html.DisplayFor(m => ServiceDeliveryTimeline)
+                                        @Html.DisplayFor(modelItem => item.PerformanceIndicator)
                                     </td>
                                     <td>
-                                        @{
-                                            var Numerator = item?.SDTMasterFk?.Numerator ?? string.Empty;
-                                        }
-                                        @Html.DisplayFor(m => Numerator)
+                                        @Html.DisplayFor(modelItem => item.FrequencyofReporting)
                                     </td>
                                     <td>
-                                        @{
-                                            var Denominator = item?.SDTMasterFk?.Denominator ?? string.Empty;
-                                        }
-                                        @Html.DisplayFor(m => Denominator)
+                                        @Html.DisplayFor(modelItem => item.IndicatorFormulae)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.IndicatorDefinition)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Target)
                                     </td>
                                     <td>
                                         @Html.DisplayFor(modelItem => item.Numerator)
@@ -132,34 +120,19 @@
                                         @Html.DisplayFor(modelItem => item.Denominator)
                                     </td>
                                     <td>
-                                        @Html.DisplayFor(modelItem => item.ImplementedTimeline)
-                                    </td>
-                                    <td>
                                         @Html.DisplayFor(modelItem => item.Rate)
                                     </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.ProportionTimeline)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Target)
-                                    </td>
-                                    <td>
-                                        @getAchievement(item.AchivementStatus)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Variance)
+                                    <td class="badge text-white" style="background-color: @getAchievementColor(item.Achieved)">
+                                        @getAchievement(item.Achieved)
                                     </td>
                                     <td>
                                         @Html.DisplayFor(modelItem => item.Justification)
                                     </td>
                                     <td>
-                                        @Html.DisplayFor(modelItem => item.Rating)
-                                    </td>
-                                    <td>
                                         @{
-                                            var deptName = item?.SDTMasterFk?.DepartmentFk?.deptName ?? string.Empty;
+                                            var ResponsibleParty = item?.KPIMasterFk?.ResponsibleParty ?? string.Empty;
                                         }
-                                        @Html.DisplayFor(m => deptName)
+                                        @Html.DisplayFor(m => ResponsibleParty)
                                     </td>
                                 </tr>
                             }
@@ -211,5 +184,10 @@
             }
         }
         return "NA";
+    }
+
+    static string getAchievementColor(string? achieve)
+    {
+        return achieve == "1.0" ? "#00b050" : achieve == "0.5" ? "#fefe00" : "#fd0000";
     }
 }
