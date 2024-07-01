@@ -4,7 +4,7 @@
 @{
 }
 @using MEMIS.Data;
-@model List<ProgramImplementationPlan>
+@model List<ActivityAssess>
 @{
     ViewData["Title"] = "Planning Reports";
     //Layout = "~/Views/Shared/_PlanningLayout.cshtml";
@@ -18,14 +18,14 @@
 <div class="row">
     <div class="col-md-12">
         <ul class="nav nav-pills flex-column flex-md-row mb-3">
-            <li class="nav-item"><a class="nav-link active" href="javascript:void(0);">Programe Implementation Plan</a></li>
-            <li class="nav-item"><a class="nav-link" href="Reports/ConsolDeptPlan">Consolidated Department Plan</a></li>
+            <li class="nav-item"><a class="nav-link" href="/Reports/planningIndex">Programe Implementation Plan</a></li>
+            <li class="nav-item"><a class="nav-link active" href="javascript:void(0);">Consolidated Department Plan</a></li>
         </ul>
 
         <div class="card mb-4">
             <h5 class="card-header">
                 <div class="col d-flex justify-content-end mb-3">
-                    <a class="btn btn-outline-success float-end float-right" asp-action="ExportToExcel" target="_blank">Export to Excel</a>
+                    <a class="btn btn-outline-success float-end float-right" asp-action="ConsolidatedExportToExcel" target="_blank">Export to Excel</a>
                 </div>
             </h5>
             <hr class="my-0" />
@@ -45,31 +45,37 @@
                                     Strategic Actions
                                 </th>
                                 <th>
-                                    Activities
+                                    Activities/Initiatives
                                 </th>
                                 <th>
                                     Output Indicators
                                 </th>
                                 <th>
-                                    Output Targets
+                                    Baseline
                                 </th>
                                 <th>
-                                    FY 1
+                                    Annual Target
                                 </th>
                                 <th>
-                                    FY 2
+                                    Budget Code
                                 </th>
                                 <th>
-                                    FY 3
+                                    Amount Allocated
                                 </th>
                                 <th>
-                                    FY 4
+                                    Quarter 1
                                 </th>
                                 <th>
-                                    FY 5
+                                    Quarter 2
                                 </th>
                                 <th>
-                                    Means of Verification
+                                    Quarter 3
+                                </th>
+                                <th>
+                                    Quarter 4
+                                </th>
+                                <th>
+                                    Identified Risks
                                 </th>
                                 <th>
                                     Responsible Party
@@ -81,44 +87,64 @@
                             {
                                 <tr>
                                     <td>
+                                        @{
+                                            var objectiveName = item?.StrategicIntervention?.StrategicObjective?.ObjectiveName ?? string.Empty;
+                                        }
+                                        @Html.DisplayFor(m => objectiveName)
+                                    </td>
+                                    <td>
+                                        @{
+                                            var InterventionName = item?.StrategicIntervention?.InterventionName ?? string.Empty;
+                                        }
+                                        @Html.DisplayFor(m => InterventionName)
+                                    </td>
+                                    <td>
+                                        @{
+                                            var actionName = item?.StrategicAction?.actionName ?? string.Empty;
+                                        }
+                                        @Html.DisplayFor(m => actionName)
+                                    </td>
+                                    <td>
+                                        @{
+                                            var activityName = item?.ActivityFk?.activityName ?? string.Empty;
+                                        }
+                                        @Html.DisplayFor(m => actionName)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.outputIndicator)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.baseline)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.QTarget)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.budgetCode)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.budgetAmount)
+                                    </td>
+                                    <td>
+                                        &nbsp;
+                                    </td>
+                                    <td>
                                         &nbsp;
                                     </td>
                                     <td>
                                         &nbsp;
-                                        
                                     </td>
                                     <td>
                                         &nbsp;
                                     </td>
                                     <td>
-                                        @Html.DisplayFor(modelItem => item.Activity)
+                                        @Html.DisplayFor(modelItem => item.IdentifiedRisks)
                                     </td>
                                     <td>
-                                        &nbsp;
-                                    </td>
-                                    <td>
-                                        &nbsp;
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.FY1)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.FY2)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.FY3)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.FY4)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.FY5)
-                                    </td>
-                                    <td>
-                                        &nbsp;
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.ResponsibleParty)
+                                        @{
+                                            var deptName = item?.DepartmentFk?.deptName ?? string.Empty;
+                                        }
+                                        @Html.DisplayFor(m => deptName)
                                     </td>
                                 </tr>
                             }

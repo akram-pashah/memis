@@ -13,7 +13,7 @@ namespace MEMIS.Helpers.ExcelReports
         IXLWorksheet worksheet = workbook.Worksheets.Add("Strategic Implementation Plan");
 
         // Style the headers
-        var headerRange = worksheet.Range("A1:M2");
+        var headerRange = worksheet.Range("A1:M1");
         headerRange.Style.Fill.BackgroundColor = XLColor.FromHtml("#063241");
         headerRange.Style.Font.FontColor = XLColor.White;
         headerRange.Style.Font.Bold = true;
@@ -27,35 +27,29 @@ namespace MEMIS.Helpers.ExcelReports
         worksheet.Cell(1, 4).Value = "Activities";
         worksheet.Cell(1, 5).Value = "Output Indicators";
         worksheet.Cell(1, 6).Value = "Output Targets";
+        worksheet.Cell(1, 7).Value = "FY 1";
+        worksheet.Cell(1, 8).Value = "FY 2";
+        worksheet.Cell(1, 9).Value = "FY 3";
+        worksheet.Cell(1, 10).Value = "FY 4";
+        worksheet.Cell(1, 11).Value = "FY 5";
         worksheet.Cell(1, 12).Value = "Means of Verification";
         worksheet.Cell(1, 13).Value = "Responsible Party";
 
-        // Setting sub-headers under Annual Targets
-        worksheet.Cell(2, 7).Value = "FY 1";
-        worksheet.Cell(2, 8).Value = "FY 2";
-        worksheet.Cell(2, 9).Value = "FY 3";
-        worksheet.Cell(2, 10).Value = "FY 4";
-        worksheet.Cell(2, 11).Value = "FY 5";
-
-        // Merging the cells for Annual Targets as per the image
-        var annualTargetsHeader = worksheet.Range(1, 7, 1, 11).Merge();
-        annualTargetsHeader.Value = "Annual Targets";
-
-        // Merging cells for the rest of the headers as per the layout
-        worksheet.Range(1, 1, 2, 1).Merge();
-        worksheet.Range(1, 2, 2, 2).Merge();
-        worksheet.Range(1, 3, 2, 3).Merge();
-        worksheet.Range(1, 4, 2, 4).Merge();
-        worksheet.Range(1, 5, 2, 5).Merge();
-        worksheet.Range(1, 6, 2, 6).Merge();
-        worksheet.Range(1, 12, 2, 12).Merge();
-        worksheet.Range(1, 13, 2, 13).Merge();
+        //// Merging cells for the rest of the headers as per the layout
+        //worksheet.Range(1, 1, 2, 1).Merge();
+        //worksheet.Range(1, 2, 2, 2).Merge();
+        //worksheet.Range(1, 3, 2, 3).Merge();
+        //worksheet.Range(1, 4, 2, 4).Merge();
+        //worksheet.Range(1, 5, 2, 5).Merge();
+        //worksheet.Range(1, 6, 2, 6).Merge();
+        //worksheet.Range(1, 12, 2, 12).Merge();
+        //worksheet.Range(1, 13, 2, 13).Merge();
 
         // Auto fit columns to content
         worksheet.Columns().AdjustToContents();
         AdjustColumnWidths(worksheet, 25, 65);
 
-        int row = 3;
+        int row = 2;
         foreach (var plan in plans)
         {
           worksheet.Cell(row, 1).Value = "";

@@ -19,9 +19,10 @@ namespace MEMIS.Controllers.Reports
       return View();
     }
 
-    public IActionResult planningIndex()
+    public async Task<IActionResult> planningIndex()
     {
-      return View();
+      var list = await _context.ProgramImplementationPlan.ToListAsync();
+      return View(list);
     }
 
     public async Task<IActionResult> ExportToExcel()
@@ -32,6 +33,21 @@ namespace MEMIS.Controllers.Reports
         var stream = ExportHandler.StrategicImplementationPlanReport(list);
         stream.Position = 0;
         return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Strategic Implementation Plan.xlsx");
+      }
+      catch (Exception ex)
+      {
+
+        throw;
+      }
+    }
+
+    public async Task<IActionResult> ConsolDeptPlan()
+    {
+      try
+      {
+        var list = await _context.ActivityAssess.Include(m => m.StrategicAction).Include(m => m.StrategicIntervention).Include(m => m.ActivityFk).ToListAsync();
+
+        return View(list);
       }
       catch (Exception ex)
       {
