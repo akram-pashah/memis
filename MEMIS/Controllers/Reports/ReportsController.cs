@@ -71,9 +71,11 @@ namespace MEMIS.Controllers.Reports
       }
     }
 
-    public IActionResult MandEIndex()
+    public async Task<IActionResult> MandEIndex()
     {
-      return View();
+
+      var list = await _context.SDTAssessment.Include(s => s.SDTMasterFk).Include(s => s.SDTMasterFk.DepartmentFk).ToListAsync();
+      return View(list);
     }
 
     public async Task<IActionResult> SDTExportToExcel()
@@ -90,6 +92,13 @@ namespace MEMIS.Controllers.Reports
 
         throw;
       }
+    }
+
+    public async Task<IActionResult> KpiAssessment()
+    {
+      var list = await _context.KPIAssessment.Include(s => s.KPIMasterFk).ToListAsync();
+
+      return View(list);
     }
 
     public async Task<IActionResult> KPIExportToExcel()
