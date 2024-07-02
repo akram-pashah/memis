@@ -1,12 +1,8 @@
-using Microsoft.EntityFrameworkCore;
-using MEMIS.Models;
-using MEMIS.Data.Risk;
-using System.Diagnostics;
 using MEMIS.Data.Project;
-using MEMIS.Data.Planning;
-using MEMIS.Data;
+using MEMIS.Data.Risk;
+using MEMIS.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using System.IO.Compression;
+using Microsoft.EntityFrameworkCore;
 
 namespace MEMIS.Data
 {
@@ -33,7 +29,7 @@ namespace MEMIS.Data
     public DbSet<Region>? Region { get; set; }
     public DbSet<AnnualImplemtationPlan>? AnnualImplemtationPlan { get; set; }
     public DbSet<ActivityAssess>? ActivityAssess { get; set; }
-
+    public DbSet<QuaterlyPlan>? QuaterlyPlans { get; set; }
     public DbSet<WorkPlanSettingsRegion>? WorkPlanSettingsRegion { get; set; }
     public DbSet<DepartmentPlan>? DepartmentPlan { get; set; }
     public DbSet<Master.ImplementationStatus> ImplementationStatus { get; set; }
@@ -114,6 +110,21 @@ namespace MEMIS.Data
            .HasOne(t => t.RiskRegister)
            .WithMany(r => r.RiskTreatmentPlans)
            .HasForeignKey(t => t.RiskRefID);
+
+      modelBuilder.Entity<QuaterlyPlan>()
+           .HasOne(t => t.ActivityAssess)
+           .WithMany(r => r.QuaterlyPlans)
+           .HasForeignKey(t => t.ActivityAccessId);
+
+      modelBuilder.Entity<QuaterlyPlan>()
+           .HasOne(t => t.DeptPlan)
+           .WithMany(r => r.QuaterlyPlans)
+           .HasForeignKey(t => t.DeptPlanId);
+
+      modelBuilder.Entity<QuaterlyPlan>()
+           .HasOne(t => t.ActivityAssessment)
+           .WithMany(r => r.QuaterlyPlans)
+           .HasForeignKey(t => t.ActivityAssessmentId);
 
       base.OnModelCreating(modelBuilder);
 

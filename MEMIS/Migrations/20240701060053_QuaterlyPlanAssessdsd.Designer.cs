@@ -4,6 +4,7 @@ using MEMIS.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MEMIS.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240701060053_QuaterlyPlanAssessdsd")]
+    partial class QuaterlyPlanAssessdsd
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -165,9 +168,6 @@ namespace MEMIS.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("intDeptPlan"));
-
-                    b.Property<long?>("ActivityAssesmentStatus")
-                        .HasColumnType("bigint");
 
                     b.Property<double?>("AnnualAchievement")
                         .HasColumnType("float");
@@ -1885,29 +1885,26 @@ namespace MEMIS.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
-                    b.Property<int?>("ActivityAccessId")
+                    b.Property<int>("ActivityAccessId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("ActivityAssessmentId")
+                    b.Property<int>("DeptPlanId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("DeptPlanId")
-                        .HasColumnType("int");
+                    b.Property<long?>("QActual")
+                        .HasColumnType("bigint");
 
-                    b.Property<double?>("QActual")
-                        .HasColumnType("float");
+                    b.Property<long?>("QAmtSpent")
+                        .HasColumnType("bigint");
 
-                    b.Property<double?>("QAmtSpent")
-                        .HasColumnType("float");
-
-                    b.Property<double?>("QBudget")
-                        .HasColumnType("float");
+                    b.Property<long?>("QBudget")
+                        .HasColumnType("bigint");
 
                     b.Property<string>("QJustification")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<double?>("QTarget")
-                        .HasColumnType("float");
+                    b.Property<long?>("QTarget")
+                        .HasColumnType("bigint");
 
                     b.Property<string>("Quarter")
                         .HasColumnType("nvarchar(max)");
@@ -1915,8 +1912,6 @@ namespace MEMIS.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("ActivityAccessId");
-
-                    b.HasIndex("ActivityAssessmentId");
 
                     b.HasIndex("DeptPlanId");
 
@@ -3708,19 +3703,17 @@ namespace MEMIS.Migrations
                 {
                     b.HasOne("MEMIS.Data.ActivityAssess", "ActivityAssess")
                         .WithMany("QuaterlyPlans")
-                        .HasForeignKey("ActivityAccessId");
-
-                    b.HasOne("MEMIS.Data.ActivityAssessment", "ActivityAssessment")
-                        .WithMany("QuaterlyPlans")
-                        .HasForeignKey("ActivityAssessmentId");
+                        .HasForeignKey("ActivityAccessId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("MEMIS.Data.DeptPlan", "DeptPlan")
                         .WithMany("QuaterlyPlans")
-                        .HasForeignKey("DeptPlanId");
+                        .HasForeignKey("DeptPlanId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("ActivityAssess");
-
-                    b.Navigation("ActivityAssessment");
 
                     b.Navigation("DeptPlan");
                 });
@@ -4016,11 +4009,6 @@ namespace MEMIS.Migrations
                 });
 
             modelBuilder.Entity("MEMIS.Data.ActivityAssess", b =>
-                {
-                    b.Navigation("QuaterlyPlans");
-                });
-
-            modelBuilder.Entity("MEMIS.Data.ActivityAssessment", b =>
                 {
                     b.Navigation("QuaterlyPlans");
                 });

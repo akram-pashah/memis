@@ -1,49 +1,31 @@
-@* <div>
-    <div class="card">
-        <div class="card-body">
-            <table class="table table-bordered table-striped">
-                <tbody>
-                    <tr>
-                        <td>SDT Assessment </td>
-                        <td><a class="btn btn-outline-success float-end float-right" asp-action="SDTExportToExcel" target="_blank">Export to Excel</a> </td>
-                    </tr>
-                    <tr>
-                        <td>KPI Assessment </td>
-                        <td><a class="btn btn-outline-success float-end float-right" asp-action="KPIExportToExcel" target="_blank">Export to Excel</a> </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-</div> *@
 @*
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
 @{
 }
 @using MEMIS.Data;
-@model List<SDTAssessment>
+@model List<ActivityAssess>
 @{
-    ViewData["Title"] = "M&E Reports";
+    ViewData["Title"] = "Planning Reports";
     //Layout = "~/Views/Shared/_PlanningLayout.cshtml";
     Layout = "~/Pages/Shared/_ContentNavbarLayout.cshtml";
 }
 
 <h4 class="py-3 mb-4">
-    <span class="text-muted fw-light">M&E Reports /</span> SDT Assessment
+    <span class="text-muted fw-light">Planning Reports /</span> Programe Implementation Plan
 </h4>
 
 <div class="row">
     <div class="col-md-12">
         <ul class="nav nav-pills flex-column flex-md-row mb-3">
-            <li class="nav-item"><a class="nav-link active" href="javascript:void(0);">SDT Assessment</a></li>
-            <li class="nav-item"><a class="nav-link" href="KpiAssessment">KPI Assessment</a></li>
+            <li class="nav-item"><a class="nav-link" href="/Reports/planningIndex">Programe Implementation Plan</a></li>
+            <li class="nav-item"><a class="nav-link active" href="javascript:void(0);">Consolidated Department Plan</a></li>
         </ul>
 
         <div class="card mb-4">
             <h5 class="card-header">
                 <div class="col d-flex justify-content-end mb-3">
-                    <a class="btn btn-outline-success float-end float-right" asp-action="SDTExportToExcel" target="_blank">Export to Excel</a>
+                    <a class="btn btn-outline-success float-end float-right" asp-action="ConsolidatedExportToExcel" target="_blank">Export to Excel</a>
                 </div>
             </h5>
             <hr class="my-0" />
@@ -54,49 +36,49 @@
                         <thead class="table-active">
                             <tr>
                                 <th>
-                                    Month
+                                    Strategic Objective
                                 </th>
                                 <th>
-                                    SDT
+                                    Strategic Intervention
                                 </th>
                                 <th>
-                                    SDT Numerator
+                                    Strategic Actions
                                 </th>
                                 <th>
-                                    SDT Denominator
+                                    Activities/Initiatives
                                 </th>
                                 <th>
-                                    Numerator Perf
+                                    Output Indicators
                                 </th>
                                 <th>
-                                    Denominator Perf
+                                    Baseline
                                 </th>
                                 <th>
-                                    Implemented Within Timeline
+                                    Annual Target
                                 </th>
                                 <th>
-                                    Average Working Days
+                                    Budget Code
                                 </th>
                                 <th>
-                                    % Implemented Within Timeline
+                                    Amount Allocated
                                 </th>
                                 <th>
-                                    Target
+                                    Quarter 1
                                 </th>
                                 <th>
-                                    Achievement Status
+                                    Quarter 2
                                 </th>
                                 <th>
-                                    % Variance
+                                    Quarter 3
                                 </th>
                                 <th>
-                                    Justification
+                                    Quarter 4
                                 </th>
                                 <th>
-                                    Rating
+                                    Identified Risks
                                 </th>
                                 <th>
-                                    Department
+                                    Responsible Party
                                 </th>
                             </tr>
                         </thead>
@@ -105,59 +87,62 @@
                             {
                                 <tr>
                                     <td>
-                                        @Html.DisplayFor(modelItem => item.Month)
-                                    </td>
-                                    <td>
                                         @{
-                                            var ServiceDeliveryTimeline = item?.SDTMasterFk?.ServiceDeliveryTimeline ?? string.Empty;
+                                            var objectiveName = item?.StrategicIntervention?.StrategicObjective?.ObjectiveName ?? string.Empty;
                                         }
-                                        @Html.DisplayFor(m => ServiceDeliveryTimeline)
+                                        @Html.DisplayFor(m => objectiveName)
                                     </td>
                                     <td>
                                         @{
-                                            var Numerator = item?.SDTMasterFk?.Numerator ?? string.Empty;
+                                            var InterventionName = item?.StrategicIntervention?.InterventionName ?? string.Empty;
                                         }
-                                        @Html.DisplayFor(m => Numerator)
+                                        @Html.DisplayFor(m => InterventionName)
                                     </td>
                                     <td>
                                         @{
-                                            var Denominator = item?.SDTMasterFk?.Denominator ?? string.Empty;
+                                            var actionName = item?.StrategicAction?.actionName ?? string.Empty;
                                         }
-                                        @Html.DisplayFor(m => Denominator)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Numerator)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Denominator)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.ImplementedTimeline)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Rate)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.ProportionTimeline)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Target)
-                                    </td>
-                                    <td>
-                                        @getAchievement(item.AchivementStatus)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Variance)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Justification)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Rating)
+                                        @Html.DisplayFor(m => actionName)
                                     </td>
                                     <td>
                                         @{
-                                            var deptName = item?.SDTMasterFk?.DepartmentFk?.deptName ?? string.Empty;
+                                            var activityName = item?.ActivityFk?.activityName ?? string.Empty;
+                                        }
+                                        @Html.DisplayFor(m => actionName)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.outputIndicator)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.baseline)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.QTarget)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.budgetCode)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.budgetAmount)
+                                    </td>
+                                    <td>
+                                        &nbsp;
+                                    </td>
+                                    <td>
+                                        &nbsp;
+                                    </td>
+                                    <td>
+                                        &nbsp;
+                                    </td>
+                                    <td>
+                                        &nbsp;
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.IdentifiedRisks)
+                                    </td>
+                                    <td>
+                                        @{
+                                            var deptName = item?.DepartmentFk?.deptName ?? string.Empty;
                                         }
                                         @Html.DisplayFor(m => deptName)
                                     </td>
@@ -200,16 +185,3 @@
     </div>
   </div>
 </div> *@
-@{
-    static string getAchievement(string? achieve)
-    {
-        foreach (var nachieve in ListHelper.AchievementStatus())
-        {
-            if (nachieve.Value == achieve)
-            {
-                return nachieve.Text;
-            }
-        }
-        return "NA";
-    }
-}

@@ -11,6 +11,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="Data\Risk\Event.cs~RF216b5b.TMP" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Include="wwwroot\vendor\libs\form-validation\umd\bundle\popular.min.js" />
     <None Include="wwwroot\vendor\libs\form-validation\umd\plugin-auto-focus\index.min.js" />
     <None Include="wwwroot\vendor\libs\form-validation\umd\plugin-bootstrap5\index.min.js" />

@@ -450,7 +450,7 @@ namespace MEMIS.Controllers.Risk
           "IdentifiedDate,StrategicObjective,FocusArea,Activity,BudgetCode" +
           ",RiskDescription,Events,RiskSource,RiskCause,RiskConsequence,RiskConsequenceId," +
           "RiskLikelihoodId,RiskScore,RiskRank,EvalCriteria,IsVerified,EventsList")]RiskIdentificationCreateEditDto dto)
-{
+    {
     if (ModelState.IsValid && dto.RiskConsequenceId != 0 && dto.RiskLikelihoodId != 0)
     {
         RiskIdentification riskIdentification = new RiskIdentification
@@ -468,6 +468,7 @@ namespace MEMIS.Controllers.Risk
             RiskScore = dto.RiskScore,
             StrategicObjective = dto.StrategicObjective,
         };
+
         _context.Add(riskIdentification);
         await _context.SaveChangesAsync();
         dto.Events.ForEach(ev => ev.RiskId = riskIdentification.RiskId);

@@ -1,4 +1,4 @@
-﻿using MEMIS.Data.Master;
+using MEMIS.Data.Master;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -76,13 +76,13 @@ namespace MEMIS.Data
 
         [ForeignKey("ImplementationStatus")]
         [Display(Name = "Implementation Status")]
-        public int ImpStatusId { get; set; }=1 ;
-        public virtual ImplementationStatus ImplementationStatus { get; set; }
-
+        public int ImpStatusId { get; set; } =1 ;
+        public virtual ImplementationStatus? ImplementationStatus { get; set; }
+        
         [Display(Name = "Justification")]
         public string? AnnualJustification { get; set; }
+        public virtual List<QuaterlyPlan> QuaterlyPlans { get; set; }
+        public long? ActivityAssesmentStatus { get; set; }
 
-
-       
     }
 }

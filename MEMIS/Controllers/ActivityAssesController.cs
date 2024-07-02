@@ -15,7 +15,7 @@ using Microsoft.AspNetCore.Authorization;
 using MEMIS.Models.Risk;
 using MEMIS.ViewModels;
 using MEMIS.Helpers.ExcelReports;
-using Syncfusion.Blazor.Data;
+using Humanizer;
 
 namespace MEMIS.Controllers
 {
@@ -94,34 +94,6 @@ namespace MEMIS.Controllers
 
         };
         
-        ViewBag.Users = _userManager;
-        return View(result);
-      }
-      else
-      {
-        return Problem("Entity set 'AppDbContext.ActivityAssess'  is null.");
-      }
-    }
-    public async Task<IActionResult> RegionalTarget(int pageNumber = 1)
-    {
-      int pageSize = 10;
-      Guid intReg =Guid.Parse(HttpContext.Session.GetString("intRegion"));
-      var offset = (pageSize * pageNumber) - pageSize;
-      if (_context.ActivityAssessRegion != null)
-      {
-        var dat = _context.ActivityAssessRegion.Include(r => r.ActivityAssessFk).ThenInclude(fk=>fk.ActivityFk).ThenInclude(fk => fk.StrategicAction).ThenInclude(fk => fk.StrategicIntervention).Where(m => m.intRegion == intReg)
-            .Skip(offset)
-            .Take(pageSize);
-
-        var result = new PagedResult<ActivityAssessRegion>
-        {
-          Data = await dat.AsNoTracking().ToListAsync(),
-          TotalItems = _context.ActivityAssessRegion.Count(),
-          PageNumber = pageNumber,
-          PageSize = pageSize
-
-        };
-
         ViewBag.Users = _userManager;
         return View(result);
       }
@@ -760,8 +732,8 @@ namespace MEMIS.Controllers
       ViewBag.Activity = _context.Activity == null ? new List<Activity>() : await _context.Activity.ToListAsync();
       ViewData["intDept"] = new SelectList(_context.Departments, "intDept", "deptName");
       ViewData["Quarter"] = ListHelper.Quarter();
-
-      return View();
+      ActivityAssessDto activityAssessDto = new ActivityAssessDto();
+      return View(activityAssessDto);
     }
 
 
@@ -787,9 +759,46 @@ namespace MEMIS.Controllers
           budgetAmount = dto.budgetAmount,
           intDept = dto.intDept,
           IdentifiedRisks = dto.IdentifiedRisks,
+
         };
         _context.Add(deptPlan);
+
         await _context.SaveChangesAsync();
+        if(dto.QuaterlyPlans.Count > 0)
+        {
+          dto.QuaterlyPlans.ForEach(ev => ev.ActivityAccessId = deptPlan.intAssess);
+          _context.QuaterlyPlans.AddRange(dto.QuaterlyPlans);
+          _context.SaveChanges();
+        }
+
+        DeptPlan dept = new DeptPlan()
+        {
+          intActivity = deptPlan.intActivity ?? 0,
+          //StrategicObjective = deptPlan.Str
+          strategicIntervention = deptPlan.intIntervention,
+          StrategicAction = deptPlan.intAction,
+          activity = deptPlan.intActivity?.ToString() ?? "",
+          outputIndicator = deptPlan.outputIndicator,
+          baseline = deptPlan.baseline,
+          budgetCode = deptPlan.budgetCode,
+          unitCost = deptPlan.QTarget,
+          Q1Target = dto.QuaterlyPlans.Where(x => x.Quarter == "1").Select(x => x.QTarget).FirstOrDefault(),
+          Q2Target = dto.QuaterlyPlans.Where( x=> x.Quarter == "2").Select(x => x.QTarget).FirstOrDefault(),
+          Q3Target = dto.QuaterlyPlans.Where( x=> x.Quarter == "3").Select(x => x.QTarget).FirstOrDefault(),
+          Q4Target = dto.QuaterlyPlans.Where( x=> x.Quarter == "4").Select(x => x.QTarget).FirstOrDefault(),
+          Q1Budget = dto.QuaterlyPlans.Where(x => x.Quarter == "1").Select(x => x.QBudget).FirstOrDefault(),
+          Q2Budget = dto.QuaterlyPlans.Where( x=> x.Quarter == "2").Select(x => x.QBudget).FirstOrDefault(),
+          Q3Budget = dto.QuaterlyPlans.Where( x=> x.Quarter == "3").Select(x => x.QBudget).FirstOrDefault(),
+          Q4Budget = dto.QuaterlyPlans.Where( x=> x.Quarter == "4").Select(x => x.QBudget).FirstOrDefault(),
+          comparativeTarget = dto.comparativeTarget,
+          justification = dto.justification,
+          budgetAmount = dto.budgetAmount,
+          IsVerified = false,
+          DepartmentId = dto.intDept,
+        };
+        _context.DeptPlans?.Add(dept);
+        _context.SaveChanges();
+
         return RedirectToAction(nameof(Index));
       }
       ViewBag.StrategicIntervention = _context.StrategicIntervention == null ? new List<StrategicIntervention>() : await _context.StrategicIntervention.ToListAsync();
@@ -798,7 +807,6 @@ namespace MEMIS.Controllers
       ViewData["intDept"] = new SelectList(_context.Departments, "intDept", "deptName",dto.intDept);
       return View(dto);
     }
-
 
     public async Task<IActionResult> Edit(int? id)
     {
@@ -827,19 +835,24 @@ namespace MEMIS.Controllers
         comparativeTarget = deptPlan.comparativeTarget,
         justification = deptPlan.justification,
         budgetAmount = deptPlan.budgetAmount,
+        IdentifiedRisks = deptPlan.IdentifiedRisks,
+        QuaterlyPlans = await _context.QuaterlyPlans.Where(x => x.ActivityAccessId == deptPlan.intAssess).ToListAsync()
       };
+      
       ViewBag.StrategicIntervention = _context.StrategicIntervention == null ? new List<StrategicIntervention>() : await _context.StrategicIntervention.ToListAsync();
       ViewBag.StrategicAction = _context.StrategicAction == null ? new List<StrategicAction>() : await _context.StrategicAction.ToListAsync();
       ViewBag.Activity = _context.Activity == null ? new List<Activity>() : await _context.Activity.ToListAsync();
+      ViewData["Quarter"] = ListHelper.Quarter();
+      ViewData["intDept"] = new SelectList(_context.Departments, "intDept", "deptName", dto.intDept);
+
       return View(dto);
     }
 
-
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Edit(int id, [Bind("intAssess,intIntervention,intAction,intActivity,outputIndicator,baseline,unitCost,comparativeTarget,justification,budgetAmount,Quarter,QTarget,QBudget")] ActivityAssessDto deptPlan)
+    public async Task<IActionResult> Edit(int id, [Bind("intAssess,intIntervention,intAction,intActivity,outputIndicator,baseline,unitCost,comparativeTarget,justification,budgetAmount,QuaterlyPlans")] ActivityAssessDto deptPlan)
     {
-      if (id != deptPlan.intActivity)
+      if (id != deptPlan.intAssess)
       {
         return NotFound();
       }
@@ -849,30 +862,59 @@ namespace MEMIS.Controllers
       {
         return NotFound();
       }
-
       if (ModelState.IsValid)
       {
         try
         {
 
-          //ActivityAssess rd = new ActivityAssess
-          //{
-          //  intAssess = deptPlan.intAssess,
-          //  intIntervention = deptPlan.intIntervention,
-          //  intAction = deptPlan.intAction,
-          //  intActivity = deptPlan.intActivity,
-          //  outputIndicator = deptPlan.outputIndicator,
-          //  budgetCode = deptPlan.budgetCode,
-          //  baseline = deptPlan.baseline,
-          //  Quarter = deptPlan.Quarter,
-          //  QTarget = deptPlan.QTarget,
-          //  QBudget = deptPlan.QBudget,
-          //  comparativeTarget = deptPlan.comparativeTarget,
-          //  justification = deptPlan.justification,
-          //  budgetAmount = deptPlan.budgetAmount,
-          //};
-          //_context.Update(rd);
+          if (deptPlan.QuaterlyPlans.Count > 0)
+          {
+            
+            foreach (var quat in deptPlan.QuaterlyPlans)
+            {
+              if(quat.Id != 0)
+              {
+                _context.Entry(quat).State = EntityState.Modified;
+                await _context.SaveChangesAsync();
+              }
+              else
+              {
+                quat.ActivityAccessId = deptPlan.intAssess;
+                await _context.QuaterlyPlans.AddAsync(quat);
+                await _context.SaveChangesAsync();
+              }
+            }
+          }
+         
           _context.Entry(original).State = EntityState.Modified;
+          await _context.SaveChangesAsync();
+
+          DeptPlan dept = new DeptPlan()
+          {
+            intActivity = deptPlan.intActivity ?? 0,
+            //StrategicObjective = deptPlan.Str
+            strategicIntervention = deptPlan.intIntervention,
+            StrategicAction = deptPlan.intAction,
+            activity = deptPlan.intActivity?.ToString() ?? "",
+            outputIndicator = deptPlan.outputIndicator,
+            baseline = deptPlan.baseline,
+            budgetCode = deptPlan.budgetCode,
+            unitCost = deptPlan.QTarget,
+            Q1Target = deptPlan.QuaterlyPlans.Where(x => x.Quarter == "1").Select(x => x.QTarget).FirstOrDefault(),
+            Q2Target = deptPlan.QuaterlyPlans.Where(x => x.Quarter == "2").Select(x => x.QTarget).FirstOrDefault(),
+            Q3Target = deptPlan.QuaterlyPlans.Where(x => x.Quarter == "3").Select(x => x.QTarget).FirstOrDefault(),
+            Q4Target = deptPlan.QuaterlyPlans.Where(x => x.Quarter == "4").Select(x => x.QTarget).FirstOrDefault(),
+            Q1Budget = deptPlan.QuaterlyPlans.Where(x => x.Quarter == "1").Select(x => x.QBudget).FirstOrDefault(),
+            Q2Budget = deptPlan.QuaterlyPlans.Where(x => x.Quarter == "2").Select(x => x.QBudget).FirstOrDefault(),
+            Q3Budget = deptPlan.QuaterlyPlans.Where(x => x.Quarter == "3").Select(x => x.QBudget).FirstOrDefault(),
+            Q4Budget = deptPlan.QuaterlyPlans.Where(x => x.Quarter == "4").Select(x => x.QBudget).FirstOrDefault(),
+            comparativeTarget = deptPlan.comparativeTarget,
+            justification = deptPlan.justification,
+            budgetAmount = deptPlan.budgetAmount,
+            IsVerified = false,
+            DepartmentId = deptPlan.intDept,
+          };
+          _context.Entry(dept).State = EntityState.Modified;
           await _context.SaveChangesAsync();
         }
         catch (DbUpdateConcurrencyException)
@@ -891,6 +933,9 @@ namespace MEMIS.Controllers
       ViewBag.StrategicIntervention = _context.StrategicIntervention == null ? new List<StrategicIntervention>() : await _context.StrategicIntervention.ToListAsync();
       ViewBag.StrategicAction = _context.StrategicAction == null ? new List<StrategicAction>() : await _context.StrategicAction.ToListAsync();
       ViewBag.Activity = _context.Activity == null ? new List<Activity>() : await _context.Activity.ToListAsync();
+      ViewData["Quarter"] = ListHelper.Quarter();
+      ViewData["intDept"] = new SelectList(_context.Departments, "intDept", "deptName", deptPlan.intDept);
+
       return View(deptPlan);
     }
 

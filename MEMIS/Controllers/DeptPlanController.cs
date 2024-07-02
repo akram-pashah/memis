@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -28,35 +28,65 @@ namespace MEMIS.Controllers
             _userManager = userManager;
         }
 
-        
-        public IActionResult Index(int pageNumber = 1)
+
+    public IActionResult Index(int pageNumber = 1)
+    {
+      int pageSize = 10;
+      var offset = (pageSize * pageNumber) - pageSize;
+
+      if (_context.DeptPlans != null)
+      {
+        // Retrieve DeptPlans with related entities
+        var dat = _context.DeptPlans
+            .Include(m => m.StrategicPlanFk)
+            .Include(m => m.StrategicInterventionFk)
+            .Include(m => m.StrategicActionFk)
+            .Include(s => s.DepartmentFk)
+            .Skip(offset)
+            .Take(pageSize)
+            .ToList(); // Execute query to materialize data
+
+        // Check if any records are returned
+        if (dat.Count > 0)
         {
-            int pageSize = 10;
-            var offset = (pageSize * pageNumber) - pageSize;
-            if (_context.DeptPlans != null)
-            {
-                var dat = _context.DeptPlans.Include(m => m.StrategicPlanFk).Include(m => m.StrategicInterventionFk).Include(m => m.StrategicActionFk).Include(s => s.DepartmentFk)
-                    .Skip(offset)
-                    .Take(pageSize);
+          foreach (var item in dat)
+          {
+            // Retrieve QuaterlyPlans for each DeptPlan item
+            var quaterlyplans = _context.QuaterlyPlans
+                .Where(x => x.DeptPlanId == item.intActivity)
+                .ToList();
 
-                var result = new PagedResult<DeptPlan>
-                {
-                    Data = dat.AsNoTracking().ToList(),
-                    TotalItems = _context.DeptPlans.Count(),
-                    PageNumber = pageNumber,
-                    PageSize = pageSize
-
-                };
-                ViewBag.Users = _userManager;
-                return View(result);
-            }
-            else
-            {
-                return Problem("Entity set 'AppDbContext.DeptPlans'  is null.");
-            }
+            // Calculate sums for each quarter
+            item.Q1Target = quaterlyplans.Where(x => x.Quarter == "1").Sum(x => x.QTarget);
+            item.Q1Budget = quaterlyplans.Where(x => x.Quarter == "1").Sum(x => x.QBudget);
+            item.Q2Target = quaterlyplans.Where(x => x.Quarter == "2").Sum(x => x.QTarget);
+            item.Q2Budget = quaterlyplans.Where(x => x.Quarter == "2").Sum(x => x.QBudget);
+            item.Q3Target = quaterlyplans.Where(x => x.Quarter == "3").Sum(x => x.QTarget);
+            item.Q3Budget = quaterlyplans.Where(x => x.Quarter == "3").Sum(x => x.QBudget);
+            item.Q4Target = quaterlyplans.Where(x => x.Quarter == "4").Sum(x => x.QTarget);
+            item.Q4Budget = quaterlyplans.Where(x => x.Quarter == "4").Sum(x => x.QBudget);
+          }
         }
 
-        public IActionResult Verify(int pageNumber = 1)
+        // Create a PagedResult object
+        var result = new PagedResult<DeptPlan>
+        {
+          Data = dat,
+          TotalItems = _context.DeptPlans.Count(),
+          PageNumber = pageNumber,
+          PageSize = pageSize
+        };
+
+        ViewBag.Users = _userManager;
+        return View(result);
+      }
+      else
+      {
+        return Problem("Entity set 'AppDbContext.DeptPlans' is null.");
+      }
+    }
+
+    public IActionResult Verify(int pageNumber = 1)
         {
             int pageSize = 10;
             var offset = (pageSize * pageNumber) - pageSize;
@@ -99,9 +129,9 @@ namespace MEMIS.Controllers
             DeptPlanDto deptDto = new DeptPlanDto
             {
                 intActivity = deptPlan.intActivity,
-                StrategicObjective = (int)deptPlan.StrategicObjective,
-                strategicIntervention = (int)deptPlan.strategicIntervention,
-                StrategicAction = (int)deptPlan.StrategicAction,
+                StrategicObjective = deptPlan.StrategicObjective,
+                strategicIntervention = deptPlan.strategicIntervention,
+                StrategicAction = deptPlan.StrategicAction,
                 activity = deptPlan.activity,
                 outputIndicator = deptPlan.outputIndicator,
                 baseline = deptPlan.baseline,
@@ -207,9 +237,9 @@ namespace MEMIS.Controllers
             DeptPlanDto riskDto = new DeptPlanDto
             {
                 intActivity = deptPlan.intActivity,
-                StrategicObjective = (int)deptPlan.StrategicObjective,
-                strategicIntervention = (int)deptPlan.strategicIntervention,
-                StrategicAction = (int)deptPlan.StrategicAction,
+                StrategicObjective = deptPlan.StrategicObjective,
+                strategicIntervention = deptPlan.strategicIntervention,
+                StrategicAction = deptPlan.StrategicAction,
                 activity = deptPlan.activity,
                 outputIndicator = deptPlan.outputIndicator,
                 baseline = deptPlan.baseline,
@@ -316,9 +346,9 @@ namespace MEMIS.Controllers
             DeptPlanDto riskDto = new DeptPlanDto
             {
                 intActivity = deptPlan.intActivity,
-                StrategicObjective = (int)deptPlan.StrategicObjective,
-                strategicIntervention = (int)deptPlan.strategicIntervention,
-                StrategicAction = (int)deptPlan.StrategicAction,
+                StrategicObjective = deptPlan.StrategicObjective,
+                strategicIntervention = deptPlan.strategicIntervention,
+                StrategicAction = deptPlan.StrategicAction,
                 activity = deptPlan.activity,
                 outputIndicator = deptPlan.outputIndicator,
                 baseline = deptPlan.baseline,
@@ -424,9 +454,9 @@ namespace MEMIS.Controllers
             DeptPlanDto riskDto = new DeptPlanDto
             {
                 intActivity = deptPlan.intActivity,
-                StrategicObjective = (int)deptPlan.StrategicObjective,
-                strategicIntervention = (int)deptPlan.strategicIntervention,
-                StrategicAction = (int)deptPlan.StrategicAction,
+                StrategicObjective = deptPlan.StrategicObjective,
+                strategicIntervention = deptPlan.strategicIntervention,
+                StrategicAction = deptPlan.StrategicAction,
                 activity = deptPlan.activity,
                 outputIndicator = deptPlan.outputIndicator,
                 baseline = deptPlan.baseline,
@@ -532,9 +562,9 @@ namespace MEMIS.Controllers
             DeptPlanDto riskDto = new DeptPlanDto
             {
                 intActivity = deptPlan.intActivity,
-                StrategicObjective = (int)deptPlan.StrategicObjective,
-                strategicIntervention = (int)deptPlan.strategicIntervention,
-                StrategicAction = (int)deptPlan.StrategicAction,
+                StrategicObjective = deptPlan.StrategicObjective,
+                strategicIntervention = deptPlan.strategicIntervention,
+                StrategicAction = deptPlan.StrategicAction,
                 activity = deptPlan.activity,
                 outputIndicator = deptPlan.outputIndicator,
                 baseline = deptPlan.baseline,
@@ -621,7 +651,9 @@ namespace MEMIS.Controllers
  
             ViewBag.StrategicPlanList = _context.StrategicPlan == null ? new List<StrategicPlan>() : await _context.StrategicPlan.ToListAsync();
             ViewBag.DeptList = _context.Departments == null ? new List<Department>() : await _context.Departments.ToListAsync();
-            return View();
+            ViewData["Quarter"] = ListHelper.Quarter();
+            DeptPlanDto deptPlanDto = new DeptPlanDto();
+            return View(deptPlanDto);
         }
 
         
@@ -655,6 +687,15 @@ namespace MEMIS.Controllers
                     DepartmentId=dto.DepartmentId,
                 };
                 _context.Add(deptPlan);
+
+                await _context.SaveChangesAsync();
+                if (dto.QuaterlyPlans.Count > 0)
+                {
+                  dto.QuaterlyPlans.ForEach(ev => ev.DeptPlanId = deptPlan.intActivity);
+                  _context.QuaterlyPlans.AddRange(dto.QuaterlyPlans);
+                  _context.SaveChanges();
+                }
+
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }            
@@ -676,11 +717,12 @@ namespace MEMIS.Controllers
             {
                 return NotFound();
             }
+
             DeptPlanDto dto = new DeptPlanDto
             {
-                StrategicObjective =(int) deptPlan.StrategicObjective,
-                strategicIntervention = (int)deptPlan.strategicIntervention,
-                StrategicAction = (int)deptPlan.StrategicAction,
+                StrategicObjective = deptPlan.StrategicObjective,
+                strategicIntervention = deptPlan.strategicIntervention,
+                StrategicAction = deptPlan.StrategicAction,
                 activity = deptPlan.activity,
                 outputIndicator = deptPlan.outputIndicator,
                 baseline = deptPlan.baseline,
@@ -699,16 +741,19 @@ namespace MEMIS.Controllers
                 budgetAmount = deptPlan.budgetAmount,
                DepartmentId= deptPlan.DepartmentId,
                intActivity= deptPlan.intActivity,
-            }; 
+               QuaterlyPlans = await _context.QuaterlyPlans.Where(x => x.DeptPlanId == deptPlan.intActivity).ToListAsync()
+            };
+
             ViewBag.StrategicPlanList = _context.StrategicPlan == null ? new List<StrategicPlan>() : await _context.StrategicPlan.ToListAsync();
             ViewBag.DeptList = _context.Departments == null ? new List<Department>() : await _context.Departments.ToListAsync();
+            ViewData["Quarter"] = ListHelper.Quarter();
             return View(dto);
         }
 
         
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("intActivity,StrategicObjective,strategicIntervention,StrategicAction,activity,outputIndicator,baseline,budgetCode,unitCost,Q1Target,Q1Budget,Q2Target,Q2Budget,Q3Target,Q3Budget,Q4Target,Q4Budget,comparativeTarget,justification,budgetAmount,DepartmentId")] DeptPlanDto deptPlan)
+        public async Task<IActionResult> Edit(int id, [Bind("intActivity,StrategicObjective,strategicIntervention,StrategicAction,activity,outputIndicator,baseline,budgetCode,unitCost,Q1Target,Q1Budget,Q2Target,Q2Budget,Q3Target,Q3Budget,Q4Target,Q4Budget,comparativeTarget,justification,budgetAmount,DepartmentId,QuaterlyPlans")] DeptPlanDto deptPlan)
         {
             if (id != deptPlan.intActivity)
             {
@@ -719,6 +764,26 @@ namespace MEMIS.Controllers
             {
                 try
                 {
+
+                    if (deptPlan.QuaterlyPlans.Count > 0)
+                    {
+
+                      foreach (var quat in deptPlan.QuaterlyPlans)
+                      {
+                        if (quat.Id != 0)
+                        {
+                          _context.Entry(quat).State = EntityState.Modified;
+                          await _context.SaveChangesAsync();
+                        }
+                        else
+                        {
+                          quat.DeptPlanId = deptPlan.intActivity;
+                          await _context.QuaterlyPlans.AddAsync(quat);
+                          await _context.SaveChangesAsync();
+                        }
+                      }
+                    }
+
                     DeptPlan rd = new DeptPlan
                     {
                         StrategicObjective = (int)deptPlan.StrategicObjective,
