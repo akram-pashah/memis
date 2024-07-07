@@ -20,39 +20,48 @@ namespace MEMIS.Controllers.ME
         // GET: ActivityAssessment
         public async Task<IActionResult> Index()
         {
-            var appDbContext = await  GetActivityAssestsDetails();
+            var appDbContext = await  GetActivityAssestsDetails(0);
             return View(appDbContext);
         }
         public async Task<IActionResult> HodVerification()
         {
-            var appDbContext = await  GetActivityAssestsDetails();
+            var appDbContext = await  GetActivityAssestsDetails(0);
            return View( appDbContext);
         }
         public async Task<IActionResult> VerificationDir()
         {
-            var appDbContext = await  GetActivityAssestsDetails();
+            var appDbContext = await  GetActivityAssestsDetails(1);
             return View( appDbContext);
         }
         public async Task<IActionResult> Consolidation()
         {
-            var appDbContext = await  GetActivityAssestsDetails();
+            var appDbContext = await  GetActivityAssestsDetails(0);
             return View( appDbContext);
         }
         public async Task<IActionResult> VerificationBpd()
         {
-            var appDbContext = await  GetActivityAssestsDetails();
+            var appDbContext = await  GetActivityAssestsDetails(3);
            return View( appDbContext);
         }
         public async Task<IActionResult> Approval()
         {
-            var appDbContext = await  GetActivityAssestsDetails();
+            var appDbContext = await  GetActivityAssestsDetails(5);
             return View( appDbContext);
         }
         
-        private async Task<List<ActivityAssessment>> GetActivityAssestsDetails()
+        private async Task<List<ActivityAssessment>> GetActivityAssestsDetails(int Status)
         {
-            var appDbContext = await _context.ActivityAssessment.Include(a => a.ImplementationStatus).ToListAsync();
-            if(appDbContext.Count > 0)
+
+            var query = _context.ActivityAssessment.Include(a => a.ImplementationStatus).AsQueryable();
+
+            if (Status != 0 && Status != null)
+            {
+              query = query.Where(s => s.ActivityAssesmentStatus == Status);
+            }
+
+            var appDbContext = await query.ToListAsync();
+
+            if (appDbContext.Count > 0)
             {
                foreach (var item in appDbContext)
                {
@@ -301,7 +310,7 @@ namespace MEMIS.Controllers.ME
           return (_context.ActivityAssessment?.Any(e => e.intDeptPlan == id)).GetValueOrDefault();
         }
 
-    public async Task<IActionResult> HodVerificationUpdate(List<int> selectedIds, int apprStatus)
+    public async Task<IActionResult> VerificationUpdate(List<int> selectedIds, int apprStatus)
     {
       if (selectedIds != null && selectedIds.Count > 0 && apprStatus != null && apprStatus != 0)
       {
@@ -315,6 +324,23 @@ namespace MEMIS.Controllers.ME
           }
         }
       }
+
+      if(apprStatus == 1 || apprStatus == 2)
+      {
+        return RedirectToAction(nameof(HodVerification));
+
+      }else if(apprStatus == 3 || apprStatus == 4)
+      {
+        return RedirectToAction(nameof(VerificationDir));
+      }else if (apprStatus == 5 || apprStatus == 6)
+      {
+        return RedirectToAction(nameof(VerificationBpd));
+      }
+      else if (apprStatus == 7 || apprStatus == 8)
+      {
+        return RedirectToAction(nameof(Approval));
+      }
+
       return RedirectToAction(nameof(Index));
     }
     }
