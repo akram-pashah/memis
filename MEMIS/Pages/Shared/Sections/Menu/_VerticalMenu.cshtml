@@ -116,6 +116,69 @@
                         </li>
                     </ul>
                 </li>
+                <li class='menu-item@(currentPage.StartsWith("/ActivityAsses") ? " active open" : "")'>
+                    <a href="javascript:void(0);" class="menu-link menu-toggle">
+                        <div>Regional Assessment</div>
+                    </a>
+                    <ul class="menu-sub">
+                        <li class='menu-item@(currentPage == "/ActivityAsses" ? " active" : "")'>
+                            <a asp-controller="ActivityAsses" asp-action="Index" class="menu-link">
+                                <div>ActivityAssess</div>
+                            </a>
+                        </li>
+                        <li class='menu-item@(currentPage == "/ActivityAsses/AllocatetoRegion" ? " active" : "")'>
+                            <a asp-controller="ActivityAsses" asp-action="AllocatetoRegion" class="menu-link">
+                                <div>Allocate To Region</div>
+                            </a>
+                        </li>
+                        <li class='menu-item@(currentPage == "/ActivityAsses/ConsolidatedDeptPlan" ? " active" : "")'>
+                            <a asp-controller="ActivityAsses" asp-action="ConsolidatedDeptPlan" class="menu-link">
+                                <div>Consolidated dept plan</div>
+                            </a>
+                        </li>
+
+                        @if (User.IsInRole("M&E Coordinator") || User.IsInRole("SuperAdmin"))
+                        {
+                            <li class='menu-item@(currentPage == "/ActivityAsses/RegionalVerify" ? " active" : "")'>
+                                <a asp-controller="ActivityAsses" asp-action="RegionalVerify" class="menu-link">
+                                    <div>Regional Assessment Verify</div>
+                                </a>
+                            </li>
+                        }
+                        @if (User.IsInRole("Head of Department") || User.IsInRole("SuperAdmin"))
+                        {
+                            <li class='menu-item@(currentPage == "/ActivityAssess/RegionalHodVerification" ? " active" : "")'>
+                                <a asp-controller="ActivityAsses" asp-action="RegionalHodVerification" class="menu-link">
+                                    <div> Regional Assessment Verification by HOD</div>
+                                </a>
+                            </li>
+                        }
+                        @if (User.IsInRole("Director") || User.IsInRole("SuperAdmin"))
+                        {
+                            <li class='menu-item@(currentPage == "/ActivityAssess/RegionalVerificationDir" ? " active" : "")'>
+                                <a asp-controller="ActivityAsses" asp-action="RegionalVerificationDir" class="menu-link">
+                                    <div>Regional Assessment Verification by Director</div>
+                                </a>
+                            </li>
+                        }
+                        @if (User.IsInRole("Head BPD") || User.IsInRole("SuperAdmin"))
+                        {
+                            <li class='menu-item@(currentPage == "/ActivityAssess/RegionalVerificationBpd" ? " active" : "")'>
+                                <a asp-controller="ActivityAsses" asp-action="RegionalVerificationBpd" class="menu-link">
+                                    <div>Regional Head BPD Verification</div>
+                                </a>
+                            </li>
+                        }
+                        @if (User.IsInRole("Director (DCS)") || User.IsInRole("SuperAdmin"))
+                        {
+                            <li class='menu-item@(currentPage == "/ActivityAssess/RegionalApproval" ? " active" : "")'>
+                                <a asp-controller="ActivityAsses" asp-action="RegionalApproval" class="menu-link">
+                                    <div>Regional Approval by Director (DCS)</div>
+                                </a>
+                            </li>
+                        }
+                    </ul>
+                </li>
             </ul>
         </li>
 

@@ -49,6 +49,10 @@ namespace MEMIS.Controllers
 
             // Store user roles in session
             HttpContext.Session.SetString("UserRoles", rolesString);
+            if(user.intRegion != null)
+            {
+              HttpContext.Session.SetString("Region", user.intRegion.ToString());
+            }
 
             if (returnUrl == null || returnUrl == "/")
             {
@@ -104,7 +108,8 @@ namespace MEMIS.Controllers
           UserName = model.Username,
           Email = model.Email,
           intDept = model.intDept,
-          intDir = model.intDir
+          intDir = model.intDir,
+          intRegion = model.intRegion
         };
         var result = await _userManager.CreateAsync(user, model.Password);
         if (result.Succeeded)
