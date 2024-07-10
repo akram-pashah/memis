@@ -184,13 +184,43 @@ namespace MEMIS.Controllers
       {
         return NotFound();
       }
-
-       
         try
         {
           activity.actType = 1;
           _context.Update(activity);
           await _context.SaveChangesAsync();
+
+          var region = HttpContext.Session.GetString("Region");
+          if(region != null)
+          {
+              var groupedData = await _context.ActivityAssess.Include(a => a.DepartmentFk)
+            .Where(a => a.actType == 1 && a.intAssess == activity.intAssess)
+            .GroupBy(a => a.intDept)
+            .Select(g => new ActivityAssess
+            {
+              intDept = g.Key,
+              budgetAmount = g.Sum(a => a.budgetAmount),
+              QTarget = g.Sum(a => a.QTarget),
+              Quarter = g.FirstOrDefault().Quarter,
+              QBudget = g.FirstOrDefault().QBudget
+            })
+            .FirstOrDefaultAsync();
+             
+             ActivityAssessRegion activityAssessRegion = new ActivityAssessRegion();
+             activityAssessRegion.intAssess = activity.intAssess;
+             activityAssessRegion.intRegion = Guid.Parse(region);
+             activityAssessRegion.Quarter = activity.Quarter;
+             if(groupedData != null)
+             {
+               activityAssessRegion.QTarget = activity.QTarget;
+               activityAssessRegion.QBudget = activity.QBudget;
+             }
+             activityAssessRegion.ApprStatus = activity.ApprStatus;
+             activityAssessRegion.budgetAmount = activity.budgetAmount;
+
+            _context.ActivityAssessRegion.Add(activityAssessRegion);
+            _context.SaveChanges();
+          }
         }
         catch (DbUpdateConcurrencyException)
         {
@@ -204,6 +234,38 @@ namespace MEMIS.Controllers
           }
         }
         return  RedirectToAction(nameof(AllocatetoRegion)); 
+    }
+
+
+    public IActionResult RegionalVerify(int pageNumber = 1)
+    {
+      var result = _context.ActivityAssessRegion.Where(x => x.ApprStatus == 0).Include(x => x.Region).ToList();
+
+      return View(result);
+    }
+    public IActionResult RegionalHodVerification(int pageNumber = 1)
+    {
+      var result = _context.ActivityAssessRegion.Where(x => x.ApprStatus == 1).Include(x => x.Region).ToList();
+
+      return View(result);
+    }
+    public IActionResult RegionalVerificationDir(int pageNumber = 1)
+    {
+      var result = _context.ActivityAssessRegion.Where(x => x.ApprStatus == 3).Include(x => x.Region).ToList();
+
+      return View(result);
+    }
+    public IActionResult RegionalVerificationBpd(int pageNumber = 1)
+    {
+      var result = _context.ActivityAssessRegion.Where(x => x.ApprStatus == 5).Include(x => x.Region).ToList();
+
+      return View(result);
+    }
+    public IActionResult RegionalApproval(int pageNumber = 1)
+    {
+      var result = _context.ActivityAssessRegion.Where(x => x.ApprStatus == 7).Include(x => x.Region).ToList();
+
+      return View(result);
     }
 
     public IActionResult Verify(int pageNumber = 1)
@@ -1027,6 +1089,42 @@ namespace MEMIS.Controllers
       {
         return new RiskMatrix();
       }
+    }
+
+    public async Task<IActionResult> RegionalAssessmentVerification(List<int> selectedIds , int apprStatus)
+    {
+      if (selectedIds != null && selectedIds.Count > 0 && apprStatus != null && apprStatus != 0)
+      {
+        foreach (int id in selectedIds)
+        {
+          var activityAssessmentRegion = _context.ActivityAssessRegion.Where(x => x.intRegionAssess == id).FirstOrDefault();
+          if (activityAssessmentRegion != null)
+          {
+            activityAssessmentRegion.ApprStatus = apprStatus;
+            _context.SaveChanges();
+          }
+        }
+      }
+      if (apprStatus == 1 || apprStatus == 2)
+      {
+        return RedirectToAction(nameof(RegionalHodVerification));
+
+      }
+      else if (apprStatus == 3 || apprStatus == 4)
+      {
+        return RedirectToAction(nameof(RegionalVerificationDir));
+      }
+      else if (apprStatus == 5 || apprStatus == 6)
+      {
+        return RedirectToAction(nameof(RegionalVerificationBpd));
+      }
+      else if (apprStatus == 7 || apprStatus == 8)
+      {
+        return RedirectToAction(nameof(RegionalApproval));
+      }
+
+
+      return RedirectToAction(nameof(RegionalVerify));
     }
   }
 }
