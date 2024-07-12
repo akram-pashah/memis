@@ -20,6 +20,7 @@ namespace MEMIS.Data
     public DbSet<NDP_HD>? NDP_HD { get; set; }
     public DbSet<NDP>? NDP { get; set; }
     public DbSet<NDPFile>? NDPFile { get; set; }
+    public DbSet<NDAFile>? NDAFile { get; set; }
     public DbSet<ProgramImplementationPlan>? ProgramImplementationPlan { get; set; }
     public DbSet<FocusArea> FocusArea { get; set; }
     public DbSet<StrategicObjective> StrategicObjective { get; set; }

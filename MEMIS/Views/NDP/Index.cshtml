@@ -21,7 +21,12 @@
   </div>
 
   <div class="row">
-    @await Html.PartialAsync("~/Views/NDP/_NDPFile.cshtml", Model.NDPFile)
+    <div class="col">
+        @await Html.PartialAsync("~/Views/NDP/_NDPFile.cshtml", Model.NDPFile)
+    </div>
+    <div class="col">
+      @await Html.PartialAsync("~/Views/NDP/_NDAFile.cshtml", Model.NDAFile)
+    </div>
   </div>
 
 <br>
