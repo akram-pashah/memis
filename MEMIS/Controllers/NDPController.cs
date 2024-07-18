@@ -45,6 +45,7 @@ namespace MEMIS.Controllers
         };
         viewModel.NDP = result;
         viewModel.NDPFile = _context.NDPFile.Where(x => x.FinancialYear == int.Parse(financialYear)).OrderByDescending(x => x.CreatedDate).FirstOrDefault();
+        viewModel.NDAFile = _context.NDAFile.Where(x => x.FinancialYear == int.Parse(financialYear)).OrderByDescending(x => x.CreatedDate).FirstOrDefault();
 
         return View(viewModel);
       }
@@ -202,6 +203,18 @@ namespace MEMIS.Controllers
       // Return the file as a stream
       return File(ndpFile.FileContent, "application/octet-stream", ndpFile.FileName);
     }
+    public async Task<IActionResult> DownloadNDAFile(int id)
+    {
+      var ndaFile = await _context.NDAFile.FindAsync(id)
+;
+      if (ndaFile == null || ndaFile.FileContent == null || ndaFile.FileContent.Length == 0)
+      {
+        return NotFound();
+      }
+
+      // Return the file as a stream
+      return File(ndaFile.FileContent, "application/octet-stream", ndaFile.FileName);
+    }
 
     public async Task<IActionResult> UploadFile()
     {
@@ -224,6 +237,32 @@ namespace MEMIS.Controllers
           }
         }
         _context.Add(nDPFile);
+        await _context.SaveChangesAsync();
+        return RedirectToAction(nameof(Index));
+      }
+      return View();
+    }
+    public async Task<IActionResult> UploadNDAFile()
+    {
+      var file = Request.Form.Files;
+      string financialYear = HttpContext.Session.GetString("FYEAR");
+
+      NDAFile ndaFile = new NDAFile();
+
+      if (ModelState.IsValid)
+      {
+        if (file != null && file.Count > 0)
+        {
+          using (var memoryStream = new MemoryStream())
+          {
+            await file[0].CopyToAsync(memoryStream);
+            ndaFile.FileContent = memoryStream.ToArray();
+            ndaFile.FileName = file[0].FileName;
+            ndaFile.FinancialYear = int.Parse(financialYear);
+            ndaFile.CreatedDate = DateTime.Now;
+          }
+        }
+        _context.Add(ndaFile);
         await _context.SaveChangesAsync();
         return RedirectToAction(nameof(Index));
       }
