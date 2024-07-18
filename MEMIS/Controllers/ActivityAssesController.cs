@@ -989,36 +989,8 @@ namespace MEMIS.Controllers
          
           _context.Entry(original).State = EntityState.Modified;
           await _context.SaveChangesAsync();
-
-          DeptPlan dept = new DeptPlan()
-          {
-            intActivity = deptPlan.intActivity ?? 0,
-            //StrategicObjective = deptPlan.Str
-            strategicIntervention = deptPlan.intIntervention,
-            StrategicAction = deptPlan.intAction,
-            activity = deptPlan.intActivity?.ToString() ?? "",
-            outputIndicator = deptPlan.outputIndicator,
-            baseline = deptPlan.baseline,
-            budgetCode = deptPlan.budgetCode,
-            unitCost = deptPlan.QTarget,
-            Q1Target = deptPlan.QuaterlyPlans.Where(x => x.Quarter == "1").Select(x => x.QTarget).FirstOrDefault(),
-            Q2Target = deptPlan.QuaterlyPlans.Where(x => x.Quarter == "2").Select(x => x.QTarget).FirstOrDefault(),
-            Q3Target = deptPlan.QuaterlyPlans.Where(x => x.Quarter == "3").Select(x => x.QTarget).FirstOrDefault(),
-            Q4Target = deptPlan.QuaterlyPlans.Where(x => x.Quarter == "4").Select(x => x.QTarget).FirstOrDefault(),
-            Q1Budget = deptPlan.QuaterlyPlans.Where(x => x.Quarter == "1").Select(x => x.QBudget).FirstOrDefault(),
-            Q2Budget = deptPlan.QuaterlyPlans.Where(x => x.Quarter == "2").Select(x => x.QBudget).FirstOrDefault(),
-            Q3Budget = deptPlan.QuaterlyPlans.Where(x => x.Quarter == "3").Select(x => x.QBudget).FirstOrDefault(),
-            Q4Budget = deptPlan.QuaterlyPlans.Where(x => x.Quarter == "4").Select(x => x.QBudget).FirstOrDefault(),
-            comparativeTarget = deptPlan.comparativeTarget,
-            justification = deptPlan.justification,
-            budgetAmount = deptPlan.budgetAmount,
-            IsVerified = false,
-            DepartmentId = deptPlan.intDept,
-          };
-          _context.Entry(dept).State = EntityState.Modified;
-          await _context.SaveChangesAsync();
         }
-        catch (DbUpdateConcurrencyException)
+        catch (DbUpdateConcurrencyException ex)
         {
           if (!ActivityAssessExists(deptPlan.intAssess))
           {
