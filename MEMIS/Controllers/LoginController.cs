@@ -53,6 +53,10 @@ namespace MEMIS.Controllers
             {
               HttpContext.Session.SetString("Region", user.intRegion.ToString());
             }
+            if(user.intDept != null)
+            {
+              HttpContext.Session.SetString("Department", user.intDept.ToString());
+            }
 
             if (returnUrl == null || returnUrl == "/")
             {

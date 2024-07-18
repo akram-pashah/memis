@@ -16,6 +16,8 @@ using MEMIS.Models.Risk;
 using MEMIS.ViewModels;
 using MEMIS.Helpers.ExcelReports;
 using Humanizer;
+using DocumentFormat.OpenXml.Wordprocessing;
+using DocumentFormat.OpenXml.Office2010.Excel;
 
 namespace MEMIS.Controllers
 {
@@ -57,6 +59,43 @@ namespace MEMIS.Controllers
       {
         return Problem("Entity set 'AppDbContext.ActivityAssess'  is null.");
       }
+    }
+
+    public async Task<IActionResult> AddAnnualPlan()
+    {
+      Guid departmentId = Guid.Parse(HttpContext.Session.GetString("Department"));
+      var contextData = _context.AnnualImplemtationPlan.Include(a => a.ActivityFk).Include(a => a.DepartmentFk).Include(a => a.FocusAreaFk).Include(a => a.StrategicActionFk).Include(a => a.StrategicInterventionFk).Include(a => a.StrategicObjectiveFk);
+
+      return View(await contextData.Where(x =>x.intDept == departmentId).ToListAsync());
+    }
+
+    public async Task<IActionResult> MoveAnualPlan(int Id)
+    {
+      AnnualImplemtationPlan? AnnualPlan = await _context.AnnualImplemtationPlan.Include(a => a.ActivityFk).Include(a => a.DepartmentFk).Include(a => a.FocusAreaFk).Include(a => a.StrategicActionFk).Include(a => a.StrategicInterventionFk).Include(a => a.StrategicObjectiveFk).Where(x => x.Id == Id).FirstOrDefaultAsync();
+      if(AnnualPlan != null)
+      {
+        ActivityAssess activityAssess = new()
+        {
+          intIntervention = AnnualPlan.intIntervention,
+          intAction = AnnualPlan.intAction,
+          intActivity = AnnualPlan.intActivity,
+          baseline = AnnualPlan.baseline,
+          intDept = AnnualPlan.intDept,
+          IdentifiedRisks = AnnualPlan.Risk,
+        };
+        _context.ActivityAssess.Add(activityAssess);
+        await _context.SaveChangesAsync();
+
+        _context.AnnualImplemtationPlan.Remove(AnnualPlan);
+        await _context.SaveChangesAsync();
+
+        return RedirectToAction(nameof(Edit), new { Id = activityAssess.intAssess });
+      }
+      else
+      {
+        return NotFound();
+      }
+
     }
 
     public async Task<IActionResult> ExportToExcel()
@@ -786,7 +825,7 @@ namespace MEMIS.Controllers
       ViewBag.Users = _userManager;
       return View(deptPlan);
     }
-    public async Task<IActionResult> Create()
+    public async Task<IActionResult> Create(int Id = 0)
     {
 
       ViewBag.StrategicIntervention = _context.StrategicIntervention == null ? new List<StrategicIntervention>() : await _context.StrategicIntervention.ToListAsync();
