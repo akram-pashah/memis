@@ -1,11 +1,11 @@
-@model MEMIS.Data.NDPFile
+@model MEMIS.Data.NDAFile
 
 <div class="container mt-4">
     <div class="card">
-        <h5 class="card-header">National Development Plan</h5>
+        <h5 class="card-header">National Drug Authority</h5>
         <div class="card-body row">
             <div class="col-md-6">
-                <form asp-action="UploadFile" method="post" enctype="multipart/form-data">
+                <form asp-action="UploadNDAFile" method="post" enctype="multipart/form-data">
                     <div class="form-group">
                         <label asp-for="FileContent" class="form-label">Select file to upload:</label>
                         <input asp-for="FileContent" type="file" class="form-control-file" />
@@ -21,7 +21,7 @@
                     <div class="uploaded-file-info">
                         <h6>Uploaded File</h6>
                         <p class="card-text">Filename: @Model.FileName</p>
-                        <a asp-action="Download" asp-controller="NDP" asp-route-id="@Model.Id" class="btn btn-outline-primary">
+                        <a asp-action="DownloadNDAFile" asp-controller="NDP" asp-route-id="@Model.Id" class="btn btn-outline-primary">
                             <i class='bx bx-download'></i> Download File
                         </a>
                     </div>

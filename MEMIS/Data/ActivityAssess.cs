@@ -21,7 +21,7 @@ namespace MEMIS.Data
     [ForeignKey("intActivity")]
     public virtual Activity? ActivityFk { get; set; }
     [Display(Name = "Output Indicators")]
-    public string outputIndicator { get; set; }
+    public string? outputIndicator { get; set; }
     [Display(Name = "Baseline")]
     public double? baseline { get; set; }
     [Display(Name = "Budget Code")]

@@ -61,7 +61,7 @@
             <br />
             <div class="form-group">
                 <label asp-for="budgetAmount" class="control-label"></label>
-                <input asp-for="budgetAmount" id="budgetAmount" onchange="SetBudgetValue()" class="form-control" type="number" />
+                <input asp-for="budgetAmount" id="budgetAmount" class="form-control" type="number" />
                 <span asp-validation-for="budgetAmount" class="text-danger"></span>
             </div>
             <br />
@@ -86,12 +86,12 @@
                 </div>
                 <div class="col">
                     <label asp-for="QTarget" class="control-label">Target</label>
-                    <input id="QTarget" asp-formaction="QTarget" onchange="SetBudgetValue()" class="form-control" type="number" />
+                    <input id="QTarget" asp-formaction="QTarget" class="form-control" type="number" />
                     <span asp-validation-for="QTarget" class="text-danger"></span>
                 </div>
                 <div class="col">
                     <label asp-for="QBudget" class="control-label">Budget</label>
-                    <input id="QBudget" readonly class="form-control" value="budgetAmount * QTarget" type="number" />
+                    <input id="QBudget" class="form-control" value="budgetAmount * QTarget" type="number" />
                     <span asp-validation-for="QBudget" class="text-danger"></span>
                 </div>
                 <div class="col-auto align-self-end">
