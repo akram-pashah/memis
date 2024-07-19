@@ -40,16 +40,14 @@ namespace MEMIS.Controllers
       var offset = (pageSize * pageNumber) - pageSize;
       if (_context.ActivityAssess != null)
       {
-        var dat = _context.ActivityAssess.Include(m => m.StrategicAction).Include(m => m.StrategicIntervention).Include(m => m.ActivityFk)
-            .Skip(offset)
-            .Take(pageSize);
+        var dat = _context.ActivityAssess.Include(m => m.StrategicAction).Include(m => m.StrategicIntervention).Include(m => m.ActivityFk);
 
         var result = new PagedResult<ActivityAssess>
         {
           Data = await dat.AsNoTracking().ToListAsync(),
           TotalItems = _context.ActivityAssess.Count(),
           PageNumber = pageNumber,
-          PageSize = pageSize
+          PageSize = _context.ActivityAssess.Count(),
 
         };
         ViewBag.Users = _userManager;
@@ -937,6 +935,7 @@ namespace MEMIS.Controllers
         justification = deptPlan.justification,
         budgetAmount = deptPlan.budgetAmount,
         IdentifiedRisks = deptPlan.IdentifiedRisks,
+        intDept = deptPlan.intDept,
         QuaterlyPlans = await _context.QuaterlyPlans.Where(x => x.ActivityAccessId == deptPlan.intAssess).ToListAsync()
       };
       
@@ -944,14 +943,15 @@ namespace MEMIS.Controllers
       ViewBag.StrategicAction = _context.StrategicAction == null ? new List<StrategicAction>() : await _context.StrategicAction.ToListAsync();
       ViewBag.Activity = _context.Activity == null ? new List<Activity>() : await _context.Activity.ToListAsync();
       ViewData["Quarter"] = ListHelper.Quarter();
-      ViewData["intDept"] = new SelectList(_context.Departments, "intDept", "deptName", dto.intDept);
+      ViewBag.Depts = await _context.Departments.ToListAsync();
+      //ViewData["intDept"] = new SelectList(_context.Departments, "intDept", "deptName", dto.intDept);
 
       return View(dto);
     }
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Edit(int id, [Bind("intAssess,intIntervention,intAction,intActivity,outputIndicator,baseline,unitCost,comparativeTarget,justification,budgetAmount,QuaterlyPlans")] ActivityAssessDto deptPlan)
+    public async Task<IActionResult> Edit(int id, [Bind("intAssess,intIntervention,intAction,intActivity,outputIndicator,baseline,budgetCode,unitCost,comparativeTarget,justification,budgetAmount,IdentifiedRisks,intDept,QuaterlyPlans")] ActivityAssessDto deptPlan)
     {
       if (id != deptPlan.intAssess)
       {
@@ -986,8 +986,19 @@ namespace MEMIS.Controllers
               }
             }
           }
-         
-          _context.Entry(original).State = EntityState.Modified;
+          original.intIntervention = deptPlan.intIntervention;
+          original.intAction = deptPlan.intAction;
+          original.intActivity = deptPlan.intActivity;
+          original.outputIndicator = deptPlan.outputIndicator;
+          original.baseline = deptPlan.baseline;
+          original.budgetCode = deptPlan.budgetCode;
+          original.comparativeTarget = deptPlan.comparativeTarget;
+          original.justification = deptPlan.justification;
+          original.budgetAmount = deptPlan.budgetAmount;
+          original.IdentifiedRisks = deptPlan.IdentifiedRisks;
+          original.intDept = deptPlan.intDept;
+
+          _context.ActivityAssess.Update(original);
           await _context.SaveChangesAsync();
         }
         catch (DbUpdateConcurrencyException ex)

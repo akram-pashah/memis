@@ -21,12 +21,12 @@
             <br />
             <div class="form-group">
                 <label asp-for="intAction" class="control-label"></label>
-                @Html.DropDownList("StrategicObjective", new SelectList(ViewBag.StrategicAction, "intAction", "actionName"), new { @class = "form-control form-select", @required = "required" })
+                @Html.DropDownList("intAction", new SelectList(ViewBag.StrategicAction, "intAction", "actionName"), new { @class = "form-control form-select", @required = "required" })
             </div>
             <br />
             <div class="form-group">
                 <label asp-for="intActivity" class="control-label"></label>
-                @Html.DropDownList("StrategicObjective", new SelectList(ViewBag.Activity, "intActivity", "activityName"), new { @class = "form-control form-select", @required = "required" })
+                @Html.DropDownList("intActivity", new SelectList(ViewBag.Activity, "intActivity", "activityName"), new { @class = "form-control form-select", @required = "required" })
             </div>
             <br />
             <div class="form-group">
@@ -73,7 +73,8 @@
             <br />
             <div class="form-group">
                 <label asp-for="intDept" class="control-label"></label>
-                <select asp-for="intDept" class="form-control" asp-items="ViewBag.intDept"></select>
+                @Html.DropDownList("intDept", new SelectList(ViewBag.Depts, "intDept", "deptName"), new { @class = "form-control form-select", @required = "required" })
+                @* <select asp-for="intDept" class="form-control" asp-items="ViewBag.Depts"></select> *@
             </div>
         </div>
         <br />

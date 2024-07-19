@@ -54,13 +54,13 @@
                         <th>
                             @Html.DisplayNameFor(model => model.Data[0].IdentifiedRisks)
                         </th>
-                        <th>
+@*                         <th>
                             @Html.DisplayNameFor(model => model.Data[0].QTarget)
                         </th>
                         <th>
                             @Html.DisplayNameFor(model => model.Data[0].QBudget)
                         </th>
-
+ *@
                         <th></th>
                     </tr>
                 </thead>
@@ -120,13 +120,13 @@
                             <td>
                                 @Html.DisplayFor(modelItem => item.IdentifiedRisks)
                             </td>
-                            <td>
+@*                             <td>
                                 @Html.DisplayFor(modelItem => item.QTarget)
                             </td>
                             <td>
                                 @Html.DisplayFor(modelItem => item.QBudget)
                             </td>
-                            <td>
+ *@                            <td>
                                 <div class="btn-group" role="group" aria-label="Actions">
                                     <a asp-action="Edit" asp-route-id="@item.intAssess" class="btn btn-secondary" data-toggle="tooltip" data-placement="top" title="Edit">
                                         <i class='bx bx-edit'></i>
