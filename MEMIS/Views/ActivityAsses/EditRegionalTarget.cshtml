@@ -1,0 +1,47 @@
+@using MEMIS.Data;
+@using MEMIS.Enums;
+@model ActivityAssessRegion
+
+@{
+    ViewData["Title"] = "Set Regional Target";
+    Layout = "~/Pages/Shared/_ContentNavbarLayout.cshtml";
+}
+
+<h1>Set Regional Target</h1>
+
+<hr />
+
+<div class="row">
+  <div class="col-md-4">
+    <form asp-action="SetRegionalTarget" method="post">
+      <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+      <input type="hidden" asp-for="intRegion" />
+            <input type="hidden" asp-for="intAssess" />
+            <div class="form-group">
+                <label asp-for="budgetAmount" class="control-label"></label>
+                <input asp-for="budgetAmount" class="form-control" />
+                <span asp-validation-for="budgetAmount" class="text-danger"></span>
+      </div>
+            <div class="form-group">
+                <label asp-for="Quarter" class="control-label"></label>
+                <select asp-for="Quarter" class="form-control">
+                    <option value="1">Quarter 1</option>
+                  <option value="2">Quarter 2</option>
+                  <option value="3">Quarter 3</option>
+                  <option value="4">Quarter 4</option>
+                </select>
+                <span asp-validation-for="Quarter" class="text-danger"></span>
+      </div>
+            <div class="form-group">
+                <label asp-for="QTarget" class="control-label"></label>
+                <input asp-for="QTarget" class="form-control" />
+                <span asp-validation-for="QTarget" class="text-danger"></span>
+      </div>
+            <div class="form-group">
+                <label asp-for="QBudget" class="control-label"></label>
+                <input asp-for="QBudget" class="form-control" />
+                <span asp-validation-for="QBudget" class="text-danger"></span>
+      </div>
+    </form>
+  </div>
+</div>

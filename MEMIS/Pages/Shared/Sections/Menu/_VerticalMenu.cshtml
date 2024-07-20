@@ -89,6 +89,16 @@
                                 <div>Allocate To Region</div>
                             </a>
                         </li>
+                        <li class='menu-item@(currentPage == "/ActivityAsses/RegionalAllocations" ? " active" : "")'>
+                            <a asp-controller="ActivityAsses" asp-action="RegionalAllocations" class="menu-link">
+                                <div>Regional Target Setting</div>
+                            </a>
+                        </li>
+                        <li class='menu-item@(currentPage == "/ActivityAsses/RegionalActivityAsses" ? " active" : "")'>
+                            <a asp-controller="ActivityAsses" asp-action="RegionalActivityAsses" class="menu-link">
+                                <div>Regional Activity Assess</div>
+                            </a>
+                        </li>
                         <li class='menu-item@(currentPage == "/ActivityAsses/ConsolidatedDeptPlan" ? " active" : "")'>
                             <a asp-controller="ActivityAsses" asp-action="ConsolidatedDeptPlan" class="menu-link">
                                 <div>Consolidated dept plan</div>

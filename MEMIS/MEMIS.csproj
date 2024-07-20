@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="Views\ActivityAsses\RegionalAllocations.cshtml" />
     <Content Remove="wwwroot\js\riskidentification.js~RF209946.TMP" />
   </ItemGroup>
 
@@ -15,6 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="Views\ActivityAsses\RegionalAllocations.cshtml" />
     <None Include="wwwroot\vendor\libs\form-validation\umd\bundle\popular.min.js" />
     <None Include="wwwroot\vendor\libs\form-validation\umd\plugin-auto-focus\index.min.js" />
     <None Include="wwwroot\vendor\libs\form-validation\umd\plugin-bootstrap5\index.min.js" />
@@ -47,8 +49,16 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.2" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.3" />
     <PackageReference Include="Syncfusion.Blazor" Version="25.1.37" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Views\ActivityAsses\RegionalAllocations.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="Views\ActivityAsses\RegionalAllocations.cshtml" />
   </ItemGroup>
 
 </Project>
