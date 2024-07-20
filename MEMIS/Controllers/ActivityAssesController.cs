@@ -40,17 +40,14 @@ namespace MEMIS.Controllers
       var offset = (pageSize * pageNumber) - pageSize;
       if (_context.ActivityAssess != null)
       {
-        var dat = _context.ActivityAssess.Include(m => m.StrategicAction).Include(m => m.StrategicIntervention).Include(m => m.ActivityFk)
-            .Skip(offset)
-            .Take(pageSize);
+        var dat = _context.ActivityAssess.Include(m => m.StrategicAction).Include(m => m.StrategicIntervention).Include(m => m.ActivityFk);
 
         var result = new PagedResult<ActivityAssess>
         {
           Data = await dat.AsNoTracking().ToListAsync(),
           TotalItems = _context.ActivityAssess.Count(),
           PageNumber = pageNumber,
-          PageSize = pageSize
-
+          PageSize = _context.ActivityAssess.Count(),
         };
         ViewBag.Users = _userManager;
         return View(result);
