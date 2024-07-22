@@ -9,7 +9,7 @@ namespace MEMIS.Data
     public int intRegionAssess { get; set; }
 
     [Display(Name = "Output Indicator")]
-    public virtual int? intAssess { get; set; }
+    public virtual int intAssess { get; set; }
     [ForeignKey("intAssess")]
     public virtual ActivityAssess? ActivityAssessFk { get; set; }
     [Display(Name = "Region")]

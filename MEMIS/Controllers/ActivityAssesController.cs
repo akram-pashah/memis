@@ -18,6 +18,7 @@ using MEMIS.Helpers.ExcelReports;
 using Humanizer;
 using DocumentFormat.OpenXml.Wordprocessing;
 using DocumentFormat.OpenXml.Office2010.Excel;
+using System.Drawing;
 
 namespace MEMIS.Controllers
 {
@@ -48,7 +49,6 @@ namespace MEMIS.Controllers
           TotalItems = _context.ActivityAssess.Count(),
           PageNumber = pageNumber,
           PageSize = _context.ActivityAssess.Count(),
-
         };
         ViewBag.Users = _userManager;
         return View(result);
@@ -64,13 +64,13 @@ namespace MEMIS.Controllers
       Guid departmentId = Guid.Parse(HttpContext.Session.GetString("Department"));
       var contextData = _context.AnnualImplemtationPlan.Include(a => a.ActivityFk).Include(a => a.DepartmentFk).Include(a => a.FocusAreaFk).Include(a => a.StrategicActionFk).Include(a => a.StrategicInterventionFk).Include(a => a.StrategicObjectiveFk);
 
-      return View(await contextData.Where(x =>x.intDept == departmentId).ToListAsync());
+      return View(await contextData.Where(x => x.intDept == departmentId).ToListAsync());
     }
 
     public async Task<IActionResult> MoveAnualPlan(int Id)
     {
       AnnualImplemtationPlan? AnnualPlan = await _context.AnnualImplemtationPlan.Include(a => a.ActivityFk).Include(a => a.DepartmentFk).Include(a => a.FocusAreaFk).Include(a => a.StrategicActionFk).Include(a => a.StrategicInterventionFk).Include(a => a.StrategicObjectiveFk).Where(x => x.Id == Id).FirstOrDefaultAsync();
-      if(AnnualPlan != null)
+      if (AnnualPlan != null)
       {
         ActivityAssess activityAssess = new()
         {
@@ -114,29 +114,182 @@ namespace MEMIS.Controllers
 
     public async Task<IActionResult> AllocatetoRegion(int pageNumber = 1)
     {
-      int pageSize = 10;
-      var offset = (pageSize * pageNumber) - pageSize;
+      //int pageSize = 10;
+      //var offset = (pageSize * pageNumber) - pageSize;
       if (_context.ActivityAssess != null)
       {
-        var dat = _context.ActivityAssess.Include(m => m.StrategicAction).Include(m => m.StrategicIntervention).Include(m => m.ActivityFk)
-            .Skip(offset)
-            .Take(pageSize);
+        var dat = _context.ActivityAssess.Include(m => m.StrategicAction).Include(m => m.StrategicIntervention).Include(m => m.ActivityFk);
 
         var result = new PagedResult<ActivityAssess>
         {
           Data = await dat.AsNoTracking().ToListAsync(),
           TotalItems = _context.ActivityAssess.Count(),
           PageNumber = pageNumber,
-          PageSize = pageSize
+          PageSize = _context.ActivityAssess.Count(),
 
         };
-        
+
         ViewBag.Users = _userManager;
         return View(result);
       }
       else
       {
         return Problem("Entity set 'AppDbContext.ActivityAssess'  is null.");
+      }
+    }
+
+    public async Task<IActionResult> RegionalAllocations(int pageNumber = 1)
+    {
+      //int pageSize = 10;
+      //var offset = (pageSize * pageNumber) - pageSize;
+      if (_context.ActivityAssess != null)
+      {
+        var dat = _context.ActivityAssess.Include(m => m.StrategicAction).Include(m => m.StrategicIntervention).Include(m => m.ActivityFk).Where(x => x.actType == 1);
+
+        var result = new PagedResult<ActivityAssess>
+        {
+          Data = await dat.AsNoTracking().ToListAsync(),
+          TotalItems = _context.ActivityAssess.Count(),
+          PageNumber = pageNumber,
+          PageSize = _context.ActivityAssess.Count(),
+
+        };
+
+        ViewBag.Users = _userManager;
+        return View(result);
+      }
+      else
+      {
+        return Problem("Entity set 'AppDbContext.ActivityAssess'  is null.");
+      }
+    }
+
+    public async Task<IActionResult> SetRegionalTarget(int id)
+    {
+      try
+      {
+        ActivityAssessRegion region = new();
+        ActivityAssess? activity = _context.ActivityAssess?.Where(x => x.intAssess == id).FirstOrDefault();
+        if (activity != null)
+        {
+          var regionId = HttpContext.Session.GetString("Region");
+          region = new()
+          {
+            intAssess = id,
+            intRegion = Guid.Parse(regionId),
+          };
+          await _context.ActivityAssessRegion.AddAsync(region);
+
+          activity.actType = 2;
+          _context.ActivityAssess?.Update(activity);
+          await _context.SaveChangesAsync();
+
+        }
+        return RedirectToAction(nameof(EditRegionalTarget), new { Id = region.intRegionAssess });
+      }
+      catch (Exception ex)
+      {
+        return StatusCode(500, ex.Message);
+      }
+    }
+
+    public async Task<IActionResult> EditRegionalTarget(int id)
+    {
+      try
+      {
+        ActivityAssessRegion? region = await _context.ActivityAssessRegion.Where(x => x.intRegionAssess == id).FirstOrDefaultAsync();
+        if (region == null)
+        {
+          return NotFound();
+        }
+
+        ActivityAssessDto activityAssessDto = new ActivityAssessDto();
+        activityAssessDto.intAssess = region.intAssess;
+        activityAssessDto.budgetAmount = region.budgetAmount;
+        activityAssessDto.QuaterlyPlans = await _context.QuaterlyPlans.Where(x => x.ActivityAccessId == region.intAssess).ToListAsync();
+        ViewData["Quarter"] = ListHelper.Quarter();
+        return View(activityAssessDto);
+      }
+      catch (Exception ex)
+      {
+        return StatusCode(500, ex.Message);
+      }
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> SetRegionalTarget(ActivityAssessDto region)
+    {
+      try
+      {
+        ActivityAssessRegion activityAssessRegion = new ActivityAssessRegion();
+
+        activityAssessRegion.intAssess = region.intAssess;
+        activityAssessRegion.intRegion = region.intRegion;
+
+        _context.ActivityAssessRegion.Update(activityAssessRegion);
+
+        if (region.QuaterlyPlans.Count > 0)
+        {
+
+          foreach (var quat in region.QuaterlyPlans)
+          {
+            if (quat.Id != 0)
+            {
+              _context.Entry(quat).State = EntityState.Modified;
+              await _context.SaveChangesAsync();
+            }
+            else
+            {
+              quat.ActivityAccessId = region.intAssess;
+              await _context.QuaterlyPlans.AddAsync(quat);
+              await _context.SaveChangesAsync();
+            }
+          }
+        }
+
+        await _context.SaveChangesAsync();
+
+        return RedirectToAction(nameof(RegionalAllocations));
+      }
+      catch (Exception ex)
+      {
+        return StatusCode(500, ex.Message);
+      }
+    }
+
+    public async Task<IActionResult> RegionalActivityAsses()
+    {
+      try
+      {
+        List<ActivityAssessRegion> activityAssessRegions = await _context.ActivityAssessRegion.ToListAsync();
+        return View(activityAssessRegions);
+      }
+      catch (Exception ex)
+      {
+        return StatusCode(500, ex.Message);
+      }
+    }
+
+    public async Task<IActionResult> DeleteRegionalTarget(int id)
+    {
+      try
+      {
+        ActivityAssessRegion? region = _context.ActivityAssessRegion?.Where(x => x.intRegionAssess == id).FirstOrDefault();
+        if (region == null)
+        {
+          return NotFound();
+        }
+        else
+        {
+          _context.Remove(region);
+          await _context.SaveChangesAsync();
+
+          return RedirectToAction(nameof(RegionalActivityAsses));
+        }
+      }
+      catch (Exception ex)
+      {
+        return StatusCode(500, ex.Message);
       }
     }
 
@@ -214,63 +367,63 @@ namespace MEMIS.Controllers
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> AllocatetoRegion(int id,ActivityAssess dto)
+    public async Task<IActionResult> AllocatetoRegion(int id, ActivityAssess dto)
     {
       var activity = await _context.ActivityAssess.FindAsync(id);
       if (activity == null)
       {
         return NotFound();
       }
-        try
-        {
-          activity.actType = 1;
-          _context.Update(activity);
-          await _context.SaveChangesAsync();
+      try
+      {
+        activity.actType = 1;
+        _context.Update(activity);
+        await _context.SaveChangesAsync();
 
-          var region = HttpContext.Session.GetString("Region");
-          if(region != null)
-          {
-              var groupedData = await _context.ActivityAssess.Include(a => a.DepartmentFk)
-            .Where(a => a.actType == 1 && a.intAssess == activity.intAssess)
-            .GroupBy(a => a.intDept)
-            .Select(g => new ActivityAssess
-            {
-              intDept = g.Key,
-              budgetAmount = g.Sum(a => a.budgetAmount),
-              QTarget = g.Sum(a => a.QTarget),
-              Quarter = g.FirstOrDefault().Quarter,
-              QBudget = g.FirstOrDefault().QBudget
-            })
-            .FirstOrDefaultAsync();
-             
-             ActivityAssessRegion activityAssessRegion = new ActivityAssessRegion();
-             activityAssessRegion.intAssess = activity.intAssess;
-             activityAssessRegion.intRegion = Guid.Parse(region);
-             activityAssessRegion.Quarter = activity.Quarter;
-             if(groupedData != null)
-             {
-               activityAssessRegion.QTarget = activity.QTarget;
-               activityAssessRegion.QBudget = activity.QBudget;
-             }
-             activityAssessRegion.ApprStatus = activity.ApprStatus;
-             activityAssessRegion.budgetAmount = activity.budgetAmount;
-
-            _context.ActivityAssessRegion.Add(activityAssessRegion);
-            _context.SaveChanges();
-          }
-        }
-        catch (DbUpdateConcurrencyException)
+        var region = HttpContext.Session.GetString("Region");
+        if (region != null)
         {
-          if (!ActivityAssessExists(activity.intAssess))
+          var groupedData = await _context.ActivityAssess.Include(a => a.DepartmentFk)
+        .Where(a => a.actType == 1 && a.intAssess == activity.intAssess)
+        .GroupBy(a => a.intDept)
+        .Select(g => new ActivityAssess
+        {
+          intDept = g.Key,
+          budgetAmount = g.Sum(a => a.budgetAmount),
+          QTarget = g.Sum(a => a.QTarget),
+          Quarter = g.FirstOrDefault().Quarter,
+          QBudget = g.FirstOrDefault().QBudget
+        })
+        .FirstOrDefaultAsync();
+          ViewData["Quarter"] = ListHelper.Quarter();
+          ActivityAssessRegion activityAssessRegion = new ActivityAssessRegion();
+          activityAssessRegion.intAssess = activity.intAssess;
+          activityAssessRegion.intRegion = Guid.Parse(region);
+          activityAssessRegion.Quarter = activity.Quarter;
+          if (groupedData != null)
           {
-            return NotFound();
+            activityAssessRegion.QTarget = activity.QTarget;
+            activityAssessRegion.QBudget = activity.QBudget;
           }
-          else
-          {
-            throw;
-          }
+          activityAssessRegion.ApprStatus = activity.ApprStatus;
+          activityAssessRegion.budgetAmount = activity.budgetAmount;
+
+          _context.ActivityAssessRegion.Add(activityAssessRegion);
+          _context.SaveChanges();
         }
-        return  RedirectToAction(nameof(AllocatetoRegion)); 
+      }
+      catch (DbUpdateConcurrencyException)
+      {
+        if (!ActivityAssessExists(activity.intAssess))
+        {
+          return NotFound();
+        }
+        else
+        {
+          throw;
+        }
+      }
+      return RedirectToAction(nameof(AllocatetoRegion));
     }
 
 
@@ -863,7 +1016,7 @@ namespace MEMIS.Controllers
         _context.Add(deptPlan);
 
         await _context.SaveChangesAsync();
-        if(dto.QuaterlyPlans.Count > 0)
+        if (dto.QuaterlyPlans.Count > 0)
         {
           dto.QuaterlyPlans.ForEach(ev => ev.ActivityAccessId = deptPlan.intAssess);
           _context.QuaterlyPlans.AddRange(dto.QuaterlyPlans);
@@ -882,13 +1035,13 @@ namespace MEMIS.Controllers
           budgetCode = deptPlan.budgetCode,
           unitCost = deptPlan.QTarget,
           Q1Target = dto.QuaterlyPlans.Where(x => x.Quarter == "1").Select(x => x.QTarget).FirstOrDefault(),
-          Q2Target = dto.QuaterlyPlans.Where( x=> x.Quarter == "2").Select(x => x.QTarget).FirstOrDefault(),
-          Q3Target = dto.QuaterlyPlans.Where( x=> x.Quarter == "3").Select(x => x.QTarget).FirstOrDefault(),
-          Q4Target = dto.QuaterlyPlans.Where( x=> x.Quarter == "4").Select(x => x.QTarget).FirstOrDefault(),
+          Q2Target = dto.QuaterlyPlans.Where(x => x.Quarter == "2").Select(x => x.QTarget).FirstOrDefault(),
+          Q3Target = dto.QuaterlyPlans.Where(x => x.Quarter == "3").Select(x => x.QTarget).FirstOrDefault(),
+          Q4Target = dto.QuaterlyPlans.Where(x => x.Quarter == "4").Select(x => x.QTarget).FirstOrDefault(),
           Q1Budget = dto.QuaterlyPlans.Where(x => x.Quarter == "1").Select(x => x.QBudget).FirstOrDefault(),
-          Q2Budget = dto.QuaterlyPlans.Where( x=> x.Quarter == "2").Select(x => x.QBudget).FirstOrDefault(),
-          Q3Budget = dto.QuaterlyPlans.Where( x=> x.Quarter == "3").Select(x => x.QBudget).FirstOrDefault(),
-          Q4Budget = dto.QuaterlyPlans.Where( x=> x.Quarter == "4").Select(x => x.QBudget).FirstOrDefault(),
+          Q2Budget = dto.QuaterlyPlans.Where(x => x.Quarter == "2").Select(x => x.QBudget).FirstOrDefault(),
+          Q3Budget = dto.QuaterlyPlans.Where(x => x.Quarter == "3").Select(x => x.QBudget).FirstOrDefault(),
+          Q4Budget = dto.QuaterlyPlans.Where(x => x.Quarter == "4").Select(x => x.QBudget).FirstOrDefault(),
           comparativeTarget = dto.comparativeTarget,
           justification = dto.justification,
           budgetAmount = dto.budgetAmount,
@@ -903,7 +1056,7 @@ namespace MEMIS.Controllers
       ViewBag.StrategicIntervention = _context.StrategicIntervention == null ? new List<StrategicIntervention>() : await _context.StrategicIntervention.ToListAsync();
       ViewBag.StrategicAction = _context.StrategicAction == null ? new List<StrategicAction>() : await _context.StrategicAction.ToListAsync();
       ViewBag.Activity = _context.Activity == null ? new List<Activity>() : await _context.Activity.ToListAsync();
-      ViewData["intDept"] = new SelectList(_context.Departments, "intDept", "deptName",dto.intDept);
+      ViewData["intDept"] = new SelectList(_context.Departments, "intDept", "deptName", dto.intDept);
       return View(dto);
     }
 
@@ -935,10 +1088,10 @@ namespace MEMIS.Controllers
         justification = deptPlan.justification,
         budgetAmount = deptPlan.budgetAmount,
         IdentifiedRisks = deptPlan.IdentifiedRisks,
-        intDept = deptPlan.intDept,
+        intDept = (Guid)deptPlan.intDept,
         QuaterlyPlans = await _context.QuaterlyPlans.Where(x => x.ActivityAccessId == deptPlan.intAssess).ToListAsync()
       };
-      
+
       ViewBag.StrategicIntervention = _context.StrategicIntervention == null ? new List<StrategicIntervention>() : await _context.StrategicIntervention.ToListAsync();
       ViewBag.StrategicAction = _context.StrategicAction == null ? new List<StrategicAction>() : await _context.StrategicAction.ToListAsync();
       ViewBag.Activity = _context.Activity == null ? new List<Activity>() : await _context.Activity.ToListAsync();
@@ -959,7 +1112,7 @@ namespace MEMIS.Controllers
       }
 
       var original = _context.ActivityAssess.Where(x => x.intAssess == id).FirstOrDefault();
-      if(original == null)
+      if (original == null)
       {
         return NotFound();
       }
@@ -970,10 +1123,10 @@ namespace MEMIS.Controllers
 
           if (deptPlan.QuaterlyPlans.Count > 0)
           {
-            
+
             foreach (var quat in deptPlan.QuaterlyPlans)
             {
-              if(quat.Id != 0)
+              if (quat.Id != 0)
               {
                 _context.Entry(quat).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
@@ -1113,7 +1266,7 @@ namespace MEMIS.Controllers
       }
     }
 
-    public async Task<IActionResult> RegionalAssessmentVerification(List<int> selectedIds , int apprStatus)
+    public async Task<IActionResult> RegionalAssessmentVerification(List<int> selectedIds, int apprStatus)
     {
       if (selectedIds != null && selectedIds.Count > 0 && apprStatus != null && apprStatus != 0)
       {

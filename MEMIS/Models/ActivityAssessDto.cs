@@ -45,6 +45,8 @@ namespace MEMIS.Models
     public int? ApprStatus { get; set; } = 0;
     [Display(Name = "Department")]
     public Guid? intDept { get; set; }
+
+    public Guid? intRegion { get; set; }
     public List<QuaterlyPlan> QuaterlyPlans { get; set; } 
   }
 }

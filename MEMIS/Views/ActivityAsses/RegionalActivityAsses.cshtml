@@ -1,0 +1,106 @@
+@using MEMIS.Data;
+@using MEMIS.Enums;
+@model List<ActivityAssessRegion>
+
+@{
+    ViewData["Title"] = "Regional Allocations";
+    Layout = "~/Pages/Shared/_ContentNavbarLayout.cshtml";
+}
+
+<h1>Regional Allocations</h1>
+
+<p>
+</p>
+<div style="width:100%; overflow-x:auto;margin-top:20px;">
+    <table class="table table-striped table-hover dt-responsive nowrap">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model[0].ActivityAssess.intIntervention)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model[0].ActivityAssess.intAction)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model[0].ActivityAssess.intActivity)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model[0].ActivityAssess.outputIndicator)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model[0].ActivityAssess.baseline)
+                </th>
+
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @if (item.ActivityAssess != null && item.ActivityAssess?.StrategicIntervention != null)
+                        {
+                            @Html.DisplayFor(modelItem => item.ActivityAssess.StrategicIntervention.InterventionName)
+                        }
+                        else
+                        {
+                            <p>N/A</p>
+                        }
+                    </td>
+                    <td>
+                        @if (item.ActivityAssess != null && item.ActivityAssess?.StrategicAction != null)
+                        {
+                            @Html.DisplayFor(modelItem => item.ActivityAssess.StrategicAction.actionName)
+                        }
+                        else
+                        {
+                            <p>N/A</p>
+                        }
+                    </td>
+                    <td>
+                        @if (item.ActivityAssess != null && item.ActivityAssess?.ActivityFk != null)
+                        {
+                            @Html.DisplayFor(modelItem => item.ActivityAssess.ActivityFk.activityName)
+                        }
+                        else
+                        {
+                            <p>N/A</p>
+                        }
+                    </td>
+                    <td>
+                        @if (item.ActivityAssess != null)
+                        {
+                            @Html.DisplayFor(modelItem => item.ActivityAssess.outputIndicator)
+                        }
+                        else
+                        {
+                            <p>N/A</p>
+                        }
+                    </td>
+                    <td>
+                        @if (item.ActivityAssess != null)
+                        {
+                            @Html.DisplayFor(modelItem => item.ActivityAssess.baseline)
+                        }
+                        else
+                        {
+                            <p>N/A</p>
+                        }
+                    </td>
+                    <td>
+                        <div class="btn-group" role="group" aria-label="Actions">
+                            <a asp-action="EditRegionalTarget" asp-route-id="@item.intRegionAssess" class="btn btn-secondary" data-toggle="tooltip" data-placement="top" title="Set Regional Target">
+                                <i class='bx bxs-edit'></i>
+                            </a>
+                            <a asp-action="DeleteRegionalTarget" asp-route-id="@item.intRegionAssess" class="btn btn-warning" data-toggle="tooltip" data-placement="top" title="Delete Regional Target">
+                                <i class='bx bxs-trash'></i>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+</div>

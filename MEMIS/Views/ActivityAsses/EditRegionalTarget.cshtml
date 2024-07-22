@@ -1,0 +1,168 @@
+@model MEMIS.Models.ActivityAssessDto
+
+
+@{
+    ViewData["Title"] = "Set Regional Target";
+    Layout = "~/Pages/Shared/_ContentNavbarLayout.cshtml";
+}
+
+<h1>Set Regional Target</h1>
+
+<hr />
+
+<div class="row">
+    <div class="col-md-6">
+        <form asp-action="SetRegionalTarget" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="intRegion" />
+            <input type="hidden" asp-for="intAssess" />
+            <div class="form-group">
+                <label asp-for="budgetAmount" class="control-label"></label>
+                <input asp-for="budgetAmount" class="form-control" />
+                <span asp-validation-for="budgetAmount" class="text-danger"></span>
+            </div>
+            <div class="col">
+                <div class="input-group">
+                    <div class="col">
+                        <label asp-for="Quarter" class="control-label">Quarter</label>
+                        <select id="Quarter" class="form-control" asp-items="ViewBag.Quarter"></select>
+                        <span asp-validation-for="Quarter" class="text-danger"></span>
+                    </div>
+                    <div class="col">
+                        <label asp-for="QTarget" class="control-label">Target</label>
+                        <input id="QTarget" class="form-control" type="number" />
+                        <span asp-validation-for="QTarget" class="text-danger"></span>
+                    </div>
+                    <div class="col">
+                        <label asp-for="QBudget" class="control-label">Budget</label>
+                        <input id="QBudget" class="form-control" type="number" />
+                        <span asp-validation-for="QBudget" class="text-danger"></span>
+                    </div>
+                    <div class="col-auto align-self-end">
+                        <button type="button" class="btn btn-outline-primary" onclick="addQuarterDetails()">
+                            <i class="bx bx-plus-circle"></i>
+                        </button>
+                        <button class="btn btn-outline-primary" type="button" data-bs-toggle="collapse" data-bs-target="#accordionQuarterDetailsCollapse" aria-expanded="false" aria-controls="accordionQuarterDetailsCollapse">
+                            <i class="bx bx-collapse-alt"></i>
+                        </button>
+                    </div>
+                </div>
+                <div id="quarterValidation" class="text-danger"></div>
+                <div class="accordion" id="accordionQuarterDetails">
+                    <div class="card accordion-item">
+                        <div id="accordionQuarterDetailsCollapse" class="accordion-collapse collapse" data-bs-parent="#accordionQuarterDetails">
+                            <div class="accordion-body">
+                                <table class="table table-striped table-bordered" id="quarterDetailsTable">
+                                    <thead class="thead-dark">
+                                        <tr>
+                                            <th>Id</th>
+                                            <th>Quarter</th>
+                                            <th>Target</th>
+                                            <th>Budget</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @for (int i = 0; i < Model.QuaterlyPlans?.Count; i++)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    @(i + 1)
+                                                    <input asp-for="QuaterlyPlans[i].Id" class="form-control" hidden />
+                                                    <input asp-for="QuaterlyPlans[i].DeptPlanId" class="form-control" hidden />
+                                                    <input asp-for="QuaterlyPlans[i].ActivityAccessId" class="form-control" hidden />
+                                                </td>
+                                                <td>
+                                                    <select asp-for="QuaterlyPlans[i].Quarter"  class="form-control" asp-items="ViewBag.Quarter"></select>
+                                                </td>
+                                                <td>
+                                                    <input asp-for="QuaterlyPlans[i].QTarget" class="form-control" />
+                                                </td>
+                                                <td>
+                                                    <input asp-for="QuaterlyPlans[i].QBudget"  class="form-control" />
+                                                </td>
+                                                <td>
+                                                    <a class="btn btn-danger delete-btn" onclick="removeEvent(this)" data-toggle="tooltip" data-placement="top" title="Delete"><i class="bx bx-message-square-x"></i></a>
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <input class="btn btn-primary" value="Save" type="submit" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+  var quarterOptions = $('#Quarter').html(); // Store the HTML content of the Quarter dropdown
+
+  function addQuarterDetails() {
+    var quarter = $('#Quarter').val();
+    var target = $('#QTarget').val();
+    var budget = $('#QBudget').val();
+
+    if (!quarter || !target || !budget) {
+      $('#quarterValidation').text("All fields are required.");
+      return;
+    } else {
+      $('#quarterValidation').text("");
+    }
+
+    var $tableBody = $('#quarterDetailsTable tbody');
+    var index;
+
+    if ($tableBody.find('tr:first').text().trim() === "No data available in table") {
+      $tableBody.find('tr:first').remove();
+      index = 0;
+    } else {
+      index = $tableBody.find('tr').length;
+    }
+
+    var options = '';
+    $('#Quarter option').each(function () {
+      var value = $(this).val();
+      var text = $(this).text();
+      var selected = value === quarter ? 'selected' : '';
+      options += `<option value="${value}" ${selected}>${text}</option>`;
+    });
+
+    var row = `
+                    <tr>
+                        <td>${index + 1}</td>
+                        <td>
+                                        <select name="QuaterlyPlans[${index}].Quarter" readonly class="form-control">
+                                ${options}
+                            </select>
+                        </td>
+                                    <td><input name="QuaterlyPlans[${index}].QTarget" readonly value="${target}" class="form-control" /></td>
+                                    <td><input name="QuaterlyPlans[${index}].QBudget" readonly value="${budget}" class="form-control" /></td>
+                        <td>
+                            <button type="button" class="btn btn-danger delete-btn" onclick="removeQuarterDetails(this)" data-toggle="tooltip" data-placement="top" title="Delete">
+                                <i class="bx bx-message-square-x"></i>
+                            </button>
+                        </td>
+                    </tr>`;
+
+    $tableBody.append(row);
+
+    // Clear the inputs
+    $('#Quarter').val('');
+    $('#QTarget').val('');
+    $('#QBudget').val('');
+
+    $('#accordionQuarterDetailsCollapse').addClass('show');
+  }
+
+  function removeQuarterDetails(button) {
+    $(button).closest('tr').remove();
+  }
+
+</script>

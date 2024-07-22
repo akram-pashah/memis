@@ -3,11 +3,11 @@
 @model cloudscribe.Pagination.Models.PagedResult<ActivityAssess>
 
 @{
-    ViewData["Title"] = "Allocate to Region";
+    ViewData["Title"] = "Regional Allocations";
     Layout = "~/Pages/Shared/_ContentNavbarLayout.cshtml";
 }
 
-<h1>Allocate to Region</h1>
+<h1>Regional Allocations</h1>
 
 <p>
 </p>
@@ -77,17 +77,11 @@
                                 @Html.DisplayFor(modelItem => item.baseline)
                             </td>
                             <td>
-                                @if (item.actType == 1 || item.actType == 2)
-                                {
-                                    <span class="text-success">Allocated To Region</span>
-                                }
-                                else
-                                {
-                                    @using (Html.BeginForm("AllocatetoRegion", "ActivityAsses", new { id = item.intAssess }, FormMethod.Post))
-                                    {
-                                        <input type="submit" asp-route-id="@item.intAssess" value="Allocate To Region" />
-                                    }
-                                }
+                                <div class="btn-group" role="group" aria-label="Actions">
+                                    <a asp-action="SetRegionalTarget" asp-route-id="@item.intAssess" class="btn btn-secondary" data-toggle="tooltip" data-placement="top" title="Set Regional Target">
+                                        <i class='bx bxs-right-arrow-alt'></i>
+                                    </a>
+                                </div>
                             </td>
                         </tr>
                     }
