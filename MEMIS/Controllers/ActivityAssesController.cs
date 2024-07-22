@@ -179,6 +179,9 @@ namespace MEMIS.Controllers
             intRegion = Guid.Parse(regionId),
           };
           await _context.ActivityAssessRegion.AddAsync(region);
+
+          activity.actType = 2;
+          _context.ActivityAssess?.Update(activity);
           await _context.SaveChangesAsync();
 
         }
@@ -200,7 +203,12 @@ namespace MEMIS.Controllers
           return NotFound();
         }
 
-        return View(region);
+        ActivityAssessDto activityAssessDto = new ActivityAssessDto();
+        activityAssessDto.intAssess = region.intAssess;
+        activityAssessDto.budgetAmount = region.budgetAmount;
+        activityAssessDto.QuaterlyPlans = await _context.QuaterlyPlans.Where(x => x.ActivityAccessId == region.intAssess).ToListAsync();
+        ViewData["Quarter"] = ListHelper.Quarter();
+        return View(activityAssessDto);
       }
       catch (Exception ex)
       {
@@ -209,11 +217,36 @@ namespace MEMIS.Controllers
     }
 
     [HttpPost]
-    public async Task<IActionResult> SetRegionalTarget(ActivityAssessRegion region)
+    public async Task<IActionResult> SetRegionalTarget(ActivityAssessDto region)
     {
       try
       {
-        _context.ActivityAssessRegion.Update(region);
+        ActivityAssessRegion activityAssessRegion = new ActivityAssessRegion();
+
+        activityAssessRegion.intAssess = region.intAssess;
+        activityAssessRegion.intRegion = region.intRegion;
+
+        _context.ActivityAssessRegion.Update(activityAssessRegion);
+
+        if (region.QuaterlyPlans.Count > 0)
+        {
+
+          foreach (var quat in region.QuaterlyPlans)
+          {
+            if (quat.Id != 0)
+            {
+              _context.Entry(quat).State = EntityState.Modified;
+              await _context.SaveChangesAsync();
+            }
+            else
+            {
+              quat.ActivityAccessId = region.intAssess;
+              await _context.QuaterlyPlans.AddAsync(quat);
+              await _context.SaveChangesAsync();
+            }
+          }
+        }
+
         await _context.SaveChangesAsync();
 
         return RedirectToAction(nameof(RegionalAllocations));
@@ -362,7 +395,7 @@ namespace MEMIS.Controllers
           QBudget = g.FirstOrDefault().QBudget
         })
         .FirstOrDefaultAsync();
-
+          ViewData["Quarter"] = ListHelper.Quarter();
           ActivityAssessRegion activityAssessRegion = new ActivityAssessRegion();
           activityAssessRegion.intAssess = activity.intAssess;
           activityAssessRegion.intRegion = Guid.Parse(region);
@@ -1055,7 +1088,7 @@ namespace MEMIS.Controllers
         justification = deptPlan.justification,
         budgetAmount = deptPlan.budgetAmount,
         IdentifiedRisks = deptPlan.IdentifiedRisks,
-        intDept = deptPlan.intDept,
+        intDept = (Guid)deptPlan.intDept,
         QuaterlyPlans = await _context.QuaterlyPlans.Where(x => x.ActivityAccessId == deptPlan.intAssess).ToListAsync()
       };
 

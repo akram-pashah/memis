@@ -11,79 +11,82 @@
 
 <p>
 </p>
-<div style="width:100%; overflow-x:auto;margin-top:20px;">
-    <table class="table table-striped table-hover dt-responsive nowrap">
-        <thead>
-            <tr>
-                <th>
-                    @Html.DisplayNameFor(model => model.Data[0].intIntervention)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Data[0].intAction)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Data[0].intActivity)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Data[0].outputIndicator)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Data[0].baseline)
-                </th>
+<div class="card">
+  <div class="card-body">
+        <div style="width:100%; overflow-x:auto;margin-top:20px;">
+            <table class="table table-striped table-hover dt-responsive nowrap">
+                <thead>
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Data[0].intIntervention)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Data[0].intAction)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Data[0].intActivity)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Data[0].outputIndicator)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Data[0].baseline)
+                        </th>
 
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model.Data)
-            {
-                <tr>
-                    <td>
-                        @if (item.StrategicIntervention != null)
-                        {
-                            @Html.DisplayFor(modelItem => item.StrategicIntervention.InterventionName)
-                        }
-                        else
-                        {
-                            <p>N/A</p>
-                        }
-                    </td>
-                    <td>
-                        @if (item.StrategicAction != null)
-                        {
-                            @Html.DisplayFor(modelItem => item.StrategicAction.actionName)
-                        }
-                        else
-                        {
-                            <p>N/A</p>
-                        }
-                    </td>
-                    <td>
-                        @if (item.ActivityFk != null)
-                        {
-                            @Html.DisplayFor(modelItem => item.ActivityFk.activityName)
-                        }
-                        else
-                        {
-                            <p>N/A</p>
-                        }
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.outputIndicator)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.baseline)
-                    </td>
-                    <td>
-                        <div class="btn-group" role="group" aria-label="Actions">
-                            <a asp-action="SetRegionalTarget" asp-route-id="@item.Id" class="btn btn-secondary" data-toggle="tooltip" data-placement="top" title="Set Regional Target">
-                                <i class='bx bxs-right-arrow-alt'></i>
-                            </a>
-                        </div>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
-
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Data)
+                    {
+                        <tr>
+                            <td>
+                                @if (item.StrategicIntervention != null)
+                                {
+                                    @Html.DisplayFor(modelItem => item.StrategicIntervention.InterventionName)
+                                }
+                                else
+                                {
+                                    <p>N/A</p>
+                                }
+                            </td>
+                            <td>
+                                @if (item.StrategicAction != null)
+                                {
+                                    @Html.DisplayFor(modelItem => item.StrategicAction.actionName)
+                                }
+                                else
+                                {
+                                    <p>N/A</p>
+                                }
+                            </td>
+                            <td>
+                                @if (item.ActivityFk != null)
+                                {
+                                    @Html.DisplayFor(modelItem => item.ActivityFk.activityName)
+                                }
+                                else
+                                {
+                                    <p>N/A</p>
+                                }
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.outputIndicator)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.baseline)
+                            </td>
+                            <td>
+                                <div class="btn-group" role="group" aria-label="Actions">
+                                    <a asp-action="SetRegionalTarget" asp-route-id="@item.intAssess" class="btn btn-secondary" data-toggle="tooltip" data-placement="top" title="Set Regional Target">
+                                        <i class='bx bxs-right-arrow-alt'></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
