@@ -1022,7 +1022,7 @@ namespace MEMIS.Controllers
         _context.Add(deptPlan);
 
         await _context.SaveChangesAsync();
-        if (dto.QuaterlyPlans.Count > 0)
+        if (dto.QuaterlyPlans?.Count > 0)
         {
           dto.QuaterlyPlans.ForEach(ev => ev.ActivityAccessId = deptPlan.intAssess);
           _context.QuaterlyPlans.AddRange(dto.QuaterlyPlans);
@@ -1040,14 +1040,14 @@ namespace MEMIS.Controllers
           baseline = deptPlan.baseline,
           budgetCode = deptPlan.budgetCode,
           unitCost = deptPlan.QTarget,
-          Q1Target = dto.QuaterlyPlans.Where(x => x.Quarter == "1").Select(x => x.QTarget).FirstOrDefault(),
-          Q2Target = dto.QuaterlyPlans.Where(x => x.Quarter == "2").Select(x => x.QTarget).FirstOrDefault(),
-          Q3Target = dto.QuaterlyPlans.Where(x => x.Quarter == "3").Select(x => x.QTarget).FirstOrDefault(),
-          Q4Target = dto.QuaterlyPlans.Where(x => x.Quarter == "4").Select(x => x.QTarget).FirstOrDefault(),
-          Q1Budget = dto.QuaterlyPlans.Where(x => x.Quarter == "1").Select(x => x.QBudget).FirstOrDefault(),
-          Q2Budget = dto.QuaterlyPlans.Where(x => x.Quarter == "2").Select(x => x.QBudget).FirstOrDefault(),
-          Q3Budget = dto.QuaterlyPlans.Where(x => x.Quarter == "3").Select(x => x.QBudget).FirstOrDefault(),
-          Q4Budget = dto.QuaterlyPlans.Where(x => x.Quarter == "4").Select(x => x.QBudget).FirstOrDefault(),
+          Q1Target = dto.QuaterlyPlans?.Where(x => x.Quarter == "1").Select(x => x.QTarget).FirstOrDefault(),
+          Q2Target = dto.QuaterlyPlans?.Where(x => x.Quarter == "2").Select(x => x.QTarget).FirstOrDefault(),
+          Q3Target = dto.QuaterlyPlans?.Where(x => x.Quarter == "3").Select(x => x.QTarget).FirstOrDefault(),
+          Q4Target = dto.QuaterlyPlans?.Where(x => x.Quarter == "4").Select(x => x.QTarget).FirstOrDefault(),
+          Q1Budget = dto.QuaterlyPlans?.Where(x => x.Quarter == "1").Select(x => x.QBudget).FirstOrDefault(),
+          Q2Budget = dto.QuaterlyPlans?.Where(x => x.Quarter == "2").Select(x => x.QBudget).FirstOrDefault(),
+          Q3Budget = dto.QuaterlyPlans?.Where(x => x.Quarter == "3").Select(x => x.QBudget).FirstOrDefault(),
+          Q4Budget = dto.QuaterlyPlans?.Where(x => x.Quarter == "4").Select(x => x.QBudget).FirstOrDefault(),
           comparativeTarget = dto.comparativeTarget,
           justification = dto.justification,
           budgetAmount = dto.budgetAmount,
