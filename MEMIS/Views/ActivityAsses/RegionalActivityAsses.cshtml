@@ -16,19 +16,19 @@
         <thead>
             <tr>
                 <th>
-                    @Html.DisplayNameFor(model => model[0].ActivityAssess.intIntervention)
+                    @Html.DisplayNameFor(model => model[0].ActivityAssessFk.intIntervention)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model[0].ActivityAssess.intAction)
+                    @Html.DisplayNameFor(model => model[0].ActivityAssessFk.intAction)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model[0].ActivityAssess.intActivity)
+                    @Html.DisplayNameFor(model => model[0].ActivityAssessFk.intActivity)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model[0].ActivityAssess.outputIndicator)
+                    @Html.DisplayNameFor(model => model[0].ActivityAssessFk.outputIndicator)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model[0].ActivityAssess.baseline)
+                    @Html.DisplayNameFor(model => model[0].ActivityAssessFk.baseline)
                 </th>
 
                 <th></th>
@@ -39,9 +39,9 @@
             {
                 <tr>
                     <td>
-                        @if (item.ActivityAssess != null && item.ActivityAssess?.StrategicIntervention != null)
+                        @if (item.ActivityAssessFk != null && item.ActivityAssessFk?.StrategicIntervention != null)
                         {
-                            @Html.DisplayFor(modelItem => item.ActivityAssess.StrategicIntervention.InterventionName)
+                            @Html.DisplayFor(modelItem => item.ActivityAssessFk.StrategicIntervention.InterventionName)
                         }
                         else
                         {
@@ -49,9 +49,9 @@
                         }
                     </td>
                     <td>
-                        @if (item.ActivityAssess != null && item.ActivityAssess?.StrategicAction != null)
+                        @if (item.ActivityAssessFk != null && item.ActivityAssessFk?.StrategicAction != null)
                         {
-                            @Html.DisplayFor(modelItem => item.ActivityAssess.StrategicAction.actionName)
+                            @Html.DisplayFor(modelItem => item.ActivityAssessFk.StrategicAction.actionName)
                         }
                         else
                         {
@@ -59,9 +59,9 @@
                         }
                     </td>
                     <td>
-                        @if (item.ActivityAssess != null && item.ActivityAssess?.ActivityFk != null)
+                        @if (item.ActivityAssessFk != null && item.ActivityAssessFk?.ActivityFk != null)
                         {
-                            @Html.DisplayFor(modelItem => item.ActivityAssess.ActivityFk.activityName)
+                            @Html.DisplayFor(modelItem => item.ActivityAssessFk.ActivityFk.activityName)
                         }
                         else
                         {
@@ -69,9 +69,9 @@
                         }
                     </td>
                     <td>
-                        @if (item.ActivityAssess != null)
+                        @if (item.ActivityAssessFk != null)
                         {
-                            @Html.DisplayFor(modelItem => item.ActivityAssess.outputIndicator)
+                            @Html.DisplayFor(modelItem => item.ActivityAssessFk.outputIndicator)
                         }
                         else
                         {
@@ -79,9 +79,9 @@
                         }
                     </td>
                     <td>
-                        @if (item.ActivityAssess != null)
+                        @if (item.ActivityAssessFk != null)
                         {
-                            @Html.DisplayFor(modelItem => item.ActivityAssess.baseline)
+                            @Html.DisplayFor(modelItem => item.ActivityAssessFk.baseline)
                         }
                         else
                         {
