@@ -177,6 +177,7 @@ namespace MEMIS.Controllers
           {
             intAssess = id,
             intRegion = Guid.Parse(regionId),
+            budgetAmount = activity.budgetAmount,
           };
           await _context.ActivityAssessRegion.AddAsync(region);
 
@@ -221,10 +222,11 @@ namespace MEMIS.Controllers
     {
       try
       {
-        ActivityAssessRegion activityAssessRegion = new ActivityAssessRegion();
+        ActivityAssessRegion activityAssessRegion = _context.ActivityAssessRegion.Where(x => x.intAssess == region.intAssess).FirstOrDefault();
 
         activityAssessRegion.intAssess = region.intAssess;
         activityAssessRegion.intRegion = region.intRegion;
+        activityAssessRegion.budgetAmount = region.budgetAmount;
 
         _context.ActivityAssessRegion.Update(activityAssessRegion);
 
