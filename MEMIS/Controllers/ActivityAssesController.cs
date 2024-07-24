@@ -261,7 +261,14 @@ namespace MEMIS.Controllers
     {
       try
       {
-        List<ActivityAssessRegion> activityAssessRegions = await _context.ActivityAssessRegion.ToListAsync();
+        List<ActivityAssessRegion> activityAssessRegions = await _context.ActivityAssessRegion
+          .Include(x => x.ActivityAssessFk)
+          .ThenInclude(x => x.StrategicIntervention)
+          .Include(x => x.ActivityAssessFk)
+          .ThenInclude(x => x.StrategicAction)
+          .Include(x => x.ActivityAssessFk)
+          .ThenInclude(x => x.ActivityFk)
+          .ToListAsync();
         return View(activityAssessRegions);
       }
       catch (Exception ex)
