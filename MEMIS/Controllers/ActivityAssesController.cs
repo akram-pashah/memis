@@ -168,21 +168,12 @@ namespace MEMIS.Controllers
     {
       try
       {
-        ActivityAssessRegion region = new();
-        ActivityAssess? activity = _context.ActivityAssess?.Where(x => x.intAssess == id).FirstOrDefault();
-        if (activity != null)
+        ActivityAssessRegion? region = _context.ActivityAssessRegion?.Include(x => x.ActivityAssessFk).Where(x => x.intAssess == id).FirstOrDefault();
+        if (region != null)
         {
-          var regionId = HttpContext.Session.GetString("Region");
-          region = new()
-          {
-            intAssess = id,
-            intRegion = Guid.Parse(regionId),
-            budgetAmount = activity.budgetAmount,
-          };
-          await _context.ActivityAssessRegion.AddAsync(region);
+          region.ActivityAssessFk.actType = 2;
+          _context.ActivityAssessRegion?.Update(region);
 
-          activity.actType = 2;
-          _context.ActivityAssess?.Update(activity);
           await _context.SaveChangesAsync();
 
         }
@@ -207,6 +198,8 @@ namespace MEMIS.Controllers
         ActivityAssessDto activityAssessDto = new ActivityAssessDto();
         activityAssessDto.intAssess = region.intAssess;
         activityAssessDto.budgetAmount = region.budgetAmount;
+        activityAssessDto.QTarget = region.QTarget;
+        activityAssessDto.QBudget = region.QBudget;
         activityAssessDto.QuaterlyPlans = await _context.QuaterlyPlans.Where(x => x.ActivityAccessId == region.intAssess).ToListAsync();
         ViewData["Quarter"] = ListHelper.Quarter();
         return View(activityAssessDto);
@@ -229,12 +222,16 @@ namespace MEMIS.Controllers
         activityAssessRegion.budgetAmount = region.budgetAmount;
 
         _context.ActivityAssessRegion.Update(activityAssessRegion);
-
+        //activityAssessRegion.QTarget = 0;
+        //activityAssessRegion.QBudget = 0;
         if (region.QuaterlyPlans.Count > 0)
         {
 
           foreach (var quat in region.QuaterlyPlans)
           {
+            //activityAssessRegion.QTarget += quat.QTarget ?? 0;
+            //activityAssessRegion.QBudget += quat.QBudget ?? 0;
+
             if (quat.Id != 0)
             {
               _context.Entry(quat).State = EntityState.Modified;
