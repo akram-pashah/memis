@@ -47,6 +47,6 @@ namespace MEMIS.Models
     public Guid? intDept { get; set; }
 
     public Guid? intRegion { get; set; }
-    public List<QuaterlyPlan>? QuaterlyPlans { get; set; } 
+    public List<QuaterlyPlan> QuaterlyPlans { get; set; } 
   }
 }

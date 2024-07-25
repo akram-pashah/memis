@@ -308,11 +308,10 @@ namespace MEMIS.Controllers
         var consolidatedDeptPlanViewModels = _context.Departments.Select(x => new ConsolidatedDeptPlanViewModel()
         {
           Department = x,
-          AllocatedActivityAssesses = _context.ActivityAssess.Where(x => x.intDept == x.intDept && x.actType == 1).ToList(),
-          ActivityAssesses = _context.ActivityAssess.Where(x => x.intDept == x.intDept && x.actType != 1).ToList(),
-          BudgetCost = _context.ActivityAssess.Where(x => x.intDept == x.intDept && x.actType == 1).Sum(x => x.budgetAmount)
-        }).Skip(offset)
-            .Take(pageSize);
+          AllocatedActivityAssesses = _context.ActivityAssess.Where(x => x.intDept == x.intDept && x.actType == 1 || x.actType == 2).ToList(),
+          ActivityAssesses = _context.ActivityAssess.Where(x => x.intDept == x.intDept && x.actType != 1 && x.actType != 2).ToList(),
+          BudgetCost = _context.ActivityAssess.Where(x => x.intDept == x.intDept && (x.actType == 1 || x.actType == 2)).Sum(x => x.budgetAmount)
+        });
 
         var groupedData = await _context.ActivityAssess.Include(a => a.DepartmentFk)
             .Where(a => a.actType == 1)
@@ -321,7 +320,7 @@ namespace MEMIS.Controllers
             {
               intDept = g.Key,
               budgetAmount = g.Sum(a => a.budgetAmount),
-              QTarget = g.Sum(a => a.QTarget),
+              QTarget = g.Sum(a => a.QuaterlyPlans.Sum(x => x.QTarget)),
               comparativeTarget = g.Sum(a => a.comparativeTarget),
               StrategicIntervention = g.FirstOrDefault().StrategicIntervention,
               StrategicAction = g.FirstOrDefault().StrategicAction,
@@ -330,7 +329,7 @@ namespace MEMIS.Controllers
               baseline = g.FirstOrDefault().baseline,
               justification = g.FirstOrDefault().justification,
               Quarter = g.FirstOrDefault().Quarter,
-              QBudget = g.FirstOrDefault().QBudget,
+              QBudget = g.Sum(a => a.QuaterlyPlans.Sum(x => x.QBudget)),
               ApprStatus = g.FirstOrDefault().ApprStatus,
               actType = g.FirstOrDefault().actType,
               IdentifiedRisks = g.FirstOrDefault().IdentifiedRisks,
@@ -339,9 +338,7 @@ namespace MEMIS.Controllers
 
         // Fetch the data where actType is not equal to 1
         var nonAllocatedData = await _context.ActivityAssess.Include(a => a.DepartmentFk)
-            .Where(a => a.actType != 1)
-            .Skip(offset)
-            .Take(pageSize)
+            .Where(a => a.actType != 1 && a.actType != 2)
             .ToListAsync();
 
         // Combine both datasets
@@ -352,12 +349,12 @@ namespace MEMIS.Controllers
           Data = combinedData,
           TotalItems = _context.ActivityAssess.Count(),
           PageNumber = pageNumber,
-          PageSize = pageSize
+          PageSize = _context.ActivityAssess.Count()
         };
 
 
         var totalAllocatedBudget = await _context.ActivityAssess
-            .Where(a => a.actType == 1)
+            .Where(a => a.actType == 1 || a.actType == 2)
             .SumAsync(a => a.budgetAmount ?? 0);
 
         ViewBag.TotalAllocatedBudget = totalAllocatedBudget;
@@ -1058,7 +1055,14 @@ namespace MEMIS.Controllers
         _context.SaveChanges();
 
         return RedirectToAction(nameof(Index));
+      } else
+      {
+        if(dto.QuaterlyPlans == null || (dto.QuaterlyPlans?.Count == 0))
+        {
+          ViewBag.ErrorMessage = "Please enter querterly targets";
+        }
       }
+
       ViewBag.StrategicIntervention = _context.StrategicIntervention == null ? new List<StrategicIntervention>() : await _context.StrategicIntervention.ToListAsync();
       ViewBag.StrategicAction = _context.StrategicAction == null ? new List<StrategicAction>() : await _context.StrategicAction.ToListAsync();
       ViewBag.Activity = _context.Activity == null ? new List<Activity>() : await _context.Activity.ToListAsync();
