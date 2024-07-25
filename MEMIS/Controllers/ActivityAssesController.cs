@@ -320,7 +320,7 @@ namespace MEMIS.Controllers
             {
               intDept = g.Key,
               budgetAmount = g.Sum(a => a.budgetAmount),
-              QTarget = g.Sum(a => a.QuaterlyPlans.Sum(x => x.QTarget)),
+              QTarget = g.Sum(a => a.QTarget),
               comparativeTarget = g.Sum(a => a.comparativeTarget),
               StrategicIntervention = g.FirstOrDefault().StrategicIntervention,
               StrategicAction = g.FirstOrDefault().StrategicAction,
@@ -329,7 +329,7 @@ namespace MEMIS.Controllers
               baseline = g.FirstOrDefault().baseline,
               justification = g.FirstOrDefault().justification,
               Quarter = g.FirstOrDefault().Quarter,
-              QBudget = g.Sum(a => a.QuaterlyPlans.Sum(x => x.QBudget)),
+              QBudget = g.Sum(a => a.QBudget),
               ApprStatus = g.FirstOrDefault().ApprStatus,
               actType = g.FirstOrDefault().actType,
               IdentifiedRisks = g.FirstOrDefault().IdentifiedRisks,
