@@ -29,7 +29,7 @@ namespace MEMIS.Data
     public DbSet<StrategicPlan>? StrategicPlan { get; set; }
     public DbSet<Region>? Region { get; set; }
     public DbSet<AnnualImplemtationPlan>? AnnualImplemtationPlan { get; set; }
-    public DbSet<ActivityAssess>? ActivityAssess { get; set; }
+    public DbSet<ActivityAssess> ActivityAssess { get; set; }
     public DbSet<QuaterlyPlan>? QuaterlyPlans { get; set; }
     public DbSet<WorkPlanSettingsRegion>? WorkPlanSettingsRegion { get; set; }
     public DbSet<DepartmentPlan>? DepartmentPlan { get; set; }

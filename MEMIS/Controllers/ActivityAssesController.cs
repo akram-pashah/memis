@@ -308,19 +308,50 @@ namespace MEMIS.Controllers
         var consolidatedDeptPlanViewModels = _context.Departments.Select(x => new ConsolidatedDeptPlanViewModel()
         {
           Department = x,
-          AllocatedActivityAssesses = _context.ActivityAssess.Where(x => x.intDept == x.intDept && x.actType == 1 || x.actType == 2).ToList(),
+          AllocatedActivityAssesses = _context.ActivityAssess.Where(x => x.intDept == x.intDept && x.actType == 1).ToList(),
           ActivityAssesses = _context.ActivityAssess.Where(x => x.intDept == x.intDept && x.actType != 1 && x.actType != 2).ToList(),
-          BudgetCost = _context.ActivityAssess.Where(x => x.intDept == x.intDept && (x.actType == 1 || x.actType == 2)).Sum(x => x.budgetAmount)
+          BudgetCost = _context.ActivityAssess.Where(x => x.intDept == x.intDept && (x.actType == 1)).Sum(x => x.budgetAmount)
         });
 
-        var groupedData = await _context.ActivityAssess.Include(a => a.DepartmentFk)
-            .Where(a => a.actType == 1)
+        var consolidatedRegionalPlan = await _context.ActivityAssessRegion
+          .Include(x => x.ActivityAssessFk)
+          .ThenInclude(x => x.StrategicIntervention)
+            .Include(x => x.ActivityAssessFk)
+            .ThenInclude(x => x.StrategicAction)
+            .Include(x => x.ActivityAssessFk)
+            .ThenInclude(x => x.ActivityFk)
+          .Where(r => r.ActivityAssessFk.actType == 2 && r.ActivityAssessFk.ApprStatus == 0)
+          .GroupBy(r => r.intRegion)
+          .Select(g => new ActivityAssess
+          {
+            intDept = g.Key,
+            intAssess = g.Select(x => x.intAssess).FirstOrDefault(),
+            budgetAmount = g.Sum(a => a.budgetAmount),
+            QTarget = g.SelectMany(a => a.ActivityAssessFk.QuaterlyPlans).Sum(a => a.QTarget),
+            comparativeTarget = g.Sum(a => a.ActivityAssessFk.comparativeTarget),
+            StrategicIntervention = g.FirstOrDefault().ActivityAssessFk.StrategicIntervention,
+            StrategicAction = g.FirstOrDefault().ActivityAssessFk.StrategicAction,
+            ActivityFk = g.FirstOrDefault().ActivityAssessFk.ActivityFk,
+            outputIndicator = g.FirstOrDefault().ActivityAssessFk.outputIndicator,
+            baseline = g.FirstOrDefault().ActivityAssessFk.baseline,
+            justification = g.FirstOrDefault().ActivityAssessFk.justification,
+            QBudget = g.SelectMany(a => a.ActivityAssessFk.QuaterlyPlans).Sum(a => a.QBudget),
+            ApprStatus = g.FirstOrDefault().ActivityAssessFk.ApprStatus,
+            actType = 2,
+            IdentifiedRisks = g.FirstOrDefault().ActivityAssessFk.IdentifiedRisks,
+            QuaterlyPlans = g.SelectMany(a => a.ActivityAssessFk.QuaterlyPlans).ToList()
+          })
+          .ToListAsync();
+
+        var groupedDeptData = await _context.ActivityAssess.Include(a => a.DepartmentFk)
+            .Where(a => (a.actType == 1) && a.ApprStatus == 0)
             .GroupBy(a => a.intDept)
             .Select(g => new ActivityAssess
             {
               intDept = g.Key,
+              intAssess = g.Select(x => x.intAssess).FirstOrDefault(),
               budgetAmount = g.Sum(a => a.budgetAmount),
-              QTarget = g.Sum(a => a.QTarget),
+              QTarget = g.SelectMany(a => a.QuaterlyPlans).Sum(a => a.QTarget),
               comparativeTarget = g.Sum(a => a.comparativeTarget),
               StrategicIntervention = g.FirstOrDefault().StrategicIntervention,
               StrategicAction = g.FirstOrDefault().StrategicAction,
@@ -328,11 +359,11 @@ namespace MEMIS.Controllers
               outputIndicator = g.FirstOrDefault().outputIndicator,
               baseline = g.FirstOrDefault().baseline,
               justification = g.FirstOrDefault().justification,
-              Quarter = g.FirstOrDefault().Quarter,
-              QBudget = g.Sum(a => a.QBudget),
+              QBudget = g.SelectMany(a => a.QuaterlyPlans).Sum(a => a.QBudget),
               ApprStatus = g.FirstOrDefault().ApprStatus,
-              actType = g.FirstOrDefault().actType,
+              actType = 1,
               IdentifiedRisks = g.FirstOrDefault().IdentifiedRisks,
+              QuaterlyPlans = g.SelectMany(a => a.QuaterlyPlans).ToList()
             })
             .ToListAsync();
 
@@ -342,16 +373,15 @@ namespace MEMIS.Controllers
             .ToListAsync();
 
         // Combine both datasets
-        var combinedData = (groupedData).Concat(nonAllocatedData).ToList();
+        var combinedData = (groupedDeptData).Concat(consolidatedRegionalPlan).Concat(nonAllocatedData).ToList();
 
         var result = new PagedResult<ActivityAssess>
         {
           Data = combinedData,
           TotalItems = _context.ActivityAssess.Count(),
           PageNumber = pageNumber,
-          PageSize = _context.ActivityAssess.Count()
+          PageSize = combinedData.Count()
         };
-
 
         var totalAllocatedBudget = await _context.ActivityAssess
             .Where(a => a.actType == 1 || a.actType == 2)
@@ -367,6 +397,42 @@ namespace MEMIS.Controllers
       }
     }
 
+    public async Task<IActionResult> ShowConsolidatedDeptPlan(int id)
+    {
+      try
+      {
+        var deptId = await _context.ActivityAssess.Where(x => x.intAssess == id).Select(x => x.intDept).FirstOrDefaultAsync();
+        List<ActivityAssess> activityAssess = await _context.ActivityAssess.Where(x => x.actType == 1 && x.ApprStatus == 0 && x.intDept == deptId).ToListAsync();
+        return View(activityAssess);
+      }
+      catch (Exception ex)
+      {
+        return StatusCode(500, ex.Message);
+      }
+    }
+
+    public async Task<IActionResult> ShowConsolidatedRegionalAssessment(int id)
+    {
+      try
+      {
+        var regionId = await _context.ActivityAssessRegion.Where(x => x.intAssess == id).Select(x => x.intRegion).FirstOrDefaultAsync();
+        List<ActivityAssessRegion> activityAssessRegions = await _context.ActivityAssessRegion
+            .Include(x => x.ActivityAssessFk)
+            .ThenInclude(x => x.StrategicIntervention)
+            .Include(x => x.ActivityAssessFk)
+            .ThenInclude(x => x.StrategicAction)
+            .Include(x => x.ActivityAssessFk)
+            .ThenInclude(x => x.ActivityFk)
+            .Where(x => x.intRegion == regionId)
+            .ToListAsync();
+
+        return View(activityAssessRegions);
+      }
+      catch (Exception ex)
+      {
+        return StatusCode(500, ex.Message);
+      }
+    }
 
     [HttpPost]
     [ValidateAntiForgeryToken]
@@ -496,7 +562,7 @@ namespace MEMIS.Controllers
       }
 
       var deptPlan = await _context.ActivityAssess.Include(m => m.StrategicIntervention).Include(m => m.StrategicAction).Include(s => s.ActivityFk)
-          .Where(m => m.intActivity == id).FirstOrDefaultAsync();
+          .Where(m => m.intAssess == id).FirstOrDefaultAsync();
       if (deptPlan == null)
       {
         return NotFound();
@@ -509,15 +575,18 @@ namespace MEMIS.Controllers
         intActivity = deptPlan.intActivity,
         outputIndicator = deptPlan.outputIndicator,
         baseline = deptPlan.baseline,
-        QTarget = deptPlan.QTarget,
-        QBudget = deptPlan.QBudget,
+        QTarget = deptPlan.QuaterlyPlans?.Sum(x => x.QTarget),
+        QBudget = deptPlan.QuaterlyPlans?.Sum(x => x.QBudget),
         comparativeTarget = deptPlan.comparativeTarget,
         justification = deptPlan.justification,
         budgetAmount = deptPlan.budgetAmount,
+        IdentifiedRisks = deptPlan.IdentifiedRisks,
       };
       ViewBag.StrategicIntervention = _context.StrategicIntervention == null ? new List<StrategicIntervention>() : await _context.StrategicIntervention.ToListAsync();
       ViewBag.StrategicAction = _context.StrategicAction == null ? new List<StrategicAction>() : await _context.StrategicAction.ToListAsync();
       ViewBag.Activity = _context.Activity == null ? new List<Activity>() : await _context.Activity.ToListAsync();
+      ViewData["Quarter"] = ListHelper.Quarter();
+      ViewBag.Depts = await _context.Departments.ToListAsync();
       ViewData["Approval"] = ListHelper.ApprovalStatus();
       return View(activityDto);
     }
@@ -530,7 +599,7 @@ namespace MEMIS.Controllers
       {
         try
         {
-          var pp = await _context.ActivityAssess.FindAsync(objectdto.intActivity);
+          var pp = await _context.ActivityAssess.FindAsync(objectdto.intAssess);
           if (pp == null)
           {
             return NotFound();
@@ -556,7 +625,7 @@ namespace MEMIS.Controllers
             throw;
           }
         }
-        return RedirectToAction(nameof(Verify));
+        return RedirectToAction(nameof(ConsolidatedDeptPlan));
       }
       ViewData["Approval"] = ListHelper.ApprovalStatus();
       return View(objectdto);
@@ -569,19 +638,17 @@ namespace MEMIS.Controllers
       if (_context.ActivityAssess != null)
       {
         var dat = _context.ActivityAssess.Include(m => m.StrategicIntervention).Include(m => m.StrategicAction).Include(s => s.ActivityFk)
-            .Where(x => x.ApprStatus == (int)(deptPlanApprStatus.hodreviewed))
-            .Skip(offset)
-            .Take(pageSize);
+            .Where(x => x.ApprStatus == (int)(deptPlanApprStatus.hodreviewed)).ToList();
 
-        var result = new PagedResult<ActivityAssess>
-        {
-          Data = dat.AsNoTracking().ToList(),
-          TotalItems = _context.ActivityAssess.Count(),
-          PageNumber = pageNumber,
-          PageSize = pageSize
-        };
+        //var result = new PagedResult<ActivityAssess>
+        //{
+        //  Data = dat.AsNoTracking().ToList(),
+        //  TotalItems = _context.ActivityAssess.Count(),
+        //  PageNumber = pageNumber,
+        //  PageSize = _context.ActivityAssess.Count()
+        //};
         ViewBag.Users = _userManager;
-        return View(result);
+        return View(dat);
       }
       else
       {
@@ -596,7 +663,7 @@ namespace MEMIS.Controllers
       }
 
       var deptPlan = await _context.ActivityAssess.Include(m => m.StrategicIntervention).Include(m => m.StrategicAction).Include(s => s.ActivityFk)
-          .Where(m => m.intActivity == id).FirstOrDefaultAsync();
+          .Where(m => m.intAssess == id).FirstOrDefaultAsync();
       if (deptPlan == null)
       {
         return NotFound();
@@ -618,6 +685,7 @@ namespace MEMIS.Controllers
       ViewBag.StrategicIntervention = _context.StrategicIntervention == null ? new List<StrategicIntervention>() : await _context.StrategicIntervention.ToListAsync();
       ViewBag.StrategicAction = _context.StrategicAction == null ? new List<StrategicAction>() : await _context.StrategicAction.ToListAsync();
       ViewBag.Activity = _context.Activity == null ? new List<Activity>() : await _context.Activity.ToListAsync();
+      ViewBag.Depts = await _context.Departments.ToListAsync();
       ViewData["Approval"] = ListHelper.ApprovalStatus();
       return View(riskDto);
     }
@@ -630,7 +698,7 @@ namespace MEMIS.Controllers
       {
         try
         {
-          var pp = await _context.ActivityAssess.FindAsync(objectdto.intActivity);
+          var pp = await _context.ActivityAssess.FindAsync(objectdto.intAssess);
           if (pp == null)
           {
             return NotFound();
@@ -670,19 +738,17 @@ namespace MEMIS.Controllers
       if (_context.ActivityAssess != null)
       {
         var dat = _context.ActivityAssess.Include(m => m.StrategicIntervention).Include(m => m.StrategicAction).Include(s => s.ActivityFk)
-            .Where(x => x.ApprStatus == (int)(deptPlanApprStatus.dirapprove))
-            .Skip(offset)
-            .Take(pageSize);
+            .Where(x => x.ApprStatus == (int)(deptPlanApprStatus.dirapprove)).ToList();
 
-        var result = new PagedResult<ActivityAssess>
-        {
-          Data = dat.AsNoTracking().ToList(),
-          TotalItems = _context.ActivityAssess.Count(),
-          PageNumber = pageNumber,
-          PageSize = pageSize
-        };
+        //var result = new PagedResult<ActivityAssess>
+        //{
+        //  Data = dat.AsNoTracking().ToList(),
+        //  TotalItems = _context.ActivityAssess.Count(),
+        //  PageNumber = pageNumber,
+        //  PageSize = pageSize
+        //};
         ViewBag.Users = _userManager;
-        return View(result);
+        return View(dat);
       }
       else
       {
@@ -697,7 +763,7 @@ namespace MEMIS.Controllers
       }
 
       var deptPlan = await _context.ActivityAssess.Include(m => m.StrategicIntervention).Include(m => m.StrategicAction).Include(s => s.ActivityFk)
-          .Where(m => m.intActivity == id).FirstOrDefaultAsync();
+          .Where(m => m.intAssess == id).FirstOrDefaultAsync();
       if (deptPlan == null)
       {
         return NotFound();
@@ -719,6 +785,7 @@ namespace MEMIS.Controllers
       ViewBag.StrategicIntervention = _context.StrategicIntervention == null ? new List<StrategicIntervention>() : await _context.StrategicIntervention.ToListAsync();
       ViewBag.StrategicAction = _context.StrategicAction == null ? new List<StrategicAction>() : await _context.StrategicAction.ToListAsync();
       ViewBag.Activity = _context.Activity == null ? new List<Activity>() : await _context.Activity.ToListAsync();
+      ViewBag.Depts = await _context.Departments.ToListAsync();
       ViewData["Approval"] = ListHelper.ApprovalStatus();
       return View(riskDto);
     }
@@ -727,11 +794,11 @@ namespace MEMIS.Controllers
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> ConsolidationStatus(ActivityAssessDto objectdto)
     {
-      if (objectdto.intActivity != null && objectdto.intActivity != 0)
+      if (objectdto.intAssess != null && objectdto.intAssess != 0)
       {
         try
         {
-          var pp = await _context.ActivityAssess.FindAsync(objectdto.intActivity);
+          var pp = await _context.ActivityAssess.FindAsync(objectdto.intAssess);
           if (pp == null)
           {
             return NotFound();
@@ -770,19 +837,17 @@ namespace MEMIS.Controllers
       if (_context.ActivityAssess != null)
       {
         var dat = _context.ActivityAssess.Include(m => m.StrategicIntervention).Include(m => m.StrategicAction).Include(s => s.ActivityFk)
-            .Where(x => x.ApprStatus == (int)(deptPlanApprStatus.meOfficerVerified))
-            .Skip(offset)
-            .Take(pageSize);
+            .Where(x => x.ApprStatus == (int)(deptPlanApprStatus.meOfficerVerified)).ToList();
 
-        var result = new PagedResult<ActivityAssess>
-        {
-          Data = dat.AsNoTracking().ToList(),
-          TotalItems = _context.ActivityAssess.Count(),
-          PageNumber = pageNumber,
-          PageSize = pageSize
-        };
+        //var result = new PagedResult<ActivityAssess>
+        //{
+        //  Data = dat.AsNoTracking().ToList(),
+        //  TotalItems = _context.ActivityAssess.Count(),
+        //  PageNumber = pageNumber,
+        //  PageSize = pageSize
+        //};
         ViewBag.Users = _userManager;
-        return View(result);
+        return View(dat);
       }
       else
       {
@@ -797,7 +862,7 @@ namespace MEMIS.Controllers
       }
 
       var deptPlan = await _context.ActivityAssess.Include(m => m.StrategicIntervention).Include(m => m.StrategicAction).Include(s => s.ActivityFk)
-          .Where(m => m.intActivity == id).FirstOrDefaultAsync();
+          .Where(m => m.intAssess == id).FirstOrDefaultAsync();
       if (deptPlan == null)
       {
         return NotFound();
@@ -819,6 +884,7 @@ namespace MEMIS.Controllers
       ViewBag.StrategicIntervention = _context.StrategicIntervention == null ? new List<StrategicIntervention>() : await _context.StrategicIntervention.ToListAsync();
       ViewBag.StrategicAction = _context.StrategicAction == null ? new List<StrategicAction>() : await _context.StrategicAction.ToListAsync();
       ViewBag.Activity = _context.Activity == null ? new List<Activity>() : await _context.Activity.ToListAsync();
+      ViewBag.Depts = await _context.Departments.ToListAsync();
       ViewData["Approval"] = ListHelper.ApprovalStatus();
       return View(riskDto);
     }
@@ -831,7 +897,7 @@ namespace MEMIS.Controllers
       {
         try
         {
-          var pp = await _context.ActivityAssess.FindAsync(objectdto.intActivity);
+          var pp = await _context.ActivityAssess.FindAsync(objectdto.intAssess);
           if (pp == null)
           {
             return NotFound();
@@ -870,19 +936,17 @@ namespace MEMIS.Controllers
       if (_context.ActivityAssess != null)
       {
         var dat = _context.ActivityAssess.Include(m => m.StrategicIntervention).Include(m => m.StrategicAction).Include(s => s.ActivityFk)
-            .Where(x => x.ApprStatus == (int)(deptPlanApprStatus.headBpdVerified))
-            .Skip(offset)
-            .Take(pageSize);
+            .Where(x => x.ApprStatus == (int)(deptPlanApprStatus.headBpdVerified)).ToList();
 
-        var result = new PagedResult<ActivityAssess>
-        {
-          Data = dat.AsNoTracking().ToList(),
-          TotalItems = _context.ActivityAssess.Count(),
-          PageNumber = pageNumber,
-          PageSize = pageSize
-        };
+        //var result = new PagedResult<ActivityAssess>
+        //{
+        //  Data = dat.AsNoTracking().ToList(),
+        //  TotalItems = _context.ActivityAssess.Count(),
+        //  PageNumber = pageNumber,
+        //  PageSize = pageSize
+        //};
         ViewBag.Users = _userManager;
-        return View(result);
+        return View(dat);
       }
       else
       {
@@ -897,7 +961,7 @@ namespace MEMIS.Controllers
       }
 
       var deptPlan = await _context.ActivityAssess.Include(m => m.StrategicIntervention).Include(m => m.StrategicAction).Include(s => s.ActivityFk)
-          .Where(m => m.intActivity == id).FirstOrDefaultAsync();
+          .Where(m => m.intAssess == id).FirstOrDefaultAsync();
       if (deptPlan == null)
       {
         return NotFound();
@@ -919,6 +983,7 @@ namespace MEMIS.Controllers
       ViewBag.StrategicIntervention = _context.StrategicIntervention == null ? new List<StrategicIntervention>() : await _context.StrategicIntervention.ToListAsync();
       ViewBag.StrategicAction = _context.StrategicAction == null ? new List<StrategicAction>() : await _context.StrategicAction.ToListAsync();
       ViewBag.Activity = _context.Activity == null ? new List<Activity>() : await _context.Activity.ToListAsync();
+      ViewBag.Depts = await _context.Departments.ToListAsync();
       ViewData["Approval"] = ListHelper.ApprovalStatus();
       return View(riskDto);
     }
@@ -931,7 +996,7 @@ namespace MEMIS.Controllers
       {
         try
         {
-          var pp = await _context.ActivityAssess.FindAsync(objectdto.intActivity);
+          var pp = await _context.ActivityAssess.FindAsync(objectdto.intAssess);
           if (pp == null)
           {
             return NotFound();
@@ -1055,9 +1120,10 @@ namespace MEMIS.Controllers
         _context.SaveChanges();
 
         return RedirectToAction(nameof(Index));
-      } else
+      }
+      else
       {
-        if(dto.QuaterlyPlans == null || (dto.QuaterlyPlans?.Count == 0))
+        if (dto.QuaterlyPlans == null || (dto.QuaterlyPlans?.Count == 0))
         {
           ViewBag.ErrorMessage = "Please enter querterly targets";
         }
