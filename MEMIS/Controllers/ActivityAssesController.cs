@@ -177,7 +177,7 @@ namespace MEMIS.Controllers
           await _context.SaveChangesAsync();
 
         }
-        return RedirectToAction(nameof(EditRegionalTarget), new { Id = region.intRegionAssess });
+        return RedirectToAction(nameof(EditRegionalTarget), new { Id = id });
       }
       catch (Exception ex)
       {
@@ -1359,7 +1359,6 @@ namespace MEMIS.Controllers
       if (apprStatus == 1 || apprStatus == 2)
       {
         return RedirectToAction(nameof(RegionalHodVerification));
-
       }
       else if (apprStatus == 3 || apprStatus == 4)
       {
@@ -1376,6 +1375,38 @@ namespace MEMIS.Controllers
 
 
       return RedirectToAction(nameof(RegionalVerify));
+    }
+    public async Task<IActionResult> DeptPlanVerification(List<int> selectedIds, int apprStatus)
+    {
+      if (selectedIds != null && selectedIds.Count > 0 && apprStatus != null && apprStatus != 0)
+      {
+        foreach (int id in selectedIds)
+        {
+          var activityAsses = _context.ActivityAssess.Where(x => x.intAssess == id).FirstOrDefault();
+          if (activityAsses != null)
+          {
+            activityAsses.ApprStatus = apprStatus;
+            _context.SaveChanges();
+          }
+        }
+      }
+      if(apprStatus == 1 || apprStatus == 2)
+      {
+        return RedirectToAction(nameof(ShowConsolidatedDeptPlan));
+      }
+      if (apprStatus == 3 || apprStatus == 4)
+      {
+        return RedirectToAction(nameof(DirVerify));
+      }
+      else if (apprStatus == 5 || apprStatus == 6)
+      {
+        return RedirectToAction(nameof(Consolidation));
+      }
+      else if (apprStatus == 7 || apprStatus == 8)
+      {
+        return RedirectToAction(nameof(HeadBpdVerify));
+      }
+      return RedirectToAction(nameof(DirAppr));
     }
   }
 }
