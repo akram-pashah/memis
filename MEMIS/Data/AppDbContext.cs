@@ -37,6 +37,7 @@ namespace MEMIS.Data
     public DbSet<ActivityAssessment>? ActivityAssessment { get; set; }
 
     public DbSet<ActivityAssessRegion> ActivityAssessRegion { get; set; }
+    public DbSet<ActivityAssessmentRegion> ActivityAssessmentRegion { get;set; }
 
     public DbSet<RiskIdent> RiskIdent { get; set; }
     public DbSet<Cause>? Cause { get; set; }
