@@ -45,7 +45,7 @@ namespace MEMIS.Controllers.Reports
     {
       try
       {
-        var list = await _context.ActivityAssess.Include(m => m.StrategicAction).Include(m => m.StrategicIntervention).Include(m => m.ActivityFk).ToListAsync();
+        var list = await _context.ActivityAssess.Include(m => m.StrategicAction).Include(m => m.StrategicIntervention).Include(m => m.ActivityFk).Where(x => x.actType == 1).ToListAsync();
 
         return View(list);
       }

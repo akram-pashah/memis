@@ -177,7 +177,7 @@ namespace MEMIS.Controllers
           await _context.SaveChangesAsync();
 
         }
-        return RedirectToAction(nameof(EditRegionalTarget), new { Id = id });
+        return RedirectToAction(nameof(EditRegionalTarget), new { Id = region.intRegionAssess });
       }
       catch (Exception ex)
       {
@@ -402,7 +402,7 @@ namespace MEMIS.Controllers
       try
       {
         var deptId = await _context.ActivityAssess.Where(x => x.intAssess == id).Select(x => x.intDept).FirstOrDefaultAsync();
-        List<ActivityAssess> activityAssess = await _context.ActivityAssess.Where(x => x.actType == 1 && x.ApprStatus == 0 && x.intDept == deptId).ToListAsync();
+        List<ActivityAssess> activityAssess = await _context.ActivityAssess.Where(x => (x.actType == 1 || x.actType == 2) && x.ApprStatus == 0 && x.intDept == deptId).ToListAsync();
         return View(activityAssess);
       }
       catch (Exception ex)
@@ -938,13 +938,6 @@ namespace MEMIS.Controllers
         var dat = _context.ActivityAssess.Include(m => m.StrategicIntervention).Include(m => m.StrategicAction).Include(s => s.ActivityFk)
             .Where(x => x.ApprStatus == (int)(deptPlanApprStatus.headBpdVerified)).ToList();
 
-        //var result = new PagedResult<ActivityAssess>
-        //{
-        //  Data = dat.AsNoTracking().ToList(),
-        //  TotalItems = _context.ActivityAssess.Count(),
-        //  PageNumber = pageNumber,
-        //  PageSize = pageSize
-        //};
         ViewBag.Users = _userManager;
         return View(dat);
       }
@@ -1090,34 +1083,6 @@ namespace MEMIS.Controllers
           _context.QuaterlyPlans.AddRange(dto.QuaterlyPlans);
           _context.SaveChanges();
         }
-
-        DeptPlan dept = new DeptPlan()
-        {
-          intActivity = deptPlan.intActivity ?? 0,
-          //StrategicObjective = deptPlan.Str
-          strategicIntervention = deptPlan.intIntervention,
-          StrategicAction = deptPlan.intAction,
-          activity = deptPlan.intActivity?.ToString() ?? "",
-          outputIndicator = deptPlan.outputIndicator,
-          baseline = deptPlan.baseline,
-          budgetCode = deptPlan.budgetCode,
-          unitCost = deptPlan.QTarget,
-          Q1Target = dto.QuaterlyPlans?.Where(x => x.Quarter == "1").Select(x => x.QTarget).FirstOrDefault(),
-          Q2Target = dto.QuaterlyPlans?.Where(x => x.Quarter == "2").Select(x => x.QTarget).FirstOrDefault(),
-          Q3Target = dto.QuaterlyPlans?.Where(x => x.Quarter == "3").Select(x => x.QTarget).FirstOrDefault(),
-          Q4Target = dto.QuaterlyPlans?.Where(x => x.Quarter == "4").Select(x => x.QTarget).FirstOrDefault(),
-          Q1Budget = dto.QuaterlyPlans?.Where(x => x.Quarter == "1").Select(x => x.QBudget).FirstOrDefault(),
-          Q2Budget = dto.QuaterlyPlans?.Where(x => x.Quarter == "2").Select(x => x.QBudget).FirstOrDefault(),
-          Q3Budget = dto.QuaterlyPlans?.Where(x => x.Quarter == "3").Select(x => x.QBudget).FirstOrDefault(),
-          Q4Budget = dto.QuaterlyPlans?.Where(x => x.Quarter == "4").Select(x => x.QBudget).FirstOrDefault(),
-          comparativeTarget = dto.comparativeTarget,
-          justification = dto.justification,
-          budgetAmount = dto.budgetAmount,
-          IsVerified = false,
-          DepartmentId = dto.intDept,
-        };
-        _context.DeptPlans?.Add(dept);
-        _context.SaveChanges();
 
         return RedirectToAction(nameof(Index));
       }
@@ -1382,14 +1347,54 @@ namespace MEMIS.Controllers
       {
         foreach (int id in selectedIds)
         {
-          var activityAsses = _context.ActivityAssess.Where(x => x.intAssess == id).FirstOrDefault();
+          var activityAsses = _context.ActivityAssess
+            .Include(x => x.StrategicIntervention)
+            .ThenInclude(x => x.StrategicObjective)
+            .Include(x => x.StrategicAction)
+            .Include(x => x.ActivityFk)
+            .Include(x => x.QuaterlyPlans)
+            .Where(x => x.intAssess == id).FirstOrDefault();
+
           if (activityAsses != null)
           {
             activityAsses.ApprStatus = apprStatus;
+            if(apprStatus == 9)
+            {
+              ActivityAssessment activityAssessment = new()
+              {
+                strategicObjective = activityAsses?.StrategicIntervention?.StrategicObjective?.ObjectiveName ?? "",
+                strategicIntervention = activityAsses?.StrategicIntervention?.InterventionName ?? "",
+                StrategicAction = activityAsses?.StrategicAction?.actionName ?? "",
+                activity = activityAsses?.ActivityFk?.activityName ?? "",
+                outputIndicator = activityAsses?.outputIndicator,
+                baseline = activityAsses?.baseline,
+                budgetCode = activityAsses?.budgetCode,
+                comparativeTarget = activityAsses?.comparativeTarget,
+                justification = activityAsses?.justification,
+                budgetAmount = activityAsses?.budgetAmount,
+              };
+
+              _context.Add(activityAssessment);
+              _context.SaveChanges();
+
+              List<QuaterlyPlan> quaterlyPlans = activityAsses.QuaterlyPlans.Select(x => new QuaterlyPlan()
+              {
+                ActivityAssessmentId = activityAssessment.intDeptPlan,
+                Quarter = x.Quarter,
+                QTarget = x.QTarget,
+                QBudget = x.QBudget,
+                ActivityAccessId = x.ActivityAccessId,
+                DeptPlanId = x.DeptPlanId,
+              }).ToList();
+
+              _context.QuaterlyPlans.AddRange(quaterlyPlans);
+            }
             _context.SaveChanges();
+
           }
         }
       }
+
       if(apprStatus == 1 || apprStatus == 2)
       {
         return RedirectToAction(nameof(ShowConsolidatedDeptPlan));
