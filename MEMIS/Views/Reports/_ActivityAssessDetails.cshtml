@@ -1,0 +1,97 @@
+@model MEMIS.Data.ActivityAssess
+
+<h5>Details</h5>
+<dl class="row">
+    <dt class="col-sm-2">
+        Strategic Objective:
+    </dt>
+    <dd class="col-sm-10">
+        @Model.StrategicIntervention?.StrategicObjective?.ObjectiveName
+    </dd>
+    <dt class="col-sm-2">
+        Strategic Intervention:
+    </dt>
+    <dd class="col-sm-10">
+        @Model.StrategicIntervention?.InterventionName
+    </dd>
+    <dt class="col-sm-2">
+        Strategic Action:
+    </dt>
+    <dd class="col-sm-10">
+        @Model.StrategicAction?.actionName
+    </dd>
+    <dt class="col-sm-2">
+        Activities/Initiatives:
+    </dt>
+    <dd class="col-sm-10">
+        @Model.ActivityFk?.activityName
+    </dd>
+    <dt class="col-sm-2">
+        Output Indicators:
+    </dt>
+    <dd class="col-sm-10">
+        @Model.outputIndicator
+    </dd>
+    <dt class="col-sm-2">
+        Baseline:
+    </dt>
+    <dd class="col-sm-10">
+        @Model.baseline
+    </dd>
+    <dt class="col-sm-2">
+        Annual Target:
+    </dt>
+    <dd class="col-sm-10">
+        @Model.QTarget
+    </dd>
+    <dt class="col-sm-2">
+        Budget Code:
+    </dt>
+    <dd class="col-sm-10">
+        @Model.budgetCode
+    </dd>
+    <dt class="col-sm-2">
+        Amount Allocated:
+    </dt>
+    <dd class="col-sm-10">
+        @Model.budgetAmount
+    </dd>
+    <dt class="col-sm-2">
+        Identified Risks:
+    </dt>
+    <dd class="col-sm-10">
+        @Model.IdentifiedRisks
+    </dd>
+    <dt class="col-sm-2">
+        Responsible Party:
+    </dt>
+    <dd class="col-sm-10">
+        @Model.DepartmentFk?.deptName
+    </dd>
+</dl>
+
+<h5>Quarterly Plans</h5>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Quarter</th>
+            <th>Target</th>
+            <th>Budget</th>
+            <th>Actual</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.QuaterlyPlans != null)
+        {
+            foreach (var plan in Model.QuaterlyPlans)
+            {
+                <tr>
+                    <td>@plan.Quarter</td>
+                    <td>@plan.QTarget</td>
+                    <td>@plan.QBudget</td>
+                    <td>@plan.QActual</td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>

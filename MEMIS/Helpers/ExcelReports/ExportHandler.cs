@@ -227,10 +227,10 @@ namespace MEMIS.Helpers.ExcelReports
           worksheet.Cell(row, 7).Value = activityAssess?.QTarget;
           worksheet.Cell(row, 8).Value = activityAssess?.budgetCode;
           worksheet.Cell(row, 9).Value = activityAssess?.budgetAmount;
-          worksheet.Cell(row, 10).Value = 0;
-          worksheet.Cell(row, 11).Value = 0;
-          worksheet.Cell(row, 12).Value = 0;
-          worksheet.Cell(row, 13).Value = 0;
+          worksheet.Cell(row, 10).Value = activityAssess?.QuaterlyPlans.FirstOrDefault(x => x.Quarter == "1")?.QTarget;
+          worksheet.Cell(row, 11).Value = activityAssess?.QuaterlyPlans.FirstOrDefault(x => x.Quarter == "2")?.QTarget;
+          worksheet.Cell(row, 12).Value = activityAssess?.QuaterlyPlans.FirstOrDefault(x => x.Quarter == "3")?.QTarget;
+          worksheet.Cell(row, 13).Value = activityAssess?.QuaterlyPlans.FirstOrDefault(x => x.Quarter == "4")?.QTarget;
           worksheet.Cell(row, 14).Value = activityAssess?.IdentifiedRisks;
           worksheet.Cell(row, 15).Value = activityAssess?.DepartmentFk?.deptName;
 

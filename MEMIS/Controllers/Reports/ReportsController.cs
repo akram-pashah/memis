@@ -1,6 +1,7 @@
 using MEMIS.Data;
 using MEMIS.Helpers.ExcelReports;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
 namespace MEMIS.Controllers.Reports
@@ -41,13 +42,27 @@ namespace MEMIS.Controllers.Reports
       }
     }
 
-    public async Task<IActionResult> ConsolDeptPlan()
+    public async Task<IActionResult> ConsolDeptPlan(Guid? selectedDeptId, string? quarter)
     {
       try
       {
-        var list = await _context.ActivityAssess.Include(m => m.StrategicAction).Include(m => m.StrategicIntervention).Include(m => m.ActivityFk).Where(x => x.actType == 1).ToListAsync();
+        ViewBag.Departments = new SelectList(await _context.Departments.ToListAsync(), "intDept", "deptName", selectedDeptId);
 
-        return View(list);
+        var list = _context.ActivityAssess.Include(m => m.StrategicAction).Include(m => m.StrategicIntervention).ThenInclude(x => x.StrategicObjective).Include(m => m.ActivityFk).Include(x => x.QuaterlyPlans).AsQueryable();
+
+        if (selectedDeptId.HasValue)
+        {
+          list = list.Where(a => a.intDept == selectedDeptId.Value);
+        }
+        if (!string.IsNullOrEmpty(quarter))
+        {
+          list = list.Where(x => x.QuaterlyPlans.Where(x => x.Quarter == quarter).Any());
+        }
+
+        ViewData["SelectedDeptId"] = selectedDeptId;
+        ViewData["SelectedQuarter"] = quarter;
+
+        return View(await list.ToListAsync());
       }
       catch (Exception ex)
       {
@@ -55,12 +70,34 @@ namespace MEMIS.Controllers.Reports
         throw;
       }
     }
-    public async Task<IActionResult> ConsolidatedExportToExcel()
+
+    [HttpGet]
+    public IActionResult GetActivityAssessDetails(int id)
+    {
+      var activityAssess = _context.ActivityAssess.Include(m => m.StrategicAction).Include(m => m.StrategicIntervention).ThenInclude(x => x.StrategicObjective).Include(m => m.ActivityFk).Include(x => x.QuaterlyPlans).Include(x => x.DepartmentFk).FirstOrDefault(x => x.intAssess == id);
+      if (activityAssess == null)
+      {
+        return NotFound();
+      }
+
+      return PartialView("_ActivityAssessDetails", activityAssess);
+    }
+    public async Task<IActionResult> ConsolidatedExportToExcel(Guid? selectedDeptId, string? quarter)
     {
       try
       {
-        var list = await _context.ActivityAssess.Include(m => m.StrategicAction).Include(m => m.StrategicIntervention).Include(m => m.ActivityFk).ToListAsync();
-        var stream = ExportHandler.AnnualDetailedResultsFrameworkReport(list);
+        var list = _context.ActivityAssess.Include(m => m.StrategicAction).Include(m => m.StrategicIntervention).ThenInclude(x => x.StrategicObjective).Include(m => m.ActivityFk).Include(x => x.QuaterlyPlans).AsQueryable();
+
+        if (selectedDeptId.HasValue)
+        {
+          list = list.Where(a => a.intDept == selectedDeptId.Value);
+        }
+        if (!string.IsNullOrEmpty(quarter))
+        {
+          list = list.Where(x => x.QuaterlyPlans.Where(x => x.Quarter == quarter).Any());
+        }
+
+        var stream = ExportHandler.AnnualDetailedResultsFrameworkReport(await list.ToListAsync());
         stream.Position = 0;
         return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Annual Detailed Results Framework.xlsx");
       }

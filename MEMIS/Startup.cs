@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using MEMIS.Models;
 using Syncfusion.Blazor;
+using Newtonsoft.Json;
 namespace MEMIS
 {
   public class Startup
@@ -16,7 +17,12 @@ namespace MEMIS
     {
       services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
       services.AddHttpContextAccessor();
-      services.AddControllersWithViews().AddRazorRuntimeCompilation();
+      services.AddControllersWithViews()
+        .AddRazorRuntimeCompilation()
+        .AddNewtonsoftJson(options =>
+        {
+          options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+        });
       services.AddDbContext<Data.AppDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
       services.AddIdentity<ApplicationUser, IdentityRole>().AddEntityFrameworkStores<Data.AppDbContext>();
       services.AddCloudscribePagination();
