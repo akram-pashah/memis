@@ -1,0 +1,144 @@
+@using MEMIS.Data;
+@using MEMIS.Enums;
+@model List<ActivityAssessmentRegion>
+
+@{
+    ViewData["Title"] = "Index";
+    //Layout = "~/Views/Shared/_MELayout.cshtml";
+    Layout = "~/Pages/Shared/_ContentNavbarLayout.cshtml";
+}
+
+<div class="row">
+    <div class="col">
+        <h3>Regional Activity Assessment Verification [HOD]</h3>
+    </div>
+</div>
+<div class="card">
+    <div class="card-body" style="width:100%; overflow-x:auto;margin-top:20px;">
+        <form id="activityForm" method="post" asp-action="RegionalVerificationUpdate">
+            <table class="table table-striped table-hover dt-responsive nowrap">
+                <thead>
+                    <tr>
+                        <th>
+                            <input type="checkbox" id="selectAll" />
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model[0].ActivityAssessFk.intIntervention)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model[0].ActivityAssessFk.intAction)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model[0].ActivityAssessFk.intActivity)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model[0].ActivityAssessFk.outputIndicator)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model[0].ActivityAssessFk.baseline)
+                        </th>
+
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                <input type="checkbox" @(item.ApprStatus == 5 ? "checked" : "") name="selectedIds" value="@item.intRegionAssess" />
+                            </td>
+                            <td>
+                                @if (item.ActivityAssessFk != null && item.ActivityAssessFk?.StrategicIntervention != null)
+                                {
+                                    @Html.DisplayFor(modelItem => item.ActivityAssessFk.StrategicIntervention.InterventionName)
+                                }
+                                else
+                                {
+                                    <p>N/A</p>
+                                }
+                            </td>
+                            <td>
+                                @if (item.ActivityAssessFk != null && item.ActivityAssessFk?.StrategicAction != null)
+                                {
+                                    @Html.DisplayFor(modelItem => item.ActivityAssessFk.StrategicAction.actionName)
+                                }
+                                else
+                                {
+                                    <p>N/A</p>
+                                }
+                            </td>
+                            <td>
+                                @if (item.ActivityAssessFk != null && item.ActivityAssessFk?.ActivityFk != null)
+                                {
+                                    @Html.DisplayFor(modelItem => item.ActivityAssessFk.ActivityFk.activityName)
+                                }
+                                else
+                                {
+                                    <p>N/A</p>
+                                }
+                            </td>
+                            <td>
+                                @if (item.ActivityAssessFk != null)
+                                {
+                                    @Html.DisplayFor(modelItem => item.ActivityAssessFk.outputIndicator)
+                                }
+                                else
+                                {
+                                    <p>N/A</p>
+                                }
+                            </td>
+                            <td>
+                                @if (item.ActivityAssessFk != null)
+                                {
+                                    @Html.DisplayFor(modelItem => item.ActivityAssessFk.baseline)
+                                }
+                                else
+                                {
+                                    <p>N/A</p>
+                                }
+                            </td>
+                            <td>
+                                <div class="btn-group" role="group" aria-label="Actions">
+                                    <a asp-action="EditRegionalTarget" asp-route-id="@item.intRegionAssess" class="btn btn-secondary" data-toggle="tooltip" data-placement="top" title="Set Regional Target">
+                                        <i class='bx bxs-edit'></i>
+                                    </a>
+                                    <a asp-action="DeleteRegionalTarget" asp-route-id="@item.intRegionAssess" class="btn btn-warning" data-toggle="tooltip" data-placement="top" title="Delete Regional Target">
+                                        <i class='bx bxs-trash'></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            <div class="col-md-3">
+                <div class="row">
+                    <div class="col-md-6">
+                        <select name="apprStatus" class="w-100 form-control">
+                            <option value="5">Verified</option>
+                            <option value="6">Rejected</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <input type="submit" value="Submit" class="btn btn-primary w-100" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('#selectAll').click(function () {
+                $('input[name="selectedIds"]').prop('checked', this.checked);
+            });
+        });
+    </script>
+}

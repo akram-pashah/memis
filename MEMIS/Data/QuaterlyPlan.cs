@@ -26,5 +26,8 @@ namespace MEMIS.Data
     [ForeignKey("ActivityAssessment")]
     public int? ActivityAssessmentId { get; set; }
     public ActivityAssessment? ActivityAssessment { get; set; }
+    [ForeignKey("ActivityAssessmentRegion")]
+    public int? ActivityAssessmentRegionId { get; set; }
+    public ActivityAssessmentRegion? ActivityAssessmentRegion { get; set; }
   }
 }

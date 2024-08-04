@@ -48,6 +48,38 @@ namespace MEMIS.Controllers.ME
             var appDbContext = await  GetActivityAssestsDetails(5);
             return View( appDbContext);
         }
+        public async Task<IActionResult> RegionalIndex()
+        {
+            var appDbContext = await GetActivityAssestsRegionalDetails(0);
+            return View(appDbContext);
+        }
+        public async Task<IActionResult> RegionalHodVerification()
+        {
+            var appDbContext = await GetActivityAssestsRegionalDetails(0);
+           return View( appDbContext);
+        }
+        public async Task<IActionResult> RegionalVerificationDir()
+        {
+            var appDbContext = await GetActivityAssestsRegionalDetails(1);
+            return View( appDbContext);
+        }
+        public async Task<IActionResult> RegionalConsolidation()
+        {
+            var appDbContext = await GetActivityAssestsRegionalDetails(0);
+            return View( appDbContext);
+        }
+        public async Task<IActionResult> RegionalVerificationBpd()
+        {
+            var appDbContext = await GetActivityAssestsRegionalDetails(3);
+           return View( appDbContext);
+        }
+        public async Task<IActionResult> RegionalApproval()
+        {
+            var appDbContext = await GetActivityAssestsRegionalDetails(5);
+            return View( appDbContext);
+        }
+
+      
         
         private async Task<List<ActivityAssessment>> GetActivityAssestsDetails(int Status)
         {
@@ -95,6 +127,39 @@ namespace MEMIS.Controllers.ME
             }
            return appDbContext;
         }
+
+      
+        private async Task<List<ActivityAssessmentRegion>> GetActivityAssestsRegionalDetails(int Status)
+        {
+            var query = _context.ActivityAssessmentRegion
+              .Include(a => a.ActivityAssessFk)
+                .ThenInclude(x => x.QuaterlyPlans)
+              .Include(x => x.ActivityAssessFk)
+                .ThenInclude(x => x.StrategicIntervention)
+                  .ThenInclude(x => x.StrategicObjective)
+              .Include(x => x.ActivityAssessFk)
+                .ThenInclude(x => x.StrategicAction)
+              .Include(x => x.ActivityAssessFk)
+                .ThenInclude(x => x.ActivityFk)
+                .Where(x => x.ApprStatus == Status)
+              .AsQueryable();
+
+            var appDbContext = await query.ToListAsync();
+
+            if (appDbContext.Count > 0)
+            {
+               foreach (var item in appDbContext)
+               {
+                 // Retrieve QuaterlyPlans for each DeptPlan item
+                 var quaterlyplans = _context.QuaterlyPlans
+                     .Where(x => x.ActivityAssessmentId == item.intRegionAssess)
+                     .ToList();
+
+               }
+            }
+           return appDbContext;
+        }
+
         // GET: ActivityAssessment/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -342,6 +407,40 @@ namespace MEMIS.Controllers.ME
       }
 
       return RedirectToAction(nameof(Index));
+    }
+    
+    public async Task<IActionResult> RegionalVerificationUpdate(List<int> selectedIds, int apprStatus)
+    {
+      if (selectedIds != null && selectedIds.Count > 0 && apprStatus != null && apprStatus != 0)
+      {
+        foreach (int id in selectedIds)
+        {
+          var activityAssessment = _context.ActivityAssessmentRegion.Where(x => x.intRegionAssess == id).FirstOrDefault();
+          if (activityAssessment != null)
+          {
+            activityAssessment.ApprStatus = apprStatus;
+            _context.SaveChanges();
+          }
+        }
+      }
+
+      if(apprStatus == 1 || apprStatus == 2)
+      {
+        return RedirectToAction(nameof(RegionalHodVerification));
+
+      }else if(apprStatus == 3 || apprStatus == 4)
+      {
+        return RedirectToAction(nameof(RegionalVerificationDir));
+      }else if (apprStatus == 5 || apprStatus == 6)
+      {
+        return RedirectToAction(nameof(RegionalVerificationBpd));
+      }
+      else if (apprStatus == 7 || apprStatus == 8)
+      {
+        return RedirectToAction(nameof(RegionalApproval));
+      }
+
+      return RedirectToAction(nameof(RegionalIndex));
     }
     }
 }

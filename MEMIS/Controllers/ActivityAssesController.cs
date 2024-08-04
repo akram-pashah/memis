@@ -244,6 +244,33 @@ namespace MEMIS.Controllers
               await _context.SaveChangesAsync();
             }
           }
+
+          ActivityAssessmentRegion? activityAssessmentRegion = _context.ActivityAssessmentRegion.Where(x => x.intAssess == activityAssessRegion.intAssess).FirstOrDefault();
+          if (activityAssessmentRegion == null)
+          {
+            activityAssessmentRegion = new ActivityAssessmentRegion()
+            {
+              intAssess = activityAssessRegion.intAssess,
+              intRegion = activityAssessRegion.intRegion,
+              budgetAmount = activityAssessRegion.budgetAmount,
+              Quarter = activityAssessRegion.Quarter,
+            };
+            _context.ActivityAssessmentRegion.Add(activityAssessmentRegion);
+          }
+          else
+          {
+            activityAssessmentRegion.intAssess = activityAssessRegion.intAssess;
+            activityAssessmentRegion.intRegion = activityAssessRegion.intRegion;
+            activityAssessmentRegion.budgetAmount = activityAssessRegion.budgetAmount;
+            activityAssessmentRegion.Quarter = activityAssessRegion.Quarter;
+
+            foreach (var item in region.QuaterlyPlans)
+            {
+              item.ActivityAssessmentRegionId = activityAssessmentRegion.intRegionAssess;
+            }
+          }
+
+          _context.SaveChanges();
         }
 
         await _context.SaveChangesAsync();
@@ -1358,7 +1385,7 @@ namespace MEMIS.Controllers
           if (activityAsses != null)
           {
             activityAsses.ApprStatus = apprStatus;
-            if(apprStatus == 9)
+            if (apprStatus == 9)
             {
               ActivityAssessment activityAssessment = new()
               {
@@ -1395,7 +1422,7 @@ namespace MEMIS.Controllers
         }
       }
 
-      if(apprStatus == 1 || apprStatus == 2)
+      if (apprStatus == 1 || apprStatus == 2)
       {
         return RedirectToAction(nameof(ShowConsolidatedDeptPlan));
       }
