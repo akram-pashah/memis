@@ -96,7 +96,7 @@
                     </div>
                     <div class="col">
                         <label asp-for="Q1Budget" class="control-label">Budget</label>
-                        <input id="QBudget" class="form-control" readonly type="number" />
+                        <input id="QBudget" class="form-control"  type="number" />
                         <span asp-validation-for="Q1Budget" class="text-danger"></span>
                     </div>
                     <div class="col">
@@ -233,7 +233,7 @@
             var AmtSpent = $('#QAmtSpent').val();
             var Justification = $('#QJustification').val();
 
-            if (!quarter || !target || !budget) {
+            if (!quarter || !target || !budget || !Actual || !AmtSpent || !Justification) {
                 $('#quarterValidation').text("All fields are required.");
                 return;
             } else {
@@ -241,7 +241,14 @@
             }
 
             var $tableBody = $('#quarterDetailsTable tbody');
-            var index = $tableBody.find('tr').length;
+            var index;
+
+            if ($tableBody.find('tr:first').text().trim() === "No data available in table") {
+                $tableBody.find('tr:first').remove();
+                index = 0;
+            } else {
+                index = $tableBody.find('tr').length;
+            }
 
             var options = '';
             $('#Quarter option').each(function () {
@@ -259,8 +266,8 @@
                                 ${options}
                             </select>
                         </td>
-                        <td><input name="QuaterlyPlans[${index}].QTarget" value="${target}" readonly class="form-control" readonly  /></td>
-                        <td><input name="QuaterlyPlans[${index}].QBudget" value="${budget}" readonly class="form-control" readonly /></td>
+                        <td><input name="QuaterlyPlans[${index}].QTarget" value="${target}" readonly class="form-control"  /></td>
+                        <td><input name="QuaterlyPlans[${index}].QBudget" value="${budget}" readonly class="form-control"  /></td>
                         <td><input name="QuaterlyPlans[${index}].QActual" value="${Actual}" readonly class="form-control"  /></td>
                         <td><input name="QuaterlyPlans[${index}].QAmtSpent" value="${AmtSpent}" readonly class="form-control"  /></td>
                         <td><input name="QuaterlyPlans[${index}].QJustification" value="${Justification}" readonly class="form-control" /></td>
@@ -311,15 +318,6 @@
             });
         }
 
-        function SetBudgetValue() {
-            var target = $('#QTarget').val();
-            var unitCost = $('#unitCost').val();
-
-            if (target != null && unitCost != null) {
-                var budVal = target * unitCost;
-                $('#QBudget').val(budVal);
-            }
-        }
     </script>
     @*@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}*@
 }

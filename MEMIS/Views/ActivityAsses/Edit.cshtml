@@ -228,25 +228,20 @@
 
     function removeQuarterDetails(button) {
         $(button).closest('tr').remove();
+        updateRowIndexes();
+    }
+
+    function updateRowIndexes() {
+        $('#quarterDetailsTable tbody tr').each(function (index, row) {
+            $(row).find('select, input').each(function () {
+                var name = $(this).attr('name');
+                if (name) {
+                    var newName = name.replace(/\[\d+\]/, `[${index}]`);
+                    $(this).attr('name', newName);
+                }
+            });
+        });
     }
 
 
-    function updateQBbudget(input) {
-        var $row = $(input).closest('tr');
-        var qTarget = parseFloat($(input).val());
-        var unitCost = parseFloat($('#unitCost').val());
-        if (!isNaN(qTarget) && !isNaN(unitCost)) {
-            var qBudget = qTarget * unitCost;
-            $row.find('input[name$=".QBudget"]').val(qBudget); // Update QBudget input
-        }
-    }
-    function SetBudgetValue() {
-        var target = $('#QTarget').val();
-        var budgetAmount = $('#budgetAmount').val();
-
-        if (target != null && budgetAmount != null) {
-            var budVal = target * budgetAmount;
-            $('#QBudget').val(budVal);
-        }
-    }
 </script>
