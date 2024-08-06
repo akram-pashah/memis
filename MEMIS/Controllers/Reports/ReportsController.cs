@@ -108,6 +108,78 @@ namespace MEMIS.Controllers.Reports
       }
     }
 
+    //, string? quarter
+    public async Task<IActionResult> ActivityImplementationStatus(Guid? selectedDeptId)
+    {
+      try
+      {
+        ViewBag.Departments = new SelectList(await _context.Departments.ToListAsync(), "intDept", "deptName", selectedDeptId);
+
+        var list = _context.ActivityAssessment.Include(m => m.ImplementationStatus)
+          .Include(m => m.QuaterlyPlans)
+          .ThenInclude(x => x.ActivityAssess)
+          .ThenInclude(m => m.DepartmentFk).AsQueryable();
+
+        if (selectedDeptId.HasValue)
+        {
+          list = list.Where(a => a.QuaterlyPlans.Any() && a.QuaterlyPlans.FirstOrDefault().ActivityAssess != null && a.QuaterlyPlans.FirstOrDefault().ActivityAssess.DepartmentFk != null && a.QuaterlyPlans.FirstOrDefault().ActivityAssess.DepartmentFk.intDept == selectedDeptId.Value);
+        }
+        //if (!string.IsNullOrEmpty(quarter))
+        //{
+        //  list = list.Where(x => x.QuaterlyPlans.Where(x => x.Quarter == quarter).Any());
+        //}
+
+        ViewData["SelectedDeptId"] = selectedDeptId;
+        //ViewData["SelectedQuarter"] = quarter;
+
+        return View(await list.ToListAsync());
+      }
+      catch (Exception ex)
+      {
+
+        throw;
+      }
+    }
+
+    [HttpGet]
+    public IActionResult GetActivityImplementationDetails(int id)
+    {
+      var activityAssess = _context.ActivityAssess.Include(m => m.StrategicAction).Include(m => m.StrategicIntervention).ThenInclude(x => x.StrategicObjective).Include(m => m.ActivityFk).Include(x => x.QuaterlyPlans).Include(x => x.DepartmentFk).FirstOrDefault(x => x.intAssess == id);
+      if (activityAssess == null)
+      {
+        return NotFound();
+      }
+
+      return PartialView("_ActivityAssessDetails", activityAssess);
+    }
+    public async Task<IActionResult> ActivityImplementationStatusExportToExcel(Guid? selectedDeptId, string? quarter)
+    {
+      try
+      {
+        var list = _context.ActivityAssess.Include(m => m.StrategicAction).Include(m => m.StrategicIntervention).ThenInclude(x => x.StrategicObjective).Include(m => m.ActivityFk).Include(x => x.QuaterlyPlans).AsQueryable();
+
+        if (selectedDeptId.HasValue)
+        {
+          list = list.Where(a => a.intDept == selectedDeptId.Value);
+        }
+        if (!string.IsNullOrEmpty(quarter))
+        {
+          list = list.Where(x => x.QuaterlyPlans.Where(x => x.Quarter == quarter).Any());
+        }
+
+        var stream = ExportHandler.AnnualDetailedResultsFrameworkReport(await list.ToListAsync());
+        stream.Position = 0;
+        return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Annual Detailed Results Framework.xlsx");
+      }
+      catch (Exception ex)
+      {
+
+        throw;
+      }
+    }
+
+
+
     public async Task<IActionResult> MandEIndex()
     {
 

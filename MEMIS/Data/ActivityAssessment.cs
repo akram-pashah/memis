@@ -83,6 +83,5 @@ namespace MEMIS.Data
         public string? AnnualJustification { get; set; }
         public virtual List<QuaterlyPlan> QuaterlyPlans { get; set; }
         public long? ActivityAssesmentStatus { get; set; } = 0;
-
     }
 }

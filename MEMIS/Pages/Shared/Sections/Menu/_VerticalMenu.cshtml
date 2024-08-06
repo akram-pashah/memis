@@ -207,9 +207,25 @@
 
                 <li class='menu-item@(currentPage.StartsWith("/ActivityAssessment") ? " active open" : "")'>
                     <a href="javascript:void(0);" class="menu-link menu-toggle">
-                        <div>Department Assessment</div>
+                        <div>Activity Assessment</div>
                     </a>
                     <ul class="menu-sub">
+                    @if (User.IsInRole("M&E Coordinator") || User.IsInRole("SuperAdmin"))
+                    {
+                        <li class='menu-item@(currentPage == "/ActivityAssessment/RegionalIndex" ? " active" : "")'>
+                            <a asp-controller="ActivityAssessment" asp-action="RegionalIndex" class="menu-link">
+                                <div>Regional Assessment</div>
+                            </a>
+                        </li>
+                    }
+                    @if (User.IsInRole("Head of Department") || User.IsInRole("SuperAdmin"))
+                    {
+                        <li class='menu-item@(currentPage == "/ActivityAssessment/RegionalHodVerification" ? " active" : "")'>
+                            <a asp-controller="ActivityAssessment" asp-action="RegionalHodVerification" class="menu-link">
+                                <div>Assessment Verification by Head of Region</div>
+                            </a>
+                        </li>
+                    }
                         @if (User.IsInRole("M&E Coordinator") || User.IsInRole("SuperAdmin"))
                         {
                             <li class='menu-item@(currentPage == "/ActivityAssessment/Index" ? " active" : "")'>
