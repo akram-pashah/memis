@@ -31,6 +31,8 @@ namespace MEMIS.Data
     public double? QRegJustification { get; set; }
     [Display(Name = "Appral Status")]
     public int? ApprStatus { get; set; } = 0;
+    [Display(Name = "Financial Year")]
+    public int Fyear = DateTime.Now.Year;
 
   }
 }

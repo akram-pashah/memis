@@ -1,5 +1,6 @@
 using ClosedXML.Excel;
 using MEMIS.Data;
+using MEMIS.Models.Report;
 
 namespace MEMIS.Helpers.ExcelReports
 {
@@ -256,6 +257,168 @@ namespace MEMIS.Helpers.ExcelReports
         throw;
       }
     }
+
+    public static MemoryStream ActivityImplementationStatusExport(List<ActivityAssessment> activityAssesses)
+    {
+      try
+      {
+        var workbook = new XLWorkbook();
+        IXLWorksheet worksheet = workbook.Worksheets.Add("Activity Implementation Status");
+
+        // Setting the header row
+        //worksheet.Cell(1, 1).Value = "Strategic Objective";
+        //worksheet.Cell(1, 2).Value = "Strategic Intervention";
+        //worksheet.Cell(1, 3).Value = "Strategic Actions";
+        //worksheet.Cell(1, 4).Value = "Activities/Initiatives";
+        //worksheet.Cell(1, 5).Value = "Output Indicators";
+        //worksheet.Cell(1, 6).Value = "Baseline";
+        //worksheet.Cell(1, 7).Value = "Annual Target";
+        //worksheet.Cell(1, 8).Value = "Budget Code";
+        //worksheet.Cell(1, 9).Value = "Amount Allocated";
+        //worksheet.Cell(1, 10).Value = "Quarter 1";
+        //worksheet.Cell(1, 11).Value = "Quarter 2";
+        //worksheet.Cell(1, 12).Value = "Quarter 3";
+        //worksheet.Cell(1, 13).Value = "Quarter 4";
+        //worksheet.Cell(1, 14).Value = "Implementation Status";
+        //worksheet.Cell(1, 15).Value = "Responsible Party";
+        worksheet.Cell(1, 1).Value = "Strategic Intervention";
+        worksheet.Cell(1, 2).Value = "Strategic Action";
+        worksheet.Cell(1, 3).Value = "Activities/Initiatives";
+        worksheet.Cell(1, 4).Value = "Implementation Status";
+        worksheet.Cell(1, 5).Value = "Department";
+
+        // Style the headers
+        var headerRange = worksheet.Range("A1:E1");
+        headerRange.Style.Fill.BackgroundColor = XLColor.FromHtml("#063241");
+        headerRange.Style.Font.Bold = true;
+        headerRange.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+        headerRange.Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
+
+        // Auto fit columns to content
+        worksheet.Columns().AdjustToContents();
+        AdjustColumnWidths(worksheet, 25, 65);
+
+        int row = 2;
+        foreach (var activityAssess in activityAssesses)
+        {
+          worksheet.Cell(row, 1).Value = activityAssess?.strategicIntervention;
+          worksheet.Cell(row, 2).Value = activityAssess?.StrategicAction;
+          worksheet.Cell(row, 3).Value = activityAssess?.activity;
+          worksheet.Cell(row, 4).Value = activityAssess?.ImplementationStatus?.ImpStatusName;
+          worksheet.Cell(row, 5).Value = activityAssess?.QuaterlyPlans?.FirstOrDefault()?.ActivityAssess?.DepartmentFk?.deptName;
+
+          row++;
+        }
+
+        var tableRange = worksheet.Range(1, 1, row - 1, 5);
+        var table = tableRange.CreateTable();
+        tableRange.Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
+        tableRange.Style.Border.InsideBorder = XLBorderStyleValues.Thin;
+        table.ShowAutoFilter = true;
+        table.AutoFilter.IsEnabled = true;
+        table.AutoFilter.Sort(1, XLSortOrder.Ascending);
+
+        // Save the workbook to a memory stream
+        var stream = new MemoryStream();
+        workbook.SaveAs(stream);
+        stream.Position = 0;
+        return stream;
+      }
+      catch (Exception ex)
+      {
+        throw;
+      }
+    }
+
+    public static MemoryStream StrategicPlanActivityImplementationTrackerExport(List<StrategicObjectiveReport> activityAssesses)
+    {
+      try
+      {
+        var workbook = new XLWorkbook();
+        IXLWorksheet worksheet = workbook.Worksheets.Add("Strategic Plan Activity Tracker");
+
+        // Setting the header row
+        //worksheet.Cell(1, 1).Value = "Strategic Objective";
+        //worksheet.Cell(1, 2).Value = "Strategic Intervention";
+        //worksheet.Cell(1, 3).Value = "Strategic Actions";
+        //worksheet.Cell(1, 4).Value = "Activities/Initiatives";
+        //worksheet.Cell(1, 5).Value = "Output Indicators";
+        //worksheet.Cell(1, 6).Value = "Baseline";
+        //worksheet.Cell(1, 7).Value = "Annual Target";
+        //worksheet.Cell(1, 8).Value = "Budget Code";
+        //worksheet.Cell(1, 9).Value = "Amount Allocated";
+        //worksheet.Cell(1, 10).Value = "Quarter 1";
+        //worksheet.Cell(1, 11).Value = "Quarter 2";
+        //worksheet.Cell(1, 12).Value = "Quarter 3";
+        //worksheet.Cell(1, 13).Value = "Quarter 4";
+        //worksheet.Cell(1, 14).Value = "Implementation Status";
+        //worksheet.Cell(1, 15).Value = "Responsible Party";
+        worksheet.Cell(1, 1).Value = "Strategic Objectives";
+        worksheet.Cell(1, 2).Value = "Strategic Interventions";
+        worksheet.Cell(1, 3).Value = "Strategic Actions";
+        worksheet.Cell(1, 4).Value = "FY1";
+        worksheet.Cell(1, 5).Value = "FY2";
+        worksheet.Cell(1, 6).Value = "FY3";
+        worksheet.Cell(1, 7).Value = "FY4";
+        worksheet.Cell(1, 8).Value = "FY5";
+        worksheet.Cell(1, 9).Value = "Cumulative Overall Performance on Strategic Intervention";
+        worksheet.Cell(1, 10).Value = "Cumulative Overall Performance on Strategic Objective 1";
+
+        // Style the headers
+        var headerRange = worksheet.Range("A1:J1");
+        headerRange.Style.Fill.BackgroundColor = XLColor.FromHtml("#063241");
+        headerRange.Style.Font.Bold = true;
+        headerRange.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+        headerRange.Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
+
+        // Auto fit columns to content
+        worksheet.Columns().AdjustToContents();
+        AdjustColumnWidths(worksheet, 25, 65);
+
+        int row = 2;
+        foreach (var objective in activityAssesses)
+        {
+          worksheet.Cell(row, 1).Value = objective.StrategicObjective;
+
+          foreach(var intervention in objective.StrategicInterventions)
+          {
+            worksheet.Cell(row, 2).Value = intervention.StrategicIntervention;
+            foreach(var action in intervention.StrategicActions)
+            {
+              worksheet.Cell(row, 3).Value = action.StrategicAction;
+              worksheet.Cell(row, 4).Value = action.FiscalYearData[0];
+              worksheet.Cell(row, 5).Value = action.FiscalYearData[1];
+              worksheet.Cell(row, 6).Value = action.FiscalYearData[2];
+              worksheet.Cell(row, 7).Value = action.FiscalYearData[3];
+              worksheet.Cell(row, 8).Value = action.FiscalYearData[4];
+              row++;
+            }
+            worksheet.Cell(row, 9).Value = Math.Round(intervention.AverageFiscalYearData.Average(), 2);
+          }
+          worksheet.Cell(row, 10).Value = Math.Round(objective.AverageFiscalYearData.Average(), 2);
+          row++;
+        }
+
+        var tableRange = worksheet.Range(1, 1, row - 1, 10);
+        var table = tableRange.CreateTable();
+        tableRange.Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
+        tableRange.Style.Border.InsideBorder = XLBorderStyleValues.Thin;
+        table.ShowAutoFilter = true;
+        table.AutoFilter.IsEnabled = true;
+        table.AutoFilter.Sort(1, XLSortOrder.Ascending);
+
+        // Save the workbook to a memory stream
+        var stream = new MemoryStream();
+        workbook.SaveAs(stream);
+        stream.Position = 0;
+        return stream;
+      }
+      catch (Exception ex)
+      {
+        throw;
+      }
+    }
+
     public static MemoryStream SDTQuarterlyPerformanceReport(List<SDTAssessment> assessments)
     {
       try

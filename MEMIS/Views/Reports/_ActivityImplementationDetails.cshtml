@@ -1,0 +1,101 @@
+@model MEMIS.Data.ActivityAssessment
+
+<h5>Details</h5>
+<dl class="row">
+    <dt class="col-sm-2">
+        Strategic Objective:
+    </dt>
+    <dd class="col-sm-10">
+        @Model.strategicObjective
+    </dd>
+    <dt class="col-sm-2">
+        Strategic Intervention:
+    </dt>
+    <dd class="col-sm-10">
+        @Model.strategicIntervention
+    </dd>
+    <dt class="col-sm-2">
+        Strategic Action:
+    </dt>
+    <dd class="col-sm-10">
+        @Model.StrategicAction
+    </dd>
+    <dt class="col-sm-2">
+        Activities/Initiatives:
+    </dt>
+    <dd class="col-sm-10">
+        @Model.activity
+    </dd>
+    <dt class="col-sm-2">
+        Output Indicators:
+    </dt>
+    <dd class="col-sm-10">
+        @Model.outputIndicator
+    </dd>
+    <dt class="col-sm-2">
+        Baseline:
+    </dt>
+    <dd class="col-sm-10">
+        @Model.baseline
+    </dd>
+    <dt class="col-sm-2">
+        Annual Target:
+    </dt>
+    <dd class="col-sm-10">
+        @Model.QuaterlyPlans?.Sum(x => x.QTarget)
+    </dd>
+    <dt class="col-sm-2">
+        Budget Code:
+    </dt>
+    <dd class="col-sm-10">
+        @Model.budgetCode
+    </dd>
+    <dt class="col-sm-2">
+        Amount Allocated:
+    </dt>
+    <dd class="col-sm-10">
+        @Model.budgetAmount
+    </dd>
+    <dt class="col-sm-2">
+        Implementation Status:
+    </dt>
+    <dd class="col-sm-10">
+        @Model.ImplementationStatus?.ImpStatusName
+    </dd>
+    <dt class="col-sm-2">
+        Department:
+    </dt>
+    <dd class="col-sm-10">
+        @Model.QuaterlyPlans?.FirstOrDefault()?.ActivityAssess?.DepartmentFk?.deptName
+    </dd>
+</dl>
+
+<h5>Quarterly Plans</h5>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Quarter</th>
+            <th>Target</th>
+            <th>Budget</th>
+            <th>Actual</th>
+            <th>Amount Spent</th>
+            <th>Justification</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.QuaterlyPlans != null)
+        {
+            foreach (var plan in Model.QuaterlyPlans)
+            {
+                <tr>
+                    <td>@plan.Quarter</td>
+                    <td>@plan.QTarget</td>
+                    <td>@plan.QBudget</td>
+                    <td>@plan.QActual</td>
+                    <td>@plan.QAmtSpent</td>
+                    <td>@plan.QJustification</td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>

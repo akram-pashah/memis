@@ -1,5 +1,6 @@
 using MEMIS.Data;
 using MEMIS.Helpers.ExcelReports;
+using MEMIS.Models.Report;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -144,32 +145,32 @@ namespace MEMIS.Controllers.Reports
     [HttpGet]
     public IActionResult GetActivityImplementationDetails(int id)
     {
-      var activityAssess = _context.ActivityAssess.Include(m => m.StrategicAction).Include(m => m.StrategicIntervention).ThenInclude(x => x.StrategicObjective).Include(m => m.ActivityFk).Include(x => x.QuaterlyPlans).Include(x => x.DepartmentFk).FirstOrDefault(x => x.intAssess == id);
+      var activityAssess = _context.ActivityAssessment.Include(x => x.QuaterlyPlans).ThenInclude(x => x.ActivityAssess).ThenInclude(x => x.DepartmentFk).FirstOrDefault(x => x.intDeptPlan == id);
       if (activityAssess == null)
       {
         return NotFound();
       }
 
-      return PartialView("_ActivityAssessDetails", activityAssess);
+      return PartialView("_ActivityImplementationDetails", activityAssess);
     }
     public async Task<IActionResult> ActivityImplementationStatusExportToExcel(Guid? selectedDeptId, string? quarter)
     {
       try
       {
-        var list = _context.ActivityAssess.Include(m => m.StrategicAction).Include(m => m.StrategicIntervention).ThenInclude(x => x.StrategicObjective).Include(m => m.ActivityFk).Include(x => x.QuaterlyPlans).AsQueryable();
+        var list = _context.ActivityAssessment.Include(x => x.QuaterlyPlans).ThenInclude(x => x.ActivityAssess).ThenInclude(x => x.DepartmentFk).AsQueryable();
 
         if (selectedDeptId.HasValue)
         {
-          list = list.Where(a => a.intDept == selectedDeptId.Value);
+          list = list.Where(a => a.QuaterlyPlans.Any() && a.QuaterlyPlans.FirstOrDefault().ActivityAssess.intDept == selectedDeptId.Value);
         }
         if (!string.IsNullOrEmpty(quarter))
         {
           list = list.Where(x => x.QuaterlyPlans.Where(x => x.Quarter == quarter).Any());
         }
 
-        var stream = ExportHandler.AnnualDetailedResultsFrameworkReport(await list.ToListAsync());
+        var stream = ExportHandler.ActivityImplementationStatusExport(await list.ToListAsync());
         stream.Position = 0;
-        return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Annual Detailed Results Framework.xlsx");
+        return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Activity Implementation Status Report.xlsx");
       }
       catch (Exception ex)
       {
@@ -178,6 +179,120 @@ namespace MEMIS.Controllers.Reports
       }
     }
 
+    public async Task<IActionResult> StrategicPlanActivityImplementationTracker()
+    {
+      try
+      {
+        List<StrategicObjectiveReport> list = await GetStrategicPlanReportAsync();
+
+        return View(list);
+      }
+      catch (Exception ex)
+      {
+
+        throw;
+      }
+    }
+
+    [HttpGet]
+    public IActionResult GetStrategicPlanActivityImplementationTrackerDetails(int id)
+    {
+      var activityAssess = _context.ActivityAssessment.Include(x => x.QuaterlyPlans).ThenInclude(x => x.ActivityAssess).ThenInclude(x => x.DepartmentFk).FirstOrDefault(x => x.intDeptPlan == id);
+      if (activityAssess == null)
+      {
+        return NotFound();
+      }
+
+      return PartialView("_ActivityImplementationDetails", activityAssess);
+    }
+    public async Task<IActionResult> StrategicPlanActivityImplementationTrackerExportToExcel(Guid? selectedDeptId, string? quarter)
+    {
+      try
+      {
+        List<StrategicObjectiveReport> list = await GetStrategicPlanReportAsync();
+
+        var stream = ExportHandler.StrategicPlanActivityImplementationTrackerExport(list);
+        stream.Position = 0;
+        return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Activity Implementation Tracker.xlsx");
+      }
+      catch (Exception ex)
+      {
+
+        throw;
+      }
+    }
+
+    public async Task<List<StrategicObjectiveReport>> GetStrategicPlanReportAsync()
+    {
+      var currentYear = DateTime.Now.Year;
+      var years = new[] { currentYear, currentYear - 1, currentYear - 2, currentYear - 3, currentYear - 4 };
+
+      var data = await _context.ActivityAssessment
+          .Include(a => a.ImplementationStatus)
+          .ToListAsync();
+
+      if (data == null || !data.Any())
+      {
+        return new List<StrategicObjectiveReport>(); // Return an empty list if no data is found
+      }
+
+      //var groupedData = await _context.ActivityAssessment
+      //      .Include(a => a.ImplementationStatus)
+      //      .GroupBy(a => a.strategicObjective)
+      //      .ToDictionaryAsync(
+      //          g => g.Key,
+      //          g => g
+      //              .GroupBy(a => a.strategicIntervention)
+      //              .ToDictionary(
+      //                  ig => ig.Key,
+      //                  ig => ig
+      //                      .GroupBy(a => a.StrategicAction)
+      //                      .ToDictionary(
+      //                          ag => ag.Key,
+      //                          ag => new double[]
+      //                          {
+      //                              CalculateAverageImplementationStatus(ag, years[0]),
+      //                              CalculateAverageImplementationStatus(ag, years[1]),
+      //                              CalculateAverageImplementationStatus(ag, years[2]),
+      //                              CalculateAverageImplementationStatus(ag, years[3]),
+      //                              CalculateAverageImplementationStatus(ag, years[4])
+      //                          }
+      //                      )
+      //              )
+      //      );
+
+      var report = data
+          .GroupBy(a => a.strategicObjective)
+          .Select(g => new StrategicObjectiveReport
+          {
+            StrategicObjective = g.Key,
+            StrategicInterventions = g
+                  .GroupBy(a => a.strategicIntervention)
+                  .Select(ig => new StrategicInterventionReport
+                  {
+                    StrategicIntervention = ig.Key,
+                    StrategicActions = ig
+                          .GroupBy(a => a.StrategicAction)
+                          .Select(ag => new StrategicActionReport
+                          {
+                            StrategicAction = ag.Key,
+                            FiscalYearData = years.Select(year => CalculateAverageImplementationStatus(ag, year)).ToArray()
+                          }).ToList()
+                  }).ToList()
+          }).ToList();
+
+      return report;
+    }
+
+    private double CalculateAverageImplementationStatus(IEnumerable<ActivityAssessment> assessments, int year)
+    {
+      var filteredAssessments = assessments.Where(a => a.Fyear == year);
+      if (!filteredAssessments.Any())
+      {
+        return 0;
+      }
+      return filteredAssessments.Average(a => a.ImplementationStatus.ImpStatusName == "Fully Implemented" ? 1 : 0);
+    }
 
 
     public async Task<IActionResult> MandEIndex()

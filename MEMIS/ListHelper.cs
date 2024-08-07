@@ -379,6 +379,22 @@ namespace MEMIS
       return results;
     }
 
+    public static string GetFiscalYearBackgroundColor(double value) =>
+    value switch
+    {
+      < 0.67 => "red",
+      < 0.9 => "yellow",
+      _ => "lightgreen"
+    };
+
+    public static string GetFiscalYearColor(double value) =>
+    value switch
+    {
+      < 0.67 => "white",
+      < 0.9 => "black",
+      _ => "black"
+    };
+
   }
   public enum EnumProductClassification
   {
