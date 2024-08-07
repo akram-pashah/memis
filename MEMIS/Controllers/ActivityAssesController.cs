@@ -177,7 +177,26 @@ namespace MEMIS.Controllers
           await _context.SaveChangesAsync();
 
         }
-        return RedirectToAction(nameof(EditRegionalTarget), new { Id = region.intRegionAssess });
+        return RedirectToAction(nameof(EditRegionalTarget), new { Id = region?.intRegionAssess });
+      }
+      catch (Exception ex)
+      {
+        return StatusCode(500, ex.Message);
+      }
+    }
+    public async Task<IActionResult> MnERegionalTarget(int id)
+    { 
+      try
+      {
+        ActivityAssessmentRegion? region = _context.ActivityAssessmentRegion?.Include(x => x.ActivityAssessFk).Where(x => x.intAssess == id).FirstOrDefault();
+        if (region != null)
+        {
+          _context.ActivityAssessmentRegion?.Update(region);
+
+          await _context.SaveChangesAsync();
+
+        }
+        return RedirectToAction(nameof(EditRegionalTarget), new { Id = region?.intRegionAssess });
       }
       catch (Exception ex)
       {

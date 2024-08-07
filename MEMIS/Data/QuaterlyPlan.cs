@@ -13,6 +13,7 @@ namespace MEMIS.Data
     public double? QBudget { get; set; }
     public double? QActual { get; set; }
     public double? QAmtSpent { get; set; }
+    public string? QAchievement { get; set; }
     public string? QJustification { get; set; }
 
     [ForeignKey("ActivityAssess")]

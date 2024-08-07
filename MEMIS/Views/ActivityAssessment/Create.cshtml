@@ -316,15 +316,7 @@
             });
         }
 
-        function SetBudgetValue() {
-            var target = $('#QTarget').val();
-            var unitCost = $('#unitCost').val();
-
-            if (target != null && unitCost != null) {
-                var budVal = target * unitCost;
-                $('#QBudget').val(budVal);
-            }
-        }
+       
     </script>
     @*@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}*@
 }
