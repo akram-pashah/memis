@@ -321,6 +321,8 @@ namespace MEMIS.Controllers.ME
     {
       ViewData["ImpStatusId"] = new SelectList(_context.ImplementationStatus, "ImpStatusId", "ImpStatusName");
       ActivityAssessment activityAssessment = new ActivityAssessment();
+      activityAssessment.QuaterlyPlans = new List<QuaterlyPlan>();
+      ViewData["Quarter"] = ListHelper.Quarter();
       return View(activityAssessment);
     }
 
@@ -333,7 +335,9 @@ namespace MEMIS.Controllers.ME
     {
       if (ModelState.IsValid)
       {
+        Guid departmentId = Guid.Parse(HttpContext.Session.GetString("Department"));
         _context.Add(activityAssessment);
+        activityAssessment.intDept = departmentId;
         await _context.SaveChangesAsync();
         if (activityAssessment.QuaterlyPlans.Count > 0)
         {
@@ -357,6 +361,7 @@ namespace MEMIS.Controllers.ME
         return RedirectToAction(nameof(Index));
       }
       ViewData["ImpStatusId"] = new SelectList(_context.ImplementationStatus, "ImpStatusId", "ImpStatusName", activityAssessment.ImpStatusId);
+      //ViewBag.Quarter = ListHelper.Quarter();
       return View(activityAssessment);
     }
 

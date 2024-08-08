@@ -80,6 +80,10 @@ namespace MEMIS.Data
     public virtual ImplementationStatus? ImplementationStatus { get; set; }
     [Display(Name = "Financial Year")]
     public int Fyear = DateTime.Now.Year;
+    [Display(Name = "Responsible Party")]
+    public virtual Guid? intDept { get; set; }
+    [ForeignKey("intDept")]
+    public virtual Department? DepartmentFk { get; set; }
 
     [Display(Name = "Justification")]
     public string? AnnualJustification { get; set; }

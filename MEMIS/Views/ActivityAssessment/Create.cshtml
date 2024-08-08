@@ -81,11 +81,11 @@
                 <span asp-validation-for="budgetAmount" class="text-danger"></span>
             </div>
             <br />
-            <div class="form-group">
+           @*  <div class="form-group">
                 <label asp-for="Q1Target" class="control-label"></label>
                 <input asp-for="Q1Target" type="number" class="form-control" />
                 <span asp-validation-for="Q1Target" class="text-danger"></span>
-            </div>
+            </div> *@
             <br />
             <div class="form-group">
                 <div class="input-group">
@@ -96,12 +96,12 @@
                     </div>
                     <div class="col">
                         <label asp-for="Q1Target" class="control-label">Target</label>
-                        <input id="QTarget" onchange="SetBudgetValue()" class="form-control" type="number" />
+                        <input id="QTarget" class="form-control" type="number" />
                         <span asp-validation-for="Q1Target" class="text-danger"></span>
                     </div>
                     <div class="col">
                         <label asp-for="Q1Budget" class="control-label">Budget</label>
-                        <input id="QBudget" class="form-control" readonly type="number" />
+                        <input id="QBudget" class="form-control" type="number" />
                         <span asp-validation-for="Q1Budget" class="text-danger"></span>
                     </div>
                     <div class="col">
@@ -161,16 +161,19 @@
                                                     <select asp-for="QuaterlyPlans[i].Quarter" class="form-control" asp-items="ViewBag.Quarter"></select>
                                                 </td>
                                                 <td>
-                                                    <input asp-for="QuaterlyPlans[i].QTarget" class="form-control" onchange="updateQBbudget(this)" />
+                                                    <input asp-for="QuaterlyPlans[i].QTarget" class="form-control" />
                                                 </td>
                                                 <td>
-                                                    <input asp-for="QuaterlyPlans[i].QBudget" readonly class="form-control" name="QuaterlyPlans[@i].QBudget" />
+                                                    <input asp-for="QuaterlyPlans[i].QBudget" class="form-control" name="QuaterlyPlans[@i].QBudget" />
                                                 </td>
                                                 <td>
                                                     <input asp-for="QuaterlyPlans[i].QActual" class="form-control" />
                                                 </td>
                                                 <td>
                                                     <input asp-for="QuaterlyPlans[i].QAmtSpent" class="form-control" />
+                                                </td>
+                                                <td>
+                                                    <input asp-for="QuaterlyPlans[i].QAchievement" class="form-control" />
                                                 </td>
                                                 <td>
                                                     <input asp-for="QuaterlyPlans[i].QJustification" class="form-control" />
@@ -264,11 +267,11 @@
                                         ${options}
                                     </select>
                                 </td>
-                                <td><input name="QuaterlyPlans[${index}].QTarget" value="${target}" readonly class="form-control" readonly  /></td>
-                                <td><input name="QuaterlyPlans[${index}].QBudget" value="${budget}" readonly class="form-control" readonly /></td>
-                                <td><input name="QuaterlyPlans[${index}].QActual" value="${Actual}" readonly class="form-control"  /></td>
-                                <td><input name="QuaterlyPlans[${index}].QAmtSpent" value="${AmtSpent}" readonly class="form-control"  /></td>
-                                <td><input name="QuaterlyPlans[${index}].QJustification" value="${Justification}" readonly class="form-control" /></td>
+                                <td><input name="QuaterlyPlans[${index}].QTarget" value="${target}" class="form-control"  /></td>
+                                <td><input name="QuaterlyPlans[${index}].QBudget" value="${budget}" class="form-control" /></td>
+                                <td><input name="QuaterlyPlans[${index}].QActual" value="${Actual}" class="form-control"  /></td>
+                                <td><input name="QuaterlyPlans[${index}].QAmtSpent" value="${AmtSpent}" class="form-control"  /></td>
+                                <td><input name="QuaterlyPlans[${index}].QJustification" value="${Justification}" class="form-control" /></td>
                                 <td>
                                     <button type="button" class="btn btn-danger delete-btn" onclick="removeQuarterDetails(this)" data-toggle="tooltip" data-placement="top" title="Delete">
                                         <i class="bx bx-message-square-x"></i>
