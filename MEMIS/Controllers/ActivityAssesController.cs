@@ -185,7 +185,7 @@ namespace MEMIS.Controllers
       }
     }
     public async Task<IActionResult> MnERegionalTarget(int id)
-    { 
+    {
       try
       {
         ActivityAssessmentRegion? region = _context.ActivityAssessmentRegion?.Include(x => x.ActivityAssessFk).Where(x => x.intAssess == id).FirstOrDefault();
@@ -1403,6 +1403,7 @@ namespace MEMIS.Controllers
 
           if (activityAsses != null)
           {
+            Guid departmentId = Guid.Parse(HttpContext.Session.GetString("Department"));
             activityAsses.ApprStatus = apprStatus;
             if (apprStatus == 9)
             {
@@ -1418,6 +1419,7 @@ namespace MEMIS.Controllers
                 comparativeTarget = activityAsses?.comparativeTarget,
                 justification = activityAsses?.justification,
                 budgetAmount = activityAsses?.budgetAmount,
+                intDept = departmentId,
               };
 
               _context.Add(activityAssessment);

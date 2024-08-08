@@ -20,21 +20,18 @@
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                     <input type="hidden" asp-for="intDeptPlan" />
                     <div class="form-group">
-                        <label asp-for="strategicObjective" class="control-label">Strategic Objective</label>
-                        <input asp-for="strategicObjective" class="form-control" />
-                        <span asp-validation-for="strategicObjective" class="text-danger"></span>
-                    </div>
-                    <br />
-                    <div class="form-group">
                         <label asp-for="strategicIntervention" class="control-label"></label>
-                        <input asp-for="strategicIntervention" class="form-control" />
-                        <span asp-validation-for="strategicIntervention" class="text-danger"></span>
+                        @Html.DropDownList("intIntervention", new SelectList(ViewBag.StrategicIntervention, "intIntervention", "InterventionName"), new { @class = "form-control form-select", @required = "required" })
                     </div>
                     <br />
                     <div class="form-group">
                         <label asp-for="StrategicAction" class="control-label"></label>
-                        <input asp-for="StrategicAction" class="form-control" />
-                        <span asp-validation-for="StrategicAction" class="text-danger"></span>
+                        @Html.DropDownList("StrategicObjective", new SelectList(ViewBag.StrategicAction, "intAction", "actionName"), new { @class = "form-control form-select", @required = "required" })
+                    </div>
+                    <br />
+                    <div class="form-group">
+                        <label asp-for="strategicObjective" class="control-label"></label>
+                        @Html.DropDownList("StrategicObjective", new SelectList(ViewBag.Activity, "intActivity", "activityName"), new { @class = "form-control form-select", @required = "required" })
                     </div>
                     <br />
                     <div class="form-group">
@@ -101,6 +98,9 @@
                             <div class="col">
                                 <input id="QAmtSpent" class="form-control" type="number" />
                                 <span asp-validation-for="Q1AmtSpent" class="text-danger"></span>
+                            </div>
+                            <div class="col">
+                                <input id="QAchievement" class="form-control" type="number" />
                             </div>
                             <div class="col">
                                 <input id="QJustification" class="form-control" />
@@ -230,8 +230,9 @@
             var Actual = $('#QActual').val();
             var AmtSpent = $('#QAmtSpent').val();
             var Justification = $('#QJustification').val();
+            var Achievement = $('#QAchievement').val();
 
-            if (!quarter || !target || !budget || !Actual || !AmtSpent || !Justification) {
+            if (!quarter || !target || !budget || !Actual || !AmtSpent || !Justification || !Achievement) {
                 $('#quarterValidation').text("All fields are required.");
                 return;
             } else {
@@ -267,6 +268,7 @@
                         <td><input name="QuaterlyPlans[${index}].QTarget" value="${target}" class="form-control"  /></td>
                         <td><input name="QuaterlyPlans[${index}].QBudget" value="${budget}" class="form-control"  /></td>
                         <td><input name="QuaterlyPlans[${index}].QActual" value="${Actual}" class="form-control"  /></td>
+                        <td><input name="QuaterlyPlans[${index}].QAchievement" value="${Achievement}" class="form-control"  /></td>
                         <td><input name="QuaterlyPlans[${index}].QAmtSpent" value="${AmtSpent}" class="form-control"  /></td>
                         <td><input name="QuaterlyPlans[${index}].QJustification" value="${Justification}" class="form-control" /></td>
                         <td>
@@ -285,6 +287,7 @@
             $('#QActual').val('');
             $('#QAmtSpent').val('');
             $('#QJustification').val('');
+            $('#QAchievement').val('');
 
             $('#accordionQuarterDetailsCollapse').addClass('show');
         }

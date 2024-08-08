@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MEMIS.Data;
 using MEMIS.Models;
+using MEMIS.Migrations;
+using Microsoft.AspNetCore.Mvc.ApplicationParts;
 
 namespace MEMIS.Controllers.ME
 {
@@ -36,10 +38,90 @@ namespace MEMIS.Controllers.ME
     }
     public async Task<IActionResult> Consolidation()
     {
-      //var deptAssessments = _context.ActivityAssessment.Where(x => x.ActivityAssesmentStatus == )
-      var appDbContext = await GetActivityAssestsDetails(0);
-      return View(appDbContext);
+      var deptAssessments = await _context.ActivityAssessment
+        .Include(x => x.DepartmentFk)
+        .Include(x => x.QuaterlyPlans)
+        .Where(x => x.ActivityAssesmentStatus == 3 && x.QuaterlyPlans.Where(y => !string.IsNullOrEmpty(y.QAchievement)).Any())
+        .GroupBy(x => x.intDept)
+        .Select(g => new ConsolidateActivityAssessment()
+        {
+          intDept = g.Key,
+          strategicObjective = g.Select(x => x.strategicObjective).FirstOrDefault(),
+          strategicIntervention = g.Select(x => x.strategicIntervention).FirstOrDefault(),
+          StrategicAction = g.Select(x => x.StrategicAction).FirstOrDefault(),
+          activity = g.Select(x => x.activity).FirstOrDefault(),
+          outputIndicator = g.Select(x => x.outputIndicator).FirstOrDefault(),
+          baseline = g.Sum(x => x.baseline),
+          budgetCode = g.Sum(x => x.budgetCode),
+          comparativeTarget = g.Sum(x => x.comparativeTarget),
+          justification = g.Select(x => x.justification).FirstOrDefault(),
+          budgetAmount = g.Sum(x => x.budgetAmount),
+          AnnualAchievement = g.Sum(x => x.AnnualAchievement),
+          TotAmtSpent = g.Sum(x => x.TotAmtSpent),
+          AnnualJustification = g.Select(x => x.AnnualJustification).FirstOrDefault(),
+          QuaterlyPlans = g.SelectMany(q => q.QuaterlyPlans).ToList()
+        }).ToListAsync();
+
+      var regAssessments = await _context.ActivityAssessmentRegion
+    .Include(x => x.ActivityAssessFk)
+    .ThenInclude(aa => aa.StrategicIntervention)
+    .ThenInclude(si => si.StrategicObjective)
+    .Include(x => x.ActivityAssessFk)
+    .ThenInclude(aa => aa.StrategicAction)
+    .Include(x => x.ActivityAssessFk)
+    .ThenInclude(aa => aa.ActivityFk)
+    .Include(x => x.ActivityAssessFk)
+    .ThenInclude(aa => aa.QuaterlyPlans)
+    .Where(x => x.ActivityAssessFk != null && x.ActivityAssessFk.QuaterlyPlans.Any(q => !string.IsNullOrEmpty(q.QAchievement)))
+    .GroupBy(x => x.intRegion)
+    .Select(g => new ConsolidateActivityAssessment()
+    {
+      intRegion = g.Key,
+      strategicObjective = g.Select(x => x.ActivityAssessFk.StrategicIntervention.StrategicObjective.ObjectiveName).FirstOrDefault(),
+      strategicIntervention = g.Select(x => x.ActivityAssessFk.StrategicIntervention.InterventionName).FirstOrDefault(),
+      StrategicAction = g.Select(x => x.ActivityAssessFk.StrategicAction.actionName).FirstOrDefault(),
+      activity = g.Select(x => x.ActivityAssessFk.ActivityFk.activityName).FirstOrDefault(),
+      outputIndicator = g.Select(x => x.ActivityAssessFk.outputIndicator).FirstOrDefault(),
+      baseline = g.Sum(x => x.ActivityAssessFk.baseline),
+      budgetCode = g.Sum(x => x.ActivityAssessFk.budgetCode),
+      comparativeTarget = g.Sum(x => x.ActivityAssessFk.comparativeTarget),
+      justification = g.Select(x => x.ActivityAssessFk.justification).FirstOrDefault(),
+      budgetAmount = g.Sum(x => x.budgetAmount),
+      AnnualAchievement = g.SelectMany(x => x.ActivityAssessFk.QuaterlyPlans).Sum(q => q.QActual),
+      TotAmtSpent = g.SelectMany(x => x.ActivityAssessFk.QuaterlyPlans).Sum(q => q.QAmtSpent),
+      AnnualJustification = g.Select(x => x.ActivityAssessFk.justification).FirstOrDefault(),
+      QuaterlyPlans = g.SelectMany(x => x.ActivityAssessFk.QuaterlyPlans).ToList()
+    }).ToListAsync();
+
+      List<ConsolidateActivityAssessment> combinedData = deptAssessments.Concat(regAssessments).ToList();
+
+      //var appDbContext = await GetActivityAssestsDetails(0);
+      return View(combinedData);
     }
+
+    public async Task<IActionResult> ConsolidatedDeptAssessment(Guid? deptId)
+    {
+      List<ActivityAssessment> list = await _context.ActivityAssessment
+        .Include(x => x.QuaterlyPlans)
+        .Include(x => x.ImplementationStatus)
+        .Where(x => x.intDept == deptId && x.ActivityAssesmentStatus == 3)
+        .ToListAsync();
+
+      return View(list);
+    }
+
+    public async Task<IActionResult> ConsolidatedRegAssessment(Guid? regId)
+    {
+      List<ActivityAssessmentRegion> list = await _context.ActivityAssessmentRegion
+        .Include(x => x.ActivityAssessFk)
+        .ThenInclude(x => x.QuaterlyPlans)
+        .Include(x => x.ActivityAssessFk)
+        .Where(x => x.intRegion == regId && x.ActivityAssessFk != null && x.ActivityAssessFk.QuaterlyPlans.Where(x => !string.IsNullOrEmpty(x.QAchievement)).Any())
+        .ToListAsync();
+
+      return View(list);
+    }
+
     public async Task<IActionResult> VerificationBpd()
     {
       var appDbContext = await GetActivityAssestsDetails(3);
@@ -317,8 +399,11 @@ namespace MEMIS.Controllers.ME
     }
 
     // GET: ActivityAssessment/Create
-    public IActionResult Create()
+    public async Task<IActionResult> Create()
     {
+      ViewBag.StrategicIntervention = _context.StrategicIntervention == null ? new List<StrategicIntervention>() : await _context.StrategicIntervention.ToListAsync();
+      ViewBag.StrategicAction = _context.StrategicAction == null ? new List<StrategicAction>() : await _context.StrategicAction.ToListAsync();
+      ViewBag.Activity = _context.Activity == null ? new List<Activity>() : await _context.Activity.ToListAsync();
       ViewData["ImpStatusId"] = new SelectList(_context.ImplementationStatus, "ImpStatusId", "ImpStatusName");
       ActivityAssessment activityAssessment = new ActivityAssessment();
       activityAssessment.QuaterlyPlans = new List<QuaterlyPlan>();
@@ -360,6 +445,8 @@ namespace MEMIS.Controllers.ME
 
         return RedirectToAction(nameof(Index));
       }
+
+     
       ViewData["ImpStatusId"] = new SelectList(_context.ImplementationStatus, "ImpStatusId", "ImpStatusName", activityAssessment.ImpStatusId);
       //ViewBag.Quarter = ListHelper.Quarter();
       return View(activityAssessment);
@@ -382,7 +469,9 @@ namespace MEMIS.Controllers.ME
       activityAssessment.QuaterlyPlans = await _context.QuaterlyPlans
           .Where(x => x.ActivityAssessmentId == activityAssessment.intDeptPlan)
           .ToListAsync();
-
+      ViewBag.StrategicIntervention = _context.StrategicIntervention == null ? new List<StrategicIntervention>() : await _context.StrategicIntervention.ToListAsync();
+      ViewBag.StrategicAction = _context.StrategicAction == null ? new List<StrategicAction>() : await _context.StrategicAction.ToListAsync();
+      ViewBag.Activity = _context.Activity == null ? new List<Activity>() : await _context.Activity.ToListAsync();
       ViewData["Quarter"] = ListHelper.Quarter();
       ViewData["ImpStatusId"] = new SelectList(_context.ImplementationStatus, "ImpStatusId", "ImpStatusName", activityAssessment.ImpStatusId);
       return View(activityAssessment);

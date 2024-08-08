@@ -1,4 +1,4 @@
-@model List<ConsolidateActivityAssessment>
+@model IEnumerable<MEMIS.Data.ActivityAssessment>
 
 @{
     ViewData["Title"] = "Index";
@@ -6,9 +6,16 @@
     Layout = "~/Pages/Shared/_ContentNavbarLayout.cshtml";
 }
 
+
 <div class="row">
     <div class="col">
-        <h3>Activity Assessment Consolidation</h3>
+        <h3>Department Assessments</h3>
+    </div>
+    <div class="col-md-2">
+        @* <a class="btn btn-success float-end float-right" asp-action="AddAnnualPlan">Add Annual Plan</a> *@
+    </div>
+    <div class="col-md-2 d-flex justify-content-end mb-3">
+        @* <a class="btn btn-info" asp-action="Create">Create New</a> *@
     </div>
 </div>
 <div class="card">
@@ -17,43 +24,49 @@
             <thead class="table-active">
                 <tr>
                     <th>
-                        @Html.DisplayNameFor(model => model[0].strategicObjective)
+                        @Html.DisplayNameFor(model => model.strategicObjective)
                     </th>
                     <th>
-                        @Html.DisplayNameFor(model => model[0].strategicIntervention)
+                        @Html.DisplayNameFor(model => model.strategicIntervention)
                     </th>
                     <th>
-                        @Html.DisplayNameFor(model => model[0].StrategicAction)
+                        @Html.DisplayNameFor(model => model.StrategicAction)
                     </th>
                     <th>
-                        @Html.DisplayNameFor(model => model[0].activity)
+                        @Html.DisplayNameFor(model => model.activity)
                     </th>
                     <th>
-                        @Html.DisplayNameFor(model => model[0].outputIndicator)
+                        @Html.DisplayNameFor(model => model.outputIndicator)
                     </th>
                     <th>
-                        @Html.DisplayNameFor(model => model[0].baseline)
+                        @Html.DisplayNameFor(model => model.baseline)
                     </th>
                     <th>
-                        @Html.DisplayNameFor(model => model[0].budgetCode)
+                        @Html.DisplayNameFor(model => model.budgetCode)
                     </th>
                     <th>
-                        @Html.DisplayNameFor(model => model[0].comparativeTarget)
+                        @Html.DisplayNameFor(model => model.unitCost)
                     </th>
                     <th>
-                        @Html.DisplayNameFor(model => model[0].justification)
+                        @Html.DisplayNameFor(model => model.comparativeTarget)
                     </th>
                     <th>
-                        @Html.DisplayNameFor(model => model[0].budgetAmount)
+                        @Html.DisplayNameFor(model => model.justification)
                     </th>
                     <th>
-                        @Html.DisplayNameFor(model => model[0].AnnualAchievement)
+                        @Html.DisplayNameFor(model => model.budgetAmount)
                     </th>
                     <th>
-                        @Html.DisplayNameFor(model => model[0].TotAmtSpent)
+                        @Html.DisplayNameFor(model => model.AnnualAchievement)
                     </th>
                     <th>
-                        @Html.DisplayNameFor(model => model[0].AnnualJustification)
+                        @Html.DisplayNameFor(model => model.TotAmtSpent)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.ImplementationStatus)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.AnnualJustification)
                     </th>
                     <th>Actions</th>
                 </tr>
@@ -84,6 +97,9 @@
                             @Html.DisplayFor(modelItem => item.budgetCode)
                         </td>
                         <td>
+                            @Html.DisplayFor(modelItem => item.unitCost)
+                        </td>
+                        <td>
                             @Html.DisplayFor(modelItem => item.comparativeTarget)
                         </td>
                         <td>
@@ -99,46 +115,25 @@
                             @Html.DisplayFor(modelItem => item.TotAmtSpent)
                         </td>
                         <td>
+                            @Html.DisplayFor(modelItem => item.ImplementationStatus.ImpStatusId)
+                        </td>
+                        <td>
                             @Html.DisplayFor(modelItem => item.AnnualJustification)
                         </td>
                         <td>
                             <div class="btn-group" role="group" aria-label="Actions">
-                                @if (item.intDept != null)
-                                {
-                                    <a asp-action="ConsolidatedDeptAssessment" asp-route-id="@item.intDept" class="btn btn-secondary" data-toggle="tooltip" data-placement="top" title="Consolidated Department Assessment">
-                                        <i class='bx bx-edit'></i>
-                                    </a>
-                                }
-                                @if (item.intRegion != null)
-                                {
-                                    <a asp-action="ConsolidatedRegAssessment" asp-route-id="@item.intRegion" class="btn btn-secondary" data-toggle="tooltip" data-placement="top" title="Consolidated Regional Assessment">
-                                        <i class='bx bx-edit'></i>
-                                    </a>
-                                }
-                                @* <a asp-action="Edit" asp-route-id="@item.intDeptPlan" class="btn btn-secondary" data-toggle="tooltip" data-placement="top" title="Edit">
-                            <i class='bx bx-edit'></i>
-                            </a>
-                            <a asp-action="Details" asp-route-id="@item.intDeptPlan" class="btn btn-info" data-toggle="tooltip" data-placement="top" title="Details">
-                            <i class='bx bx-detail'></i>
-                            </a> *@
+                                <a asp-action="Edit" asp-route-id="@item.intDeptPlan" class="btn btn-secondary" data-toggle="tooltip" data-placement="top" title="Edit">
+                                    <i class='bx bx-edit'></i>
+                                </a>
+                                <a asp-action="Details" asp-route-id="@item.intDeptPlan" class="btn btn-info" data-toggle="tooltip" data-placement="top" title="Details">
+                                    <i class='bx bx-detail'></i>
+                                </a>
                             </div>
-
                         </td>
                     </tr>
                 }
             </tbody>
         </table>
-        <div class="col-md-3">
-
-            <div class="row mt-2">
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <input type="submit" value="Submit" class="btn btn-primary w-100" />
-                    </div>
-                </div>
-
-            </div>
-        </div>
     </div>
 </div>
 
