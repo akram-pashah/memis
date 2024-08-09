@@ -21,19 +21,19 @@ namespace MEMIS.Controllers.ME
     }
 
     // GET: ActivityAssessment
-    public async Task<IActionResult> Index()
+    public async Task<IActionResult> Index(string? quarter)
     {
-      var appDbContext = await GetActivityAssestsDetails(0);
+      var appDbContext = await GetActivityAssestsDetails(0, false, quarter);
       return View(appDbContext);
     }
-    public async Task<IActionResult> HodVerification()
+    public async Task<IActionResult> HodVerification(string? quarter)
     {
-      var appDbContext = await GetActivityAssestsDetails(0, true);
+      var appDbContext = await GetActivityAssestsDetails(0, true, quarter);
       return View(appDbContext);
     }
-    public async Task<IActionResult> VerificationDir()
+    public async Task<IActionResult> VerificationDir(string? quarter)
     {
-      var appDbContext = await GetActivityAssestsDetails(1);
+      var appDbContext = await GetActivityAssestsDetails(1, false, quarter);
       return View(appDbContext);
     }
     public async Task<IActionResult> Consolidation()
@@ -99,37 +99,60 @@ namespace MEMIS.Controllers.ME
       return View(combinedData);
     }
 
-    public async Task<IActionResult> ConsolidatedDeptAssessment(Guid? deptId)
+    public async Task<IActionResult> ConsolidatedDeptAssessment(Guid? deptId, string? quarter)
     {
-      List<ActivityAssessment> list = await _context.ActivityAssessment
+      var query = _context.ActivityAssessment
         .Include(x => x.QuaterlyPlans)
         .Include(x => x.ImplementationStatus)
-        .Where(x => x.intDept == deptId && x.ActivityAssesmentStatus == 3)
-        .ToListAsync();
+        .Where(x => x.intDept == deptId && x.ActivityAssesmentStatus == 3);
 
-      return View(list);
+      if (!string.IsNullOrEmpty(quarter))
+      {
+        List<ActivityAssessment> list = await query.Where(x => x.QuaterlyPlans.Any() && x.QuaterlyPlans.Where(y => y.Quarter == quarter).Any())
+  .ToListAsync();
+
+        return View(list);
+
+      }
+      else
+      {
+        List<ActivityAssessment> list = await query.ToListAsync();
+
+        return View(list);
+
+      }
     }
 
-    public async Task<IActionResult> ConsolidatedRegAssessment(Guid? regId)
+    public async Task<IActionResult> ConsolidatedRegAssessment(Guid? regId, string? quarter)
     {
-      List<ActivityAssessmentRegion> list = await _context.ActivityAssessmentRegion
+      var query = _context.ActivityAssessmentRegion
         .Include(x => x.ActivityAssessFk)
         .ThenInclude(x => x.QuaterlyPlans)
         .Include(x => x.ActivityAssessFk)
-        .Where(x => x.intRegion == regId && x.ActivityAssessFk != null && x.ActivityAssessFk.QuaterlyPlans.Where(x => !string.IsNullOrEmpty(x.QAchievement)).Any())
-        .ToListAsync();
+        .Where(x => x.intRegion == regId && x.ActivityAssessFk != null && x.ActivityAssessFk.QuaterlyPlans.Where(x => !string.IsNullOrEmpty(x.QAchievement)).Any());
 
-      return View(list);
+      if (!string.IsNullOrEmpty(quarter))
+      {
+        List<ActivityAssessmentRegion> list = await query.Where(x => x.ActivityAssessFk != null && x.ActivityAssessFk.QuaterlyPlans.Any() && x.ActivityAssessFk.QuaterlyPlans.Where(y => y.Quarter == quarter).Any())
+  .ToListAsync();
+
+        return View(list);
+      } else
+      {
+        List<ActivityAssessmentRegion> list = await query.ToListAsync();
+
+        return View(list);
+      }
     }
 
-    public async Task<IActionResult> VerificationBpd()
+    public async Task<IActionResult> VerificationBpd(string? quarter)
     {
-      var appDbContext = await GetActivityAssestsDetails(3);
+      var appDbContext = await GetActivityAssestsDetails(3, false, quarter);
       return View(appDbContext);
     }
-    public async Task<IActionResult> Approval()
+    public async Task<IActionResult> Approval(string? quarter)
     {
-      var appDbContext = await GetActivityAssestsDetails(5);
+      var appDbContext = await GetActivityAssestsDetails(5, false, quarter);
       return View(appDbContext);
     }
     public async Task<IActionResult> RegionalIndex()
@@ -165,7 +188,7 @@ namespace MEMIS.Controllers.ME
 
 
 
-    private async Task<List<ActivityAssessment>> GetActivityAssestsDetails(int Status, bool isHod = false)
+    private async Task<List<ActivityAssessment>> GetActivityAssestsDetails(int Status, bool isHod = false, string? quarter = "")
     {
 
       var query = _context.ActivityAssessment.Include(x => x.QuaterlyPlans).Include(a => a.ImplementationStatus).AsQueryable();
@@ -178,6 +201,11 @@ namespace MEMIS.Controllers.ME
       if (isHod)
       {
         query = query.Where(x => x.QuaterlyPlans.Any() && x.QuaterlyPlans.Where(y => !string.IsNullOrEmpty(y.QAchievement)).Any() && x.ActivityAssesmentStatus == Status);
+      }
+
+      if (!string.IsNullOrEmpty(quarter))
+      {
+        query = query.Where(x => x.QuaterlyPlans.Any() && x.QuaterlyPlans.Where(y => y.Quarter == quarter && !string.IsNullOrEmpty(y.QAchievement)).Any());
       }
 
       var appDbContext = await query.ToListAsync();
@@ -328,7 +356,8 @@ namespace MEMIS.Controllers.ME
       if (isHod)
       {
         query = query.Where(x => x.ActivityAssessFk.QuaterlyPlans.Where(x => !string.IsNullOrEmpty(x.QAchievement)).Any());
-      } else if(Status == 0)
+      }
+      else if (Status == 0)
       {
         query = query.Where(x => x.ActivityAssessFk.QuaterlyPlans.Count != 4);
       }
@@ -446,7 +475,7 @@ namespace MEMIS.Controllers.ME
         return RedirectToAction(nameof(Index));
       }
 
-     
+
       ViewData["ImpStatusId"] = new SelectList(_context.ImplementationStatus, "ImpStatusId", "ImpStatusName", activityAssessment.ImpStatusId);
       //ViewBag.Quarter = ListHelper.Quarter();
       return View(activityAssessment);
