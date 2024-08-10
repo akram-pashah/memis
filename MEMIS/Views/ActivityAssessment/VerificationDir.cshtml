@@ -1,16 +1,17 @@
 @model IEnumerable<MEMIS.Data.ActivityAssessment>
 
-@{ ViewData["Title"] = "Index";
-        //Layout = "~/Views/Shared/_MELayout.cshtml";
-        Layout = "~/Pages/Shared/_ContentNavbarLayout.cshtml";
+@{
+    ViewData["Title"] = "Index";
+    //Layout = "~/Views/Shared/_MELayout.cshtml";
+    Layout = "~/Pages/Shared/_ContentNavbarLayout.cshtml";
     var selectedQuarter = ViewData["SelectedQuarter"]?.ToString();
 }
 
 
 <div class="row">
-  <div class="col">
-    <h3>Activity Assessment Verification [Director]</h3>
-  </div>
+    <div class="col">
+        <h3>Activity Assessment Verification [Director]</h3>
+    </div>
 </div>
 <div class="card">
     <div class="card-header">
@@ -46,7 +47,7 @@
             </form>
         </div>
     </div>
-  <div class="card-body" style="width:100%; overflow-x:auto;margin-top:20px;">
+    <div class="card-body" style="width:100%; overflow-x:auto;margin-top:20px;">
         <form id="activityForm" method="post" asp-action="VerificationUpdate">
             <table class="table table-striped table-bordered table-hover dt-responsive nowrap" id="datatable">
                 <thead class="table-active">
@@ -87,7 +88,7 @@
                         <th>
                             @Html.DisplayNameFor(model => model.budgetAmount)
                         </th>
-                      
+
                         <th>
                             @Html.DisplayNameFor(model => model.AnnualAchievement)
                         </th>
@@ -143,7 +144,7 @@
                             <td>
                                 @Html.DisplayFor(modelItem => item.budgetAmount)
                             </td>
-                           
+
                             <td>
                                 @Html.DisplayFor(modelItem => item.AnnualAchievement)
                             </td>
@@ -158,9 +159,12 @@
                             </td>
                             <td>
                                 <div class="btn-group" role="group" aria-label="Actions">
-                                    <a asp-action="Edit" asp-route-id="@item.intDeptPlan" class="btn btn-secondary" data-toggle="tooltip" data-placement="top" title="Edit">
-                                        <i class='bx bx-edit'></i>
-                                    </a>
+                                    @if (item.actType == 0)
+                                    {
+                                        <a asp-action="Edit" asp-route-id="@item.intDeptPlan" class="btn btn-secondary" data-toggle="tooltip" data-placement="top" title="Edit">
+                                            <i class='bx bx-edit'></i>
+                                        </a>
+                                    }
                                     <a asp-action="Details" asp-route-id="@item.intDeptPlan" class="btn btn-info" data-toggle="tooltip" data-placement="top" title="Details">
                                         <i class='bx bx-detail'></i>
                                     </a>
@@ -189,7 +193,7 @@
                 </div>
             </div>
         </form>
-  </div>
+    </div>
 </div>
 
 @section Scripts {

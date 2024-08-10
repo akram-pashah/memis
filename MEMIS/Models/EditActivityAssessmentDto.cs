@@ -1,20 +1,20 @@
+using MEMIS.Data;
 using MEMIS.Data.Master;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace MEMIS.Data
+namespace MEMIS.Models
 {
-  public class ActivityAssessment
+  public class EditActivityAssessmentDto
   {
-    [Key]
     public int intDeptPlan { get; set; }
-    public string strategicObjective { get; set; }
+    public string? strategicObjective { get; set; }
     [Display(Name = "Strategic Intervention")]
-    public string strategicIntervention { get; set; }
+    public string? strategicIntervention { get; set; }
     [Display(Name = "Strategic Action")]
-    public string StrategicAction { get; set; }
+    public string? StrategicAction { get; set; }
     [Display(Name = "Activity / Initiative")]
-    public string activity { get; set; }
+    public string? activity { get; set; }
     [Display(Name = "Output Indicators")]
     public string outputIndicator { get; set; }
     [Display(Name = "Baseline")]
@@ -69,6 +69,7 @@ namespace MEMIS.Data
     public double? Q4AmtSpent { get; set; }
     [Display(Name = "Q4 Justification")]
     public string? Q4Justification { get; set; }
+
     [Display(Name = "Annual Achievement")]
     public double? AnnualAchievement { get; set; }
     [Display(Name = "Total Amount Spent")]
@@ -87,9 +88,9 @@ namespace MEMIS.Data
 
     [Display(Name = "Justification")]
     public string? AnnualJustification { get; set; }
-    public virtual List<QuaterlyPlan> QuaterlyPlans { get; set; }
+    public virtual List<QuaterlyPlan>? QuaterlyPlans { get; set; }
     public long? ActivityAssesmentStatus { get; set; } = 0;
     public int? actType { get; set; } = 0;
-    public virtual ICollection<ActivityAssessmentRegion> ActivityAssessmentRegions { get; set; }
+    public virtual ICollection<ActivityAssessmentRegion>? ActivityAssessmentRegions { get; set; }
   }
 }

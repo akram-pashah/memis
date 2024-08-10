@@ -95,8 +95,19 @@ namespace MEMIS.Controllers.ME
 
       List<ConsolidateActivityAssessment> combinedData = deptAssessments.Concat(regAssessments).ToList();
 
+      var query = _context.ActivityAssessment
+        .Include(x => x.ActivityAssessmentRegions)
+          .ThenInclude(x => x.QuaterlyPlans)
+        .Include(x => x.ActivityAssessmentRegions)
+          .ThenInclude(x => x.Region)
+        .Include(x => x.QuaterlyPlans)
+        .Include(x => x.ImplementationStatus)
+        .Include(x => x.DepartmentFk);
+
+      List<ActivityAssessment> activityAssessments = await query.Where(x => (x.actType == 0 && x.ActivityAssesmentStatus == 3) || (x.actType == 1 && x.ActivityAssesmentStatus <5 && x.ActivityAssessmentRegions.Where(x => x.ApprStatus == 1).Any())).ToListAsync();
+
       //var appDbContext = await GetActivityAssestsDetails(0);
-      return View(combinedData);
+      return View(activityAssessments);
     }
 
     public async Task<IActionResult> ConsolidatedDeptAssessment(Guid? deptId, string? quarter)
@@ -137,7 +148,8 @@ namespace MEMIS.Controllers.ME
   .ToListAsync();
 
         return View(list);
-      } else
+      }
+      else
       {
         List<ActivityAssessmentRegion> list = await query.ToListAsync();
 
@@ -147,22 +159,22 @@ namespace MEMIS.Controllers.ME
 
     public async Task<IActionResult> VerificationBpd(string? quarter)
     {
-      var appDbContext = await GetActivityAssestsDetails(3, false, quarter);
+      var appDbContext = await GetActivityAssestsDetails(5, false, quarter);
       return View(appDbContext);
     }
     public async Task<IActionResult> Approval(string? quarter)
     {
-      var appDbContext = await GetActivityAssestsDetails(5, false, quarter);
+      var appDbContext = await GetActivityAssestsDetails(7, false, quarter);
       return View(appDbContext);
     }
     public async Task<IActionResult> RegionalIndex()
     {
-      var appDbContext = await GetActivityAssestsRegionalDetails(0);
+      var appDbContext = await GetActivityAssestsRegionalDetails(0, false, true);
       return View(appDbContext);
     }
     public async Task<IActionResult> RegionalHodVerification()
     {
-      var appDbContext = await GetActivityAssestsRegionalDetails(0, true);
+      var appDbContext = await GetActivityAssestsRegionalDetails(0, true, true);
       return View(appDbContext);
     }
     public async Task<IActionResult> RegionalVerificationDir()
@@ -186,12 +198,17 @@ namespace MEMIS.Controllers.ME
       return View(appDbContext);
     }
 
-
-
     private async Task<List<ActivityAssessment>> GetActivityAssestsDetails(int Status, bool isHod = false, string? quarter = "")
     {
 
-      var query = _context.ActivityAssessment.Include(x => x.QuaterlyPlans).Include(a => a.ImplementationStatus).AsQueryable();
+      var query = _context.ActivityAssessment
+        .Include(x => x.ActivityAssessmentRegions)
+          .ThenInclude(x => x.QuaterlyPlans)
+         .Include(x => x.ActivityAssessmentRegions)
+          .ThenInclude(x => x.Region)
+        .Include(x => x.QuaterlyPlans)
+        .Include(a => a.ImplementationStatus)
+        .AsQueryable();
 
       if (Status != 0 && Status != null)
       {
@@ -249,7 +266,10 @@ namespace MEMIS.Controllers.ME
     {
       try
       {
-        ActivityAssessmentRegion? region = await _context.ActivityAssessmentRegion.Where(x => x.intRegionAssess == id).FirstOrDefaultAsync();
+        ActivityAssessmentRegion? region = await _context.ActivityAssessmentRegion
+          .Include(x => x.ActivityAssessmentFk)
+          .ThenInclude(x => x.QuaterlyPlans)
+          .Where(x => x.intRegionAssess == id).FirstOrDefaultAsync();
         if (region == null)
         {
           return NotFound();
@@ -261,7 +281,7 @@ namespace MEMIS.Controllers.ME
         activityAssessDto.budgetAmount = region.budgetAmount;
         activityAssessDto.QTarget = region.QTarget;
         activityAssessDto.QBudget = region.QBudget;
-        activityAssessDto.QuaterlyPlans = await _context.QuaterlyPlans.Where(x => x.ActivityAccessId == region.intAssess).ToListAsync();
+        activityAssessDto.QuaterlyPlans = region.ActivityAssessmentFk.QuaterlyPlans;
         ViewData["Quarter"] = ListHelper.Quarter();
         return View(activityAssessDto);
       }
@@ -338,9 +358,11 @@ namespace MEMIS.Controllers.ME
     }
 
 
-    private async Task<List<ActivityAssessmentRegion>> GetActivityAssestsRegionalDetails(int Status, bool isHod = false)
+    private async Task<List<ActivityAssessmentRegion>> GetActivityAssestsRegionalDetails(int Status, bool isHod = false, bool isRegional = false)
     {
       var query = _context.ActivityAssessmentRegion
+        .Include(x => x.ActivityAssessmentFk)
+          .ThenInclude(x => x.QuaterlyPlans)
         .Include(a => a.ActivityAssessFk)
           .ThenInclude(x => x.QuaterlyPlans)
         .Include(x => x.ActivityAssessFk)
@@ -355,11 +377,15 @@ namespace MEMIS.Controllers.ME
 
       if (isHod)
       {
-        query = query.Where(x => x.ActivityAssessFk.QuaterlyPlans.Where(x => !string.IsNullOrEmpty(x.QAchievement)).Any());
+        query = query.Where(x => x.QuaterlyPlans.Where(x => !string.IsNullOrEmpty(x.QAchievement)).Any());
       }
       else if (Status == 0)
       {
-        query = query.Where(x => x.ActivityAssessFk.QuaterlyPlans.Count != 4);
+        query = query.Where(x => x.ActivityAssessFk != null && x.ActivityAssessFk.QuaterlyPlans.Count != 4);
+      }
+      if (isRegional)
+      {
+        query = query.Where(x => x.ActivityAssessFk != null && x.ActivityAssessFk.actType != 1);
       }
 
       var appDbContext = await query.ToListAsync();
@@ -387,7 +413,12 @@ namespace MEMIS.Controllers.ME
       }
 
       var activityAssessment = await _context.ActivityAssessment
+        .Include(x => x.ActivityAssessmentRegions)
+        .ThenInclude(x => x.QuaterlyPlans)
+        .Include(x => x.ActivityAssessmentRegions)
+        .ThenInclude(x => x.Region)
           .Include(a => a.ImplementationStatus)
+          .Include(x => x.DepartmentFk)
           .FirstOrDefaultAsync(m => m.intDeptPlan == id);
       if (activityAssessment == null)
       {
@@ -489,21 +520,103 @@ namespace MEMIS.Controllers.ME
         return NotFound();
       }
 
-      ActivityAssessment? activityAssessment = await _context.ActivityAssessment.Include(x => x.QuaterlyPlans).Where(x => x.intDeptPlan == id).FirstOrDefaultAsync();
+      var activityAssessment = await _context.ActivityAssessment
+         .Include(x => x.ActivityAssessmentRegions)
+         .ThenInclude(x => x.QuaterlyPlans)
+         .Include(x => x.ActivityAssessmentRegions)
+         .ThenInclude(x => x.Region)
+           .Include(a => a.ImplementationStatus)
+           .Include(x => x.DepartmentFk)
+           .FirstOrDefaultAsync(m => m.intDeptPlan == id);
       if (activityAssessment == null)
       {
         return NotFound();
       }
+      if (activityAssessment != null)
+      {
 
-      activityAssessment.QuaterlyPlans = await _context.QuaterlyPlans
-          .Where(x => x.ActivityAssessmentId == activityAssessment.intDeptPlan)
-          .ToListAsync();
+        // Retrieve QuaterlyPlans for each DeptPlan item
+        var quaterlyplans = _context.QuaterlyPlans
+            .Where(x => x.ActivityAssessmentId == activityAssessment.intDeptPlan)
+            .ToList();
+
+        // Calculate sums for each quarter
+        activityAssessment.Q1Target = quaterlyplans.Where(x => x.Quarter == "1").Sum(x => x.QTarget);
+        activityAssessment.Q1Budget = quaterlyplans.Where(x => x.Quarter == "1").Sum(x => x.QBudget);
+        activityAssessment.Q1Actual = quaterlyplans.Where(x => x.Quarter == "1").Sum(x => x.QActual);
+        activityAssessment.Q1AmtSpent = quaterlyplans.Where(x => x.Quarter == "1").Sum(x => x.QAmtSpent);
+        activityAssessment.Q1Justification = quaterlyplans.Where(x => x.Quarter == "1").FirstOrDefault()?.QJustification;
+        activityAssessment.Q2Target = quaterlyplans.Where(x => x.Quarter == "2").Sum(x => x.QTarget);
+        activityAssessment.Q2Budget = quaterlyplans.Where(x => x.Quarter == "2").Sum(x => x.QBudget);
+        activityAssessment.Q2Actual = quaterlyplans.Where(x => x.Quarter == "2").Sum(x => x.QActual);
+        activityAssessment.Q2AmtSpent = quaterlyplans.Where(x => x.Quarter == "2").Sum(x => x.QAmtSpent);
+        activityAssessment.Q2Justification = quaterlyplans.Where(x => x.Quarter == "2").FirstOrDefault()?.QJustification;
+        activityAssessment.Q3Target = quaterlyplans.Where(x => x.Quarter == "3").Sum(x => x.QTarget);
+        activityAssessment.Q3Budget = quaterlyplans.Where(x => x.Quarter == "3").Sum(x => x.QBudget);
+        activityAssessment.Q3Actual = quaterlyplans.Where(x => x.Quarter == "3").Sum(x => x.QActual);
+        activityAssessment.Q3AmtSpent = quaterlyplans.Where(x => x.Quarter == "3").Sum(x => x.QAmtSpent);
+        activityAssessment.Q3Justification = quaterlyplans.Where(x => x.Quarter == "3").FirstOrDefault()?.QJustification;
+        activityAssessment.Q4Target = quaterlyplans.Where(x => x.Quarter == "4").Sum(x => x.QTarget);
+        activityAssessment.Q4Budget = quaterlyplans.Where(x => x.Quarter == "4").Sum(x => x.QBudget);
+        activityAssessment.Q4Actual = quaterlyplans.Where(x => x.Quarter == "4").Sum(x => x.QActual);
+        activityAssessment.Q4AmtSpent = quaterlyplans.Where(x => x.Quarter == "4").Sum(x => x.QAmtSpent);
+        activityAssessment.Q4Justification = quaterlyplans.Where(x => x.Quarter == "4").FirstOrDefault()?.QJustification;
+      }
+
+      EditActivityAssessmentDto editActivityAssessmentDto = new()
+      {
+        intDeptPlan = activityAssessment.intDeptPlan,
+        strategicObjective = activityAssessment.strategicObjective,
+        strategicIntervention = activityAssessment.strategicIntervention,
+        StrategicAction = activityAssessment.StrategicAction,
+        activity = activityAssessment.activity,
+        outputIndicator = activityAssessment.outputIndicator,
+        baseline = activityAssessment.baseline,
+        budgetCode = activityAssessment.budgetCode,
+        unitCost = activityAssessment.unitCost,
+        comparativeTarget = activityAssessment.comparativeTarget,
+        justification = activityAssessment.justification,
+        budgetAmount = activityAssessment.budgetAmount,
+        Q1Target = activityAssessment.Q1Target,
+        Q1Budget = activityAssessment.Q1Budget,
+        Q1Actual = activityAssessment.Q1Actual,
+        Q1AmtSpent = activityAssessment.Q1AmtSpent,
+        Q1Justification = activityAssessment.Q1Justification,
+        Q2Target = activityAssessment.Q2Target,
+        Q2Budget = activityAssessment.Q2Budget,
+        Q2Actual = activityAssessment.Q2Actual,
+        Q2AmtSpent = activityAssessment.Q2AmtSpent,
+        Q2Justification = activityAssessment.Q2Justification,
+        Q3Target = activityAssessment.Q3Target,
+        Q3Budget = activityAssessment.Q3Budget,
+        Q3Actual = activityAssessment.Q3Actual,
+        Q3AmtSpent = activityAssessment.Q3AmtSpent,
+        Q3Justification = activityAssessment.Q3Justification,
+        Q4Target = activityAssessment.Q4Target,
+        Q4Budget = activityAssessment.Q4Budget,
+        Q4Actual = activityAssessment.Q4Actual,
+        Q4AmtSpent = activityAssessment.Q4AmtSpent,
+        Q4Justification = activityAssessment.Q4Justification,
+        AnnualAchievement = activityAssessment.AnnualAchievement,
+        TotAmtSpent = activityAssessment.TotAmtSpent,
+        ImpStatusId = activityAssessment.ImpStatusId,
+        ImplementationStatus = activityAssessment.ImplementationStatus,
+        Fyear = activityAssessment.Fyear,
+        intDept = activityAssessment.intDept,
+        DepartmentFk = activityAssessment.DepartmentFk,
+        AnnualJustification = activityAssessment.AnnualJustification,
+        QuaterlyPlans = activityAssessment.QuaterlyPlans,
+        ActivityAssesmentStatus = activityAssessment.ActivityAssesmentStatus,
+        actType = activityAssessment.actType,
+        ActivityAssessmentRegions = activityAssessment.ActivityAssessmentRegions,
+      };
+
       ViewBag.StrategicIntervention = _context.StrategicIntervention == null ? new List<StrategicIntervention>() : await _context.StrategicIntervention.ToListAsync();
       ViewBag.StrategicAction = _context.StrategicAction == null ? new List<StrategicAction>() : await _context.StrategicAction.ToListAsync();
       ViewBag.Activity = _context.Activity == null ? new List<Activity>() : await _context.Activity.ToListAsync();
       ViewData["Quarter"] = ListHelper.Quarter();
       ViewData["ImpStatusId"] = new SelectList(_context.ImplementationStatus, "ImpStatusId", "ImpStatusName", activityAssessment.ImpStatusId);
-      return View(activityAssessment);
+      return View(editActivityAssessmentDto);
     }
 
 
@@ -511,29 +624,58 @@ namespace MEMIS.Controllers.ME
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Edit(int id, [Bind("intDeptPlan,strategicObjective,strategicIntervention,StrategicAction,activity,outputIndicator,baseline,budgetCode,unitCost,comparativeTarget,justification,budgetAmount,Q1Target,Q1Budget,Q1Actual,Q1AmtSpent,Q1Justification,Q2Target,Q2Budget,Q2Actual,Q2AmtSpent,Q2Justification,Q3Target,Q3Budget,Q3Actual,Q3AmtSpent,Q3Justification,Q4Target,Q4Budget,Q4Actual,Q4AmtSpent,Q4Justification,AnnualAchievement,TotAmtSpent,ImpStatusId,AnnualJustification,QuaterlyPlans")] ActivityAssessment activityAssessment)
+    public async Task<IActionResult> Edit(int id, [Bind("intDeptPlan,strategicObjective,strategicIntervention,StrategicAction,activity,outputIndicator,baseline,budgetCode,unitCost,comparativeTarget,justification,budgetAmount,Q1Target,Q1Budget,Q1Actual,Q1AmtSpent,Q1Justification,Q2Target,Q2Budget,Q2Actual,Q2AmtSpent,Q2Justification,Q3Target,Q3Budget,Q3Actual,Q3AmtSpent,Q3Justification,Q4Target,Q4Budget,Q4Actual,Q4AmtSpent,Q4Justification,AnnualAchievement,TotAmtSpent,ImpStatusId,AnnualJustification,QuaterlyPlans")] EditActivityAssessmentDto activityAssessmentDto)
     {
-      if (id != activityAssessment.intDeptPlan)
+      if (id != activityAssessmentDto.intDeptPlan)
       {
         return NotFound();
       }
-      activityAssessment.ImplementationStatus = await _context.ImplementationStatus.Where(x => x.ImpStatusId == activityAssessment.ImpStatusId).FirstOrDefaultAsync();
+
+      ActivityAssessment activityAssessment = await _context.ActivityAssessment
+        .Include(x => x.QuaterlyPlans)
+        .Include(x => x.ImplementationStatus)
+        .Include(x => x.DepartmentFk)
+        .Where(x => x.intDeptPlan == id)
+        .FirstAsync();
+
+      activityAssessment.ImplementationStatus = await _context.ImplementationStatus.Where(x => x.ImpStatusId == activityAssessmentDto.ImpStatusId).FirstOrDefaultAsync();
 
       if (ModelState.IsValid)
       {
         try
         {
+          activityAssessment.outputIndicator = activityAssessmentDto.outputIndicator;
+          activityAssessment.baseline = activityAssessmentDto.baseline;
+          activityAssessment.budgetCode = activityAssessmentDto.budgetCode;
+          activityAssessment.unitCost = activityAssessmentDto.unitCost;
+          activityAssessment.comparativeTarget = activityAssessmentDto.comparativeTarget;
+          activityAssessment.justification = activityAssessmentDto.justification;
+          activityAssessment.budgetAmount = activityAssessmentDto.budgetAmount;
+          activityAssessment.AnnualAchievement = activityAssessmentDto.AnnualAchievement;
+          activityAssessment.TotAmtSpent = activityAssessmentDto.TotAmtSpent;
+          activityAssessment.AnnualJustification = activityAssessmentDto.AnnualJustification;
+
           _context.Update(activityAssessment);
           await _context.SaveChangesAsync();
 
           if (activityAssessment.QuaterlyPlans.Count > 0)
           {
 
-            foreach (var quat in activityAssessment.QuaterlyPlans)
+            foreach (var quat in activityAssessmentDto.QuaterlyPlans)
             {
               if (quat.Id != 0)
               {
-                _context.Entry(quat).State = EntityState.Modified;
+                QuaterlyPlan quaterlyPlan = await _context.QuaterlyPlans.FindAsync(quat.Id);
+
+                //quaterlyPlan.Quarter = quat.Quarter;
+                quaterlyPlan.QTarget = quat.QTarget;
+                quaterlyPlan.QBudget = quat.QBudget;
+                quaterlyPlan.QActual = quat.QActual;
+                quaterlyPlan.QAmtSpent = quat.QAmtSpent;
+                quaterlyPlan.QAchievement = quat.QAchievement;
+                quaterlyPlan.QJustification = quat.QJustification;
+
+                _context.QuaterlyPlans.Update(quaterlyPlan);
                 await _context.SaveChangesAsync();
               }
               else
@@ -631,9 +773,13 @@ namespace MEMIS.Controllers.ME
       }
       else if (apprStatus == 5 || apprStatus == 6)
       {
-        return RedirectToAction(nameof(VerificationBpd));
+        return RedirectToAction(nameof(Consolidation));
       }
       else if (apprStatus == 7 || apprStatus == 8)
+      {
+        return RedirectToAction(nameof(VerificationBpd));
+      }
+      else if (apprStatus == 8 || apprStatus == 9)
       {
         return RedirectToAction(nameof(Approval));
       }

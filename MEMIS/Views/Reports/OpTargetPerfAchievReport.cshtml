@@ -1,0 +1,80 @@
+@{
+}
+@using MEMIS.Data;
+@model List<ActivityAssessment>
+@{
+    ViewData["Title"] = "M&E Reports";
+    //Layout = "~/Views/Shared/_PlanningLayout.cshtml";
+    Layout = "~/Pages/Shared/_ContentNavbarLayout.cshtml";
+}
+
+<h4 class="py-3 mb-4">
+    <span class="text-muted fw-light">M&E Reports /</span> Output/Target Performance Achievement Report
+</h4>
+
+<div class="row">
+    <div class="col-md-12">
+        <ul class="nav nav-pills flex-column flex-md-row mb-3">
+            <li class="nav-item"><a class="nav-link" href="MandEIndex">SDT Assessment</a></li>
+            <li class="nav-item"><a class="nav-link" href="KpiAssessment">KPI Assessment</a></li>
+            <li class="nav-item"><a class="nav-link active" href="javascript:void(0);">Output/Target Performance Achievement Report </a></li>
+        </ul>
+
+        <div class="card mb-4">
+            <h5 class="card-header">
+                <div class="col d-flex justify-content-end mb-3">
+                    <a class="btn btn-outline-success float-end float-right" asp-action="OpTargetPerfAchievReportExcel" target="_blank">Export to Excel</a>
+                </div>
+            </h5>
+            <hr class="my-0" />
+
+            <div class="card-body">
+                <div style="width:100%; overflow-x:auto;">
+                    <table class="table table-striped table-bordered table-hover dt-responsive nowrap">
+                        <thead class="table-active">
+                            <tr>
+                                <th>
+                                    Strategic Action
+                                </th>
+                                <th>
+                                    Activity
+                                </th>
+                                <th>
+                                    Output/Target
+                                </th>
+                                <th>
+                                    Performance Achievement Status
+                                </th>
+                                <th>
+                                    Department
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.StrategicAction)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(m => item.activity)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(m => item.comparativeTarget)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(m => item.ImplementationStatus.ImpStatusName)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.DepartmentFk.deptName)
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

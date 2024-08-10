@@ -4,6 +4,7 @@ using MEMIS.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MEMIS.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240809171813_RegionAllocation")]
+    partial class RegionAllocation
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -244,9 +247,6 @@ namespace MEMIS.Migrations
                     b.Property<double?>("TotAmtSpent")
                         .HasColumnType("float");
 
-                    b.Property<int?>("actType")
-                        .HasColumnType("int");
-
                     b.Property<string>("activity")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -328,17 +328,12 @@ namespace MEMIS.Migrations
                     b.Property<int>("intAssess")
                         .HasColumnType("int");
 
-                    b.Property<int>("intAssessment")
-                        .HasColumnType("int");
-
                     b.Property<Guid?>("intRegion")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("intRegionAssess");
 
                     b.HasIndex("intAssess");
-
-                    b.HasIndex("intAssessment");
 
                     b.HasIndex("intRegion");
 
@@ -3492,19 +3487,11 @@ namespace MEMIS.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("MEMIS.Data.ActivityAssessment", "ActivityAssessmentFk")
-                        .WithMany("ActivityAssessmentRegions")
-                        .HasForeignKey("intAssessment")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("MEMIS.Data.Region", "Region")
                         .WithMany()
                         .HasForeignKey("intRegion");
 
                     b.Navigation("ActivityAssessFk");
-
-                    b.Navigation("ActivityAssessmentFk");
 
                     b.Navigation("Region");
                 });
@@ -4173,8 +4160,6 @@ namespace MEMIS.Migrations
 
             modelBuilder.Entity("MEMIS.Data.ActivityAssessment", b =>
                 {
-                    b.Navigation("ActivityAssessmentRegions");
-
                     b.Navigation("QuaterlyPlans");
                 });
 

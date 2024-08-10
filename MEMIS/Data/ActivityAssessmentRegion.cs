@@ -12,6 +12,9 @@ namespace MEMIS.Data
     public virtual int intAssess { get; set; }
     [ForeignKey("intAssess")]
     public virtual ActivityAssess? ActivityAssessFk { get; set; }
+    public virtual int intAssessment { get; set; }
+    [ForeignKey("intAssessment")]
+    public virtual ActivityAssessment? ActivityAssessmentFk { get; set; }
     [Display(Name = "Region")]
     public virtual Guid? intRegion { get; set; }
     [ForeignKey("intRegion")]
@@ -33,6 +36,6 @@ namespace MEMIS.Data
     public int? ApprStatus { get; set; } = 0;
     [Display(Name = "Financial Year")]
     public int Fyear = DateTime.Now.Year;
-
+    public virtual ICollection<QuaterlyPlan> QuaterlyPlans { get; set; }
   }
 }

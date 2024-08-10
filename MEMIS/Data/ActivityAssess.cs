@@ -51,5 +51,6 @@ namespace MEMIS.Data
     public int? actType { get; set; } = 0;
 
     public virtual ICollection<QuaterlyPlan> QuaterlyPlans { get; set; }
+    public virtual ICollection<ActivityAssessRegion> ActivityAssessRegions { get; set; }
   }
 }

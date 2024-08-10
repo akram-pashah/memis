@@ -567,6 +567,62 @@ namespace MEMIS.Helpers.ExcelReports
       }
     }
 
+    public static MemoryStream OpTargetPerfAcheivReport(List<ActivityAssessment> assessments)
+    {
+      try
+      {
+        var workbook = new XLWorkbook();
+        IXLWorksheet worksheet = workbook.Worksheets.Add("Performance Achievement");
+
+        // Setting the header row
+        worksheet.Cell(1, 1).Value = "Strategic Action";
+        worksheet.Cell(1, 2).Value = "Activity";
+        worksheet.Cell(1, 3).Value = "Output/Target";
+        worksheet.Cell(1, 4).Value = "Performance Achievement Status";
+        worksheet.Cell(1, 5).Value = "Department";
+
+        // Style the headers
+        var headerRange = worksheet.Range("A1:E1");
+        headerRange.Style.Fill.BackgroundColor = XLColor.FromHtml("#063241");
+        headerRange.Style.Font.Bold = true;
+        headerRange.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+        headerRange.Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
+
+        // Auto fit columns to content
+        worksheet.Columns().AdjustToContents();
+        AdjustColumnWidths(worksheet, 25, 65);
+
+        int row = 2;
+        foreach (var assessment in assessments)
+        {
+          worksheet.Cell(row, 1).Value = assessment?.StrategicAction;
+          worksheet.Cell(row, 2).Value = assessment?.activity;
+          worksheet.Cell(row, 3).Value = assessment?.comparativeTarget;
+          worksheet.Cell(row, 4).Value = assessment?.ImplementationStatus?.ImpStatusName;
+          worksheet.Cell(row, 5).Value = assessment?.DepartmentFk?.deptName;
+          row++;
+        }
+
+        var tableRange = worksheet.Range(1, 1, row - 1, 5);
+        var table = tableRange.CreateTable();
+        tableRange.Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
+        tableRange.Style.Border.InsideBorder = XLBorderStyleValues.Thin;
+        table.ShowAutoFilter = true;
+        table.AutoFilter.IsEnabled = true;
+        table.AutoFilter.Sort(1, XLSortOrder.Ascending);
+
+        // Save the workbook to a memory stream
+        var stream = new MemoryStream();
+        workbook.SaveAs(stream);
+        stream.Position = 0;
+        return stream;
+      }
+      catch (Exception ex)
+      {
+        throw;
+      }
+    }
+
     public static string getAchievement(string achieve)
     {
       foreach (var nachieve in ListHelper.AchievementStatus())

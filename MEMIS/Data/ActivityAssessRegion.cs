@@ -25,5 +25,6 @@ namespace MEMIS.Data
     public double? QBudget { get; set; }
     [Display(Name = "Appral Status")]
     public int? ApprStatus { get; set; } = 0;
+    public virtual ICollection<QuaterlyPlan> QuaterlyPlans { get; set; }
   }
 }

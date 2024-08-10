@@ -119,6 +119,11 @@ namespace MEMIS.Data
            .HasForeignKey(t => t.ActivityAccessId);
 
       modelBuilder.Entity<QuaterlyPlan>()
+           .HasOne(t => t.ActivityAssessRegion)
+           .WithMany(r => r.QuaterlyPlans)
+           .HasForeignKey(t => t.ActivityAssessRegionId);
+
+      modelBuilder.Entity<QuaterlyPlan>()
            .HasOne(t => t.DeptPlan)
            .WithMany(r => r.QuaterlyPlans)
            .HasForeignKey(t => t.DeptPlanId);
@@ -127,6 +132,11 @@ namespace MEMIS.Data
            .HasOne(t => t.ActivityAssessment)
            .WithMany(r => r.QuaterlyPlans)
            .HasForeignKey(t => t.ActivityAssessmentId);
+
+      modelBuilder.Entity<QuaterlyPlan>()
+           .HasOne(t => t.ActivityAssessmentRegion)
+           .WithMany(r => r.QuaterlyPlans)
+           .HasForeignKey(t => t.ActivityAssessmentRegionId);
 
       base.OnModelCreating(modelBuilder);
 

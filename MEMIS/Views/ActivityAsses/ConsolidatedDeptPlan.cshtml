@@ -59,17 +59,33 @@
                             <td>@Html.DisplayFor(modelItem => item.QBudget)</td>
                             <td>
                                     @{
-                                        if (item.actType == 1)
+                                        if (item.actType == 0)
                                         {
-                                        <a asp-action="ShowConsolidatedDeptPlan" asp-route-id="@item.intAssess" data-toggle="tooltip" data-placement="top" title="Details">
-                                            <i class="bx bx-detail"></i>
-                                        </a>
+                                            // <a asp-action="ShowConsolidatedDeptPlan" asp-route-id="@item.intAssess" data-toggle="tooltip" data-placement="top" title="Details">
+                                            //     <i class="bx bx-detail"></i>
+                                            // </a>
+                                        <div class="btn-group" role="group" aria-label="Actions">
+                                            <a asp-action="Details" asp-route-id="@item.intAssess" class="btn btn-info" data-toggle="tooltip" data-placement="top" title="Details">
+                                                <i class='bx bx-detail'></i>
+                                            </a>
+                                            <a asp-action="HeadVerifyStatus" asp-route-id="@item.intAssess" asp-route-IsVerified="True" class="btn btn-warning" data-toggle="tooltip" data-placement="top" title="Verify">
+                                                <i class='bx bx-check'></i>
+                                            </a>
+                                        </div>
                                         }
-                                        else if (item.actType == 2)
+                                        else if (item.actType == 1)
                                         {
-                                        <a asp-action="ShowConsolidatedRegionalAssessment" asp-route-id="@item.intAssess" data-toggle="tooltip" data-placement="top" title="Details">
-                                            <i class="bx bx-detail"></i>
-                                        </a>
+                                            // <a asp-action="ShowConsolidatedRegionalAssessment" asp-route-id="@item.intAssess" data-toggle="tooltip" data-placement="top" title="Details">
+                                            //     <i class="bx bx-detail"></i>
+                                            // </a>
+                                        <div class="btn-group" role="group" aria-label="Actions">
+                                            <a asp-action="Details" asp-route-id="@item.intAssess" class="btn btn-info" data-toggle="tooltip" data-placement="top" title="Details">
+                                                <i class='bx bx-detail'></i>
+                                            </a>
+                                            <a asp-action="HeadVerifyStatus" asp-route-id="@item.intAssess" asp-route-IsVerified="True" class="btn btn-warning" data-toggle="tooltip" data-placement="top" title="Verify">
+                                                <i class='bx bx-check'></i>
+                                            </a>
+                                        </div>
                                         }
                                     }
                             </td>

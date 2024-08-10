@@ -4,6 +4,7 @@ using MEMIS.Models.Report;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using System.IO;
 
 namespace MEMIS.Controllers.Reports
 {
@@ -339,6 +340,48 @@ namespace MEMIS.Controllers.Reports
 
         throw;
       }
+    }
+
+    public async Task<IActionResult> OpTargetPerfAchievReport()
+    {
+      List<ActivityAssessment> list = await _context.ActivityAssessment
+        .Include(x => x.ImplementationStatus)
+        .Include(x => x.DepartmentFk)
+        .ToListAsync();
+
+      return View(list);
+    }
+
+    public async Task<IActionResult> OpTargetPerfAchievReportExcel()
+    {
+      List<ActivityAssessment> list = await _context.ActivityAssessment
+        .Include(x => x.ImplementationStatus)
+        .Include(x => x.DepartmentFk)
+        .ToListAsync();
+
+      var stream = ExportHandler.OpTargetPerfAcheivReport(list);
+      stream.Position = 0;
+      return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Output/Target Performance Achievement Report.xlsx");
+    }
+
+    public async Task<IActionResult> StrategicActionPerfAchievReport()
+    {
+      List<ActivityAssessment> list = await _context.ActivityAssessment
+        .Include(x => x.ImplementationStatus)
+        .ToListAsync();
+
+      return View(list);
+    }
+
+    public async Task<IActionResult> StrategicActionPerfAchievReportExcel()
+    {
+      List<ActivityAssessment> list = await _context.ActivityAssessment
+        .Include(x => x.ImplementationStatus)
+        .ToListAsync();
+
+      var stream = ExportHandler.OpTargetPerfAcheivReport(list);
+      stream.Position = 0;
+      return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Output/Target Performance Achievement Report.xlsx");
     }
   }
 }
