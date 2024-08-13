@@ -684,7 +684,7 @@ namespace MEMIS.Helpers.ExcelReports
           row++;
         }
 
-        var tableRange = worksheet.Range(1, 1, row - 1, 16);
+        var tableRange = worksheet.Range(1, 1, row - 1, 11);
         var table = tableRange.CreateTable();
         tableRange.Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
         tableRange.Style.Border.InsideBorder = XLBorderStyleValues.Thin;
@@ -765,7 +765,7 @@ namespace MEMIS.Helpers.ExcelReports
       try
       {
         var workbook = new XLWorkbook();
-        IXLWorksheet worksheet = workbook.Worksheets.Add("Strategic Action Performance Achievement ");
+        IXLWorksheet worksheet = workbook.Worksheets.Add("Strategic Action Performance");
 
         // Setting the header row
         worksheet.Cell(1, 1).Value = "Strategic Action";
@@ -815,7 +815,7 @@ namespace MEMIS.Helpers.ExcelReports
       try
       {
         var workbook = new XLWorkbook();
-        IXLWorksheet worksheet = workbook.Worksheets.Add("Strategic Intervention Performance Achievement ");
+        IXLWorksheet worksheet = workbook.Worksheets.Add("Strategic Intervention Performance ");
 
         // Setting the header row
         worksheet.Cell(1, 1).Value = "Strategic Intervention";
@@ -865,7 +865,7 @@ namespace MEMIS.Helpers.ExcelReports
       try
       {
         var workbook = new XLWorkbook();
-        IXLWorksheet worksheet = workbook.Worksheets.Add("Strategic Objective Performance Achievement ");
+        IXLWorksheet worksheet = workbook.Worksheets.Add("Strategic Objective Performance ");
 
         // Setting the header row
         worksheet.Cell(1, 1).Value = "Strategic Objective";
@@ -915,7 +915,7 @@ namespace MEMIS.Helpers.ExcelReports
       try
       {
         var workbook = new XLWorkbook();
-        IXLWorksheet worksheet = workbook.Worksheets.Add("Outcome Performance Achievement Report");
+        IXLWorksheet worksheet = workbook.Worksheets.Add("Outcome Performance");
 
         // Setting the header row
         worksheet.Cell(1, 1).Value = "Strategic Objective";
@@ -967,7 +967,7 @@ namespace MEMIS.Helpers.ExcelReports
       try
       {
         var workbook = new XLWorkbook();
-        IXLWorksheet worksheet = workbook.Worksheets.Add("Impact Performance Achievement Report");
+        IXLWorksheet worksheet = workbook.Worksheets.Add("Impact Performance");
 
         // Setting the header row
         worksheet.Cell(1, 1).Value = "Strategic Objective";

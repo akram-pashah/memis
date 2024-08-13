@@ -1,7 +1,7 @@
 @{
 }
 @using MEMIS.Data;
-@model List<KPIAssessment>
+@model List<KPIMaster>
 @{
     ViewData["Title"] = "M&E Reports";
     //Layout = "~/Views/Shared/_PlanningLayout.cshtml";
@@ -9,14 +9,14 @@
 }
 
 <h4 class="py-3 mb-4">
-    <span class="text-muted fw-light">M&E Reports /</span> KPI M&E Report
+    <span class="text-muted fw-light">M&E Reports /</span> KPI M&E Framework Report
 </h4>
 
 <div class="row">
     <div class="col-md-12">
         <ul class="nav nav-pills flex-column flex-md-row mb-3">
             <li class="nav-item"><a class="nav-link" href="MandEIndex">SDT Quarterly Performance Report </a></li>
-            <li class="nav-item"><a class="nav-link active" href="javascript:void(0);">KPI M&E Report</a></li>
+            <li class="nav-item"><a class="nav-link" href="KpiAssessment">KPI M&E Report</a></li>
             <li class="nav-item"><a class="nav-link" href="OpTargetPerfAchievReport">Output/Target Performance Achievement Report </a></li>
             <li class="nav-item"><a class="nav-link" href="StrategicActionPerfAchievReport">Strategic Action Performance Achievement  </a></li>
             <li class="nav-item"><a class="nav-link" href="StrategicInterventionPerfAchievReport">Strategic Intervention Performance Achievement  </a></li>
@@ -24,55 +24,70 @@
             <li class="nav-item"><a class="nav-link" href="OutcomePerformanceAchievementReport">Outcome Performance Achievement Report</a></li>
             <li class="nav-item"><a class="nav-link" href="ImpactPerformanceAchievementReport">Impact Performance Achievement Report</a></li>
             <li class="nav-item"><a class="nav-link" href="SDTMAndEFrameworkReport">SDT M&E Framework Report </a></li>
-            <li class="nav-item"><a class="nav-link" href="KPIMandEFramework">KPI M&E Framework Report </a></li>
+            <li class="nav-item"><a class="nav-link active" href="javascript:void(0);">KPI M&E Framework Report </a></li>
             <li class="nav-item"><a class="nav-link" href="StrategicPlanOutputMonitoringTracker">Strategic Plan Output Monitoring Tracker</a></li>
         </ul>
 
         <div class="card mb-4">
             <h5 class="card-header">
                 <div class="col d-flex justify-content-end mb-3">
-                    <a class="btn btn-outline-success float-end float-right" asp-action="KPIExportToExcel" target="_blank">Export to Excel</a>
+                    <a class="btn btn-outline-success float-end float-right" asp-action="KPIMandEFrameworkReportExcel" target="_blank">Export to Excel</a>
                 </div>
             </h5>
             <hr class="my-0" />
 
             <div class="card-body">
                 <div style="width:100%; overflow-x:auto;">
-                    <table class="table table-bordered table-hover dt-responsive nowrap">
+                    <table class="table table-striped table-bordered table-hover dt-responsive nowrap">
                         <thead class="table-active">
                             <tr>
                                 <th>
                                     Performance Indicator
                                 </th>
                                 <th>
-                                    Frequency of Reporting
+                                    Type of Indicator
                                 </th>
                                 <th>
                                     Indicator Formulae
                                 </th>
                                 <th>
-                                    Indicator Definition 
+                                    Indicator Definition
                                 </th>
                                 <th>
-                                    FY
+                                    Original Baseline
                                 </th>
                                 <th>
-                                    Target
+                                    Indicator Classification
                                 </th>
                                 <th>
-                                    Numerator
+                                    Data Type
                                 </th>
                                 <th>
-                                    Denominator
+                                    Unit of Measure
                                 </th>
                                 <th>
-                                    Rate
+                                    Frequency of Reporting
                                 </th>
                                 <th>
-                                    Achieved
+                                    Target for FY 1
                                 </th>
                                 <th>
-                                    Justification
+                                    Target for FY 2
+                                </th>
+                                <th>
+                                    Target for FY 3
+                                </th>
+                                <th>
+                                    Target for FY 4
+                                </th>
+                                <th>
+                                    Target for FY 5
+                                </th>
+                                <th>
+                                    Means of Verification
+                                </th>
+                                <th>
+                                    Department
                                 </th>
                             </tr>
                         </thead>
@@ -84,92 +99,56 @@
                                         @Html.DisplayFor(modelItem => item.PerformanceIndicator)
                                     </td>
                                     <td>
-                                        @Html.DisplayFor(modelItem => item.FrequencyofReporting)
+                                        @Html.DisplayFor(m => item.TypeofIndicator)
                                     </td>
                                     <td>
-                                        @Html.DisplayFor(modelItem => item.IndicatorFormulae)
+                                        @Html.DisplayFor(m => item.IndicatorFormulae)
                                     </td>
                                     <td>
-                                        @Html.DisplayFor(modelItem => item.IndicatorDefinition)
+                                        @Html.DisplayFor(m => item.IndicatorDefinition)
                                     </td>
                                     <td>
-                                        @Html.DisplayFor(modelItem => item.FY)
+                                        @Html.DisplayFor(m => item.OriginalBaseline)
                                     </td>
                                     <td>
-                                        @Html.DisplayFor(modelItem => item.Target)
+                                        @Html.DisplayFor(m => item.Indicatorclassification)
                                     </td>
                                     <td>
-                                        @Html.DisplayFor(modelItem => item.Numerator)
+                                        @Html.DisplayFor(m => item.DataType)
                                     </td>
                                     <td>
-                                        @Html.DisplayFor(modelItem => item.Denominator)
+                                        @Html.DisplayFor(m => item.Unitofmeasure)
                                     </td>
                                     <td>
-                                        @Html.DisplayFor(modelItem => item.Rate)
-                                    </td>
-                                    @* <td class="badge text-white" style="background-color: @getAchievementColor(item.Achieved)">
-                                        @getAchievement(item.Achieved)
-                                    </td> *@
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Achieved)
+                                        @Html.DisplayFor(m => item.FrequencyofReporting)
                                     </td>
                                     <td>
-                                        @Html.DisplayFor(modelItem => item.Justification)
+                                        @Html.DisplayFor(m => item.FY1)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(m => item.FY2)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(m => item.FY3)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(m => item.FY4)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(m => item.FY5)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(m => item.MeansofVerification)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(m => item.ResponsibleParty)
                                     </td>
                                 </tr>
                             }
                         </tbody>
                     </table>
-                    @*<cs-pager cs-paging-pagenumber="@Model.PageNumber"
-                    cs-paging-totalitems="@Model.TotalItems"
-                    cs-paging-pagesize="@Model.PageSize"
-                    cs-pagenumber-param="pagenumber"
-                    asp-controller="RiskIdentifications"
-                    asp-action="Index"
-                    cs-pager-li-current-class="page-item active"
-                    cs-pager-li-other-class="page-item"
-                    cs-pager-li-non-active-class="page-item disabled"
-                    cs-pager-link-current-class="page-link"
-                    cs-pager-link-other-class="page-link"></cs-pager>*@
                 </div>
             </div>
         </div>
     </div>
 </div>
-
-@* <div>
-  <div class="card">
-    <div class="card-body">
-      <table class="table table-bordered table-striped">
-       <tbody>
-         <tr>
-           <td>Programe Implementation Plan </td>
-           <td><a class="btn btn-outline-success float-end float-right" asp-action="ExportToExcel" target="_blank">Export to Excel</a> </td>
-         </tr>
-          <tr>
-           <td>Consolidated Department Plan </td>
-           <td><a class="btn btn-outline-success float-end float-right" asp-action="ConsolidatedExportToExcel" target="_blank">Export to Excel</a> </td>
-         </tr>
-       </tbody>
-      </table>
-    </div>
-  </div>
-</div> *@
-@{
-    static string getAchievement(string? achieve)
-    {
-        foreach (var nachieve in ListHelper.AchievementStatus())
-        {
-            if (nachieve.Value == achieve)
-            {
-                return nachieve.Text;
-            }
-        }
-        return "NA";
-    }
-
-    static string getAchievementColor(string? achieve)
-    {
-        return achieve == "1.0" ? "#00b050" : achieve == "0.5" ? "#fefe00" : "#fd0000";
-    }
-}

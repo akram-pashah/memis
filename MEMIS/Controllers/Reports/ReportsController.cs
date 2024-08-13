@@ -707,10 +707,9 @@ namespace MEMIS.Controllers.Reports
 
     public async Task<IActionResult> SDTMAndEFrameworkReport()
     {
-      List<ActivityAssessment> list = await _context.ActivityAssessment
-        .Include(x => x.ImplementationStatus)
-        .Include(x => x.DepartmentFk)
-        .ToListAsync();
+      List<SDTMaster> list = await _context.SDTMasters
+      .Include(x => x.DepartmentFk)
+      .ToListAsync();
 
       return View(list);
     }
