@@ -24,7 +24,7 @@
                          Budget Amount
                        </th>
                        <th>
-                         Quarter
+                         Quarters
                        </th>
                        <th>
                          Quarterly Target
@@ -45,16 +45,16 @@
                                 @Html.DisplayFor(modelItem => item.Region.regionName)
                             </td>
                             <td>
-                                @Html.DisplayFor(modelItem => item.Quarter)
-                            </td>
-                            <td>
                                 @Html.DisplayFor(modelItem => item.budgetAmount)
                             </td>
                             <td>
-                                @Html.DisplayFor(modelItem => item.QTarget)
+                                @item.QuaterlyPlans.Count
                             </td>
                             <td>
-                                @Html.DisplayFor(modelItem => item.QBudget)
+                                @item.QuaterlyPlans.Sum(x => x.QTarget)
+                            </td>
+                            <td>
+                                @item.QuaterlyPlans.Sum(x => x.QBudget)
                             </td>
                         </tr>
                     }

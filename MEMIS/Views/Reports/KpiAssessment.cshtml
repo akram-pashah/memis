@@ -9,15 +9,20 @@
 }
 
 <h4 class="py-3 mb-4">
-    <span class="text-muted fw-light">M&E Reports /</span> SDT Assessment
+    <span class="text-muted fw-light">M&E Reports /</span> KPI M&E Report
 </h4>
 
 <div class="row">
     <div class="col-md-12">
         <ul class="nav nav-pills flex-column flex-md-row mb-3">
             <li class="nav-item"><a class="nav-link" href="MandEIndex">SDT Assessment</a></li>
-            <li class="nav-item"><a class="nav-link active" href="javascript:void(0);">KPI Assessment</a></li>
+            <li class="nav-item"><a class="nav-link active" href="javascript:void(0);">KPI M&E Report</a></li>
             <li class="nav-item"><a class="nav-link" href="OpTargetPerfAchievReport">Output/Target Performance Achievement Report </a></li>
+            <li class="nav-item"><a class="nav-link" href="StrategicActionPerfAchievReport">Strategic Action Performance Achievement  </a></li>
+            <li class="nav-item"><a class="nav-link" href="StrategicInterventionPerfAchievReport">Strategic Intervention Performance Achievement  </a></li>
+            <li class="nav-item"><a class="nav-link" href="StrategicObjectivePerfAchievReport">Strategic Objective Performance Achievement  </a></li>
+            <li class="nav-item"><a class="nav-link" href="OutcomePerformanceAchievementReport">Outcome Performance Achievement Report</a></li>
+            <li class="nav-item"><a class="nav-link" href="ImpactPerformanceAchievementReport">Impact Performance Achievement Report</a></li>
         </ul>
 
         <div class="card mb-4">
@@ -34,19 +39,19 @@
                         <thead class="table-active">
                             <tr>
                                 <th>
-                                    Financial Year
-                                </th>
-                                <th>
                                     Performance Indicator
                                 </th>
                                 <th>
-                                    Frequency Of Reporting
+                                    Frequency of Reporting
                                 </th>
                                 <th>
-                                    Numerator Description
+                                    Indicator Formulae
                                 </th>
                                 <th>
-                                    Denominator Description
+                                    Indicator Definition 
+                                </th>
+                                <th>
+                                    FY
                                 </th>
                                 <th>
                                     Target
@@ -58,16 +63,13 @@
                                     Denominator
                                 </th>
                                 <th>
-                                    Performance
+                                    Rate
                                 </th>
                                 <th>
-                                    Rating
+                                    Achieved
                                 </th>
                                 <th>
                                     Justification
-                                </th>
-                                <th>
-                                    Department
                                 </th>
                             </tr>
                         </thead>
@@ -75,9 +77,6 @@
                             @foreach (var item in Model)
                             {
                                 <tr>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.FY)
-                                    </td>
                                     <td>
                                         @Html.DisplayFor(modelItem => item.PerformanceIndicator)
                                     </td>
@@ -91,6 +90,9 @@
                                         @Html.DisplayFor(modelItem => item.IndicatorDefinition)
                                     </td>
                                     <td>
+                                        @Html.DisplayFor(modelItem => item.FY)
+                                    </td>
+                                    <td>
                                         @Html.DisplayFor(modelItem => item.Target)
                                     </td>
                                     <td>
@@ -102,17 +104,14 @@
                                     <td>
                                         @Html.DisplayFor(modelItem => item.Rate)
                                     </td>
-                                    <td class="badge text-white" style="background-color: @getAchievementColor(item.Achieved)">
+                                    @* <td class="badge text-white" style="background-color: @getAchievementColor(item.Achieved)">
                                         @getAchievement(item.Achieved)
+                                    </td> *@
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Achieved)
                                     </td>
                                     <td>
                                         @Html.DisplayFor(modelItem => item.Justification)
-                                    </td>
-                                    <td>
-                                        @{
-                                            var ResponsibleParty = item?.KPIMasterFk?.ResponsibleParty ?? string.Empty;
-                                        }
-                                        @Html.DisplayFor(m => ResponsibleParty)
                                     </td>
                                 </tr>
                             }

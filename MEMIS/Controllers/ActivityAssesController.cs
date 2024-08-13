@@ -138,15 +138,21 @@ namespace MEMIS.Controllers
       }
     }
 
+    private string[] getUserRoles()
+    {
+      string userRolesString = HttpContext.Session.GetString("UserRoles");
+      string[] userRoles = userRolesString?.Split(',', StringSplitOptions.RemoveEmptyEntries) ?? Array.Empty<string>();
+      return userRoles;
+    }
+
     public async Task<IActionResult> RegionalAllocations(int pageNumber = 1)
     {
       //int pageSize = 10;
       //var offset = (pageSize * pageNumber) - pageSize;
       if (_context.ActivityAssessRegion != null)
       {
-        string userRolesString = HttpContext.Session.GetString("UserRoles");
-        string[] userRoles = userRolesString?.Split(',', StringSplitOptions.RemoveEmptyEntries) ?? Array.Empty<string>();
         var region = HttpContext.Session.GetString("Region");
+        var userRoles = getUserRoles();
 
         var query = _context.ActivityAssessRegion
             .Include(x => x.ActivityAssessFk)
@@ -320,15 +326,18 @@ namespace MEMIS.Controllers
     {
       try
       {
-        List<ActivityAssessRegion> activityAssessRegions = await _context.ActivityAssessRegion
+        var query = _context.ActivityAssessRegion
           .Include(x => x.ActivityAssessFk)
           .ThenInclude(x => x.StrategicIntervention)
           .Include(x => x.ActivityAssessFk)
           .ThenInclude(x => x.StrategicAction)
           .Include(x => x.ActivityAssessFk)
           .ThenInclude(x => x.ActivityFk)
-          .Where(x => x.QuaterlyPlans.Count == 4)
-          .ToListAsync();
+          .Where(x => x.QuaterlyPlans.Count == 4);
+        var region = HttpContext.Session.GetString("Region");
+        var userRoles = getUserRoles();
+
+        List<ActivityAssessRegion> activityAssessRegions = userRoles.Contains("SuperAdmin") ? await query.ToListAsync() : await query.Where(x => x.intRegion == Guid.Parse(region)).ToListAsync();
         return View(activityAssessRegions);
       }
       catch (Exception ex)
@@ -574,9 +583,14 @@ namespace MEMIS.Controllers
     }
 
 
-    public IActionResult RegionalVerify(int pageNumber = 1)
+    public async Task<IActionResult> RegionalVerify(int pageNumber = 1)
     {
-      var result = _context.ActivityAssessRegion.Include(x => x.QuaterlyPlans).Where(x => x.ApprStatus == 0 && x.QuaterlyPlans.Where(q => q.QTarget > 0).Any()).Include(x => x.Region).ToList();
+      var query = _context.ActivityAssessRegion.Include(x => x.QuaterlyPlans).Where(x => x.ApprStatus == 0 && x.QuaterlyPlans.Where(q => q.QTarget > 0).Any()).Include(x => x.Region);
+
+      var region = HttpContext.Session.GetString("Region");
+      var userRoles = getUserRoles();
+
+      var result = userRoles.Contains("SuperAdmin") ? await query.ToListAsync() : await query.Where(x => x.intRegion == Guid.Parse(region)).ToListAsync();
 
       return View(result);
     }
@@ -674,7 +688,7 @@ namespace MEMIS.Controllers
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> HeadVerifyStatus(ActivityAssessDto objectdto)
     {
-      if (objectdto.intActivity != null && objectdto.intActivity != 0)
+      if (objectdto.intAssess != 0)
       {
         try
         {
@@ -710,14 +724,17 @@ namespace MEMIS.Controllers
       return View(objectdto);
     }
 
-    public IActionResult DirVerify(int pageNumber = 1)
+    public async Task<IActionResult> DirVerify(int pageNumber = 1)
     {
       int pageSize = 10;
       var offset = (pageSize * pageNumber) - pageSize;
       if (_context.ActivityAssess != null)
       {
-        var dat = _context.ActivityAssess.Include(m => m.StrategicIntervention).Include(m => m.StrategicAction).Include(s => s.ActivityFk)
-            .Where(x => x.ApprStatus == (int)(deptPlanApprStatus.hodreviewed)).ToList();
+        var userRoles = getUserRoles();
+        var query = _context.ActivityAssess.Include(m => m.StrategicIntervention).Include(m => m.StrategicAction).Include(s => s.ActivityFk)
+            .Where(x => x.ApprStatus == (int)(deptPlanApprStatus.hodreviewed));
+
+        var dat = userRoles.Contains("SuperAdmin") ? await query.ToListAsync() : await query.Where(x => x.intDept == Guid.Parse(HttpContext.Session.GetString("Department"))).ToListAsync();
 
         //var result = new PagedResult<ActivityAssess>
         //{
@@ -741,39 +758,42 @@ namespace MEMIS.Controllers
         return NotFound();
       }
 
-      var deptPlan = await _context.ActivityAssess.Include(m => m.StrategicIntervention).Include(m => m.StrategicAction).Include(s => s.ActivityFk)
-          .Where(m => m.intAssess == id).FirstOrDefaultAsync();
-      if (deptPlan == null)
+      ActivityAssess activityAssess = await _context.ActivityAssess.Include(m => m.StrategicIntervention).Include(m => m.StrategicAction).Include(s => s.ActivityFk)
+        .Include(x => x.QuaterlyPlans)
+        .Include(x => x.ActivityAssessRegions)
+        .ThenInclude(x => x.QuaterlyPlans).Where(x => x.intAssess == id).FirstOrDefaultAsync();
+
+      if (activityAssess.actType == 1)
       {
-        return NotFound();
+        var quarterlyPlans = await _context.ActivityAssessRegion
+          .Include(x => x.QuaterlyPlans)
+          .Where(x => x.intAssess == id)
+          .SelectMany(x => x.QuaterlyPlans)
+          .GroupBy(x => x.Quarter)
+          .Select(x => new QuaterlyPlan()
+          {
+            Quarter = x.Key,
+            QTarget = x.Sum(y => y.QTarget),
+            QBudget = x.Sum(y => y.QBudget),
+          })
+          .ToListAsync();
+
+        activityAssess.QuaterlyPlans = quarterlyPlans;
       }
-      ActivityAssessDto riskDto = new ActivityAssessDto
-      {
-        intAssess = deptPlan.intAssess,
-        intIntervention = deptPlan.intIntervention,
-        intAction = deptPlan.intAction,
-        intActivity = deptPlan.intActivity,
-        outputIndicator = deptPlan.outputIndicator,
-        baseline = deptPlan.baseline,
-        QTarget = deptPlan.QTarget,
-        QBudget = deptPlan.QBudget,
-        comparativeTarget = deptPlan.comparativeTarget,
-        justification = deptPlan.justification,
-        budgetAmount = deptPlan.budgetAmount,
-      };
+
       ViewBag.StrategicIntervention = _context.StrategicIntervention == null ? new List<StrategicIntervention>() : await _context.StrategicIntervention.ToListAsync();
       ViewBag.StrategicAction = _context.StrategicAction == null ? new List<StrategicAction>() : await _context.StrategicAction.ToListAsync();
       ViewBag.Activity = _context.Activity == null ? new List<Activity>() : await _context.Activity.ToListAsync();
       ViewBag.Depts = await _context.Departments.ToListAsync();
       ViewData["Approval"] = ListHelper.ApprovalStatus();
-      return View(riskDto);
+      return View(activityAssess);
     }
 
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> DirVerifyStatus(ActivityAssessDto objectdto)
     {
-      if (objectdto.intActivity != null && objectdto.intActivity != 0)
+      if (objectdto.intAssess != 0)
       {
         try
         {
@@ -1114,7 +1134,7 @@ namespace MEMIS.Controllers
         .Include(x => x.ActivityAssessRegions)
         .ThenInclude(x => x.Region)
         .Include(x => x.DepartmentFk)
-        .Where(x =>x.intAssess == id).FirstOrDefaultAsync();
+        .Where(x => x.intAssess == id).FirstOrDefaultAsync();
 
       if (activityAssess.actType == 1)
       {
@@ -1505,16 +1525,17 @@ namespace MEMIS.Controllers
               //  ActivityAccessId = x.ActivityAccessId,
               //  DeptPlanId = x.DeptPlanId,
               //}).ToList();
-              if(activityAsses.actType == 0)
+              if (activityAsses.actType == 0)
               {
                 foreach (var quarter in activityAsses.QuaterlyPlans)
                 {
                   quarter.ActivityAssessmentId = activityAssessment.intDeptPlan;
                 }
                 _context.SaveChanges();
-              } else
+              }
+              else
               {
-                foreach(var region in activityAsses.ActivityAssessRegions)
+                foreach (var region in activityAsses.ActivityAssessRegions)
                 {
                   ActivityAssessmentRegion activityAssessmentRegion = new ActivityAssessmentRegion()
                   {
@@ -1523,13 +1544,13 @@ namespace MEMIS.Controllers
                     intRegion = region.intRegion,
                     budgetAmount = region?.budgetAmount,
                     Quarter = region.Quarter,
-                    QTarget= region.QTarget,
+                    QTarget = region.QTarget,
                   };
 
                   _context.ActivityAssessmentRegion.Add(activityAssessmentRegion);
                   _context.SaveChanges();
 
-                  foreach(var quarter in region.QuaterlyPlans)
+                  foreach (var quarter in region.QuaterlyPlans)
                   {
                     quarter.ActivityAssessmentRegionId = activityAssessmentRegion.intRegionAssess;
                     quarter.ActivityAssessmentId = activityAssessment.intDeptPlan;

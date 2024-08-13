@@ -337,30 +337,87 @@ namespace MEMIS.Helpers.ExcelReports
         var workbook = new XLWorkbook();
         IXLWorksheet worksheet = workbook.Worksheets.Add("Strategic Plan Activity Tracker");
 
-        // Setting the header row
-        //worksheet.Cell(1, 1).Value = "Strategic Objective";
-        //worksheet.Cell(1, 2).Value = "Strategic Intervention";
-        //worksheet.Cell(1, 3).Value = "Strategic Actions";
-        //worksheet.Cell(1, 4).Value = "Activities/Initiatives";
-        //worksheet.Cell(1, 5).Value = "Output Indicators";
-        //worksheet.Cell(1, 6).Value = "Baseline";
-        //worksheet.Cell(1, 7).Value = "Annual Target";
-        //worksheet.Cell(1, 8).Value = "Budget Code";
-        //worksheet.Cell(1, 9).Value = "Amount Allocated";
-        //worksheet.Cell(1, 10).Value = "Quarter 1";
-        //worksheet.Cell(1, 11).Value = "Quarter 2";
-        //worksheet.Cell(1, 12).Value = "Quarter 3";
-        //worksheet.Cell(1, 13).Value = "Quarter 4";
-        //worksheet.Cell(1, 14).Value = "Implementation Status";
-        //worksheet.Cell(1, 15).Value = "Responsible Party";
         worksheet.Cell(1, 1).Value = "Strategic Objectives";
         worksheet.Cell(1, 2).Value = "Strategic Interventions";
         worksheet.Cell(1, 3).Value = "Strategic Actions";
-        worksheet.Cell(1, 4).Value = "FY1";
-        worksheet.Cell(1, 5).Value = "FY2";
-        worksheet.Cell(1, 6).Value = "FY3";
-        worksheet.Cell(1, 7).Value = "FY4";
-        worksheet.Cell(1, 8).Value = "FY5";
+        worksheet.Cell(1, 4).Value = "FY 1";
+        worksheet.Cell(1, 5).Value = "FY 2";
+        worksheet.Cell(1, 6).Value = "FY 3";
+        worksheet.Cell(1, 7).Value = "FY 4";
+        worksheet.Cell(1, 8).Value = "FY 5";
+        worksheet.Cell(1, 9).Value = "Cumulative Overall Performance on Strategic Intervention";
+        worksheet.Cell(1, 10).Value = "Cumulative Overall Performance on Strategic Objective 1";
+
+        // Style the headers
+        var headerRange = worksheet.Range("A1:J1");
+        headerRange.Style.Fill.BackgroundColor = XLColor.FromHtml("#063241");
+        headerRange.Style.Font.Bold = true;
+        headerRange.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+        headerRange.Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
+
+        // Auto fit columns to content
+        worksheet.Columns().AdjustToContents();
+        AdjustColumnWidths(worksheet, 25, 65);
+
+        int row = 2;
+        foreach (var objective in activityAssesses)
+        {
+          worksheet.Cell(row, 1).Value = objective.StrategicObjective;
+
+          foreach(var intervention in objective.StrategicInterventions)
+          {
+            worksheet.Cell(row, 2).Value = intervention.StrategicIntervention;
+            foreach(var action in intervention.StrategicActions)
+            {
+              worksheet.Cell(row, 3).Value = action.StrategicAction;
+              worksheet.Cell(row, 4).Value = action.FiscalYearData[0];
+              worksheet.Cell(row, 5).Value = action.FiscalYearData[1];
+              worksheet.Cell(row, 6).Value = action.FiscalYearData[2];
+              worksheet.Cell(row, 7).Value = action.FiscalYearData[3];
+              worksheet.Cell(row, 8).Value = action.FiscalYearData[4];
+              row++;
+            }
+            worksheet.Cell(row, 9).Value = Math.Round(intervention.AverageFiscalYearData.Average(), 2);
+          }
+          worksheet.Cell(row, 10).Value = Math.Round(objective.AverageFiscalYearData.Average(), 2);
+          row++;
+        }
+
+        var tableRange = worksheet.Range(1, 1, row - 1, 10);
+        var table = tableRange.CreateTable();
+        tableRange.Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
+        tableRange.Style.Border.InsideBorder = XLBorderStyleValues.Thin;
+        table.ShowAutoFilter = true;
+        table.AutoFilter.IsEnabled = true;
+        table.AutoFilter.Sort(1, XLSortOrder.Ascending);
+
+        // Save the workbook to a memory stream
+        var stream = new MemoryStream();
+        workbook.SaveAs(stream);
+        stream.Position = 0;
+        return stream;
+      }
+      catch (Exception ex)
+      {
+        throw;
+      }
+    }
+
+    public static MemoryStream StrategicPlanOutputMonitoringTrackerExport(List<StrategicObjectiveReport> activityAssesses)
+    {
+      try
+      {
+        var workbook = new XLWorkbook();
+        IXLWorksheet worksheet = workbook.Worksheets.Add("Strategic Plan Activity Tracker");
+
+        worksheet.Cell(1, 1).Value = "Strategic Objectives";
+        worksheet.Cell(1, 2).Value = "Strategic Interventions";
+        worksheet.Cell(1, 3).Value = "Strategic Actions";
+        worksheet.Cell(1, 4).Value = "FY 1";
+        worksheet.Cell(1, 5).Value = "FY 2";
+        worksheet.Cell(1, 6).Value = "FY 3";
+        worksheet.Cell(1, 7).Value = "FY 4";
+        worksheet.Cell(1, 8).Value = "FY 5";
         worksheet.Cell(1, 9).Value = "Cumulative Overall Performance on Strategic Intervention";
         worksheet.Cell(1, 10).Value = "Cumulative Overall Performance on Strategic Objective 1";
 
@@ -495,29 +552,33 @@ namespace MEMIS.Helpers.ExcelReports
         throw;
       }
     }
-    public static MemoryStream KPIMandEReport(List<KPIAssessment> assessments)
+    public static MemoryStream KPIMandEFrameworkReport(List<KPIMaster> assessments)
     {
       try
       {
         var workbook = new XLWorkbook();
-        IXLWorksheet worksheet = workbook.Worksheets.Add("KPI M&E");
+        IXLWorksheet worksheet = workbook.Worksheets.Add("KPI M&E Framework Report");
 
         // Setting the header row
-        worksheet.Cell(1, 1).Value = "Financial Year";
-        worksheet.Cell(1, 2).Value = "Performance Indicator";
-        worksheet.Cell(1, 3).Value = "Frequency Of Reporting";
-        worksheet.Cell(1, 4).Value = "Numerator Description";
-        worksheet.Cell(1, 5).Value = "Denominator Description";
-        worksheet.Cell(1, 6).Value = "Target";
-        worksheet.Cell(1, 7).Value = "Numerator";
-        worksheet.Cell(1, 8).Value = "Denominator";
-        worksheet.Cell(1, 9).Value = "Performance";
-        worksheet.Cell(1, 10).Value = "Rating";
-        worksheet.Cell(1, 11).Value = "Justification";
-        worksheet.Cell(1, 12).Value = "Department";
+        worksheet.Cell(1, 1).Value = "Performance Indicator";
+        worksheet.Cell(1, 2).Value = "Type of Indicator";
+        worksheet.Cell(1, 3).Value = "Indicator Formulae";
+        worksheet.Cell(1, 4).Value = "Indicator Definition";
+        worksheet.Cell(1, 5).Value = "Original Baseline";
+        worksheet.Cell(1, 6).Value = "Indicator Classification";
+        worksheet.Cell(1, 7).Value = "Data Type";
+        worksheet.Cell(1, 8).Value = "Unit of Measure";
+        worksheet.Cell(1, 9).Value = "Frequency of Reporting";
+        worksheet.Cell(1, 10).Value = "Target for FY 1";
+        worksheet.Cell(1, 11).Value = "Target for FY 2";
+        worksheet.Cell(1, 12).Value = "Target for FY 3";
+        worksheet.Cell(1, 13).Value = "Target for FY 4";
+        worksheet.Cell(1, 14).Value = "Target for FY 5";
+        worksheet.Cell(1, 15).Value = "Means of Verification";
+        worksheet.Cell(1, 16).Value = "Department";
 
         // Style the headers
-        var headerRange = worksheet.Range("A1:L1");
+        var headerRange = worksheet.Range("A1:P1");
         headerRange.Style.Fill.BackgroundColor = XLColor.FromHtml("#063241");
         headerRange.Style.Font.Bold = true;
         headerRange.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
@@ -530,24 +591,100 @@ namespace MEMIS.Helpers.ExcelReports
         int row = 2;
         foreach (var assessment in assessments)
         {
-          worksheet.Cell(row, 1).Value = assessment?.FY;
-          worksheet.Cell(row, 2).Value = assessment?.PerformanceIndicator;
-          worksheet.Cell(row, 3).Value = assessment?.FrequencyofReporting;
-          worksheet.Cell(row, 4).Value = assessment?.IndicatorFormulae;
-          worksheet.Cell(row, 5).Value = assessment?.IndicatorDefinition;
-          worksheet.Cell(row, 6).Value = assessment?.Target;
-          worksheet.Cell(row, 7).Value = assessment?.Numerator;
-          worksheet.Cell(row, 8).Value = assessment?.Denominator;
-          worksheet.Cell(row, 9).Value = assessment?.Rate;
-          worksheet.Cell(row, 10).Value = getAchievement(assessment?.Achieved ?? "");
-          worksheet.Cell(row, 10).Style.Font.FontColor = assessment?.Achieved == "1.0" ? XLColor.FromHtml("#00b050") : assessment?.Achieved == "0.5" ? XLColor.FromHtml("#fefe00") : XLColor.FromHtml("#fd0000");
-          worksheet.Cell(row, 11).Value = assessment?.Justification;
-          worksheet.Cell(row, 12).Value = assessment?.KPIMasterFk?.ResponsibleParty;
+          worksheet.Cell(row, 1).Value = assessment?.PerformanceIndicator;
+          worksheet.Cell(row, 2).Value = assessment?.TypeofIndicator;
+          worksheet.Cell(row, 3).Value = assessment?.IndicatorFormulae;
+          worksheet.Cell(row, 4).Value = assessment?.IndicatorDefinition;
+          worksheet.Cell(row, 5).Value = assessment?.OriginalBaseline;
+          worksheet.Cell(row, 6).Value = assessment?.Indicatorclassification;
+          worksheet.Cell(row, 7).Value = assessment?.DataType;
+          worksheet.Cell(row, 8).Value = assessment?.Unitofmeasure;
+          worksheet.Cell(row, 9).Value = assessment?.FrequencyofReporting;
+          //worksheet.Cell(row, 10).Value = getAchievement(assessment?.Achieved ?? "");
+          //worksheet.Cell(row, 10).Style.Font.FontColor = assessment?.Achieved == "1.0" ? XLColor.FromHtml("#00b050") : assessment?.Achieved == "0.5" ? XLColor.FromHtml("#fefe00") : XLColor.FromHtml("#fd0000");
+          worksheet.Cell(row, 10).Value = assessment?.FY1;
+          worksheet.Cell(row, 11).Value = assessment?.FY2;
+          worksheet.Cell(row, 12).Value = assessment?.FY3;
+          worksheet.Cell(row, 13).Value = assessment?.FY4;
+          worksheet.Cell(row, 14).Value = assessment?.FY5;
+          worksheet.Cell(row, 15).Value = assessment?.MeansofVerification;
+          worksheet.Cell(row, 16).Value = assessment?.ResponsibleParty;
 
           row++;
         }
 
-        var tableRange = worksheet.Range(1, 1, row - 1, 12);
+        var tableRange = worksheet.Range(1, 1, row - 1, 16);
+        var table = tableRange.CreateTable();
+        tableRange.Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
+        tableRange.Style.Border.InsideBorder = XLBorderStyleValues.Thin;
+        table.ShowAutoFilter = true;
+        table.AutoFilter.IsEnabled = true;
+        table.AutoFilter.Sort(1, XLSortOrder.Ascending);
+
+        // Save the workbook to a memory stream
+        var stream = new MemoryStream();
+        workbook.SaveAs(stream);
+        stream.Position = 0;
+        return stream;
+      }
+      catch (Exception ex)
+      {
+        throw;
+      }
+    }
+
+    public static MemoryStream KPIMandEReport(List<KPIAssessment> assessments)
+    {
+      try
+      {
+        var workbook = new XLWorkbook();
+        IXLWorksheet worksheet = workbook.Worksheets.Add("KPI M&E Report");
+
+        // Setting the header row
+        worksheet.Cell(1, 1).Value = "Performance Indicator";
+        worksheet.Cell(1, 2).Value = "Frequency Of Reporting";
+        worksheet.Cell(1, 3).Value = "Indicator Formulae";
+        worksheet.Cell(1, 4).Value = "Indicator Definition";
+        worksheet.Cell(1, 5).Value = "FY";
+        worksheet.Cell(1, 6).Value = "Target";
+        worksheet.Cell(1, 7).Value = "Numerator";
+        worksheet.Cell(1, 8).Value = "Denominator";
+        worksheet.Cell(1, 9).Value = "Rate";
+        worksheet.Cell(1, 10).Value = "Achieved";
+        worksheet.Cell(1, 11).Value = "Justification";
+
+        // Style the headers
+        var headerRange = worksheet.Range("A1:K1");
+        headerRange.Style.Fill.BackgroundColor = XLColor.FromHtml("#063241");
+        headerRange.Style.Font.Bold = true;
+        headerRange.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+        headerRange.Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
+
+        // Auto fit columns to content
+        worksheet.Columns().AdjustToContents();
+        AdjustColumnWidths(worksheet, 25, 65);
+
+        int row = 2;
+        foreach (var assessment in assessments)
+        {
+          worksheet.Cell(row, 1).Value = assessment?.PerformanceIndicator;
+          worksheet.Cell(row, 2).Value = assessment?.FrequencyofReporting;
+          worksheet.Cell(row, 3).Value = assessment?.IndicatorFormulae;
+          worksheet.Cell(row, 4).Value = assessment?.IndicatorDefinition;
+          worksheet.Cell(row, 5).Value = assessment?.FY;
+          worksheet.Cell(row, 6).Value = assessment?.Target;
+          worksheet.Cell(row, 7).Value = assessment?.Numerator;
+          worksheet.Cell(row, 8).Value = assessment?.Denominator;
+          worksheet.Cell(row, 9).Value = assessment?.Rate;
+          //worksheet.Cell(row, 10).Value = getAchievement(assessment?.Achieved ?? "");
+          //worksheet.Cell(row, 10).Style.Font.FontColor = assessment?.Achieved == "1.0" ? XLColor.FromHtml("#00b050") : assessment?.Achieved == "0.5" ? XLColor.FromHtml("#fefe00") : XLColor.FromHtml("#fd0000");
+          worksheet.Cell(row, 10).Value = assessment?.Achieved;
+          worksheet.Cell(row, 11).Value = assessment?.Justification;
+
+          row++;
+        }
+
+        var tableRange = worksheet.Range(1, 1, row - 1, 16);
         var table = tableRange.CreateTable();
         tableRange.Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
         tableRange.Style.Border.InsideBorder = XLBorderStyleValues.Thin;
@@ -604,6 +741,320 @@ namespace MEMIS.Helpers.ExcelReports
         }
 
         var tableRange = worksheet.Range(1, 1, row - 1, 5);
+        var table = tableRange.CreateTable();
+        tableRange.Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
+        tableRange.Style.Border.InsideBorder = XLBorderStyleValues.Thin;
+        table.ShowAutoFilter = true;
+        table.AutoFilter.IsEnabled = true;
+        table.AutoFilter.Sort(1, XLSortOrder.Ascending);
+
+        // Save the workbook to a memory stream
+        var stream = new MemoryStream();
+        workbook.SaveAs(stream);
+        stream.Position = 0;
+        return stream;
+      }
+      catch (Exception ex)
+      {
+        throw;
+      }
+    }
+
+    public static MemoryStream StrategicActionPerfAchievReport(List<StrategicActionPerformanceAchievementDto> actions)
+    {
+      try
+      {
+        var workbook = new XLWorkbook();
+        IXLWorksheet worksheet = workbook.Worksheets.Add("Strategic Action Performance Achievement ");
+
+        // Setting the header row
+        worksheet.Cell(1, 1).Value = "Strategic Action";
+        worksheet.Cell(1, 2).Value = "Performance Achievement Status";
+
+        // Style the headers
+        var headerRange = worksheet.Range("A1:B1");
+        headerRange.Style.Fill.BackgroundColor = XLColor.FromHtml("#063241");
+        headerRange.Style.Font.Bold = true;
+        headerRange.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+        headerRange.Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
+
+        // Auto fit columns to content
+        worksheet.Columns().AdjustToContents();
+        AdjustColumnWidths(worksheet, 25, 65);
+
+        int row = 2;
+        foreach (var action in actions)
+        {
+          worksheet.Cell(row, 1).Value = action?.StrategicAction;
+          worksheet.Cell(row, 2).Value = action?.PerformanceAchievementStatus;
+          row++;
+        }
+
+        var tableRange = worksheet.Range(1, 1, row - 1, 2);
+        var table = tableRange.CreateTable();
+        tableRange.Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
+        tableRange.Style.Border.InsideBorder = XLBorderStyleValues.Thin;
+        table.ShowAutoFilter = true;
+        table.AutoFilter.IsEnabled = true;
+        table.AutoFilter.Sort(1, XLSortOrder.Ascending);
+
+        // Save the workbook to a memory stream
+        var stream = new MemoryStream();
+        workbook.SaveAs(stream);
+        stream.Position = 0;
+        return stream;
+      }
+      catch (Exception ex)
+      {
+        throw;
+      }
+    }
+
+    public static MemoryStream StrategicInterventionPerfAchievReport(List<StrategicInterventionPerformanceAchievementDto> actions)
+    {
+      try
+      {
+        var workbook = new XLWorkbook();
+        IXLWorksheet worksheet = workbook.Worksheets.Add("Strategic Intervention Performance Achievement ");
+
+        // Setting the header row
+        worksheet.Cell(1, 1).Value = "Strategic Intervention";
+        worksheet.Cell(1, 2).Value = "Performance Achievement Status";
+
+        // Style the headers
+        var headerRange = worksheet.Range("A1:B1");
+        headerRange.Style.Fill.BackgroundColor = XLColor.FromHtml("#063241");
+        headerRange.Style.Font.Bold = true;
+        headerRange.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+        headerRange.Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
+
+        // Auto fit columns to content
+        worksheet.Columns().AdjustToContents();
+        AdjustColumnWidths(worksheet, 25, 65);
+
+        int row = 2;
+        foreach (var action in actions)
+        {
+          worksheet.Cell(row, 1).Value = action?.StrategicIntervention;
+          worksheet.Cell(row, 2).Value = action?.PerformanceAchievementStatus;
+          row++;
+        }
+
+        var tableRange = worksheet.Range(1, 1, row - 1, 2);
+        var table = tableRange.CreateTable();
+        tableRange.Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
+        tableRange.Style.Border.InsideBorder = XLBorderStyleValues.Thin;
+        table.ShowAutoFilter = true;
+        table.AutoFilter.IsEnabled = true;
+        table.AutoFilter.Sort(1, XLSortOrder.Ascending);
+
+        // Save the workbook to a memory stream
+        var stream = new MemoryStream();
+        workbook.SaveAs(stream);
+        stream.Position = 0;
+        return stream;
+      }
+      catch (Exception ex)
+      {
+        throw;
+      }
+    }
+
+    public static MemoryStream StrategicObjectivePerfAchievReport(List<StrategicObjectivePerformanceAchievementDto> actions)
+    {
+      try
+      {
+        var workbook = new XLWorkbook();
+        IXLWorksheet worksheet = workbook.Worksheets.Add("Strategic Objective Performance Achievement ");
+
+        // Setting the header row
+        worksheet.Cell(1, 1).Value = "Strategic Objective";
+        worksheet.Cell(1, 2).Value = "Performance Achievement Status";
+
+        // Style the headers
+        var headerRange = worksheet.Range("A1:B1");
+        headerRange.Style.Fill.BackgroundColor = XLColor.FromHtml("#063241");
+        headerRange.Style.Font.Bold = true;
+        headerRange.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+        headerRange.Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
+
+        // Auto fit columns to content
+        worksheet.Columns().AdjustToContents();
+        AdjustColumnWidths(worksheet, 25, 65);
+
+        int row = 2;
+        foreach (var action in actions)
+        {
+          worksheet.Cell(row, 1).Value = action?.StrategicObjective;
+          worksheet.Cell(row, 2).Value = action?.PerformanceAchievementStatus;
+          row++;
+        }
+
+        var tableRange = worksheet.Range(1, 1, row - 1, 2);
+        var table = tableRange.CreateTable();
+        tableRange.Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
+        tableRange.Style.Border.InsideBorder = XLBorderStyleValues.Thin;
+        table.ShowAutoFilter = true;
+        table.AutoFilter.IsEnabled = true;
+        table.AutoFilter.Sort(1, XLSortOrder.Ascending);
+
+        // Save the workbook to a memory stream
+        var stream = new MemoryStream();
+        workbook.SaveAs(stream);
+        stream.Position = 0;
+        return stream;
+      }
+      catch (Exception ex)
+      {
+        throw;
+      }
+    }
+
+    public static MemoryStream OutcomePerfAchievReport(List<ActivityAssessment> activities)
+    {
+      try
+      {
+        var workbook = new XLWorkbook();
+        IXLWorksheet worksheet = workbook.Worksheets.Add("Outcome Performance Achievement Report");
+
+        // Setting the header row
+        worksheet.Cell(1, 1).Value = "Strategic Objective";
+        worksheet.Cell(1, 2).Value = "Performance Achievement Status";
+        worksheet.Cell(1, 3).Value = "Department";
+
+        // Style the headers
+        var headerRange = worksheet.Range("A1:C1");
+        headerRange.Style.Fill.BackgroundColor = XLColor.FromHtml("#063241");
+        headerRange.Style.Font.Bold = true;
+        headerRange.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+        headerRange.Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
+
+        // Auto fit columns to content
+        worksheet.Columns().AdjustToContents();
+        AdjustColumnWidths(worksheet, 25, 65);
+
+        int row = 2;
+        foreach (var activity in activities)
+        {
+          worksheet.Cell(row, 1).Value = activity?.strategicObjective;
+          worksheet.Cell(row, 2).Value = activity?.ImplementationStatus?.ImpStatusName;
+          worksheet.Cell(row, 3).Value = activity?.DepartmentFk?.deptName;
+          row++;
+        }
+
+        var tableRange = worksheet.Range(1, 1, row - 1, 3);
+        var table = tableRange.CreateTable();
+        tableRange.Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
+        tableRange.Style.Border.InsideBorder = XLBorderStyleValues.Thin;
+        table.ShowAutoFilter = true;
+        table.AutoFilter.IsEnabled = true;
+        table.AutoFilter.Sort(1, XLSortOrder.Ascending);
+
+        // Save the workbook to a memory stream
+        var stream = new MemoryStream();
+        workbook.SaveAs(stream);
+        stream.Position = 0;
+        return stream;
+      }
+      catch (Exception ex)
+      {
+        throw;
+      }
+    }
+
+    public static MemoryStream ImpactPerfAchievReport(List<ActivityAssessment> activities)
+    {
+      try
+      {
+        var workbook = new XLWorkbook();
+        IXLWorksheet worksheet = workbook.Worksheets.Add("Impact Performance Achievement Report");
+
+        // Setting the header row
+        worksheet.Cell(1, 1).Value = "Strategic Objective";
+        worksheet.Cell(1, 2).Value = "Performance Achievement Status";
+        worksheet.Cell(1, 3).Value = "Department";
+
+        // Style the headers
+        var headerRange = worksheet.Range("A1:C1");
+        headerRange.Style.Fill.BackgroundColor = XLColor.FromHtml("#063241");
+        headerRange.Style.Font.Bold = true;
+        headerRange.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+        headerRange.Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
+
+        // Auto fit columns to content
+        worksheet.Columns().AdjustToContents();
+        AdjustColumnWidths(worksheet, 25, 65);
+
+        int row = 2;
+        foreach (var activity in activities)
+        {
+          worksheet.Cell(row, 1).Value = activity?.strategicObjective;
+          worksheet.Cell(row, 2).Value = activity?.ImplementationStatus?.ImpStatusName;
+          worksheet.Cell(row, 3).Value = activity?.DepartmentFk?.deptName;
+          row++;
+        }
+
+        var tableRange = worksheet.Range(1, 1, row - 1, 3);
+        var table = tableRange.CreateTable();
+        tableRange.Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
+        tableRange.Style.Border.InsideBorder = XLBorderStyleValues.Thin;
+        table.ShowAutoFilter = true;
+        table.AutoFilter.IsEnabled = true;
+        table.AutoFilter.Sort(1, XLSortOrder.Ascending);
+
+        // Save the workbook to a memory stream
+        var stream = new MemoryStream();
+        workbook.SaveAs(stream);
+        stream.Position = 0;
+        return stream;
+      }
+      catch (Exception ex)
+      {
+        throw;
+      }
+    }
+
+    public static MemoryStream SdtMAndEFrameworkReport(List<SDTMaster> sDTMasters)
+    {
+      try
+      {
+        var workbook = new XLWorkbook();
+        IXLWorksheet worksheet = workbook.Worksheets.Add("SDT M&E Framework Report");
+
+        // Setting the header row
+        worksheet.Cell(1, 1).Value = "SDT Indicator";
+        worksheet.Cell(1, 2).Value = "Measure";
+        worksheet.Cell(1, 3).Value = "Evaluation Period";
+        worksheet.Cell(1, 4).Value = "Target";
+        worksheet.Cell(1, 5).Value = "Numerator";
+        worksheet.Cell(1, 6).Value = "Denominator";
+        worksheet.Cell(1, 7).Value = "Department";
+
+        // Style the headers
+        var headerRange = worksheet.Range("A1:G1");
+        headerRange.Style.Fill.BackgroundColor = XLColor.FromHtml("#063241");
+        headerRange.Style.Font.Bold = true;
+        headerRange.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+        headerRange.Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
+
+        // Auto fit columns to content
+        worksheet.Columns().AdjustToContents();
+        AdjustColumnWidths(worksheet, 25, 65);
+
+        int row = 2;
+        foreach (var activity in sDTMasters)
+        {
+          worksheet.Cell(row, 1).Value = activity?.ServiceDeliveryTimeline;
+          worksheet.Cell(row, 2).Value = activity?.Measure;
+          worksheet.Cell(row, 3).Value = activity?.EvaluationPeriod;
+          worksheet.Cell(row, 4).Value = activity?.Target;
+          worksheet.Cell(row, 5).Value = activity?.Numerator;
+          worksheet.Cell(row, 6).Value = activity?.Denominator;
+          worksheet.Cell(row, 7).Value = activity?.DepartmentFk?.deptName;
+          row++;
+        }
+
+        var tableRange = worksheet.Range(1, 1, row - 1, 7);
         var table = tableRange.CreateTable();
         tableRange.Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
         tableRange.Style.Border.InsideBorder = XLBorderStyleValues.Thin;
