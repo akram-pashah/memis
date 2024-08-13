@@ -281,7 +281,7 @@ namespace MEMIS.Controllers.ME
         activityAssessDto.budgetAmount = region.budgetAmount;
         activityAssessDto.QTarget = region.QTarget;
         activityAssessDto.QBudget = region.QBudget;
-        activityAssessDto.QuaterlyPlans = region.ActivityAssessmentFk.QuaterlyPlans;
+        activityAssessDto.QuaterlyPlans = region.QuaterlyPlans.ToList();
         ViewData["Quarter"] = ListHelper.Quarter();
         return View(activityAssessDto);
       }
@@ -381,11 +381,11 @@ namespace MEMIS.Controllers.ME
       }
       else if (Status == 0)
       {
-        query = query.Where(x => x.ActivityAssessFk != null && x.ActivityAssessFk.QuaterlyPlans.Count != 4);
+        query = query.Where(x => x.ActivityAssessFk != null);
       }
       if (isRegional)
       {
-        query = query.Where(x => x.ActivityAssessFk != null && x.ActivityAssessFk.actType != 1);
+        query = query.Where(x => x.ActivityAssessFk != null && x.ActivityAssessFk.actType == 1);
       }
 
       var appDbContext = await query.ToListAsync();

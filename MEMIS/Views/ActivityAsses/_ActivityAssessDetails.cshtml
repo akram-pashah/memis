@@ -1,0 +1,124 @@
+@model MEMIS.Data.ActivityAssessRegion
+
+<h5>Details</h5>
+<dl class="row">
+    <dt class="col-sm-2">
+        Strategic Objective:
+    </dt>
+    <dd class="col-sm-10">
+        @Model.ActivityAssessFk.StrategicIntervention?.StrategicObjective?.ObjectiveName
+    </dd>
+    <dt class="col-sm-2">
+        Strategic Intervention:
+    </dt>
+    <dd class="col-sm-10">
+        @Model.ActivityAssessFk.StrategicIntervention?.InterventionName
+    </dd>
+    <dt class="col-sm-2">
+        Strategic Action:
+    </dt>
+    <dd class="col-sm-10">
+        @Model.ActivityAssessFk.StrategicAction?.actionName
+    </dd>
+    <dt class="col-sm-2">
+        Activities/Initiatives:
+    </dt>
+    <dd class="col-sm-10">
+        @Model.ActivityAssessFk.ActivityFk?.activityName
+    </dd>
+    <dt class="col-sm-2">
+        Output Indicators:
+    </dt>
+    <dd class="col-sm-10">
+        @Model.ActivityAssessFk.outputIndicator
+    </dd>
+    <dt class="col-sm-2">
+        Baseline:
+    </dt>
+    <dd class="col-sm-10">
+        @Model.ActivityAssessFk.baseline
+    </dd>
+    <dt class="col-sm-2">
+        Annual Target:
+    </dt>
+    <dd class="col-sm-10">
+        @Model.QTarget
+    </dd>
+    <dt class="col-sm-2">
+        Budget Code:
+    </dt>
+    <dd class="col-sm-10">
+        @Model.ActivityAssessFk.budgetCode
+    </dd>
+    <dt class="col-sm-2">
+        Amount Allocated:
+    </dt>
+    <dd class="col-sm-10">
+        @Model.budgetAmount
+    </dd>
+    <dt class="col-sm-2">
+        Identified Risks:
+    </dt>
+    <dd class="col-sm-10">
+        @Model.ActivityAssessFk.IdentifiedRisks
+    </dd>
+    <dt class="col-sm-2">
+        Responsible Party:
+    </dt>
+    <dd class="col-sm-10">
+        @Model.ActivityAssessFk.DepartmentFk?.deptName
+    </dd>
+</dl>
+
+<div class="row">
+  <div class="col">
+        <h5>Department Quarterly Plans</h5>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Quarter</th>
+                    <th>Target</th>
+                    <th>Budget</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.ActivityAssessFk.QuaterlyPlans != null)
+                {
+                    foreach (var plan in Model.ActivityAssessFk.QuaterlyPlans)
+                    {
+                        <tr>
+                            <td>@plan.Quarter</td>
+                            <td>@plan.QTarget</td>
+                            <td>@plan.QBudget</td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+  </div>
+  <div class="col">
+        <h5>Regional Quarterly Plans: @Model.Region?.regionName</h5>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Quarter</th>
+                    <th>Target</th>
+                    <th>Budget</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.QuaterlyPlans != null)
+                {
+                    foreach (var plan in Model.QuaterlyPlans)
+                    {
+                        <tr>
+                            <td>@plan.Quarter</td>
+                            <td>@plan.QTarget</td>
+                            <td>@plan.QBudget</td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+  </div>
+</div>

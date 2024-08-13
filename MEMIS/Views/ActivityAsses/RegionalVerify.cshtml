@@ -32,6 +32,9 @@
                        <th>
                          Quarterly Budget
                        </th>
+                       <th>
+                         Actions
+                       </th>
                     </tr>
                 </thead>
                 <tbody>
@@ -55,6 +58,11 @@
                             </td>
                             <td>
                                 @item.QuaterlyPlans.Sum(x => x.QBudget)
+                            </td>
+                            <td>
+                                <button type="button" class="btn btn-info" data-id="@item.intRegionAssess">
+                                    View Details
+                                </button>
                             </td>
                         </tr>
                     }
@@ -92,3 +100,42 @@
         });
     </script>
 }
+
+<div class="modal fade" id="activityAssessModal" tabindex="-1" role="dialog" aria-labelledby="activityAssessModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="activityAssessModalLabel">Activity Assess Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Content will be loaded here -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+
+    $(document).on('click', 'button[data-id]', function () {
+        var id = $(this).data('id');
+
+        $.ajax({
+            url: '@Url.Action("GetActivityAssessDetails", "ActivityAsses")',
+            type: 'GET',
+            data: { id: id },
+            success: function (data) {
+                $('#activityAssessModal .modal-body').html(data);
+                $('#activityAssessModal').modal('show');
+            },
+            error: function () {
+                alert('Failed to load details.');
+            }
+        });
+    });
+</script>

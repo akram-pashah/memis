@@ -55,8 +55,8 @@
                             <td>@Html.DisplayFor(modelItem => item.comparativeTarget)</td>
                             <td>@Html.DisplayFor(modelItem => item.justification)</td>
                             <td>@Html.DisplayFor(modelItem => item.budgetAmount)</td>
-                            <td>@Html.DisplayFor(modelItem => item.QTarget)</td>
-                            <td>@Html.DisplayFor(modelItem => item.QBudget)</td>
+                            <td>@item.QuaterlyPlans.Sum(x => x.QTarget)</td>
+                            <td>@item.QuaterlyPlans.Sum(x => x.QBudget)</td>
                             <td>
                                     @{
                                         if (item.actType == 0)

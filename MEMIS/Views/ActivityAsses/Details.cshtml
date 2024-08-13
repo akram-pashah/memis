@@ -86,9 +86,9 @@
                 </div>
                 <br />
                 @* <div class="form-group">
-                    <label asp-for="ApprStatus" class="control-label">Approval Status</label>
-                    <select asp-for="ApprStatus" class="form-control" asp-items="ViewBag.Approval"></select>
-                    <span asp-validation-for="ApprStatus" class="text-danger"></span>
+                <label asp-for="ApprStatus" class="control-label">Approval Status</label>
+                <select asp-for="ApprStatus" class="form-control" asp-items="ViewBag.Approval"></select>
+                <span asp-validation-for="ApprStatus" class="text-danger"></span>
                 </div>
                 <br /> *@
                 @* <div class="form-group">
@@ -127,88 +127,80 @@
                     <div class="card accordion-item">
                         <div id="accordionQuarterDetailsCollapse" class="accordion-collapse" data-bs-parent="#accordionQuarterDetails">
                             <div class="accordion-body">
-                                @if (Model.actType == 0)
+                                <h5>Target set for Department Plan</h5>
+                                <hr />
+                                <table class="table table-striped table-bordered" id="quarterDetailsTable">
+                                    <thead class="thead-dark">
+                                        <tr>
+                                            <th>Id</th>
+                                            <th>Quarter</th>
+                                            <th>Target</th>
+                                            <th>Budget</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @for (int i = 0; i < Model.QuaterlyPlans?.Count; i++)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    @(i + 1)
+                                                    @* <input asp-for="QuaterlyPlans.ToList()[i].Id" class="form-control" hidden />
+                                                <input asp-for="QuaterlyPlans.ToList()[i].DeptPlanId" class="form-control" hidden />
+                                                <input asp-for="QuaterlyPlans.ToList()[i].ActivityAccessId" class="form-control" hidden /> *@
+                                                </td>
+                                                <td>
+                                                    <label class="form-control">@Model.QuaterlyPlans.ToList()[i].Quarter</label>
+                                                </td>
+                                                <td>
+                                                    <label class="form-control">@Model.QuaterlyPlans.ToList()[i].QTarget</label>
+                                                </td>
+                                                <td>
+                                                    <label class="form-control">@Model.QuaterlyPlans.ToList()[i].QBudget</label>
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                                <hr />
+                                @foreach (var region in Model.ActivityAssessRegions)
                                 {
+                                    <h5>Targets set for Region: @region.Region?.regionName</h5>
+                                    <hr />
                                     <table class="table table-striped table-bordered" id="quarterDetailsTable">
                                         <thead class="thead-dark">
                                             <tr>
                                                 <th>Id</th>
+                                                <th>Region</th>
                                                 <th>Quarter</th>
                                                 <th>Target</th>
                                                 <th>Budget</th>
-                                                <th>Action</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @for (int i = 0; i < Model.QuaterlyPlans?.Count; i++)
+                                            @for (int i = 0; i < region.QuaterlyPlans?.Count; i++)
                                             {
                                                 <tr>
                                                     <td>
                                                         @(i + 1)
-                                                        @* <input asp-for="QuaterlyPlans.ToList()[i].Id" class="form-control" hidden />
-                                                <input asp-for="QuaterlyPlans.ToList()[i].DeptPlanId" class="form-control" hidden />
-                                                <input asp-for="QuaterlyPlans.ToList()[i].ActivityAccessId" class="form-control" hidden /> *@
+                                                        @* <input asp-for="@region.QuaterlyPlans.ToList()[i].Id" class="form-control" hidden />
+                                                <input asp-for="@region.QuaterlyPlans.ToList()[i].DeptPlanId" class="form-control" hidden />
+                                                <input asp-for="@region.QuaterlyPlans.ToList()[i].ActivityAccessId" class="form-control" hidden /> *@
+                                                    </td>
+                                                    <td>@region.Region.regionName</td>
+                                                    <td>
+                                                        <label class="form-control">Quarter @region.QuaterlyPlans.ToList()[i].Quarter</label>
                                                     </td>
                                                     <td>
-                                                        <label class="form-control">@Model.QuaterlyPlans.ToList()[i].Quarter</label>
+                                                        <label class="form-control">@region.QuaterlyPlans.ToList()[i].QTarget</label>
                                                     </td>
                                                     <td>
-                                                        <label class="form-control">@Model.QuaterlyPlans.ToList()[i].QTarget</label>
+                                                        <label class='form-control'>@region.QuaterlyPlans.ToList()[i].QBudget</label>
                                                     </td>
-                                                    <td>
-                                                        <label class="form-control">@Model.QuaterlyPlans.ToList()[i].QBudget</label>
-                                                    </td>
-                                                    <td>
-                                                        @* <a class="btn btn-danger delete-btn" onclick="removeEvent(this)" data-toggle="tooltip" data-placement="top" title="Delete"><i class="bx bx-message-square-x"></i></a> *@
-                                                    </td>
+                                                    
                                                 </tr>
                                             }
                                         </tbody>
                                     </table>
-                                }
-                                else
-                                {
-                                    @foreach (var region in Model.ActivityAssessRegions)
-                                    {
-                                      <h5>Targets set for Region: @region.Region?.regionName</h5>
-                                      <hr />
-                                        <table class="table table-striped table-bordered" id="quarterDetailsTable">
-                                            <thead class="thead-dark">
-                                                <tr>
-                                                    <th>Id</th>
-                                                    <th>Quarter</th>
-                                                    <th>Target</th>
-                                                    <th>Budget</th>
-                                                    <th>Action</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                @for (int i = 0; i < region.QuaterlyPlans?.Count; i++)
-                                                {
-                                                    <tr>
-                                                        <td>
-                                                            @(i + 1)
-                                                            @* <input asp-for="@region.QuaterlyPlans.ToList()[i].Id" class="form-control" hidden />
-                                                <input asp-for="@region.QuaterlyPlans.ToList()[i].DeptPlanId" class="form-control" hidden />
-                                                <input asp-for="@region.QuaterlyPlans.ToList()[i].ActivityAccessId" class="form-control" hidden /> *@
-                                                        </td>
-                                                        <td>
-                                                            <label class="form-control">Quarter @region.QuaterlyPlans.ToList()[i].Quarter</label>
-                                                        </td>
-                                                        <td>
-                                                            <label class="form-control">@region.QuaterlyPlans.ToList()[i].QTarget</label>
-                                                        </td>
-                                                        <td>
-                                                            <label class='form-control'>@region.QuaterlyPlans.ToList()[i].QBudget</label>
-                                                        </td>
-                                                        <td>
-                                                            @* <a class="btn btn-danger delete-btn" onclick="removeEvent(this)" data-toggle="tooltip" data-placement="top" title="Delete"><i class="bx bx-message-square-x"></i></a>
-                                                </td> *@
-                                                    </tr>
-                                                }
-                                            </tbody>
-                                        </table>
-                                    }
                                 }
                             </div>
                         </div>

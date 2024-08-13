@@ -72,16 +72,16 @@
             initializeDataTable();
 
             function initializeDataTable() {
-                if ($.fn.DataTable?.isDataTable('.table')) {
-                    $('.table').DataTable().destroy();
+                if ($.fn.DataTable?.isDataTable('.table') && !$('.table.no-table').length) {
+                    $('.table').not('.no-table').DataTable().destroy();
                 }
-                $('.table').DataTable();
+                $('.table').not('.no-table').DataTable();
             }
 
             function reinitializeDataTable() {
                 // Destroy and reinitialize DataTable
-                $('.table').DataTable().destroy();
-                $('.table').DataTable();
+                $('.table').not('.no-table').DataTable().destroy();
+                $('.table').not('.no-table').DataTable();
             }
 
             $(document).on('change', '.table', function () {
