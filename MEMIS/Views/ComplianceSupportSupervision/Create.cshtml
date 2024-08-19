@@ -1,9 +1,8 @@
-
 @model MEMIS.Models.ComplianceSupportSupervisionDto
 @{
-  ViewData["Title"] = "Create";
-  //Layout = "~/Views/Shared/_GISLayout.cshtml";
-  Layout = "~/Pages/Shared/_ContentNavbarLayout.cshtml";
+    ViewData["Title"] = "Create";
+    //Layout = "~/Views/Shared/_GISLayout.cshtml";
+    Layout = "~/Pages/Shared/_ContentNavbarLayout.cshtml";
 }
 
 <h5>Compliance Support Supervision</h5>
@@ -73,30 +72,53 @@
             </div>
             <br />
             <div class="form-group">
-                <label asp-for="CategoryOfpremises" class="control-label"></label>
-                <select asp-for="CategoryOfpremises" class="form-control" asp-items="ViewBag.Category"></select>
-                <span asp-validation-for="CategoryOfpremises" class="text-danger"></span>
+                <label for="complianceType" class="control-label">Compliance Type</label>
+                <select id="complianceType" class="form-control">
+                    <option value="">Select Compliance Type</option>
+                    <option value="GPP">GPP</option>
+                    <option value="GMP">GMP</option>
+                    <option value="GDP">GDP</option>
+                </select>
             </div>
-           <br />
+            <br />
+            <div id="gppFields" class="conditional-fields">
+                <div class="form-group">
+                    <label asp-for="CategoryOfpremises" class="control-label"></label>
+                    <select asp-for="CategoryOfpremises" class="form-control" asp-items="ViewBag.Category"></select>
+                    <span asp-validation-for="CategoryOfpremises" class="text-danger"></span>
+                </div>
+                <br />
+                <div class="form-group">
+                    <label asp-for="LicenseStatus" class="control-label"></label>
+                    <select asp-for="LicenseStatus" class="form-control" asp-items="ViewBag.LicenseStatus"></select>
+                    <span asp-validation-for="LicenseStatus" class="text-danger"></span>
+                </div>
+                <br />
+            </div>
 
-            <div class="form-group">
-                <label asp-for="LicenseStatus" class="control-label"></label>
-                <select asp-for="LicenseStatus" class="form-control" asp-items="ViewBag.LicenseStatus"></select>
-                <span asp-validation-for="LicenseStatus" class="text-danger"></span>
+            <div id="gmpFields" class="conditional-fields">
+                <div class="form-group">
+                    <label asp-for="CategoryStatus" class="control-label"></label>
+                    <select asp-for="CategoryStatus" class="form-control" asp-items="ViewBag.CategoryofDrugs"></select>
+                    <span asp-validation-for="CategoryStatus" class="text-danger"></span>
+                </div>
+                <br />
+                <div class="form-group">
+                    <label asp-for="CertificationStatus" class="control-label"></label>
+                    <select asp-for="CertificationStatus" class="form-control" asp-items="ViewBag.CertificationStatus"></select>
+                    <span asp-validation-for="CertificationStatus" class="text-danger"></span>
+                </div>
+                <br />
             </div>
-            <br />
-            <div class="form-group">
-                <label asp-for="CategoryStatus" class="control-label"></label>
-                <select asp-for="CategoryStatus" class="form-control" asp-items="ViewBag.CategoryofDrugs"></select>
-                <span asp-validation-for="CategoryStatus" class="text-danger"></span>
+
+            <div id="gdpFields" class="conditional-fields">
+                <div class="form-group">
+                    <label asp-for="GDPRecommendation" class="control-label"></label>
+                    <select asp-for="GDPRecommendation" class="form-control" asp-items="ViewBag.GDPRecommendation"></select>
+                    <span asp-validation-for="GDPRecommendation" class="text-danger"></span>
+                </div>
+                <br />
             </div>
-            <br />
-            <div class="form-group">
-                <label asp-for="PremisesCondition" class="control-label"></label>
-                <select asp-for="PremisesCondition" class="form-control" asp-items="ViewBag.Category"></select>
-                <span asp-validation-for="PremisesCondition" class="text-danger"></span>
-            </div>
-            <br />
             <div class="form-group">
                 <label asp-for="RecordKeeping" class="control-label"></label>
                 <select asp-for="RecordKeeping" class="form-control" asp-items="ViewBag.RecordKeeping"></select>
@@ -129,11 +151,31 @@
 </div>
 <br />
 <div>
-	<a asp-action="Index">Back to List</a>
+    <a asp-action="Index">Back to List</a>
 </div>
 
-@*@section Scripts {
-	@{
-		await Html.RenderPartialAsync("_ValidationScriptsPartial");
-	}
-}*@
+@section Scripts {
+    @* <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> *@
+    <script type="text/javascript">
+        $(document).ready(function () {
+            // Hide all conditional fields initially
+            $('.conditional-fields').hide();
+
+            $('#complianceType').change(function () {
+                var selectedValue = $(this).val();
+
+                // Hide all conditional fields
+                $('.conditional-fields').hide();
+
+                // Show relevant fields based on the selected value
+                if (selectedValue === 'GPP') {
+                    $('#gppFields').show();
+                } else if (selectedValue === 'GMP') {
+                    $('#gmpFields').show();
+                } else if (selectedValue === 'GDP') {
+                    $('#gdpFields').show();
+                }
+            });
+        });
+    </script>
+}

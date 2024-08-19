@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -38,6 +38,10 @@ namespace MEMIS.Models
 
         [Display(Name = "Category Status")]
         public int CategoryStatus { get; set; }
+        [Display(Name = "Certification Status")]
+        public int CertificationStatus { get; set; }
+        [Display(Name = "GDP Recommendation")]
+        public int GDPRecommendation { get; set; }
 
         [Display(Name = "Condition of Premises")]
         public int PremisesCondition { get; set; }

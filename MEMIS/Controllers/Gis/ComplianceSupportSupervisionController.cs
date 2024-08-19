@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MEMIS.Data;
@@ -89,6 +89,8 @@ namespace MEMIS.Controllers
             ViewData["ClassofDrugs"] = ListHelper.ClassofDrugs();
             ViewData["UnregisteredDrugs"] = ListHelper.UnregisteredDrugs();
             ViewData["ComplianceAction"] = ListHelper.ComplianceAction();
+            ViewData["CertificationStatus"] = ListHelper.CertificationStatus();
+            ViewData["GDPRecommendation"] = ListHelper.GDPRecommendation();
 
 
 
