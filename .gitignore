@@ -9,3 +9,5 @@
 /MEMIS/node_modules
 /Requirement Doc
 /Theme/MVC
+/MEMIS/appsettings.json
+/MEMIS/Migrations/20240810041234_AssessmentRegionChanges.cs

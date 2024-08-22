@@ -1,4 +1,4 @@
-﻿using MEMIS.Migrations;
+using MEMIS.Migrations;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 

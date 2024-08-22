@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -58,7 +58,7 @@ namespace MEMIS.Controllers
         // GET: StrategicInterventions/Create
         public IActionResult Create()
         {
-            ViewData["intObjective"] = new SelectList(_context.StrategicObjective, "intObjective", "ObjectiveCode");
+            ViewData["intObjective"] = new SelectList(_context.StrategicObjective, "intObjective", "ObjectiveName");
             return View();
         }
 
@@ -75,7 +75,7 @@ namespace MEMIS.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["intObjective"] = new SelectList(_context.StrategicObjective, "intObjective", "ObjectiveCode", strategicIntervention.intObjective);
+            ViewData["intObjective"] = new SelectList(_context.StrategicObjective, "intObjective", "ObjectiveName", strategicIntervention.intObjective);
             return View(strategicIntervention);
         }
 
@@ -92,7 +92,7 @@ namespace MEMIS.Controllers
             {
                 return NotFound();
             }
-            ViewData["intObjective"] = new SelectList(_context.StrategicObjective, "intObjective", "ObjectiveCode", strategicIntervention.intObjective);
+            ViewData["intObjective"] = new SelectList(_context.StrategicObjective, "intObjective", "ObjectiveName", strategicIntervention.intObjective);
             return View(strategicIntervention);
         }
 
