@@ -274,7 +274,7 @@ namespace MEMIS.Controllers
         _context.ActivityAssessRegion.Update(activityAssessRegion);
         //activityAssessRegion.QTarget = 0;
         //activityAssessRegion.QBudget = 0;
-        if (region.QuaterlyPlans.Count > 0)
+        if (region.QuaterlyPlans?.Count > 0)
         {
 
           foreach (var quat in region.QuaterlyPlans)
@@ -1309,12 +1309,52 @@ namespace MEMIS.Controllers
     {
 
       ViewBag.StrategicIntervention = _context.StrategicIntervention == null ? new List<StrategicIntervention>() : await _context.StrategicIntervention.ToListAsync();
-      ViewBag.StrategicAction = _context.StrategicAction == null ? new List<StrategicAction>() : await _context.StrategicAction.ToListAsync();
-      ViewBag.Activity = _context.Activity == null ? new List<Activity>() : await _context.Activity.ToListAsync();
+      //ViewBag.StrategicAction = _context.StrategicAction == null ? new List<StrategicAction>() : await _context.StrategicAction.ToListAsync();
+      //ViewBag.Activity = _context.Activity == null ? new List<Activity>() : await _context.Activity.ToListAsync();
       ViewData["intDept"] = new SelectList(_context.Departments, "intDept", "deptName");
       ViewData["Quarter"] = ListHelper.Quarter();
       ActivityAssessDto activityAssessDto = new ActivityAssessDto();
       return View(activityAssessDto);
+    }
+
+    [HttpGet]
+    public JsonResult GetStrategicObjectives(int focusAreaId)
+    {
+      var strategicObjectives = _context.StrategicObjective
+                                        .Where(so => so.intFocus == focusAreaId)
+                                        .Select(so => new { so.intObjective, so.ObjectiveName })
+                                        .ToList();
+      return Json(strategicObjectives);
+    }
+
+    [HttpGet]
+    public JsonResult GetStrategicInterventions(int objectiveId)
+    {
+      var interventions = _context.StrategicIntervention
+                                  .Where(si => si.intObjective == objectiveId)
+                                  .Select(si => new { si.intIntervention, si.InterventionName })
+                                  .ToList();
+      return Json(interventions);
+    }
+
+    [HttpGet]
+    public JsonResult GetStrategicActions(int interventionId)
+    {
+      var actions = _context.StrategicAction
+                            .Where(sa => sa.intIntervention == interventionId)
+                            .Select(sa => new { sa.intAction, sa.actionName })
+                            .ToList();
+      return Json(actions);
+    }
+
+    [HttpGet]
+    public JsonResult GetActivities(int actionId)
+    {
+      var activities = _context.Activity
+                               .Where(a => a.intAction == actionId)
+                               .Select(a => new { a.intActivity, a.activityName })
+                               .ToList();
+      return Json(activities);
     }
 
 
@@ -1402,8 +1442,14 @@ namespace MEMIS.Controllers
       };
 
       ViewBag.StrategicIntervention = _context.StrategicIntervention == null ? new List<StrategicIntervention>() : await _context.StrategicIntervention.ToListAsync();
-      ViewBag.StrategicAction = _context.StrategicAction == null ? new List<StrategicAction>() : await _context.StrategicAction.ToListAsync();
-      ViewBag.Activity = _context.Activity == null ? new List<Activity>() : await _context.Activity.ToListAsync();
+      ViewBag.StrategicAction = _context.StrategicAction
+                            .Where(sa => sa.intIntervention == dto.intIntervention)
+                            .Select(sa => new { sa.intAction, sa.actionName })
+                            .ToList();
+      ViewBag.Activity = _context.Activity
+                               .Where(a => a.intAction == dto.intAction)
+                               .Select(a => new { a.intActivity, a.activityName })
+                               .ToList();
       ViewData["Quarter"] = ListHelper.Quarter();
       ViewBag.Depts = await _context.Departments.ToListAsync();
       //ViewData["intDept"] = new SelectList(_context.Departments, "intDept", "deptName", dto.intDept);
@@ -1425,6 +1471,8 @@ namespace MEMIS.Controllers
       {
         return NotFound();
       }
+
+
       if (ModelState.IsValid)
       {
         try

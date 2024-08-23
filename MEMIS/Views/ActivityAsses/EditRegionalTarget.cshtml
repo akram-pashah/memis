@@ -120,6 +120,21 @@
       $('#quarterValidation').text("");
     }
 
+
+        var exists = false;
+        $('#quarterDetailsTable tbody tr').each(function () {
+            var selectedQuarter = $(this).find('select[name*="Quarter"]').val();
+            if (selectedQuarter === quarter) {
+                exists = true;
+                return false; // Break out of the loop
+            }
+        });
+
+        if (exists) {
+            $('#quarterValidation').text("Selected quarter already exists.");
+            return;
+        }
+
     var $tableBody = $('#quarterDetailsTable tbody');
     var index;
 

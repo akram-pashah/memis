@@ -37,7 +37,7 @@ namespace MEMIS.Data
     public DbSet<ActivityAssessment>? ActivityAssessment { get; set; }
 
     public DbSet<ActivityAssessRegion> ActivityAssessRegion { get; set; }
-    public DbSet<ActivityAssessmentRegion> ActivityAssessmentRegion { get;set; }
+    public DbSet<ActivityAssessmentRegion> ActivityAssessmentRegion { get; set; }
 
     public DbSet<RiskIdent> RiskIdent { get; set; }
     public DbSet<Cause>? Cause { get; set; }
@@ -83,6 +83,26 @@ namespace MEMIS.Data
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+      modelBuilder.Entity<StrategicObjective>()
+        .HasOne(x => x.FocusArea)
+        .WithMany(t => t.StrategicObjectives)
+        .HasForeignKey(t => t.intFocus);
+
+      modelBuilder.Entity<StrategicIntervention>()
+        .HasOne(z => z.StrategicObjective)
+        .WithMany(x => x.StrategicInterventions)
+        .HasForeignKey(t => t.intObjective);
+
+      modelBuilder.Entity<StrategicAction>()
+        .HasOne(z => z.StrategicIntervention)
+        .WithMany(x => x.StrategicActions)
+        .HasForeignKey(t => t.intIntervention);
+
+      modelBuilder.Entity<Activity>()
+        .HasOne(z => z.StrategicAction)
+        .WithMany(x => x.Activities)
+        .HasForeignKey(t => t.intAction);
+
       modelBuilder.Entity<RiskIdentification>()
                 .HasMany(r => r.RiskDetails)
                 .WithOne(rd => rd.RiskIdentification)
