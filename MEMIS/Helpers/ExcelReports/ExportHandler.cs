@@ -56,7 +56,7 @@ namespace MEMIS.Helpers.ExcelReports
           worksheet.Cell(row, 1).Value = "";
           worksheet.Cell(row, 2).Value = "";
           worksheet.Cell(row, 3).Value = "";
-          worksheet.Cell(row, 4).Value = plan?.Activity;
+          worksheet.Cell(row, 4).Value = plan?.intActivity;
           worksheet.Cell(row, 5).Value = "";
           worksheet.Cell(row, 6).Value = "";
           worksheet.Cell(row, 7).Value = plan?.FY1;
@@ -146,7 +146,7 @@ namespace MEMIS.Helpers.ExcelReports
           worksheet.Cell(row, 1).Value = "";
           worksheet.Cell(row, 2).Value = "";
           worksheet.Cell(row, 3).Value = "";
-          worksheet.Cell(row, 4).Value = plan?.Activity;
+          worksheet.Cell(row, 4).Value = plan?.intActivity;
           worksheet.Cell(row, 5).Value = "";
           worksheet.Cell(row, 6).Value = "";
           worksheet.Cell(row, 7).Value = plan?.FY1;

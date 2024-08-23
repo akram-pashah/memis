@@ -14,11 +14,27 @@
     <div class="col-md-4">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <br />
             <div class="form-group">
-                <label asp-for="Activity" class="control-label"></label>
-                <input asp-for="Activity" class="form-control" />
-                <span asp-validation-for="Activity" class="text-danger"></span>
+                <label asp-for="intObjective" class="control-label"></label>
+                <select asp-for="intObjective" class="form-control form-select" asp-items="ViewBag.intObjective"></select>
             </div>
+            <br /> 
+            <div class="form-group">
+                <label asp-for="intIntervention" class="control-label"></label>
+                <select asp-for="intIntervention" class="form-control form-select" asp-items="ViewBag.intIntervention"></select>
+            </div>
+            <br /> 
+            <div class="form-group">
+                <label asp-for="intAction" class="control-label"></label>
+                <select asp-for="intAction" class="form-control form-select" asp-items="ViewBag.intAction"></select>
+            </div>
+            <br />
+            <br />
+            <div class="form-group">
+                <label asp-for="intActivity" class="control-label"></label>
+                <select asp-for="intActivity" class="form-control form-select" asp-items="ViewBag.intActivity"></select>
+            </div> 
             <br />
             <div class="form-group">
                 <label asp-for="Output" class="control-label"></label>
@@ -27,23 +43,11 @@
             </div>
             <br />
             <div class="form-group">
-                <label asp-for="ResponsibleParty" class="control-label"></label>
-                <input asp-for="ResponsibleParty" class="form-control" />
-                <span asp-validation-for="ResponsibleParty" class="text-danger"></span>
+                <label asp-for="OutputTarget" class="control-label"></label>
+                <input asp-for="OutputTarget" class="form-control" />
+                <span asp-validation-for="OutputTarget" class="text-danger"></span>
             </div>
-            <br />
-            <div class="form-group">
-                <label asp-for="DateofAction" class="control-label"></label>
-                <input asp-for="DateofAction" class="form-control" />
-                <span asp-validation-for="DateofAction" class="text-danger"></span>
-            </div>
-            <br />
-            <div class="form-group">
-                <label asp-for="Baseline" class="control-label"></label>
-                <input asp-for="Baseline" class="form-control" />
-                <span asp-validation-for="Baseline" class="text-danger"></span>
-            </div>
-            <br />
+            <br /> 
             <div class="form-group">
                 <label asp-for="FY1" class="control-label"></label>
                 <input asp-for="FY1" class="form-control" />
@@ -72,6 +76,18 @@
                 <label asp-for="FY5" class="control-label"></label>
                 <input asp-for="FY5" class="form-control" />
                 <span asp-validation-for="FY5" class="text-danger"></span>
+            </div>
+            <br />
+            <div class="form-group">
+                <label asp-for="MeansofVerification" class="control-label"></label>
+                <input asp-for="MeansofVerification" class="form-control" />
+                <span asp-validation-for="MeansofVerification" class="text-danger"></span>
+            </div>
+            <br />
+            <div class="form-group">
+                <label asp-for="ResponsibleParty" class="control-label"></label>
+                <input asp-for="ResponsibleParty" class="form-control" />
+                <span asp-validation-for="ResponsibleParty" class="text-danger"></span>
             </div>
             <br />
             <div class="form-group">

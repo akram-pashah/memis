@@ -4,6 +4,7 @@ using MEMIS.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MEMIS.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240823093638_ProgramImplementationPlanChanges")]
+    partial class ProgramImplementationPlanChanges
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1660,19 +1663,19 @@ namespace MEMIS.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<long?>("FY1")
+                    b.Property<long>("FY1")
                         .HasColumnType("bigint");
 
-                    b.Property<long?>("FY2")
+                    b.Property<long>("FY2")
                         .HasColumnType("bigint");
 
-                    b.Property<long?>("FY3")
+                    b.Property<long>("FY3")
                         .HasColumnType("bigint");
 
-                    b.Property<long?>("FY4")
+                    b.Property<long>("FY4")
                         .HasColumnType("bigint");
 
-                    b.Property<long?>("FY5")
+                    b.Property<long>("FY5")
                         .HasColumnType("bigint");
 
                     b.Property<string>("MeansofVerification")
@@ -1685,6 +1688,7 @@ namespace MEMIS.Migrations
                         .HasColumnType("nvarchar(1000)");
 
                     b.Property<string>("OutputTarget")
+                        .IsRequired()
                         .HasMaxLength(1000)
                         .HasColumnType("nvarchar(1000)");
 
@@ -3789,29 +3793,29 @@ namespace MEMIS.Migrations
 
             modelBuilder.Entity("MEMIS.Data.ProgramImplementationPlan", b =>
                 {
-                    b.HasOne("MEMIS.Data.StrategicAction", "StrategicActionFK")
+                    b.HasOne("MEMIS.Data.StrategicAction", "StrategicAction")
                         .WithMany()
                         .HasForeignKey("intAction");
 
-                    b.HasOne("MEMIS.Data.Activity", "ActivityFK")
+                    b.HasOne("MEMIS.Data.Activity", "Activity")
                         .WithMany()
                         .HasForeignKey("intActivity");
 
-                    b.HasOne("MEMIS.Data.StrategicIntervention", "StrategicInterventionFK")
+                    b.HasOne("MEMIS.Data.StrategicIntervention", "StrategicIntervention")
                         .WithMany()
                         .HasForeignKey("intIntervention");
 
-                    b.HasOne("MEMIS.Data.StrategicObjective", "StrategicObjectiveFK")
+                    b.HasOne("MEMIS.Data.StrategicObjective", "StrategicObjective")
                         .WithMany()
                         .HasForeignKey("intObjective");
 
-                    b.Navigation("ActivityFK");
+                    b.Navigation("Activity");
 
-                    b.Navigation("StrategicActionFK");
+                    b.Navigation("StrategicAction");
 
-                    b.Navigation("StrategicInterventionFK");
+                    b.Navigation("StrategicIntervention");
 
-                    b.Navigation("StrategicObjectiveFK");
+                    b.Navigation("StrategicObjective");
                 });
 
             modelBuilder.Entity("MEMIS.Data.Project.MonitoringAndControl", b =>
