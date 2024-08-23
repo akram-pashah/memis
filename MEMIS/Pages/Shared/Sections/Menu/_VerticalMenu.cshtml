@@ -215,7 +215,7 @@
                     <div>Activity Assessment</div>
                 </a>
                 <ul class="menu-sub">
-                    @if (User.IsInRole("M&E Coordinator") || User.IsInRole("SuperAdmin"))
+                    @if (User.IsInRole("Regional Officer") || User.IsInRole("SuperAdmin"))
                     {
                         <li class='menu-item@(currentPage == "/ActivityAssessment/RegionalIndex" ? " active" : "")'>
                             <a asp-controller="ActivityAssessment" asp-action="RegionalIndex" class="menu-link">
