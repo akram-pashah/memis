@@ -31,6 +31,7 @@ namespace MEMIS.Data
     public DbSet<AnnualImplemtationPlan>? AnnualImplemtationPlan { get; set; }
     public DbSet<ActivityAssess> ActivityAssess { get; set; }
     public DbSet<QuaterlyPlan>? QuaterlyPlans { get; set; }
+    public DbSet<QuarterlyRiskAction>? QuarterlyRiskActions { get; set; }
     public DbSet<WorkPlanSettingsRegion>? WorkPlanSettingsRegion { get; set; }
     public DbSet<DepartmentPlan>? DepartmentPlan { get; set; }
     public DbSet<Master.ImplementationStatus> ImplementationStatus { get; set; }
@@ -137,6 +138,16 @@ namespace MEMIS.Data
            .HasOne(t => t.ActivityAssessmentRegion)
            .WithMany(r => r.QuaterlyPlans)
            .HasForeignKey(t => t.ActivityAssessmentRegionId);
+
+      modelBuilder.Entity<QuarterlyRiskAction>()
+     .HasOne(t => t.RiskTreatmentPlan)
+     .WithMany(r => r.QuarterlyRiskActions)
+     .HasForeignKey(t => t.TreatmentPlanId);
+
+      modelBuilder.Entity<QuarterlyRiskAction>()
+        .HasOne(t => t.ImplementationStatus)
+        .WithMany(x => x.QuarterlyRiskActions)
+        .HasForeignKey(t => t.ImpStatusId);
 
       base.OnModelCreating(modelBuilder);
 

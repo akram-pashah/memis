@@ -24,5 +24,9 @@ namespace MEMIS.Data.Risk
 
     [Required]
     public string FrequencyOfReporting { get; set; }  // Monthly, Quarterly, Annually
+    public string? DataCollectionInstrumentMethods { get; set; }
+    public string? MeansOfVerification { get; set; }
+    public string? ResponsiblePersons { get; set; }
+    public virtual ICollection<QuarterlyRiskAction>? QuarterlyRiskActions { get; set; }
   }
 }

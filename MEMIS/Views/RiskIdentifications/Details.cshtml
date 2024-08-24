@@ -74,7 +74,10 @@
                 @Html.DisplayNameFor(model => model.RiskOwner)
             </dt>
             <dd class="col-sm-10">
-                @ViewBag.Users.FindByIdAsync(Model.RiskOwner).Result.UserName
+                @{
+                    string userName = !string.IsNullOrEmpty(Model.RiskOwner) ? ViewBag.Users.FindByIdAsync(Model.RiskOwner).Result.UserName : "";
+                }
+                @userName
             </dd>
             <dt class="col-sm-2">
                 @Html.DisplayNameFor(model => model.RiskConsequenceId)

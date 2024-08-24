@@ -1,0 +1,46 @@
+@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@model IEnumerable<MEMIS.Data.Risk.QuarterlyRiskAction>
+
+<div class="card-body">
+    <table class="table table-bordered" id="riskTreatmentTable">
+        <thead>
+            <tr>
+                @* <th>Treatment Action</th>
+                <th>Indicator Description</th>
+                <th>Baseline</th>
+                <th>Cumulative Target</th>
+                <th>Frequency of Reporting</th> *@
+                <th>Quarter</th>
+                <th>Implementation Status</th>
+                <th>No. of Incidents</th>
+                <th>Risk Description</th>
+                <th>Incident value/Financial Loss</th>
+                @* <th>Actions</th> *@
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var plan in Model)
+            {
+                <tr>
+                    @* <td>@plan.RiskTreatmentPlan?.TreatmentAction</td>
+                    <td>@plan.RiskTreatmentPlan?.IndicatorDescription</td>
+                    <td>@plan.RiskTreatmentPlan?.Baseline</td>
+                    <td>@plan.RiskTreatmentPlan?.CumulativeTarget</td>
+                    <td>@plan.RiskTreatmentPlan?.FrequencyOfReporting</td> *@
+                    <td>Quarter @plan.Quarter</td>
+                    <td>@plan.ImplementationStatus?.ImpStatusName</td>
+                    <td>@plan.NoOfIncedents</td>
+                    <td>@plan.RiskDescription</td>
+                    <td>@plan.IncidentValue</td>
+                    @* <td>
+                        <a asp-action="RemoveTreatmentPlan" asp-controller="RiskRegister" asp-route-id="@plan.Id" class="btn btn-danger btn-sm remove-treatment" data-id="@plan.Id"><i class="menu-icon tf-icons bx bx-delete"></i></a>
+                        <a asp-action="RemoveTreatmentPlanDetails" asp-controller="RiskRegister" asp-route-id="@plan.Id" class="btn btn-primary btn-sm remove-treatment" data-id="@plan.Id"><i class="menu-icon tf-icons bx bx-detail"></i></a>
+                        <a asp-action="RemoveTreatmentPlanEdit" asp-controller="RiskRegister" asp-route-id="@plan.Id" class="btn btn-info btn-sm remove-treatment" data-id="@plan.Id"><i class='bx bx-log-in-circle'></i></a>
+                    </td> *@
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

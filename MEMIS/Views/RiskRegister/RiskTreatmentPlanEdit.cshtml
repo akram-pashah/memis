@@ -1,0 +1,173 @@
+@model MEMIS.Data.Risk.RiskTreatmentPlan
+
+@{
+    ViewData["Title"] = "Risk Treatment Plan";
+    //Layout = "~/Views/Shared/_RiskLayout.cshtml";
+    Layout = "~/Pages/Shared/_ContentNavbarLayout.cshtml";
+}
+<script src="~/js/ui-modals.js"></script>
+
+<h4>Risk Treatment Plan</h4>
+<hr />
+<div class="row">
+    <div class="col-md-12">
+      <div class="row">
+                        <div class="col-md-3">
+                            <label class="form-label" for="treatmentAction">Treatment Action</label>
+                            <input type="text" class="form-control" id="treatmentAction" asp-for="TreatmentAction" name="TreatmentAction" placeholder="Treatment Action" readonly>
+                            @* <div class="valid-feedback"> Looks good! </div>
+                            <div class="invalid-feedback"> This field is required. </div> *@
+                            </div>
+                            <div class="col-md-3">
+                            <label class="form-label" for="indicatorDescription">Indicator Description</label>
+                            <input type="text" class="form-control" id="indicatorDescription" asp-for="IndicatorDescription" name="IndicatorDescription" placeholder="Description" readonly>
+                            @* <div class="valid-feedback"> Looks good! </div>
+                            <div class="invalid-feedback"> This field is required. </div> *@
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label" for="baseline">Baseline</label>
+                            <input type="number" class="form-control" id="baseline" asp-for="Baseline" name="Baseline" placeholder="Baseline" readonly>
+                            @* <div class="valid-feedback"> Looks good! </div>
+                            <div class="invalid-feedback"> This field is required. </div> *@
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label" for="cumulativeTarget">Cumulative Target</label>
+                            <input type="number" class="form-control" id="cumulativeTarget" asp-for="CumulativeTarget" name="CumulativeTarget" placeholder="Cumulative Target" readonly>
+                            @* <div class="valid-feedback"> Looks good! </div>
+                            <div class="invalid-feedback"> This field is required. </div> *@
+                        </div>
+                        </div>
+                    @* </div> *@
+                    <div class="row">
+                        <div class="col-md-3 mb-3">
+                            <label class="form-label" for="frequencyOfReporting">Frequency of Reporting</label>
+                            <select class="form-select" name="FrequencyOfReporting" asp-for="FrequencyOfReporting" id="frequencyOfReporting" disabled>
+                                <option value="Monthly">Monthly</option>
+                                <option value="Quarterly" selected>Quarterly</option>
+                                <option value="Annually">Annually</option>
+                            </select>
+                            <div class="valid-feedback"> Looks good! </div>
+                            <div class="invalid-feedback"> This field is required. </div>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                          <label class="form-label">&nbsp; &nbsp;</label>
+                          <button type="button" class="form-control btn btn-info float-end" data-bs-toggle="modal" data-bs-target="#riskTreatmentModal">
+                          Add Quarterly Risk Action Plan
+                          </button>
+                        </div>
+                    </div>
+
+                    
+        @{
+            var viewData = new ViewDataDictionary(ViewData);
+            viewData["TreatmentPlanId"] = Model.TreatmentPlanId;
+        }
+
+        @Html.Partial("_QuarterlyTreatmentActionForm", new MEMIS.Data.Risk.QuarterlyRiskAction(){
+          RiskTreatmentPlan = Model
+        }, viewData)
+        <!-- Risk Treatment Plan Grid -->
+        @* <table class="table table-bordered" id="riskTreatmentTable">
+            <thead>
+                <tr>
+                    <th>Treatment Action</th>
+                    <th>Indicator Description</th>
+                    <th>Baseline</th>
+                    <th>Cumulative Target</th>
+                    <th>Frequency of Reporting</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table> *@
+
+        <!-- Modal -->
+
+    </div>
+    <div class="col-md-12">
+        <div class="card" style="width: fit-content" id="treatmentPlanGrid">
+            @Html.Partial("_QuarterlyTreatmentPlanActionGrid", Model.QuarterlyRiskActions)
+        </div>
+    </div>
+</div>
+
+<div>
+    <a href="#" onclick="history.back()">Back</a>
+</div>
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script>
+
+    $(document).ready(function () {
+        $('#addRiskTreatment').on('click', function () {
+            var form = $('#treatmentPlanForm');
+            if (form[0].checkValidity()) {
+                $.ajax({
+                    url: '@Url.Action("AddTreatmentPlan", "Risk")',
+                    type: 'POST',
+                    data: form.serialize(),
+                    success: function (result) {
+                        $('#riskTreatmentModal').modal('hide');
+                        $('#treatmentPlanGrid').html(result);
+                    },
+                    error: function (error) {
+                        // Handle error
+                    }
+                });
+            } else {
+                form.addClass('was-validated');
+            }
+        });
+
+        // $(document).on('click', '.remove-treatment', function () {
+        //     var id = $(this).data('id');
+        //     $.ajax({
+        //         url: '@Url.Action("RemoveTreatmentPlan", "Risk")/' + id,
+        //         type: 'POST',
+        //         success: function (result) {
+        //             $('#treatmentPlanGrid').html(result);
+        //         },
+        //         error: function (error) {
+        //             // Handle error
+        //         }
+        //     });
+        // });
+    });
+    window.addEventListener('load', function () {
+        GetData();
+    })
+
+    $("#RiskConsequenceId").change(function () {
+        if ($('option:selected', this).val() != 0) {
+            GetData();
+        }
+
+    });
+    $("#RiskLikelihoodId").change(function () {
+        if ($('option:selected', this).val() != 0) {
+            GetData();
+        }
+
+    });
+
+    function GetData() {
+        if (document.getElementById("RiskConsequenceId").value != 0 && document.getElementById("RiskLikelihoodId").value != 0) {
+            $.ajax({
+                url: '/RiskIdentifications/GetRiskMatrix',
+                type: 'GET',
+                data: { RCId: document.getElementById("RiskConsequenceId").value, RLId: document.getElementById("RiskLikelihoodId").value },
+                dataType: 'json',
+                success: function (data) {
+                    document.getElementById('RiskRank').value = data.riskValue;
+                    document.getElementById('RiskScore').value = data.riskRank;
+                    document.getElementById('EvalCriteria').value = data.evaluationCriteria;
+                },
+                error: function (error) {
+                    //log or alert the error
+                }
+            });
+        }
+
+    }
+
+</script>

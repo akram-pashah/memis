@@ -4,6 +4,7 @@ using MEMIS.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MEMIS.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240823123502_DataCollectionColumnRiskPlan")]
+    partial class DataCollectionColumnRiskPlan
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -2744,15 +2747,6 @@ namespace MEMIS.Migrations
 
                     b.Property<string>("RiskRank")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("RiskRatingCategory")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("RiskRatingColor")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("RiskRatingId")
-                        .HasColumnType("int");
 
                     b.Property<int?>("RiskResidualConsequenceId")
                         .HasColumnType("int");

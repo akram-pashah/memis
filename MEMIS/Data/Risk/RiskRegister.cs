@@ -12,27 +12,30 @@ namespace MEMIS.Data.Risk
     public virtual int? StrategicObjective { get; set; }
 
     [ForeignKey("StrategicObjective")]
-    public virtual StrategicObjective StrategicPlanFk { get; set; }
+    public virtual StrategicObjective? StrategicPlanFk { get; set; }
     public virtual int? FocusArea { get; set; }
     [ForeignKey("FocusArea")]
-    public virtual FocusArea FocusAreaFk { get; set; }
+    public virtual FocusArea? FocusAreaFk { get; set; }
     public virtual int Activity { get; set; }
     [ForeignKey("Activity")]
-    public virtual Activity ActivityFk { get; set; }
+    public virtual Activity? ActivityFk { get; set; }
     public string RiskDescription { get; set; }
     public string Events { get; set; }
     public string RiskSource { get; set; }
     public string RiskCause { get; set; }
     public string RiskConsequence { get; set; }
-    public string RiskOwner { get; set; }
+    public string? RiskOwner { get; set; }
     public int RiskConsequenceId { get; set; }
     public int RiskLikelihoodId { get; set; }
+    public int RiskRatingId { get; set; }
+    public string? RiskRatingCategory { get; set; }
+    public string? RiskRatingColor { get; set; }
     public int RiskScore { get; set; }
     public string? RiskRank { get; set; }
     public string? EvalCriteria { get; set; }
     public virtual int? RiskId { get; set; }
     [ForeignKey("RiskId")]
-    public virtual DeptPlan RiskIdentificationFk { get; set; }
+    public virtual DeptPlan? RiskIdentificationFk { get; set; }
     //[Display (Name ="Activity / Additional mitigation strategies")]
     //public string? AdditionalMitigation { get;set; }
     //[Display(Name = "Resources Required for effective risk management")]
@@ -55,6 +58,10 @@ namespace MEMIS.Data.Risk
     public int? RiskResidualLikelihoodId { get; set; }
     public int? RiskResidualScore { get; set; }
     public string? RiskResidualRank { get; set; }
+    public long ActivityBudget { get; set; }
+    public string? ControlEffectiveness { get; set; }
+    public int? Effectiveness { get; set; }
+    public string? Recommendation { get; set; }
     public virtual ICollection<RiskTreatmentPlan> RiskTreatmentPlans { get; set; } = [];
   }
 }

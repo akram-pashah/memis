@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+using MEMIS.Data.Risk;
+using System.ComponentModel.DataAnnotations;
 
 namespace MEMIS.Data.Master
 {
@@ -8,6 +9,7 @@ namespace MEMIS.Data.Master
         public int ImpStatusId { get; set; } 
         public string ImpStatusName { get; set; }
         public virtual ICollection<ActivityAssessment> ActivityAssessments { get; set; }
+        public virtual ICollection<QuarterlyRiskAction> QuarterlyRiskActions { get; set; }
 
     }
 }

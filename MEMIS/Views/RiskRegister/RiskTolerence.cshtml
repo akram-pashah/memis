@@ -61,9 +61,9 @@
                         <th>
                             @Html.DisplayNameFor(model => model.Data[0].RiskConsequence)
                         </th>
-                        <th>
+                        @* <th>
                             @Html.DisplayNameFor(model => model.Data[0].RiskOwner)
-                        </th>
+                        </th> *@
                         <th>
                             @Html.DisplayNameFor(model => model.Data[0].RiskConsequenceId)
                         </th>
@@ -117,9 +117,9 @@
                             <td>
                                 @Html.DisplayFor(modelItem => item.RiskConsequence)
                             </td>
-                            <td>
-                                @ViewBag.Users.FindByIdAsync(item.RiskOwner).Result.UserName
-                            </td>
+                            @* <td>
+                                @ViewBag.Users.FindByIdAsync(item.RiskOwner)?.Result.UserName
+                            </td> *@
                             <td>
                                 @Enum.GetName(typeof(RiskConsequence), item.RiskConsequenceId)
                             </td>

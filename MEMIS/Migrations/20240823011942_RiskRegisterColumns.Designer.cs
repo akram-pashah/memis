@@ -4,6 +4,7 @@ using MEMIS.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MEMIS.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240823011942_RiskRegisterColumns")]
+    partial class RiskRegisterColumns
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -2745,15 +2748,6 @@ namespace MEMIS.Migrations
                     b.Property<string>("RiskRank")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("RiskRatingCategory")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("RiskRatingColor")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("RiskRatingId")
-                        .HasColumnType("int");
-
                     b.Property<int?>("RiskResidualConsequenceId")
                         .HasColumnType("int");
 
@@ -2831,9 +2825,6 @@ namespace MEMIS.Migrations
                     b.Property<long>("CumulativeTarget")
                         .HasColumnType("bigint");
 
-                    b.Property<string>("DataCollectionInstrumentMethods")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("FrequencyOfReporting")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -2842,12 +2833,6 @@ namespace MEMIS.Migrations
                         .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
-
-                    b.Property<string>("MeansOfVerification")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ResponsiblePersons")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("RiskRefID")
                         .HasColumnType("int");

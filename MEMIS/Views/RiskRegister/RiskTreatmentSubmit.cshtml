@@ -5,7 +5,11 @@
     ViewData["Title"] = "Risk Treatment";
     //Layout = "~/Views/Shared/_RiskLayout.cshtml";
     Layout = "~/Pages/Shared/_ContentNavbarLayout.cshtml";
+
+    // var selectedItem = ViewBag.RiskLikelihoodList.FirstOrDefault(item => item.Value == Model.RiskRatingId.ToString());
+    // var borderColor = selectedItem?.Data.Color ?? "black";
 }
+
 <script src="~/js/ui-modals.js"></script>
 
 <h4>Risk Treatment</h4>
@@ -73,6 +77,12 @@
                 <span asp-validation-for="RiskLikelihoodId" class="text-danger"></span>
             </div>
             <div class="form-group">
+    <label asp-for="RiskRatingId" class="control-label"></label>
+    @Html.DropDownList("RiskRatingId", ViewBag.RiskLikelihoodList as SelectList, 
+        new { @class = "form-control form-select", style = $"border-color: {Model.RiskRatingColor};" })
+    <span asp-validation-for="RiskRatingId" class="text-danger"></span>
+</div>
+            <div class="form-group">
                 <label asp-for="RiskScore" class="control-label"></label>
                 <input asp-for="RiskScore" class="form-control" required readonly />
                 <span asp-validation-for="RiskScore" class="text-danger"></span>
@@ -96,6 +106,11 @@
                 <label asp-for="riskTolerenceJustification" class="control-label"></label>
                 <input asp-for="riskTolerenceJustification" class="form-control" />
                 <span asp-validation-for="riskTolerenceJustification" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ActivityBudget" class="control-label"></label>
+                <input asp-for="ActivityBudget" class="form-control" required />
+                <span asp-validation-for="ActivityBudget" class="text-danger"></span>
             </div>
             <!-- Modal Trigger -->
 
@@ -134,7 +149,7 @@
 
     </div>
     <div class="col-md-6">
-        <div class="card" id="treatmentPlanGrid">
+        <div class="card" style="width: fit-content" id="treatmentPlanGrid">
             @Html.Partial("_TreatmentPlanGrid", Model.RiskTreatmentPlans)
         </div>
     </div>

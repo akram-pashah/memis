@@ -116,7 +116,10 @@
                                 @Html.DisplayFor(modelItem => item.RiskConsequence)
                             </td>
                             <td>
-                                @ViewBag.Users.FindByIdAsync(item.RiskOwner).Result.UserName
+                                @{
+                                    string userName = !string.IsNullOrEmpty(item.RiskOwner) ? ViewBag.Users.FindByIdAsync(item.RiskOwner).Result.UserName : "";
+                                }
+                                @userName
                             </td>
                             <td>
                                 @Enum.GetName(typeof(RiskConsequence), item.RiskConsequenceId)

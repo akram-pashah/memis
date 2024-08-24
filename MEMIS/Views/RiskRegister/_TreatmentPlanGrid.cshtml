@@ -25,7 +25,11 @@
                     <td>@plan.Baseline</td>
                     <td>@plan.CumulativeTarget</td>
                     <td>@plan.FrequencyOfReporting</td>
-                    <td><a asp-action="RemoveTreatmentPlan" asp-controller="RiskRegister" asp-route-id="@plan.TreatmentPlanId" class="btn btn-danger btn-sm remove-treatment" data-id="@plan.TreatmentPlanId">Remove</a></td>
+                    <td>
+                        <a asp-action="RemoveTreatmentPlan" asp-controller="RiskRegister" asp-route-id="@plan.TreatmentPlanId" class="btn btn-danger btn-sm remove-treatment" data-id="@plan.TreatmentPlanId"><i class="menu-icon tf-icons bx bx-trash"></i></a>
+                        @* <a asp-action="RiskTreatmentPlanDetails" asp-controller="RiskRegister" asp-route-id="@plan.TreatmentPlanId" class="btn btn-primary btn-sm remove-treatment" data-id="@plan.TreatmentPlanId"><i class="menu-icon tf-icons bx bx-detail"></i></a> *@
+                        <a asp-action="RiskTreatmentPlanEdit" asp-controller="RiskRegister" asp-route-id="@plan.TreatmentPlanId" class="btn btn-info btn-sm remove-treatment" data-id="@plan.TreatmentPlanId"><i class='bx bx-log-in-circle'></i></a>
+                    </td>
                 </tr>
             }
         </tbody>

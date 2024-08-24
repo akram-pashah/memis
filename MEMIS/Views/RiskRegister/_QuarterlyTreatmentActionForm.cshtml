@@ -1,0 +1,104 @@
+@model MEMIS.Data.Risk.QuarterlyRiskAction
+@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@
+<div class="modal fade" id="riskTreatmentModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <form asp-action="AddQuarterlyTreatmentAction" class="needs-validation was-validated" novalidate="">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel1">Add Quarterly Risk Action Plan</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="TreatmentPlanId" asp-for="TreatmentPlanId" name="TreatmentPlanId" value="@ViewBag.TreatmentPlanId" />
+                    <div class="row">
+                        <div class="col mb-3">
+                            <label class="form-label" for="RiskTreatmentPlan.TreatmentAction">Treatment Action</label>
+                            <input type="text" class="form-control" id="treatmentAction" asp-for="RiskTreatmentPlan.TreatmentAction" name="RiskTreatmentPlan.TreatmentAction" placeholder="Treatment Action" disabled>
+                            @* <div class="valid-feedback"> Looks good! </div>
+                            <div class="invalid-feedback"> This field is required. </div> *@
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col mb-3">
+                            <label class="form-label" for="RiskTreatmentPlan.IndicatorDescription">Indicator Description</label>
+                            <input type="text" class="form-control" id="indicatorDescription" asp-for="RiskTreatmentPlan.IndicatorDescription" name="RiskTreatmentPlan.IndicatorDescription" placeholder="Indicator Description" disabled>
+                            @* <div class="valid-feedback"> Looks good! </div>
+                            <div class="invalid-feedback"> This field is required. </div> *@
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col mb-3">
+                            <label class="form-label" for="RiskTreatmentPlan.CumulativeTarget">RiskDescription</label>
+                            <input type="number" class="form-control" id="baseline" asp-for="RiskTreatmentPlan.CumulativeTarget" name="RiskTreatmentPlan.CumulativeTarget" placeholder="RiskDescription" disabled>
+                            @* <div class="valid-feedback"> Looks good! </div>
+                            <div class="invalid-feedback"> This field is required. </div> *@
+                        </div>
+                    </div>
+                    @* <div class="row">
+                    <div class="col mb-3">
+                    <label class="form-label" for="cumulativeTarget">Cumulative Target</label>
+                    <input type="number" class="form-control" id="cumulativeTarget" name="CumulativeTarget" placeholder="Cumulative Target" required="">
+                    <div class="valid-feedback"> Looks good! </div>
+                    <div class="invalid-feedback"> This field is required. </div>
+                    </div>
+                    </div> *@
+                    <div class="row">
+                        <div class="col mb-3">
+                            <label class="form-label" for="Quarter">Quarter</label>
+                            <select class="form-select" name="Quarter" id="Quarter" asp-for="Quarter" required>
+                                <option value="1">Quarter 1</option>
+                                <option value="2">Quarter 2</option>
+                                <option value="3">Quarter 3</option>
+                                <option value="4">Quarter 4</option>
+                            </select>
+                            <div class="valid-feedback"> Looks good! </div>
+                            <div class="invalid-feedback"> This field is required. </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col mb-3">
+                            <label class="form-label" for="ImpStatusId">Implementation Status</label>
+                            <select class="form-select" name="ImpStatusId" id="ImpStatusId" asp-for="ImpStatusId" required>
+                                <option value="1">Not Implemented</option>
+                                <option value="2">Partially Implemented</option>
+                                <option value="3">Fully Implemented</option>
+                            </select>
+                            <div class="valid-feedback"> Looks good! </div>
+                            <div class="invalid-feedback"> This field is required. </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col mb-3">
+                            <label class="form-label" for="">No. Of Incidents</label>
+                            <input type="number" class="form-control" id="NoOfIncedents" asp-for="NoOfIncedents" name="NoOfIncedents" placeholder="No. Of Incidents" required="">
+                            <div class="valid-feedback"> Looks good! </div>
+                            <div class="invalid-feedback"> This field is required. </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col mb-3">
+                            <label class="form-label" for="RiskDescription">Risk Description</label>
+                            <textarea class="form-control" id="cumulativeTarget" asp-for="RiskDescription" name="RiskDescription" placeholder="Risk Description" required></textarea>
+                            <div class="valid-feedback"> Looks good! </div>
+                            <div class="invalid-feedback"> This field is required. </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col mb-3">
+                            <label class="form-label" for="">Incident value(Financial Loss)</label>
+                            <input type="number" class="form-control" id="IncidentValue" asp-for="IncidentValue" name="IncidentValue" placeholder="Incident value(Financial Loss)" required="">
+                            <div class="valid-feedback"> Looks good! </div>
+                            <div class="invalid-feedback"> This field is required. </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Add</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

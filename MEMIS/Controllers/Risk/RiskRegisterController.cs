@@ -168,7 +168,9 @@ namespace MEMIS.Controllers.Risk
       if (_context.RiskRegister != null)
       {
         var dat = _context.RiskRegister.Include(m => m.StrategicPlanFk).Include(m => m.ActivityFk).Include(m => m.FocusAreaFk).Include(m => m.RiskIdentificationFk)
-            .Where(x => x.ApprStatus == 1)
+          .Include(x => x.RiskTreatmentPlans)
+          .ThenInclude(x => x.QuarterlyRiskActions)
+            .Where(x => x.ApprStatus == 1 || (x.ApprStatus == (int)riskWorkFlowStatus.monitoringrmoapproved && x.RiskTreatmentPlans.Where(x => x.QuarterlyRiskActions != null && x.QuarterlyRiskActions.Count != 4).Any()))
             .Skip(offset)
             .Take(pageSize);
 
@@ -197,6 +199,7 @@ namespace MEMIS.Controllers.Risk
 
       var riskIdentification = await _context.RiskRegister.Include(m => m.StrategicPlanFk).Include(m => m.ActivityFk).Include(m => m.FocusAreaFk).Include(m => m.RiskIdentificationFk)
             .Include(m => m.RiskTreatmentPlans)
+            .ThenInclude(x => x.QuarterlyRiskActions)
           .Where(m => m.RiskRefID == id).FirstOrDefaultAsync();
       if (riskIdentification == null)
       {
@@ -223,6 +226,17 @@ namespace MEMIS.Controllers.Risk
         //ResourcesRequired= riskIdentification.ResourcesRequired,
         //ExpectedDate= riskIdentification.ExpectedDate,
       };
+      var riskLikelihoodList = new List<SelectListItem>
+    {
+        new CustomSelectListItem { Value = "1", Text = "Very Low", Color = "green" },
+    new CustomSelectListItem { Value = "2", Text = "Low", Color = "yellow" },
+    new CustomSelectListItem { Value = "3", Text = "Medium", Color = "orange" },
+    new CustomSelectListItem { Value = "4", Text = "High", Color = "peach" },
+    new CustomSelectListItem { Value = "5", Text = "Very High", Color = "red" }
+    };
+
+      ViewBag.RiskRatingList = new SelectList(riskLikelihoodList, "Value", "Text", riskIdentification.RiskRatingId);
+
       ViewBag.RiskConsequenceList = GetSelectListForRiskConsequence();
       ViewBag.RiskLikelihoodList = GetSelectListForRiskLikelihood();
       ViewBag.StrategicPlanList = _context.StrategicObjective == null ? new List<StrategicObjective>() : await _context.StrategicObjective.ToListAsync();
@@ -232,44 +246,178 @@ namespace MEMIS.Controllers.Risk
       return View(riskIdentification);
     }
 
+    public async Task<int> GetRiskConsequence(int RiskRefId)
+    {
+      RiskRegister riskRegister = await _context.RiskRegister
+          .Include(x => x.RiskTreatmentPlans)
+          .ThenInclude(x => x.QuarterlyRiskActions)
+          .Where(x => x.RiskRefID == RiskRefId)
+          .FirstAsync();
+
+      double? totalIncidentValue = riskRegister.RiskTreatmentPlans
+          .Where(x => x.QuarterlyRiskActions != null)
+          .Sum(x => x.QuarterlyRiskActions.Sum(y => y.IncidentValue));
+
+      if (totalIncidentValue != null && totalIncidentValue > 0)
+      {
+        double? activityBudget = riskRegister.RiskTreatmentPlans.Sum(x => x.CumulativeTarget);
+
+        if (totalIncidentValue > 100000000) // Financial Loss > 100M
+        {
+          return 4; // Major
+        }
+        else if (totalIncidentValue > 10000000) // Financial Loss 10M-100M
+        {
+          return 3; // Severe
+        }
+        else if (totalIncidentValue > 1000000) // Financial Loss 1M-10M
+        {
+          return 2; // Serious
+        }
+        else if (totalIncidentValue < 1000000) // Financial Loss < 1M
+        {
+          return 1; // Minor
+        }
+
+        if (activityBudget != null && totalIncidentValue > 0.5 * activityBudget)
+        {
+          return 5; // Catastrophic
+        }
+      }
+
+      return 0;
+    }
+
+    public async Task<int> GetRiskLikelihood(int RiskRefId)
+    {
+      RiskRegister riskRegister = await _context.RiskRegister
+          .Include(x => x.RiskTreatmentPlans)
+          .ThenInclude(x => x.QuarterlyRiskActions)
+          .Where(x => x.RiskRefID == RiskRefId)
+          .FirstAsync();
+
+      double? noOfIncidents = riskRegister.RiskTreatmentPlans
+          .Where(x => x.QuarterlyRiskActions != null)
+          .Sum(x => x.QuarterlyRiskActions.Sum(y => y.NoOfIncedents));
+
+      if (noOfIncidents != null && noOfIncidents > 0)
+      {
+        double? totalTarget = riskRegister.RiskTreatmentPlans.Sum(x => x.CumulativeTarget);
+
+        if (totalTarget != null && totalTarget > 0)
+        {
+          double percentage = ((double)noOfIncidents / (double)totalTarget) * 100;
+
+          if (percentage > 95)
+          {
+            return 5; // Almost certain
+          }
+          else if (percentage > 50 && percentage <= 95)
+          {
+            return 4; // Likely
+          }
+          else if (percentage > 15 && percentage <= 50)
+          {
+            return 3; // Possible
+          }
+          else if (percentage > 5 && percentage <= 15)
+          {
+            return 2; // Unlikely
+          }
+          else if (percentage > 0 && percentage <= 5)
+          {
+            return 1; // Rare
+          }
+        }
+      }
+
+      return 0;
+    }
+
+    public (int RiskRating, string RiskCategory, string Color) GetRiskRating(int likelihood, int consequence)
+    {
+      int riskRating = likelihood * consequence;
+
+      string riskCategory = "Very Low";
+      string color = "green";
+
+      if (riskRating >= 1 && riskRating <= 4)
+      {
+        riskCategory = "Very Low";
+        color = "green";
+      }
+      else if (riskRating >= 5 && riskRating <= 8)
+      {
+        riskCategory = "Low";
+        color = "yellow";
+      }
+      else if (riskRating >= 9 && riskRating <= 12)
+      {
+        riskCategory = "Medium";
+        color = "orange";
+      }
+      else if (riskRating >= 13 && riskRating <= 15)
+      {
+        riskCategory = "High";
+        color = "peach";
+      }
+      else if (riskRating >= 16 && riskRating <= 25)
+      {
+        riskCategory = "Very High";
+        color = "red";
+      }
+
+      return (riskRating, riskCategory, color);
+    }
+
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> RiskTreatmentSubmit(RiskRegister riskRegister)
     {
-      if (ModelState.IsValid)
+      if (ModelState.IsValid && riskRegister.RiskRefID == 0)
       {
         _context.RiskRegister.Add(riskRegister);
         await _context.SaveChangesAsync();
         return RedirectToAction(nameof(RiskTolerence));
       }
-      //if (objectdto.RiskRefID != null && objectdto.RiskRefID != 0)
-      //{
-      //  try
-      //  {
-      //    var pp = await _context.RiskRegister.FindAsync(objectdto.RiskRefID);
-      //    if (pp == null)
-      //    {
-      //      return NotFound();
-      //    }
-      //    pp.ApprStatus = (int)riskWorkFlowStatus.treatmentsubmitted;
-      //    //pp.AdditionalMitigation = objectdto.AdditionalMitigation;
-      //    //pp.ResourcesRequired = objectdto.ResourcesRequired;
-      //    //pp.ExpectedDate=   objectdto.ExpectedDate;
-      //    await _context.SaveChangesAsync();
-      //  }
-      //  catch (DbUpdateConcurrencyException)
-      //  {
-      //    if (!RiskIdentificationExists(objectdto.RiskRefID))
-      //    {
-      //      return NotFound();
-      //    }
-      //    else
-      //    {
-      //      throw;
-      //    }
-      //  }
-      //  return RedirectToAction(nameof(RiskTolerence));
-      //}
+      else
+      {
+        if (riskRegister.RiskRefID != 0)
+        {
+          try
+          {
+            //var pp = await _context.RiskRegister.FindAsync(riskRegister.RiskRefID);
+            //if (pp == null)
+            //{
+            //  return NotFound();
+            //}
+            riskRegister.RiskConsequenceId = await GetRiskConsequence(riskRegister.RiskRefID);
+            riskRegister.RiskLikelihoodId = await GetRiskLikelihood(riskRegister.RiskRefID);
+            (int RiskRating, string RiskCategory, string Color) = GetRiskRating(riskRegister.RiskLikelihoodId, riskRegister.RiskConsequenceId);
+            riskRegister.RiskRatingId = RiskRating;
+            riskRegister.RiskRatingCategory = RiskCategory;
+            riskRegister.RiskRatingColor = Color;
+            riskRegister.ApprStatus = (int)riskWorkFlowStatus.treatmentsubmitted;
+            //pp.AdditionalMitigation = objectdto.AdditionalMitigation;
+            //pp.ResourcesRequired = objectdto.ResourcesRequired;
+            //pp.ExpectedDate=   objectdto.ExpectedDate;
+            _context.Update(riskRegister);
+            await _context.SaveChangesAsync();
+          }
+          catch (DbUpdateConcurrencyException)
+          {
+            if (!RiskIdentificationExists(riskRegister.RiskRefID))
+            {
+              return NotFound();
+            }
+            else
+            {
+              throw;
+            }
+          }
+          return RedirectToAction(nameof(RiskTreatmentList));
+        }
+      }
       ViewBag.RiskConsequenceList = GetSelectListForRiskConsequence();
       ViewBag.RiskLikelihoodList = GetSelectListForRiskLikelihood();
       ViewBag.StrategicPlanList = _context.StrategicObjective == null ? new List<StrategicObjective>() : await _context.StrategicObjective.ToListAsync();
@@ -296,6 +444,47 @@ namespace MEMIS.Controllers.Risk
         return RedirectToAction(nameof(RiskTreatmentSubmit), new { id = treatmentPlan.RiskRefID });
       }
       return BadRequest();
+    }
+
+    [HttpPost]
+    public IActionResult AddQuarterlyTreatmentAction(QuarterlyRiskAction quarterlyRiskAction)
+    {
+      if (ModelState.IsValid)
+      {
+        // Add the treatment plan to the database with the correct RiskRefID
+        _context.QuarterlyRiskActions.Add(quarterlyRiskAction);
+        _context.SaveChanges();
+
+        // Return the updated grid
+        var treatmentPlans = _context.RiskTreatmentPlans
+                                     .Where(tp => tp.TreatmentPlanId == quarterlyRiskAction.TreatmentPlanId)
+                                     .FirstOrDefault();
+        return RedirectToAction(nameof(RiskTreatmentPlanEdit), new { id = quarterlyRiskAction.TreatmentPlanId });
+      }
+      return BadRequest();
+    }
+
+    public async Task<IActionResult> RiskTreatmentPlanEdit(int? id)
+    {
+      if (id == null || _context.RiskTreatmentPlans == null)
+      {
+        return NotFound();
+      }
+
+      var riskIdentification = await _context.RiskTreatmentPlans.Include(m => m.QuarterlyRiskActions)
+            .ThenInclude(m => m.ImplementationStatus)
+          .Where(m => m.TreatmentPlanId == id).FirstOrDefaultAsync();
+      if (riskIdentification == null)
+      {
+        return NotFound();
+      }
+      ViewBag.RiskConsequenceList = GetSelectListForRiskConsequence();
+      ViewBag.RiskLikelihoodList = GetSelectListForRiskLikelihood();
+      ViewBag.StrategicPlanList = _context.StrategicObjective == null ? new List<StrategicObjective>() : await _context.StrategicObjective.ToListAsync();
+      ViewBag.FocusArea = _context.FocusArea == null ? new List<FocusArea>() : await _context.FocusArea.ToListAsync();
+      ViewBag.ActivityList = _context.Activity == null ? new List<Activity>() : await _context.Activity.ToListAsync();
+      ViewData["RiskRank"] = ListHelper.RiskRank();
+      return View(riskIdentification);
     }
 
     public IActionResult RemoveTreatmentPlan(int id)
@@ -709,6 +898,7 @@ namespace MEMIS.Controllers.Risk
       }
 
       var riskIdentification = await _context.RiskRegister.Include(m => m.StrategicPlanFk).Include(m => m.ActivityFk).Include(m => m.FocusAreaFk).Include(m => m.RiskIdentificationFk)
+        .Include(m => m.RiskTreatmentPlans)
           .Where(m => m.RiskRefID == id).FirstOrDefaultAsync();
       if (riskIdentification == null)
       {
@@ -743,31 +933,32 @@ namespace MEMIS.Controllers.Risk
       ViewBag.FocusArea = _context.FocusArea == null ? new List<FocusArea>() : await _context.FocusArea.ToListAsync();
       ViewBag.ActivityList = _context.Activity == null ? new List<Activity>() : await _context.Activity.ToListAsync();
       ViewData["RiskRank"] = ListHelper.RiskRank();
-      return View(riskDto);
+      return View(riskIdentification);
     }
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> RiskMonitoringSubmit(RiskMonitoringDto objectdto)
+    public async Task<IActionResult> RiskMonitoringSubmit(RiskRegister pp)
     {
-      if (objectdto.RiskRefID != null && objectdto.RiskRefID != 0)
+      if (pp.RiskRefID != 0)
       {
         try
         {
-          var pp = await _context.RiskRegister.FindAsync(objectdto.RiskRefID);
-          if (pp == null)
-          {
-            return NotFound();
-          }
+          //var pp = await _context.RiskRegister.FindAsync(objectdto.RiskRefID);
+          //if (pp == null)
+          //{
+          //  return NotFound();
+          //}
           pp.ApprStatus = (int)riskWorkFlowStatus.monitoringsubmitted;
-          pp.ActionTaken = objectdto.ActionTaken;
-          pp.ActualDate = objectdto.ActualDate;
+          //pp.ActionTaken = objectdto.ActionTaken;
+          //pp.ActualDate = objectdto.ActualDate;
           pp.ActualBy = User.FindFirstValue(ClaimTypes.NameIdentifier);
+          _context.RiskRegister.Update(pp);
           await _context.SaveChangesAsync();
         }
         catch (DbUpdateConcurrencyException)
         {
-          if (!RiskIdentificationExists(objectdto.RiskRefID))
+          if (!RiskIdentificationExists(pp.RiskRefID))
           {
             return NotFound();
           }
@@ -785,7 +976,29 @@ namespace MEMIS.Controllers.Risk
       ViewBag.ActivityList = _context.Activity == null ? new List<Activity>() : await _context.Activity.ToListAsync();
       ViewData["Approval"] = ListHelper.ApprovalStatus();
       ViewData["RiskRank"] = ListHelper.RiskRank();
-      return View(objectdto);
+      return View(pp);
+    }
+
+    public async Task<IActionResult> RemoveTreatmentPlanEdit(int TreatmentPlanId)
+    {
+      try
+      {
+        RiskTreatmentPlan? riskTreatmentPlan = await _context.RiskTreatmentPlans
+          .Where(x => x.TreatmentPlanId == TreatmentPlanId)
+          .Include(x => x.QuarterlyRiskActions)
+          .ThenInclude(q => q.ImplementationStatus)
+          .FirstOrDefaultAsync();
+        if (riskTreatmentPlan == null)
+        {
+          return NotFound();
+        }
+
+        return Ok(riskTreatmentPlan);
+      }
+      catch (Exception ex)
+      {
+        return StatusCode(500, ex);
+      }
     }
 
     public IActionResult RiskMonitoringHodReviewList(int pageNumber = 1)
@@ -823,6 +1036,8 @@ namespace MEMIS.Controllers.Risk
       }
 
       var riskIdentification = await _context.RiskRegister.Include(m => m.StrategicPlanFk).Include(m => m.ActivityFk).Include(m => m.FocusAreaFk).Include(m => m.RiskIdentificationFk)
+        .Include(x => x.RiskTreatmentPlans)
+        .ThenInclude(x => x.QuarterlyRiskActions)
           .Where(m => m.RiskRefID == id).FirstOrDefaultAsync();
       if (riskIdentification == null)
       {
@@ -858,35 +1073,32 @@ namespace MEMIS.Controllers.Risk
       ViewBag.ActivityList = _context.Activity == null ? new List<Activity>() : await _context.Activity.ToListAsync();
       ViewData["RiskRank"] = ListHelper.RiskRank();
       ViewData["Approval"] = ListHelper.ApprovalStatus();
-      return View(riskDto);
+      return View(riskIdentification);
     }
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> RiskMonitoringHodReview(RiskMonitoringDto objectdto)
+    public async Task<IActionResult> RiskMonitoringHodReview(RiskRegister pp)
     {
-      if (objectdto.RiskRefID != null && objectdto.RiskRefID != 0)
+      if (pp.RiskRefID != 0)
       {
         try
         {
-          var pp = await _context.RiskRegister.FindAsync(objectdto.RiskRefID);
-          if (pp == null)
-          {
-            return NotFound();
-          }
-          if (objectdto.ApprStatus == 1)
+
+          if (pp.ApprStatus == 1)
           {
             pp.ApprStatus = (int)riskWorkFlowStatus.monitoringhodreviewed;
           }
-          else if (objectdto.ApprStatus == 2)
+          else if (pp.ApprStatus == 2)
           {
             pp.ApprStatus = (int)riskWorkFlowStatus.monitoringhodrejected;
           }
+          _context.RiskRegister.Update(pp);
           await _context.SaveChangesAsync();
         }
         catch (DbUpdateConcurrencyException)
         {
-          if (!RiskIdentificationExists(objectdto.RiskRefID))
+          if (!RiskIdentificationExists(pp.RiskRefID))
           {
             return NotFound();
           }
@@ -904,7 +1116,7 @@ namespace MEMIS.Controllers.Risk
       ViewBag.ActivityList = _context.Activity == null ? new List<Activity>() : await _context.Activity.ToListAsync();
       ViewData["Approval"] = ListHelper.ApprovalStatus();
       ViewData["RiskRank"] = ListHelper.RiskRank();
-      return View(objectdto);
+      return View(pp);
     }
     public IActionResult RiskMonitoringDirVerifyList(int pageNumber = 1)
     {
@@ -940,7 +1152,8 @@ namespace MEMIS.Controllers.Risk
         return NotFound();
       }
 
-      var riskIdentification = await _context.RiskRegister.Include(m => m.StrategicPlanFk).Include(m => m.ActivityFk).Include(m => m.FocusAreaFk).Include(m => m.RiskIdentificationFk)
+      var riskIdentification = await _context.RiskRegister.Include(m => m.StrategicPlanFk).Include(m => m.ActivityFk).Include(m => m.FocusAreaFk).Include(m => m.RiskIdentificationFk).Include(x => x.RiskTreatmentPlans)
+        .ThenInclude(x => x.QuarterlyRiskActions)
           .Where(m => m.RiskRefID == id).FirstOrDefaultAsync();
       if (riskIdentification == null)
       {
@@ -976,35 +1189,31 @@ namespace MEMIS.Controllers.Risk
       ViewBag.ActivityList = _context.Activity == null ? new List<Activity>() : await _context.Activity.ToListAsync();
       ViewData["RiskRank"] = ListHelper.RiskRank();
       ViewData["Approval"] = ListHelper.ApprovalStatus();
-      return View(riskDto);
+      return View(riskIdentification);
     }
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> RiskMonitoringDirVerify(RiskMonitoringDto objectdto)
+    public async Task<IActionResult> RiskMonitoringDirVerify(RiskRegister pp)
     {
-      if (objectdto.RiskRefID != null && objectdto.RiskRefID != 0)
+      if (pp.RiskRefID != 0)
       {
         try
         {
-          var pp = await _context.RiskRegister.FindAsync(objectdto.RiskRefID);
-          if (pp == null)
-          {
-            return NotFound();
-          }
-          if (objectdto.ApprStatus == 1)
+          if (pp.ApprStatus == 1)
           {
             pp.ApprStatus = (int)riskWorkFlowStatus.monitoringdirapprove;
           }
-          else if (objectdto.ApprStatus == 2)
+          else if (pp.ApprStatus == 2)
           {
             pp.ApprStatus = (int)riskWorkFlowStatus.monitoringdirrejected;
           }
+          _context.RiskRegister.Update(pp);
           await _context.SaveChangesAsync();
         }
         catch (DbUpdateConcurrencyException)
         {
-          if (!RiskIdentificationExists(objectdto.RiskRefID))
+          if (!RiskIdentificationExists(pp.RiskRefID))
           {
             return NotFound();
           }
@@ -1022,7 +1231,7 @@ namespace MEMIS.Controllers.Risk
       ViewBag.ActivityList = _context.Activity == null ? new List<Activity>() : await _context.Activity.ToListAsync();
       ViewData["Approval"] = ListHelper.ApprovalStatus();
       ViewData["RiskRank"] = ListHelper.RiskRank();
-      return View(objectdto);
+      return View(pp);
     }
     public IActionResult RiskMonitoringRmoVerifyList(int pageNumber = 1)
     {
@@ -1059,6 +1268,8 @@ namespace MEMIS.Controllers.Risk
       }
 
       var riskIdentification = await _context.RiskRegister.Include(m => m.StrategicPlanFk).Include(m => m.ActivityFk).Include(m => m.FocusAreaFk).Include(m => m.RiskIdentificationFk)
+        .Include(x => x.RiskTreatmentPlans)
+        .ThenInclude(x => x.QuarterlyRiskActions)
           .Where(m => m.RiskRefID == id).FirstOrDefaultAsync();
       if (riskIdentification == null)
       {
@@ -1094,35 +1305,31 @@ namespace MEMIS.Controllers.Risk
       ViewBag.ActivityList = _context.Activity == null ? new List<Activity>() : await _context.Activity.ToListAsync();
       ViewData["RiskRank"] = ListHelper.RiskRank();
       ViewData["Approval"] = ListHelper.ApprovalStatus();
-      return View(riskDto);
+      return View(riskIdentification);
     }
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> RiskMonitoringRmoVerify(RiskMonitoringDto objectdto)
+    public async Task<IActionResult> RiskMonitoringRmoVerify(RiskRegister pp)
     {
-      if (objectdto.RiskRefID != null && objectdto.RiskRefID != 0)
+      if (pp.RiskRefID != 0)
       {
         try
         {
-          var pp = await _context.RiskRegister.FindAsync(objectdto.RiskRefID);
-          if (pp == null)
-          {
-            return NotFound();
-          }
-          if (objectdto.ApprStatus == 1)
+          if (pp.ApprStatus == 1)
           {
             pp.ApprStatus = (int)riskWorkFlowStatus.monitoringrmoapproved;
           }
-          else if (objectdto.ApprStatus == 2)
+          else if (pp.ApprStatus == 2)
           {
             pp.ApprStatus = (int)riskWorkFlowStatus.monitoringrmorejected;
           }
+          _context.RiskRegister.Update(pp);
           await _context.SaveChangesAsync();
         }
         catch (DbUpdateConcurrencyException)
         {
-          if (!RiskIdentificationExists(objectdto.RiskRefID))
+          if (!RiskIdentificationExists(pp.RiskRefID))
           {
             return NotFound();
           }
@@ -1140,7 +1347,7 @@ namespace MEMIS.Controllers.Risk
       ViewBag.ActivityList = _context.Activity == null ? new List<Activity>() : await _context.Activity.ToListAsync();
       ViewData["Approval"] = ListHelper.ApprovalStatus();
       ViewData["RiskRank"] = ListHelper.RiskRank();
-      return View(objectdto);
+      return View(pp);
     }
 
     public IActionResult RiskResidualList(int pageNumber = 1)
@@ -1883,5 +2090,10 @@ namespace MEMIS.Controllers.Risk
 
       return RedirectToAction("Verify");
     }
+  }
+
+  public class CustomSelectListItem : SelectListItem
+  {
+    public string Color { get; set; }
   }
 }
