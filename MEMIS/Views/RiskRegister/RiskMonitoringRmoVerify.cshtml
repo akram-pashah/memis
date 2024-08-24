@@ -77,6 +77,12 @@
                 @Html.DropDownList("RiskLikelihoodId", ViewBag.RiskLikelihoodList as SelectList, new { @class = "form-control form-select" })
                 <span asp-validation-for="RiskLikelihoodId" class="text-danger"></span>
             </div>
+            <div class="form-group  col-md-3">
+                <label asp-for="RiskRatingId" class="control-label"></label>
+                @Html.DropDownList("RiskRatingId", ViewBag.RiskLikelihoodList as SelectList, 
+                    new { @class = "form-control form-select", style = $"border-color: {Model.RiskRatingColor};" })
+                <span asp-validation-for="RiskRatingId" class="text-danger"></span>
+            </div>
             <div class="form-group col-md-3">
                 <label asp-for="RiskScore" class="control-label"></label>
                 <input asp-for="RiskScore" class="form-control"  required readonly/>

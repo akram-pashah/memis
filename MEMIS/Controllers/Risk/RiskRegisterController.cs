@@ -114,6 +114,15 @@ namespace MEMIS.Controllers.Risk
         RiskSource = riskIdentification.RiskSource,
         StrategicObjective = riskIdentification.StrategicObjective,
       };
+      var riskLikelihoodList = new List<SelectListItem>
+    {
+        new CustomSelectListItem { Value = "1", Text = "Very Low", Color = "green" },
+    new CustomSelectListItem { Value = "2", Text = "Low", Color = "yellow" },
+    new CustomSelectListItem { Value = "3", Text = "Medium", Color = "orange" },
+    new CustomSelectListItem { Value = "4", Text = "High", Color = "peach" },
+    new CustomSelectListItem { Value = "5", Text = "Very High", Color = "red" }
+    };
+
       ViewBag.RiskConsequenceList = GetSelectListForRiskConsequence();
       ViewBag.RiskLikelihoodList = GetSelectListForRiskLikelihood();
       ViewBag.StrategicPlanList = _context.StrategicObjective == null ? new List<StrategicObjective>() : await _context.StrategicObjective.ToListAsync();
@@ -152,6 +161,16 @@ namespace MEMIS.Controllers.Risk
         }
         return RedirectToAction(nameof(RiskTolerence));
       }
+
+      var riskLikelihoodList = new List<SelectListItem>
+    {
+        new CustomSelectListItem { Value = "1", Text = "Very Low", Color = "green" },
+    new CustomSelectListItem { Value = "2", Text = "Low", Color = "yellow" },
+    new CustomSelectListItem { Value = "3", Text = "Medium", Color = "orange" },
+    new CustomSelectListItem { Value = "4", Text = "High", Color = "peach" },
+    new CustomSelectListItem { Value = "5", Text = "Very High", Color = "red" }
+    };
+
       ViewBag.RiskConsequenceList = GetSelectListForRiskConsequence();
       ViewBag.RiskLikelihoodList = GetSelectListForRiskLikelihood();
       ViewBag.StrategicPlanList = _context.StrategicObjective == null ? new List<StrategicObjective>() : await _context.StrategicObjective.ToListAsync();
@@ -252,7 +271,7 @@ namespace MEMIS.Controllers.Risk
           .Include(x => x.RiskTreatmentPlans)
           .ThenInclude(x => x.QuarterlyRiskActions)
           .Where(x => x.RiskRefID == RiskRefId)
-          .FirstAsync();
+          .AsNoTracking().FirstAsync();
 
       double? totalIncidentValue = riskRegister.RiskTreatmentPlans
           .Where(x => x.QuarterlyRiskActions != null)
@@ -294,7 +313,7 @@ namespace MEMIS.Controllers.Risk
           .Include(x => x.RiskTreatmentPlans)
           .ThenInclude(x => x.QuarterlyRiskActions)
           .Where(x => x.RiskRefID == RiskRefId)
-          .FirstAsync();
+          .AsNoTracking().FirstAsync();
 
       double? noOfIncidents = riskRegister.RiskTreatmentPlans
           .Where(x => x.QuarterlyRiskActions != null)
@@ -418,6 +437,15 @@ namespace MEMIS.Controllers.Risk
           return RedirectToAction(nameof(RiskTreatmentList));
         }
       }
+      var riskLikelihoodList = new List<SelectListItem>
+    {
+        new CustomSelectListItem { Value = "1", Text = "Very Low", Color = "green" },
+    new CustomSelectListItem { Value = "2", Text = "Low", Color = "yellow" },
+    new CustomSelectListItem { Value = "3", Text = "Medium", Color = "orange" },
+    new CustomSelectListItem { Value = "4", Text = "High", Color = "peach" },
+    new CustomSelectListItem { Value = "5", Text = "Very High", Color = "red" }
+    };
+
       ViewBag.RiskConsequenceList = GetSelectListForRiskConsequence();
       ViewBag.RiskLikelihoodList = GetSelectListForRiskLikelihood();
       ViewBag.StrategicPlanList = _context.StrategicObjective == null ? new List<StrategicObjective>() : await _context.StrategicObjective.ToListAsync();
@@ -478,6 +506,15 @@ namespace MEMIS.Controllers.Risk
       {
         return NotFound();
       }
+      var riskLikelihoodList = new List<SelectListItem>
+    {
+        new CustomSelectListItem { Value = "1", Text = "Very Low", Color = "green" },
+    new CustomSelectListItem { Value = "2", Text = "Low", Color = "yellow" },
+    new CustomSelectListItem { Value = "3", Text = "Medium", Color = "orange" },
+    new CustomSelectListItem { Value = "4", Text = "High", Color = "peach" },
+    new CustomSelectListItem { Value = "5", Text = "Very High", Color = "red" }
+    };
+
       ViewBag.RiskConsequenceList = GetSelectListForRiskConsequence();
       ViewBag.RiskLikelihoodList = GetSelectListForRiskLikelihood();
       ViewBag.StrategicPlanList = _context.StrategicObjective == null ? new List<StrategicObjective>() : await _context.StrategicObjective.ToListAsync();
@@ -567,6 +604,15 @@ namespace MEMIS.Controllers.Risk
         //ResourcesRequired = riskIdentification.ResourcesRequired,
         //ExpectedDate = riskIdentification.ExpectedDate,
       };
+      var riskLikelihoodList = new List<SelectListItem>
+    {
+        new CustomSelectListItem { Value = "1", Text = "Very Low", Color = "green" },
+    new CustomSelectListItem { Value = "2", Text = "Low", Color = "yellow" },
+    new CustomSelectListItem { Value = "3", Text = "Medium", Color = "orange" },
+    new CustomSelectListItem { Value = "4", Text = "High", Color = "peach" },
+    new CustomSelectListItem { Value = "5", Text = "Very High", Color = "red" }
+    };
+
       ViewBag.RiskConsequenceList = GetSelectListForRiskConsequence();
       ViewBag.RiskLikelihoodList = GetSelectListForRiskLikelihood();
       ViewBag.StrategicPlanList = _context.StrategicObjective == null ? new List<StrategicObjective>() : await _context.StrategicObjective.ToListAsync();
@@ -616,6 +662,15 @@ namespace MEMIS.Controllers.Risk
         }
         return RedirectToAction(nameof(RiskTreatmentHodReviewList));
       }
+      var riskLikelihoodList = new List<SelectListItem>
+    {
+        new CustomSelectListItem { Value = "1", Text = "Very Low", Color = "green" },
+    new CustomSelectListItem { Value = "2", Text = "Low", Color = "yellow" },
+    new CustomSelectListItem { Value = "3", Text = "Medium", Color = "orange" },
+    new CustomSelectListItem { Value = "4", Text = "High", Color = "peach" },
+    new CustomSelectListItem { Value = "5", Text = "Very High", Color = "red" }
+    };
+
       ViewBag.RiskConsequenceList = GetSelectListForRiskConsequence();
       ViewBag.RiskLikelihoodList = GetSelectListForRiskLikelihood();
       ViewBag.StrategicPlanList = _context.StrategicObjective == null ? new List<StrategicObjective>() : await _context.StrategicObjective.ToListAsync();
@@ -686,6 +741,15 @@ namespace MEMIS.Controllers.Risk
         //ResourcesRequired = riskIdentification.ResourcesRequired,
         //ExpectedDate = riskIdentification.ExpectedDate,
       };
+      var riskLikelihoodList = new List<SelectListItem>
+    {
+        new CustomSelectListItem { Value = "1", Text = "Very Low", Color = "green" },
+    new CustomSelectListItem { Value = "2", Text = "Low", Color = "yellow" },
+    new CustomSelectListItem { Value = "3", Text = "Medium", Color = "orange" },
+    new CustomSelectListItem { Value = "4", Text = "High", Color = "peach" },
+    new CustomSelectListItem { Value = "5", Text = "Very High", Color = "red" }
+    };
+
       ViewBag.RiskConsequenceList = GetSelectListForRiskConsequence();
       ViewBag.RiskLikelihoodList = GetSelectListForRiskLikelihood();
       ViewBag.StrategicPlanList = _context.StrategicObjective == null ? new List<StrategicObjective>() : await _context.StrategicObjective.ToListAsync();
@@ -735,6 +799,15 @@ namespace MEMIS.Controllers.Risk
         }
         return RedirectToAction(nameof(RiskTreatmentDirVerifyList));
       }
+      var riskLikelihoodList = new List<SelectListItem>
+    {
+        new CustomSelectListItem { Value = "1", Text = "Very Low", Color = "green" },
+    new CustomSelectListItem { Value = "2", Text = "Low", Color = "yellow" },
+    new CustomSelectListItem { Value = "3", Text = "Medium", Color = "orange" },
+    new CustomSelectListItem { Value = "4", Text = "High", Color = "peach" },
+    new CustomSelectListItem { Value = "5", Text = "Very High", Color = "red" }
+    };
+
       ViewBag.RiskConsequenceList = GetSelectListForRiskConsequence();
       ViewBag.RiskLikelihoodList = GetSelectListForRiskLikelihood();
       ViewBag.StrategicPlanList = _context.StrategicObjective == null ? new List<StrategicObjective>() : await _context.StrategicObjective.ToListAsync();
@@ -805,6 +878,16 @@ namespace MEMIS.Controllers.Risk
         //ResourcesRequired = riskIdentification.ResourcesRequired,
         //ExpectedDate = riskIdentification.ExpectedDate,
       };
+
+      var riskLikelihoodList = new List<SelectListItem>
+    {
+        new CustomSelectListItem { Value = "1", Text = "Very Low", Color = "green" },
+    new CustomSelectListItem { Value = "2", Text = "Low", Color = "yellow" },
+    new CustomSelectListItem { Value = "3", Text = "Medium", Color = "orange" },
+    new CustomSelectListItem { Value = "4", Text = "High", Color = "peach" },
+    new CustomSelectListItem { Value = "5", Text = "Very High", Color = "red" }
+    };
+
       ViewBag.RiskConsequenceList = GetSelectListForRiskConsequence();
       ViewBag.RiskLikelihoodList = GetSelectListForRiskLikelihood();
       ViewBag.StrategicPlanList = _context.StrategicObjective == null ? new List<StrategicObjective>() : await _context.StrategicObjective.ToListAsync();
@@ -854,6 +937,16 @@ namespace MEMIS.Controllers.Risk
         }
         return RedirectToAction(nameof(RiskTreatmentRmoVerifyList));
       }
+
+      var riskLikelihoodList = new List<SelectListItem>
+    {
+        new CustomSelectListItem { Value = "1", Text = "Very Low", Color = "green" },
+    new CustomSelectListItem { Value = "2", Text = "Low", Color = "yellow" },
+    new CustomSelectListItem { Value = "3", Text = "Medium", Color = "orange" },
+    new CustomSelectListItem { Value = "4", Text = "High", Color = "peach" },
+    new CustomSelectListItem { Value = "5", Text = "Very High", Color = "red" }
+    };
+
       ViewBag.RiskConsequenceList = GetSelectListForRiskConsequence();
       ViewBag.RiskLikelihoodList = GetSelectListForRiskLikelihood();
       ViewBag.StrategicPlanList = _context.StrategicObjective == null ? new List<StrategicObjective>() : await _context.StrategicObjective.ToListAsync();
@@ -927,6 +1020,17 @@ namespace MEMIS.Controllers.Risk
         ActionTaken = riskIdentification.ActionTaken,
         ActualDate = riskIdentification.ActualDate,
       };
+      var riskLikelihoodList = new List<SelectListItem>
+    {
+        new CustomSelectListItem { Value = "1", Text = "Very Low", Color = "green" },
+    new CustomSelectListItem { Value = "2", Text = "Low", Color = "yellow" },
+    new CustomSelectListItem { Value = "3", Text = "Medium", Color = "orange" },
+    new CustomSelectListItem { Value = "4", Text = "High", Color = "peach" },
+    new CustomSelectListItem { Value = "5", Text = "Very High", Color = "red" }
+    };
+
+      ViewBag.RiskRatingList = new SelectList(riskLikelihoodList, "Value", "Text", riskIdentification.RiskRatingId);
+
       ViewBag.RiskConsequenceList = GetSelectListForRiskConsequence();
       ViewBag.RiskLikelihoodList = GetSelectListForRiskLikelihood();
       ViewBag.StrategicPlanList = _context.StrategicObjective == null ? new List<StrategicObjective>() : await _context.StrategicObjective.ToListAsync();
@@ -969,6 +1073,16 @@ namespace MEMIS.Controllers.Risk
         }
         return RedirectToAction(nameof(RiskMonitoringList));
       }
+
+      var riskLikelihoodList = new List<SelectListItem>
+    {
+        new CustomSelectListItem { Value = "1", Text = "Very Low", Color = "green" },
+    new CustomSelectListItem { Value = "2", Text = "Low", Color = "yellow" },
+    new CustomSelectListItem { Value = "3", Text = "Medium", Color = "orange" },
+    new CustomSelectListItem { Value = "4", Text = "High", Color = "peach" },
+    new CustomSelectListItem { Value = "5", Text = "Very High", Color = "red" }
+    };
+
       ViewBag.RiskConsequenceList = GetSelectListForRiskConsequence();
       ViewBag.RiskLikelihoodList = GetSelectListForRiskLikelihood();
       ViewBag.StrategicPlanList = _context.StrategicObjective == null ? new List<StrategicObjective>() : await _context.StrategicObjective.ToListAsync();
@@ -1066,6 +1180,15 @@ namespace MEMIS.Controllers.Risk
         ActionTaken = riskIdentification.ActionTaken,
         ActualDate = riskIdentification.ActualDate,
       };
+      var riskLikelihoodList = new List<SelectListItem>
+    {
+        new CustomSelectListItem { Value = "1", Text = "Very Low", Color = "green" },
+    new CustomSelectListItem { Value = "2", Text = "Low", Color = "yellow" },
+    new CustomSelectListItem { Value = "3", Text = "Medium", Color = "orange" },
+    new CustomSelectListItem { Value = "4", Text = "High", Color = "peach" },
+    new CustomSelectListItem { Value = "5", Text = "Very High", Color = "red" }
+    };
+
       ViewBag.RiskConsequenceList = GetSelectListForRiskConsequence();
       ViewBag.RiskLikelihoodList = GetSelectListForRiskLikelihood();
       ViewBag.StrategicPlanList = _context.StrategicObjective == null ? new List<StrategicObjective>() : await _context.StrategicObjective.ToListAsync();
@@ -1109,6 +1232,15 @@ namespace MEMIS.Controllers.Risk
         }
         return RedirectToAction(nameof(RiskMonitoringHodReviewList));
       }
+      var riskLikelihoodList = new List<SelectListItem>
+        {
+            new CustomSelectListItem { Value = "1", Text = "Very Low", Color = "green" },
+        new CustomSelectListItem { Value = "2", Text = "Low", Color = "yellow" },
+        new CustomSelectListItem { Value = "3", Text = "Medium", Color = "orange" },
+        new CustomSelectListItem { Value = "4", Text = "High", Color = "peach" },
+        new CustomSelectListItem { Value = "5", Text = "Very High", Color = "red" }
+        };
+
       ViewBag.RiskConsequenceList = GetSelectListForRiskConsequence();
       ViewBag.RiskLikelihoodList = GetSelectListForRiskLikelihood();
       ViewBag.StrategicPlanList = _context.StrategicObjective == null ? new List<StrategicObjective>() : await _context.StrategicObjective.ToListAsync();
@@ -1182,6 +1314,15 @@ namespace MEMIS.Controllers.Risk
         ActionTaken = riskIdentification.ActionTaken,
         ActualDate = riskIdentification.ActualDate,
       };
+      var riskLikelihoodList = new List<SelectListItem>
+    {
+        new CustomSelectListItem { Value = "1", Text = "Very Low", Color = "green" },
+    new CustomSelectListItem { Value = "2", Text = "Low", Color = "yellow" },
+    new CustomSelectListItem { Value = "3", Text = "Medium", Color = "orange" },
+    new CustomSelectListItem { Value = "4", Text = "High", Color = "peach" },
+    new CustomSelectListItem { Value = "5", Text = "Very High", Color = "red" }
+    };
+
       ViewBag.RiskConsequenceList = GetSelectListForRiskConsequence();
       ViewBag.RiskLikelihoodList = GetSelectListForRiskLikelihood();
       ViewBag.StrategicPlanList = _context.StrategicObjective == null ? new List<StrategicObjective>() : await _context.StrategicObjective.ToListAsync();
@@ -1224,6 +1365,15 @@ namespace MEMIS.Controllers.Risk
         }
         return RedirectToAction(nameof(RiskMonitoringDirVerifyList));
       }
+      var riskLikelihoodList = new List<SelectListItem>
+    {
+        new CustomSelectListItem { Value = "1", Text = "Very Low", Color = "green" },
+    new CustomSelectListItem { Value = "2", Text = "Low", Color = "yellow" },
+    new CustomSelectListItem { Value = "3", Text = "Medium", Color = "orange" },
+    new CustomSelectListItem { Value = "4", Text = "High", Color = "peach" },
+    new CustomSelectListItem { Value = "5", Text = "Very High", Color = "red" }
+    };
+
       ViewBag.RiskConsequenceList = GetSelectListForRiskConsequence();
       ViewBag.RiskLikelihoodList = GetSelectListForRiskLikelihood();
       ViewBag.StrategicPlanList = _context.StrategicObjective == null ? new List<StrategicObjective>() : await _context.StrategicObjective.ToListAsync();
@@ -1298,6 +1448,16 @@ namespace MEMIS.Controllers.Risk
         ActionTaken = riskIdentification.ActionTaken,
         ActualDate = riskIdentification.ActualDate,
       };
+
+      var riskLikelihoodList = new List<SelectListItem>
+    {
+        new CustomSelectListItem { Value = "1", Text = "Very Low", Color = "green" },
+    new CustomSelectListItem { Value = "2", Text = "Low", Color = "yellow" },
+    new CustomSelectListItem { Value = "3", Text = "Medium", Color = "orange" },
+    new CustomSelectListItem { Value = "4", Text = "High", Color = "peach" },
+    new CustomSelectListItem { Value = "5", Text = "Very High", Color = "red" }
+    };
+
       ViewBag.RiskConsequenceList = GetSelectListForRiskConsequence();
       ViewBag.RiskLikelihoodList = GetSelectListForRiskLikelihood();
       ViewBag.StrategicPlanList = _context.StrategicObjective == null ? new List<StrategicObjective>() : await _context.StrategicObjective.ToListAsync();
@@ -1340,6 +1500,16 @@ namespace MEMIS.Controllers.Risk
         }
         return RedirectToAction(nameof(RiskMonitoringRmoVerifyList));
       }
+
+      var riskLikelihoodList = new List<SelectListItem>
+    {
+        new CustomSelectListItem { Value = "1", Text = "Very Low", Color = "green" },
+    new CustomSelectListItem { Value = "2", Text = "Low", Color = "yellow" },
+    new CustomSelectListItem { Value = "3", Text = "Medium", Color = "orange" },
+    new CustomSelectListItem { Value = "4", Text = "High", Color = "peach" },
+    new CustomSelectListItem { Value = "5", Text = "Very High", Color = "red" }
+    };
+
       ViewBag.RiskConsequenceList = GetSelectListForRiskConsequence();
       ViewBag.RiskLikelihoodList = GetSelectListForRiskLikelihood();
       ViewBag.StrategicPlanList = _context.StrategicObjective == null ? new List<StrategicObjective>() : await _context.StrategicObjective.ToListAsync();
@@ -1377,6 +1547,7 @@ namespace MEMIS.Controllers.Risk
         return Problem("Entity set 'AppDbContext.RiskRegister'  is null.");
       }
     }
+
     public async Task<IActionResult> RiskResidualSubmit(int? id)
     {
       if (id == null || _context.RiskRegister == null)
@@ -1415,6 +1586,16 @@ namespace MEMIS.Controllers.Risk
         RiskResidualScore = riskIdentification.RiskResidualScore,
         RiskResidualRank = riskIdentification.RiskResidualRank,
       };
+
+      var riskLikelihoodList = new List<SelectListItem>
+    {
+        new CustomSelectListItem { Value = "1", Text = "Very Low", Color = "green" },
+    new CustomSelectListItem { Value = "2", Text = "Low", Color = "yellow" },
+    new CustomSelectListItem { Value = "3", Text = "Medium", Color = "orange" },
+    new CustomSelectListItem { Value = "4", Text = "High", Color = "peach" },
+    new CustomSelectListItem { Value = "5", Text = "Very High", Color = "red" }
+    };
+
       ViewBag.RiskConsequenceList = GetSelectListForRiskConsequence();
       ViewBag.RiskLikelihoodList = GetSelectListForRiskLikelihood();
       ViewBag.StrategicPlanList = _context.StrategicObjective == null ? new List<StrategicObjective>() : await _context.StrategicObjective.ToListAsync();
@@ -1457,6 +1638,16 @@ namespace MEMIS.Controllers.Risk
         }
         return RedirectToAction(nameof(RiskResidualList));
       }
+
+      var riskLikelihoodList = new List<SelectListItem>
+    {
+        new CustomSelectListItem { Value = "1", Text = "Very Low", Color = "green" },
+    new CustomSelectListItem { Value = "2", Text = "Low", Color = "yellow" },
+    new CustomSelectListItem { Value = "3", Text = "Medium", Color = "orange" },
+    new CustomSelectListItem { Value = "4", Text = "High", Color = "peach" },
+    new CustomSelectListItem { Value = "5", Text = "Very High", Color = "red" }
+    };
+
       ViewBag.RiskConsequenceList = GetSelectListForRiskConsequence();
       ViewBag.RiskLikelihoodList = GetSelectListForRiskLikelihood();
       ViewBag.StrategicPlanList = _context.StrategicObjective == null ? new List<StrategicObjective>() : await _context.StrategicObjective.ToListAsync();
@@ -1533,6 +1724,16 @@ namespace MEMIS.Controllers.Risk
         RiskResidualScore = riskIdentification.RiskResidualScore,
         RiskResidualRank = riskIdentification.RiskResidualRank,
       };
+
+      var riskLikelihoodList = new List<SelectListItem>
+    {
+        new CustomSelectListItem { Value = "1", Text = "Very Low", Color = "green" },
+    new CustomSelectListItem { Value = "2", Text = "Low", Color = "yellow" },
+    new CustomSelectListItem { Value = "3", Text = "Medium", Color = "orange" },
+    new CustomSelectListItem { Value = "4", Text = "High", Color = "peach" },
+    new CustomSelectListItem { Value = "5", Text = "Very High", Color = "red" }
+    };
+
       ViewBag.RiskConsequenceList = GetSelectListForRiskConsequence();
       ViewBag.RiskLikelihoodList = GetSelectListForRiskLikelihood();
       ViewBag.StrategicPlanList = _context.StrategicObjective == null ? new List<StrategicObjective>() : await _context.StrategicObjective.ToListAsync();
@@ -1579,6 +1780,16 @@ namespace MEMIS.Controllers.Risk
         }
         return RedirectToAction(nameof(RiskResidualHodReviewList));
       }
+
+      var riskLikelihoodList = new List<SelectListItem>
+    {
+        new CustomSelectListItem { Value = "1", Text = "Very Low", Color = "green" },
+    new CustomSelectListItem { Value = "2", Text = "Low", Color = "yellow" },
+    new CustomSelectListItem { Value = "3", Text = "Medium", Color = "orange" },
+    new CustomSelectListItem { Value = "4", Text = "High", Color = "peach" },
+    new CustomSelectListItem { Value = "5", Text = "Very High", Color = "red" }
+    };
+
       ViewBag.RiskConsequenceList = GetSelectListForRiskConsequence();
       ViewBag.RiskLikelihoodList = GetSelectListForRiskLikelihood();
       ViewBag.StrategicPlanList = _context.StrategicObjective == null ? new List<StrategicObjective>() : await _context.StrategicObjective.ToListAsync();
@@ -1654,6 +1865,16 @@ namespace MEMIS.Controllers.Risk
         RiskResidualScore = riskIdentification.RiskResidualScore,
         RiskResidualRank = riskIdentification.RiskResidualRank,
       };
+
+      var riskLikelihoodList = new List<SelectListItem>
+    {
+        new CustomSelectListItem { Value = "1", Text = "Very Low", Color = "green" },
+    new CustomSelectListItem { Value = "2", Text = "Low", Color = "yellow" },
+    new CustomSelectListItem { Value = "3", Text = "Medium", Color = "orange" },
+    new CustomSelectListItem { Value = "4", Text = "High", Color = "peach" },
+    new CustomSelectListItem { Value = "5", Text = "Very High", Color = "red" }
+    };
+
       ViewBag.RiskConsequenceList = GetSelectListForRiskConsequence();
       ViewBag.RiskLikelihoodList = GetSelectListForRiskLikelihood();
       ViewBag.StrategicPlanList = _context.StrategicObjective == null ? new List<StrategicObjective>() : await _context.StrategicObjective.ToListAsync();
@@ -1700,6 +1921,15 @@ namespace MEMIS.Controllers.Risk
         }
         return RedirectToAction(nameof(RiskResidualDirVerifyList));
       }
+      var riskLikelihoodList = new List<SelectListItem>
+    {
+        new CustomSelectListItem { Value = "1", Text = "Very Low", Color = "green" },
+    new CustomSelectListItem { Value = "2", Text = "Low", Color = "yellow" },
+    new CustomSelectListItem { Value = "3", Text = "Medium", Color = "orange" },
+    new CustomSelectListItem { Value = "4", Text = "High", Color = "peach" },
+    new CustomSelectListItem { Value = "5", Text = "Very High", Color = "red" }
+    };
+
       ViewBag.RiskConsequenceList = GetSelectListForRiskConsequence();
       ViewBag.RiskLikelihoodList = GetSelectListForRiskLikelihood();
       ViewBag.StrategicPlanList = _context.StrategicObjective == null ? new List<StrategicObjective>() : await _context.StrategicObjective.ToListAsync();
@@ -1775,6 +2005,16 @@ namespace MEMIS.Controllers.Risk
         RiskResidualScore = riskIdentification.RiskResidualScore,
         RiskResidualRank = riskIdentification.RiskResidualRank,
       };
+
+      var riskLikelihoodList = new List<SelectListItem>
+    {
+        new CustomSelectListItem { Value = "1", Text = "Very Low", Color = "green" },
+    new CustomSelectListItem { Value = "2", Text = "Low", Color = "yellow" },
+    new CustomSelectListItem { Value = "3", Text = "Medium", Color = "orange" },
+    new CustomSelectListItem { Value = "4", Text = "High", Color = "peach" },
+    new CustomSelectListItem { Value = "5", Text = "Very High", Color = "red" }
+    };
+
       ViewBag.RiskConsequenceList = GetSelectListForRiskConsequence();
       ViewBag.RiskLikelihoodList = GetSelectListForRiskLikelihood();
       ViewBag.StrategicPlanList = _context.StrategicObjective == null ? new List<StrategicObjective>() : await _context.StrategicObjective.ToListAsync();
@@ -1821,6 +2061,16 @@ namespace MEMIS.Controllers.Risk
         }
         return RedirectToAction(nameof(RiskResidualRmoVerifyList));
       }
+
+      var riskLikelihoodList = new List<SelectListItem>
+    {
+        new CustomSelectListItem { Value = "1", Text = "Very Low", Color = "green" },
+    new CustomSelectListItem { Value = "2", Text = "Low", Color = "yellow" },
+    new CustomSelectListItem { Value = "3", Text = "Medium", Color = "orange" },
+    new CustomSelectListItem { Value = "4", Text = "High", Color = "peach" },
+    new CustomSelectListItem { Value = "5", Text = "Very High", Color = "red" }
+    };
+
       ViewBag.RiskConsequenceList = GetSelectListForRiskConsequence();
       ViewBag.RiskLikelihoodList = GetSelectListForRiskLikelihood();
       ViewBag.StrategicPlanList = _context.StrategicObjective == null ? new List<StrategicObjective>() : await _context.StrategicObjective.ToListAsync();
@@ -1888,6 +2138,16 @@ namespace MEMIS.Controllers.Risk
         await _context.SaveChangesAsync();
         return RedirectToAction(nameof(Index));
       }
+
+      var riskLikelihoodList = new List<SelectListItem>
+    {
+        new CustomSelectListItem { Value = "1", Text = "Very Low", Color = "green" },
+    new CustomSelectListItem { Value = "2", Text = "Low", Color = "yellow" },
+    new CustomSelectListItem { Value = "3", Text = "Medium", Color = "orange" },
+    new CustomSelectListItem { Value = "4", Text = "High", Color = "peach" },
+    new CustomSelectListItem { Value = "5", Text = "Very High", Color = "red" }
+    };
+
       ViewBag.RiskConsequenceList = GetSelectListForRiskConsequence();
       ViewBag.RiskLikelihoodList = GetSelectListForRiskLikelihood();
       ViewBag.StrategicPlanList = _context.StrategicObjective == null ? new List<StrategicObjective>() : await _context.StrategicObjective.ToListAsync();
@@ -1929,6 +2189,16 @@ namespace MEMIS.Controllers.Risk
         StrategicObjective = (int)riskIdentification.StrategicObjective,
 
       };
+
+      var riskLikelihoodList = new List<SelectListItem>
+    {
+        new CustomSelectListItem { Value = "1", Text = "Very Low", Color = "green" },
+    new CustomSelectListItem { Value = "2", Text = "Low", Color = "yellow" },
+    new CustomSelectListItem { Value = "3", Text = "Medium", Color = "orange" },
+    new CustomSelectListItem { Value = "4", Text = "High", Color = "peach" },
+    new CustomSelectListItem { Value = "5", Text = "Very High", Color = "red" }
+    };
+
       ViewBag.RiskConsequenceList = GetSelectListForRiskConsequence();
       ViewBag.RiskLikelihoodList = GetSelectListForRiskLikelihood();
       ViewBag.StrategicPlanList = _context.StrategicObjective == null ? new List<StrategicObjective>() : await _context.StrategicObjective.ToListAsync();
@@ -1987,6 +2257,16 @@ namespace MEMIS.Controllers.Risk
         }
         return RedirectToAction(nameof(Index));
       }
+
+      var riskLikelihoodList = new List<SelectListItem>
+    {
+        new CustomSelectListItem { Value = "1", Text = "Very Low", Color = "green" },
+    new CustomSelectListItem { Value = "2", Text = "Low", Color = "yellow" },
+    new CustomSelectListItem { Value = "3", Text = "Medium", Color = "orange" },
+    new CustomSelectListItem { Value = "4", Text = "High", Color = "peach" },
+    new CustomSelectListItem { Value = "5", Text = "Very High", Color = "red" }
+    };
+
       ViewBag.RiskConsequenceList = GetSelectListForRiskConsequence();
       ViewBag.RiskLikelihoodList = GetSelectListForRiskLikelihood();
       ViewBag.StrategicPlanList = _context.StrategicObjective == null ? new List<StrategicObjective>() : await _context.StrategicObjective.ToListAsync();

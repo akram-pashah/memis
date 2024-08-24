@@ -1,4 +1,3 @@
-
 @*
     For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 *@
@@ -26,9 +25,15 @@
                     <td>@plan.CumulativeTarget</td>
                     <td>@plan.FrequencyOfReporting</td>
                     <td>
-                        <a asp-action="RemoveTreatmentPlan" asp-controller="RiskRegister" asp-route-id="@plan.TreatmentPlanId" class="btn btn-danger btn-sm remove-treatment" data-id="@plan.TreatmentPlanId"><i class="menu-icon tf-icons bx bx-trash"></i></a>
                         @* <a asp-action="RiskTreatmentPlanDetails" asp-controller="RiskRegister" asp-route-id="@plan.TreatmentPlanId" class="btn btn-primary btn-sm remove-treatment" data-id="@plan.TreatmentPlanId"><i class="menu-icon tf-icons bx bx-detail"></i></a> *@
-                        <a asp-action="RiskTreatmentPlanEdit" asp-controller="RiskRegister" asp-route-id="@plan.TreatmentPlanId" class="btn btn-info btn-sm remove-treatment" data-id="@plan.TreatmentPlanId"><i class='bx bx-log-in-circle'></i></a>
+                        @if (plan.RiskRegister?.ApprStatus >= 7)
+                        {
+                            <a asp-action="RiskTreatmentPlanEdit" asp-controller="RiskRegister" asp-route-id="@plan.TreatmentPlanId" class="btn btn-info btn-sm remove-treatment" data-id="@plan.TreatmentPlanId"><i class='bx bx-log-in-circle'></i></a>
+                        }
+                        else
+                        {
+                            <a asp-action="RemoveTreatmentPlan" asp-controller="RiskRegister" asp-route-id="@plan.TreatmentPlanId" class="btn btn-danger btn-sm remove-treatment" data-id="@plan.TreatmentPlanId"><i class="menu-icon tf-icons bx bx-trash"></i></a>
+                        }
                     </td>
                 </tr>
             }
