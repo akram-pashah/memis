@@ -58,7 +58,7 @@ namespace MEMIS.Controllers
         // GET: Activities/Create
         public IActionResult Create()
         {
-            ViewData["intAction"] = new SelectList(_context.StrategicAction, "intAction", "actionCode");
+            ViewData["intAction"] = new SelectList(_context.StrategicAction, "intAction", "actionName");
             return View();
         }
 
@@ -75,7 +75,7 @@ namespace MEMIS.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["intAction"] = new SelectList(_context.StrategicAction, "intAction", "actionCode", activity.intAction);
+            ViewData["intAction"] = new SelectList(_context.StrategicAction, "intAction", "actionName", activity.intAction);
             return View(activity);
         }
 
@@ -92,7 +92,7 @@ namespace MEMIS.Controllers
             {
                 return NotFound();
             }
-            ViewData["intAction"] = new SelectList(_context.StrategicAction, "intAction", "actionCode", activity.intAction);
+            ViewData["intAction"] = new SelectList(_context.StrategicAction, "intAction", "actionName", activity.intAction);
             return View(activity);
         }
 
@@ -128,7 +128,7 @@ namespace MEMIS.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["intAction"] = new SelectList(_context.StrategicAction, "intAction", "actionCode", activity.intAction);
+            ViewData["intAction"] = new SelectList(_context.StrategicAction, "intAction", "actionName", activity.intAction);
             return View(activity);
         }
 

@@ -4,6 +4,7 @@ using MEMIS.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MEMIS.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240823093638_ProgramImplementationPlanChanges")]
+    partial class ProgramImplementationPlanChanges
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1660,19 +1663,19 @@ namespace MEMIS.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<long?>("FY1")
+                    b.Property<long>("FY1")
                         .HasColumnType("bigint");
 
-                    b.Property<long?>("FY2")
+                    b.Property<long>("FY2")
                         .HasColumnType("bigint");
 
-                    b.Property<long?>("FY3")
+                    b.Property<long>("FY3")
                         .HasColumnType("bigint");
 
-                    b.Property<long?>("FY4")
+                    b.Property<long>("FY4")
                         .HasColumnType("bigint");
 
-                    b.Property<long?>("FY5")
+                    b.Property<long>("FY5")
                         .HasColumnType("bigint");
 
                     b.Property<string>("MeansofVerification")
@@ -1685,6 +1688,7 @@ namespace MEMIS.Migrations
                         .HasColumnType("nvarchar(1000)");
 
                     b.Property<string>("OutputTarget")
+                        .IsRequired()
                         .HasMaxLength(1000)
                         .HasColumnType("nvarchar(1000)");
 
@@ -2459,41 +2463,6 @@ namespace MEMIS.Migrations
                     b.ToTable("Events");
                 });
 
-            modelBuilder.Entity("MEMIS.Data.Risk.QuarterlyRiskAction", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
-
-                    b.Property<int>("ImpStatusId")
-                        .HasColumnType("int");
-
-                    b.Property<double?>("IncidentValue")
-                        .HasColumnType("float");
-
-                    b.Property<double?>("NoOfIncedents")
-                        .HasColumnType("float");
-
-                    b.Property<int>("Quarter")
-                        .HasColumnType("int");
-
-                    b.Property<string>("RiskDescription")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("TreatmentPlanId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ImpStatusId");
-
-                    b.HasIndex("TreatmentPlanId");
-
-                    b.ToTable("QuarterlyRiskActions");
-                });
-
             modelBuilder.Entity("MEMIS.Data.Risk.RiskCause", b =>
                 {
                     b.Property<int>("RiskCauseId")
@@ -2695,9 +2664,6 @@ namespace MEMIS.Migrations
                     b.Property<int>("Activity")
                         .HasColumnType("int");
 
-                    b.Property<long>("ActivityBudget")
-                        .HasColumnType("bigint");
-
                     b.Property<string>("ActualBy")
                         .HasColumnType("nvarchar(max)");
 
@@ -2705,12 +2671,6 @@ namespace MEMIS.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<int?>("ApprStatus")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ControlEffectiveness")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("Effectiveness")
                         .HasColumnType("int");
 
                     b.Property<string>("EvalCriteria")
@@ -2727,9 +2687,6 @@ namespace MEMIS.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Opportunity")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Recommendation")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("ReviewDate")
@@ -2757,19 +2714,11 @@ namespace MEMIS.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("RiskOwner")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("RiskRank")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("RiskRatingCategory")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("RiskRatingColor")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("RiskRatingId")
-                        .HasColumnType("int");
 
                     b.Property<int?>("RiskResidualConsequenceId")
                         .HasColumnType("int");
@@ -2848,9 +2797,6 @@ namespace MEMIS.Migrations
                     b.Property<long>("CumulativeTarget")
                         .HasColumnType("bigint");
 
-                    b.Property<string>("DataCollectionInstrumentMethods")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("FrequencyOfReporting")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -2859,12 +2805,6 @@ namespace MEMIS.Migrations
                         .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
-
-                    b.Property<string>("MeansOfVerification")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ResponsiblePersons")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("RiskRefID")
                         .HasColumnType("int");
@@ -3853,29 +3793,29 @@ namespace MEMIS.Migrations
 
             modelBuilder.Entity("MEMIS.Data.ProgramImplementationPlan", b =>
                 {
-                    b.HasOne("MEMIS.Data.StrategicAction", "StrategicActionFK")
+                    b.HasOne("MEMIS.Data.StrategicAction", "StrategicAction")
                         .WithMany()
                         .HasForeignKey("intAction");
 
-                    b.HasOne("MEMIS.Data.Activity", "ActivityFK")
+                    b.HasOne("MEMIS.Data.Activity", "Activity")
                         .WithMany()
                         .HasForeignKey("intActivity");
 
-                    b.HasOne("MEMIS.Data.StrategicIntervention", "StrategicInterventionFK")
+                    b.HasOne("MEMIS.Data.StrategicIntervention", "StrategicIntervention")
                         .WithMany()
                         .HasForeignKey("intIntervention");
 
-                    b.HasOne("MEMIS.Data.StrategicObjective", "StrategicObjectiveFK")
+                    b.HasOne("MEMIS.Data.StrategicObjective", "StrategicObjective")
                         .WithMany()
                         .HasForeignKey("intObjective");
 
-                    b.Navigation("ActivityFK");
+                    b.Navigation("Activity");
 
-                    b.Navigation("StrategicActionFK");
+                    b.Navigation("StrategicAction");
 
-                    b.Navigation("StrategicInterventionFK");
+                    b.Navigation("StrategicIntervention");
 
-                    b.Navigation("StrategicObjectiveFK");
+                    b.Navigation("StrategicObjective");
                 });
 
             modelBuilder.Entity("MEMIS.Data.Project.MonitoringAndControl", b =>
@@ -4053,23 +3993,6 @@ namespace MEMIS.Migrations
                         .IsRequired();
 
                     b.Navigation("RiskIdentification");
-                });
-
-            modelBuilder.Entity("MEMIS.Data.Risk.QuarterlyRiskAction", b =>
-                {
-                    b.HasOne("MEMIS.Data.Master.ImplementationStatus", "ImplementationStatus")
-                        .WithMany("QuarterlyRiskActions")
-                        .HasForeignKey("ImpStatusId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("MEMIS.Data.Risk.RiskTreatmentPlan", "RiskTreatmentPlan")
-                        .WithMany("QuarterlyRiskActions")
-                        .HasForeignKey("TreatmentPlanId");
-
-                    b.Navigation("ImplementationStatus");
-
-                    b.Navigation("RiskTreatmentPlan");
                 });
 
             modelBuilder.Entity("MEMIS.Data.Risk.RiskCause", b =>
@@ -4308,11 +4231,6 @@ namespace MEMIS.Migrations
                     b.Navigation("QuaterlyPlans");
                 });
 
-            modelBuilder.Entity("MEMIS.Data.ActivityAssessmentRegion", b =>
-                {
-                    b.Navigation("QuaterlyPlans");
-                });
-
             modelBuilder.Entity("MEMIS.Data.DeptPlan", b =>
                 {
                     b.Navigation("QuaterlyPlans");
@@ -4326,8 +4244,6 @@ namespace MEMIS.Migrations
             modelBuilder.Entity("MEMIS.Data.Master.ImplementationStatus", b =>
                 {
                     b.Navigation("ActivityAssessments");
-
-                    b.Navigation("QuarterlyRiskActions");
                 });
 
             modelBuilder.Entity("MEMIS.Data.Risk.RiskIdentification", b =>
@@ -4347,10 +4263,6 @@ namespace MEMIS.Migrations
                 {
                     b.Navigation("RiskTreatmentPlans");
                 });
-            modelBuilder.Entity("MEMIS.Data.Risk.RiskTreatmentPlan", b =>
-            {
-                b.Navigation("QuarterlyRiskActions");
-            });
 
             modelBuilder.Entity("MEMIS.Data.StrategicAction", b =>
                 {

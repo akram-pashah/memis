@@ -22,28 +22,37 @@
             <br />
             <div class="form-group">
                 <label asp-for="intFocus" class="control-label"></label>
-                <select asp-for="intFocus" class ="form-control" asp-items="ViewBag.intFocus"></select>
+                <select id="FocusArea" name="FocusArea" class="form-control" onchange="loadStrategicObjectives(this.value)">
+                    <option value="">Select Focus Area</option>
+                    @foreach (var item in ViewBag.FocusAreas)
+                    {
+                        <option value="@item.intFocus">@item.FocusAreaName</option>
+                    }
+                </select>
             </div>
             <br />
             <div class="form-group">
                 <label asp-for="intObjective" class="control-label"></label>
-                <select asp-for="intObjective" class ="form-control" asp-items="ViewBag.intObjective"></select>
+                <select id="StrategicObjective" asp-for="intObjective" class="form-control" onchange="loadStrategicInterventions(this.value)">
+                    <option value="">Select Strategic Objective</option>
+                </select>
             </div>
             <br />
             <div class="form-group">
                 <label asp-for="intIntervention" class="control-label"></label>
-                <select asp-for="intIntervention" class ="form-control" asp-items="ViewBag.intIntervention"></select>
+                <select id="StrategicIntervention" asp-for="intIntervention" class="form-control" onchange="loadStrategicActions(this.value)">
+                    <option value="">Select Strategic Intervention</option>
+                </select>
             </div>
             <br />
             <div class="form-group">
                 <label asp-for="intAction" class="control-label"></label>
-                <select asp-for="intAction" class ="form-control" asp-items="ViewBag.intAction"></select>
+                <select id="StrategicAction" asp-for="intAction" class="form-control" onchange="loadActivities(this.value)">
+                    <option value="">Select Strategic Action</option>
+                </select>
             </div>
             <br />
-            <div class="form-group">
-                <label asp-for="intActivity" class="control-label"></label>
-                <select asp-for="intActivity" class ="form-control" asp-items="ViewBag.intActivity"></select>
-            </div>
+            c
             <br />
             <div class="form-group">
                 <label asp-for="baseline" class="control-label"></label>
@@ -94,3 +103,59 @@
 @*@section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }*@
+
+@section Scripts {
+  <script>
+        function loadStrategicObjectives(focusAreaId) {
+            if (focusAreaId) {
+                $.getJSON('@Url.Action("GetStrategicObjectives")', { focusAreaId: focusAreaId }, function (data) {
+                    var $objectiveDropdown = $('#StrategicObjective');
+                    $objectiveDropdown.empty();
+                    $objectiveDropdown.append('<option value="">Select Strategic Objective</option>');
+                    $.each(data, function (index, item) {
+                        $objectiveDropdown.append('<option value="' + item.intObjective + '">' + item.ObjectiveName + '</option>');
+                    });
+                });
+            }
+        }
+
+        function loadStrategicInterventions(objectiveId) {
+            if (objectiveId) {
+                $.getJSON('@Url.Action("GetStrategicInterventions")', { objectiveId: objectiveId }, function (data) {
+                    var $interventionDropdown = $('#StrategicIntervention');
+                    $interventionDropdown.empty();
+                    $interventionDropdown.append('<option value="">Select Strategic Intervention</option>');
+                    $.each(data, function (index, item) {
+                        $interventionDropdown.append('<option value="' + item.intIntervention + '">' + item.InterventionName + '</option>');
+                    });
+                });
+            }
+        }
+
+        function loadStrategicActions(interventionId) {
+            if (interventionId) {
+                $.getJSON('@Url.Action("GetStrategicActions")', { interventionId: interventionId }, function (data) {
+                    var $actionDropdown = $('#StrategicAction');
+                    $actionDropdown.empty();
+                    $actionDropdown.append('<option value="">Select Strategic Action</option>');
+                    $.each(data, function (index, item) {
+                        $actionDropdown.append('<option value="' + item.intAction + '">' + item.actionName + '</option>');
+                    });
+                });
+            }
+        }
+        function loadActivities(actionId) {
+            if (actionId) {
+                $.getJSON('@Url.Action("GetActivities")', { actionId: actionId }, function (data) {
+                    var $activityDropdown = $('#Activity');
+                    $activityDropdown.empty();
+                    $activityDropdown.append('<option value="">Select Activity</option>');
+                    $.each(data, function (index, item) {
+                        $activityDropdown.append('<option value="' + item.intActivity + '">' + item.activityName + '</option>');
+                    });
+                });
+            }
+        }
+
+    </script>
+}

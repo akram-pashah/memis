@@ -374,10 +374,11 @@ namespace MEMIS.Controllers.ME
           .ThenInclude(x => x.ActivityFk)
           .Where(x => x.ApprStatus == Status)
         .AsQueryable();
+      var region = Guid.Parse(HttpContext.Session.GetString("Region"));
 
       if (isHod)
       {
-        query = query.Where(x => x.QuaterlyPlans.Where(x => !string.IsNullOrEmpty(x.QAchievement)).Any());
+        query = query.Where(x => x.ActivityAssessFk.QuaterlyPlans.Where(x => !string.IsNullOrEmpty(x.QAchievement)).Any() && x.intRegion == region);
       }
       else if (Status == 0)
       {

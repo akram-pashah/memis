@@ -16,17 +16,17 @@
             <div class="form-group">
                 <input asp-for="intAssess" hidden />
                 <label asp-for="intIntervention" class="control-label"></label>
-                @Html.DropDownList("intIntervention", new SelectList(ViewBag.StrategicIntervention, "intIntervention", "InterventionName"), new { @class = "form-control form-select", @required = "required" })
+                @Html.DropDownList("intIntervention", new SelectList(ViewBag.StrategicIntervention, "intIntervention", "InterventionName"), new { @class = "form-control form-select", @required = "required", onchange = "loadStrategicActions(this.value)" })
             </div>
             <br />
             <div class="form-group">
                 <label asp-for="intAction" class="control-label"></label>
-                @Html.DropDownList("intAction", new SelectList(ViewBag.StrategicAction, "intAction", "actionName"), new { @class = "form-control form-select", @required = "required" })
+                @Html.DropDownList("intAction", new SelectList(ViewBag.StrategicAction, "intAction", "actionName"), new { @class = "form-control form-select", id = "StrategicAction", @required = "required", onchange = "loadActivities(this.value)" })
             </div>
             <br />
             <div class="form-group">
                 <label asp-for="intActivity" class="control-label"></label>
-                @Html.DropDownList("intActivity", new SelectList(ViewBag.Activity, "intActivity", "activityName"), new { @class = "form-control form-select", @required = "required" })
+                @Html.DropDownList("intActivity", new SelectList(ViewBag.Activity, "intActivity", "activityName"), new { @class = "form-control form-select",id="Activity", @required = "required" })
             </div>
             <br />
             <div class="form-group">
@@ -181,6 +181,21 @@
             $('#quarterValidation').text("");
         }
 
+        // Check if the selected quarter already exists in the table
+        var exists = false;
+        $('#quarterDetailsTable tbody tr').each(function () {
+            var selectedQuarter = $(this).find('select[name*="Quarter"]').val();
+            if (selectedQuarter === quarter) {
+                exists = true;
+                return false; // Break out of the loop
+            }
+        });
+
+        if (exists) {
+            $('#quarterValidation').text("Selected quarter already exists.");
+            return;
+        }
+
         var $tableBody = $('#quarterDetailsTable tbody');
         var index;
 
@@ -203,12 +218,12 @@
                     <tr>
                         <td>${index + 1}</td>
                         <td>
-                                        <select name="QuaterlyPlans[${index}].Quarter" readonly class="form-control">
+                            <select name="QuaterlyPlans[${index}].Quarter" readonly class="form-control">
                                 ${options}
                             </select>
                         </td>
-                                    <td><input name="QuaterlyPlans[${index}].QTarget" readonly value="${target}" class="form-control" /></td>
-                                    <td><input name="QuaterlyPlans[${index}].QBudget" readonly value="${budget}" class="form-control" /></td>
+                        <td><input name="QuaterlyPlans[${index}].QTarget" readonly value="${target}" class="form-control" /></td>
+                        <td><input name="QuaterlyPlans[${index}].QBudget" readonly value="${budget}" class="form-control" /></td>
                         <td>
                             <button type="button" class="btn btn-danger delete-btn" onclick="removeQuarterDetails(this)" data-toggle="tooltip" data-placement="top" title="Delete">
                                 <i class="bx bx-message-square-x"></i>
@@ -242,6 +257,30 @@
             });
         });
     }
+    function loadStrategicActions(interventionId) {
+        if (interventionId) {
+            $.getJSON('@Url.Action("GetStrategicActions")', { interventionId: interventionId }, function (data) {
+                var $actionDropdown = $('#StrategicAction');
+                $actionDropdown.empty();
+                $actionDropdown.append('<option value="">Select Strategic Action</option>');
+                $.each(data, function (index, item) {
+                    $actionDropdown.append('<option value="' + item.intAction + '">' + item.actionName + '</option>');
+                });
+            });
+        }
+    }
 
+    function loadActivities(actionId) {
+        if (actionId) {
+            $.getJSON('@Url.Action("GetActivities")', { actionId: actionId }, function (data) {
+                var $activityDropdown = $('#Activity');
+                $activityDropdown.empty();
+                $activityDropdown.append('<option value="">Select Activity</option>');
+                $.each(data, function (index, item) {
+                    $activityDropdown.append('<option value="' + item.intActivity + '">' + item.activityName + '</option>');
+                });
+            });
+        }
+    }
 
 </script>
