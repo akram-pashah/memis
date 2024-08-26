@@ -20,10 +20,10 @@ namespace MEMIS.Data.Risk
     [ForeignKey("Activity")]
     public virtual Activity? ActivityFk { get; set; }
     public string RiskDescription { get; set; }
-    public string Events { get; set; }
-    public string RiskSource { get; set; }
-    public string RiskCause { get; set; }
-    public string RiskConsequence { get; set; }
+    public string? Events { get; set; }
+    public string? RiskSource { get; set; }
+    public string? RiskCause { get; set; }
+    public string? RiskConsequence { get; set; }
     public string? RiskOwner { get; set; }
     public int RiskConsequenceId { get; set; }
     public int RiskLikelihoodId { get; set; }
