@@ -1,0 +1,99 @@
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+@using MEMIS.Data.Risk;
+@model List<RiskRegister>
+@{
+    ViewData["Title"] = "Risk Reports";
+    //Layout = "~/Views/Shared/_PlanningLayout.cshtml";
+    Layout = "~/Pages/Shared/_ContentNavbarLayout.cshtml";
+}
+
+<h4 class="py-3 mb-4">
+    <span class="text-muted fw-light">Risk Reports /</span> Annual Report
+</h4>
+
+<div class="row">
+    <div class="col-md-12">
+        <ul class="nav nav-pills flex-column flex-md-row mb-3">
+            <li class="nav-item"><a class="nav-link" href="/RiskReport/Index">Quarterly Report</a></li>
+            <li class="nav-item"><a class="nav-link active" href="javascript:void(0);">Annual Report</a></li>
+            <li class="nav-item"><a class="nav-link" href="/RiskReport/RiskRegister">Risk Register</a></li>
+            <li class="nav-item"><a class="nav-link" href="/RiskReport/RiskTreatmentPlan">Risk Treatment Plan</a></li>
+            <li class="nav-item"><a class="nav-link" href="/RiskReport/RiskMonitoringReport">Risk Monitoring Report</a></li>
+        </ul>
+
+        <div class="card mb-4">
+            <h5 class="card-header">
+                <div class="col d-flex justify-content-end mb-3">
+                    <a class="btn btn-outline-success float-end float-right" asp-action="AnnualReportExcel" target="_blank">Export to Excel</a>
+                </div>
+            </h5>
+
+            <hr class="my-0" />
+
+            <div class="card-body">
+                <div style="width:100%; overflow-x:auto;">
+                    <table class="table table-striped table-bordered table-hover dt-responsive nowrap">
+                        <thead class="table-active">
+                            <tr>
+                                <th>
+                                    Risk ID
+                                </th>
+                                <th>
+                                    Risk Title
+                                </th>
+                                <th>
+                                    Inherent Rating
+                                </th>
+                                <th>
+                                    Residual Rating
+                                </th>
+                                <th>
+                                    Risk Movement
+                                </th>
+                                <th>
+                                    Control Effectiveness
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        @item.RiskRefID
+                                    </td>
+                                    <td>
+                                        @item.RiskDescription
+                                    </td>
+                                    <td>
+                                        @item.RiskRatingCategory
+                                    </td>
+                                    <td>
+                                        @item.RiskResidualRank;
+                                    </td>
+                                    <td>
+                                        @{
+                                            int inheringRating = item.RiskConsequenceId * item.RiskLikelihoodId;
+                                            int residualRating = (item.RiskResidualConsequenceId ?? 0) * (item.RiskResidualLikelihoodId ?? 0);
+                                            (string movement, string icon) = inheringRating == residualRating ? ("Same", "bx bx-right-arrow-alt") : inheringRating
+                                            < residualRating ? ("Reduced", "bx bx-down-arrow-alt") : ("Increased", "bx bx-up-arrow-alt");
+                                        }
+                                        @movement
+                                        <i class="@icon" style="font-size: xxx-large;"></i>
+                                    </td>
+                                    <td>
+                                        @item.ControlEffectiveness;
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

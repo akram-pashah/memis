@@ -410,8 +410,10 @@ namespace MEMIS.Controllers.Risk
             //{
             //  return NotFound();
             //}
-            riskRegister.RiskConsequenceId = await GetRiskConsequence(riskRegister.RiskRefID);
-            riskRegister.RiskLikelihoodId = await GetRiskLikelihood(riskRegister.RiskRefID);
+            riskRegister.RiskResidualConsequenceId = await GetRiskConsequence(riskRegister.RiskRefID);
+            riskRegister.RiskResidualLikelihoodId = await GetRiskLikelihood(riskRegister.RiskRefID);
+            //riskRegister.RiskConsequenceId = await GetRiskConsequence(riskRegister.RiskRefID);
+            //riskRegister.RiskLikelihoodId = await GetRiskLikelihood(riskRegister.RiskRefID);
             (int RiskRating, string RiskCategory, string Color) = GetRiskRating(riskRegister.RiskLikelihoodId, riskRegister.RiskConsequenceId);
             riskRegister.RiskRatingId = RiskRating;
             riskRegister.RiskRatingCategory = RiskCategory;
@@ -422,6 +424,8 @@ namespace MEMIS.Controllers.Risk
             //pp.ExpectedDate=   objectdto.ExpectedDate;
             _context.Update(riskRegister);
             await _context.SaveChangesAsync();
+
+            
           }
           catch (DbUpdateConcurrencyException)
           {
@@ -475,13 +479,27 @@ namespace MEMIS.Controllers.Risk
     }
 
     [HttpPost]
-    public IActionResult AddQuarterlyTreatmentAction(QuarterlyRiskAction quarterlyRiskAction)
+    public async Task<IActionResult> AddQuarterlyTreatmentAction(QuarterlyRiskAction quarterlyRiskAction)
     {
       if (ModelState.IsValid)
       {
         // Add the treatment plan to the database with the correct RiskRefID
         _context.QuarterlyRiskActions.Add(quarterlyRiskAction);
         _context.SaveChanges();
+
+        if(quarterlyRiskAction.Quarter == 1)
+        {
+          int riskId = (int)_context.RiskTreatmentPlans.Where(x => x.RiskRefID !=null && x.TreatmentPlanId == quarterlyRiskAction.TreatmentPlanId).Select(x => x.RiskRefID).First();
+          Data.Risk.RiskRegister riskRegister = _context.RiskRegister.First(x => x.RiskRefID == riskId);
+          riskRegister.RiskConsequenceId = await GetRiskConsequence(riskRegister.RiskRefID);
+          riskRegister.RiskLikelihoodId = await GetRiskLikelihood(riskRegister.RiskRefID);
+
+          _context.RiskRegister.Update(riskRegister);
+          _context.SaveChanges();
+          //riskRegister.RiskConsequenceId = await GetRiskConsequence(riskRegister.RiskRefID);
+          //riskRegister.RiskLikelihoodId = await GetRiskLikelihood(riskRegister.RiskRefID);
+          (int RiskRating, string RiskCategory, string Color) = GetRiskRating(riskRegister.RiskLikelihoodId, riskRegister.RiskConsequenceId);
+        }
 
         // Return the updated grid
         var treatmentPlans = _context.RiskTreatmentPlans

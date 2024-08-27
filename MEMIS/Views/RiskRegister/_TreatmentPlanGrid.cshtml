@@ -12,6 +12,9 @@
                 <th>Baseline</th>
                 <th>Cumulative Target</th>
                 <th>Frequency of Reporting</th>
+                <th>Date Collection Instrument & Methods</th>
+                <th>Means Of Verification</th>
+                <th>Responsible Person(s)</th>
                 <th>Actions</th>
             </tr>
         </thead>
@@ -24,6 +27,9 @@
                     <td>@plan.Baseline</td>
                     <td>@plan.CumulativeTarget</td>
                     <td>@plan.FrequencyOfReporting</td>
+                    <td>@plan.DataCollectionInstrumentMethods</td>
+                    <td>@plan.MeansOfVerification</td>
+                    <td>@plan.ResponsiblePersons</td>
                     <td>
                         @* <a asp-action="RiskTreatmentPlanDetails" asp-controller="RiskRegister" asp-route-id="@plan.TreatmentPlanId" class="btn btn-primary btn-sm remove-treatment" data-id="@plan.TreatmentPlanId"><i class="menu-icon tf-icons bx bx-detail"></i></a> *@
                         @if (plan.RiskRegister?.ApprStatus >= 7)

@@ -1,5 +1,6 @@
 using ClosedXML.Excel;
 using MEMIS.Data;
+using MEMIS.Data.Risk;
 using MEMIS.Models.Report;
 
 namespace MEMIS.Helpers.ExcelReports
@@ -364,10 +365,10 @@ namespace MEMIS.Helpers.ExcelReports
         {
           worksheet.Cell(row, 1).Value = objective.StrategicObjective;
 
-          foreach(var intervention in objective.StrategicInterventions)
+          foreach (var intervention in objective.StrategicInterventions)
           {
             worksheet.Cell(row, 2).Value = intervention.StrategicIntervention;
-            foreach(var action in intervention.StrategicActions)
+            foreach (var action in intervention.StrategicActions)
             {
               worksheet.Cell(row, 3).Value = action.StrategicAction;
               worksheet.Cell(row, 4).Value = action.FiscalYearData[0];
@@ -437,10 +438,10 @@ namespace MEMIS.Helpers.ExcelReports
         {
           worksheet.Cell(row, 1).Value = objective.StrategicObjective;
 
-          foreach(var intervention in objective.StrategicInterventions)
+          foreach (var intervention in objective.StrategicInterventions)
           {
             worksheet.Cell(row, 2).Value = intervention.StrategicIntervention;
-            foreach(var action in intervention.StrategicActions)
+            foreach (var action in intervention.StrategicActions)
             {
               worksheet.Cell(row, 3).Value = action.StrategicAction;
               worksheet.Cell(row, 4).Value = action.FiscalYearData[0];
@@ -1073,6 +1074,403 @@ namespace MEMIS.Helpers.ExcelReports
         throw;
       }
     }
+
+    public static MemoryStream QuarterlyReport(List<RiskTreatmentPlan> plans)
+    {
+      try
+      {
+        var workbook = new XLWorkbook();
+        IXLWorksheet worksheet = workbook.Worksheets.Add("Quarterly Report");
+
+        // Setting the header row
+        worksheet.Cell(1, 1).Value = "Action";
+        worksheet.Cell(1, 2).Value = "Indicator Description";
+        worksheet.Cell(1, 3).Value = "Cumulative Target";
+        worksheet.Cell(1, 4).Value = "Q1";
+        worksheet.Cell(1, 5).Value = "Q2";
+        worksheet.Cell(1, 6).Value = "Q3";
+        worksheet.Cell(1, 7).Value = "Q4";
+        worksheet.Cell(1, 8).Value = "Status";
+        worksheet.Cell(1, 9).Value = "Data Collection Instrument & Methods";
+        worksheet.Cell(1, 10).Value = "Means Of Verification";
+        worksheet.Cell(1, 11).Value = "Responsible Person(s)";
+
+        // Style the headers
+        var headerRange = worksheet.Range("A1:K1");
+        headerRange.Style.Fill.BackgroundColor = XLColor.FromHtml("#063241");
+        headerRange.Style.Font.Bold = true;
+        headerRange.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+        headerRange.Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
+
+        // Auto fit columns to content
+        worksheet.Columns().AdjustToContents();
+        AdjustColumnWidths(worksheet, 25, 65);
+
+        int row = 2;
+        foreach (var plan in plans)
+        {
+          worksheet.Cell(row, 1).Value = plan?.TreatmentAction;
+          worksheet.Cell(row, 2).Value = plan?.IndicatorDescription;
+          worksheet.Cell(row, 3).Value = plan?.CumulativeTarget;
+          worksheet.Cell(row, 4).Value = plan?.QuarterlyRiskActions?.Where(x => x.Quarter == 1).FirstOrDefault()?.IncidentValue;
+          worksheet.Cell(row, 5).Value = plan?.QuarterlyRiskActions?.Where(x => x.Quarter == 2).FirstOrDefault()?.IncidentValue;
+          worksheet.Cell(row, 6).Value = plan?.QuarterlyRiskActions?.Where(x => x.Quarter == 3).FirstOrDefault()?.IncidentValue;
+          worksheet.Cell(row, 7).Value = plan?.QuarterlyRiskActions?.Where(x => x.Quarter == 4).FirstOrDefault()?.IncidentValue;
+
+          string Status = "";
+          var averageImpStatus = plan.QuarterlyRiskActions.Count > 0 ? plan.QuarterlyRiskActions?.Average(x => x.ImpStatusId) : 0;
+
+          if (averageImpStatus < 1)
+          {
+            Status = "Not Implemented";
+          }
+          else if (averageImpStatus < 3)
+          {
+            Status = "Partially Implemented";
+          }
+          else if (averageImpStatus == 3)
+          {
+            Status = "Fully Implemented";
+          }
+          else
+          {
+            Status = "NA";
+          }
+
+          worksheet.Cell(row, 8).Value = Status;
+          worksheet.Cell(row, 9).Value = plan?.DataCollectionInstrumentMethods;
+          worksheet.Cell(row, 10).Value = plan?.MeansOfVerification;
+          worksheet.Cell(row, 11).Value = plan?.ResponsiblePersons;
+          row++;
+        }
+
+        var tableRange = worksheet.Range(1, 1, row - 1, 11);
+        var table = tableRange.CreateTable();
+        tableRange.Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
+        tableRange.Style.Border.InsideBorder = XLBorderStyleValues.Thin;
+        table.ShowAutoFilter = true;
+        table.AutoFilter.IsEnabled = true;
+        table.AutoFilter.Sort(1, XLSortOrder.Ascending);
+
+        // Save the workbook to a memory stream
+        var stream = new MemoryStream();
+        workbook.SaveAs(stream);
+        stream.Position = 0;
+        return stream;
+      }
+      catch (Exception)
+      {
+
+        throw;
+      }
+    }
+
+    public static MemoryStream AnnualReport(List<RiskRegister> risks)
+    {
+      try
+      {
+        var workbook = new XLWorkbook();
+        IXLWorksheet worksheet = workbook.Worksheets.Add("Annual Report");
+
+        // Setting the header row
+        worksheet.Cell(1, 1).Value = "Risk ID";
+        worksheet.Cell(1, 2).Value = "Risk Title";
+        worksheet.Cell(1, 3).Value = "Inherent Rating";
+        worksheet.Cell(1, 4).Value = "Residual Rating";
+        worksheet.Cell(1, 5).Value = "Risk Movement";
+        worksheet.Cell(1, 6).Value = "Control Effectiveness";
+
+        // Style the headers
+        var headerRange = worksheet.Range("A1:F1");
+        headerRange.Style.Fill.BackgroundColor = XLColor.FromHtml("#063241");
+        headerRange.Style.Font.Bold = true;
+        headerRange.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+        headerRange.Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
+
+        // Auto fit columns to content
+        worksheet.Columns().AdjustToContents();
+        AdjustColumnWidths(worksheet, 25, 65);
+
+        int row = 2;
+        foreach (var risk in risks)
+        {
+          worksheet.Cell(row, 1).Value = risk?.RiskRefID;
+          worksheet.Cell(row, 2).Value = risk?.RiskDescription;
+          worksheet.Cell(row, 3).Value = risk?.RiskRatingCategory;
+          worksheet.Cell(row, 4).Value = risk?.RiskResidualRank;
+
+          int inheringRating = risk?.RiskConsequenceId ?? 0 * risk?.RiskLikelihoodId ?? 0;
+          int residualRating = (risk?.RiskResidualConsequenceId ?? 0) * (risk?.RiskResidualLikelihoodId ?? 0);
+          (string movement, string icon) = inheringRating == residualRating ? ("Same", "bx bx-right-arrow-alt") : inheringRating
+          < residualRating ? ("Reduced", "bx bx-down-arrow-alt") : ("Increased", "bx bx-up-arrow-alt");
+
+          worksheet.Cell(row, 5).Value = movement;
+          worksheet.Cell(row, 6).Value = risk?.ControlEffectiveness;
+          row++;
+        }
+
+        var tableRange = worksheet.Range(1, 1, row - 1, 6);
+        var table = tableRange.CreateTable();
+        tableRange.Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
+        tableRange.Style.Border.InsideBorder = XLBorderStyleValues.Thin;
+        table.ShowAutoFilter = true;
+        table.AutoFilter.IsEnabled = true;
+        table.AutoFilter.Sort(1, XLSortOrder.Ascending);
+
+        // Save the workbook to a memory stream
+        var stream = new MemoryStream();
+        workbook.SaveAs(stream);
+        stream.Position = 0;
+        return stream;
+      }
+      catch (Exception)
+      {
+
+        throw;
+      }
+    }
+
+    public static MemoryStream RiskRegisterReport(List<RiskRegister> risks)
+    {
+      try
+      {
+        var workbook = new XLWorkbook();
+        IXLWorksheet worksheet = workbook.Worksheets.Add("Risk Register");
+
+        // Setting the header row
+        worksheet.Cell(1, 1).Value = "Objective";
+        worksheet.Cell(1, 2).Value = "Risk Reference Code/Number";
+        worksheet.Cell(1, 3).Value = "Risk Description";
+        worksheet.Cell(1, 4).Value = "Risk Category";
+        worksheet.Cell(1, 5).Value = "Risk Driver/Root Cause";
+        worksheet.Cell(1, 6).Value = "Consequence/Impact Definition";
+        worksheet.Cell(1, 7).Value = "Existing Mitigation";
+        worksheet.Cell(1, 8).Value = "Likelihood";
+        worksheet.Cell(1, 9).Value = "Consequence";
+        worksheet.Cell(1, 10).Value = "Inherent Risk Rating";
+        worksheet.Cell(1, 11).Value = "Further Action Required/Additional Mitigation Strategies";
+        worksheet.Cell(1, 12).Value = "Opportunity";
+        worksheet.Cell(1, 13).Value = "Review/Implementation Date";
+        worksheet.Cell(1, 14).Value = "Risk Owner";
+
+        // Style the headers
+        var headerRange = worksheet.Range("A1:N1");
+        headerRange.Style.Fill.BackgroundColor = XLColor.FromHtml("#063241");
+        headerRange.Style.Font.Bold = true;
+        headerRange.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+        headerRange.Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
+
+        // Auto fit columns to content
+        worksheet.Columns().AdjustToContents();
+        AdjustColumnWidths(worksheet, 25, 65);
+
+        int row = 2;
+        foreach (var risk in risks)
+        {
+          worksheet.Cell(row, 1).Value = risk?.StrategicPlanFk?.ObjectiveName;
+          worksheet.Cell(row, 2).Value = "";
+          worksheet.Cell(row, 3).Value = risk?.RiskDescription;
+          worksheet.Cell(row, 4).Value = risk?.RiskRatingCategory;
+          worksheet.Cell(row, 5).Value = risk?.RiskCause;
+          worksheet.Cell(row, 6).Value = risk?.RiskConsequence;
+          worksheet.Cell(row, 7).Value = "";
+          worksheet.Cell(row, 8).Value = risk?.RiskLikelihoodId;
+          worksheet.Cell(row, 9).Value = risk?.RiskConsequence;
+          worksheet.Cell(row, 10).Value = risk?.RiskRatingId;
+          worksheet.Cell(row, 11).Value = risk?.ActionTaken;
+          worksheet.Cell(row, 12).Value = risk?.Opportunity;
+          worksheet.Cell(row, 13).Value = risk?.ReviewDate;
+          worksheet.Cell(row, 14).Value = risk?.RiskOwner;
+          row++;
+        }
+
+        var tableRange = worksheet.Range(1, 1, row - 1, 14);
+        var table = tableRange.CreateTable();
+        tableRange.Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
+        tableRange.Style.Border.InsideBorder = XLBorderStyleValues.Thin;
+        table.ShowAutoFilter = true;
+        table.AutoFilter.IsEnabled = true;
+        table.AutoFilter.Sort(1, XLSortOrder.Ascending);
+
+        // Save the workbook to a memory stream
+        var stream = new MemoryStream();
+        workbook.SaveAs(stream);
+        stream.Position = 0;
+        return stream;
+      }
+      catch (Exception)
+      {
+
+        throw;
+      }
+    }
+
+    public static MemoryStream RiskTreatmentReport(List<RiskTreatmentPlan> plans)
+    {
+      try
+      {
+        var workbook = new XLWorkbook();
+        IXLWorksheet worksheet = workbook.Worksheets.Add("Risk Treatment Plan");
+
+        // Setting the header row
+        worksheet.Cell(1, 1).Value = "Treatment Action";
+        worksheet.Cell(1, 2).Value = "Indicator Description";
+        worksheet.Cell(1, 3).Value = "Baseline";
+        worksheet.Cell(1, 4).Value = "Cumulative Target";
+        worksheet.Cell(1, 5).Value = "Q1";
+        worksheet.Cell(1, 6).Value = "Q2";
+        worksheet.Cell(1, 7).Value = "Q3";
+        worksheet.Cell(1, 8).Value = "Q4";
+        worksheet.Cell(1, 9).Value = "Data Collection Instrument & Methods";
+        worksheet.Cell(1, 10).Value = "Frequency Of Reporting";
+        worksheet.Cell(1, 11).Value = "Means Of Verification";
+        worksheet.Cell(1, 12).Value = "Responsible Person(s)";
+
+        // Style the headers
+        var headerRange = worksheet.Range("A1:L1");
+        headerRange.Style.Fill.BackgroundColor = XLColor.FromHtml("#063241");
+        headerRange.Style.Font.Bold = true;
+        headerRange.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+        headerRange.Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
+
+        // Auto fit columns to content
+        worksheet.Columns().AdjustToContents();
+        AdjustColumnWidths(worksheet, 25, 65);
+
+        int row = 2;
+        foreach (var plan in plans)
+        {
+          worksheet.Cell(row, 1).Value = plan?.TreatmentAction;
+          worksheet.Cell(row, 2).Value = plan?.IndicatorDescription;
+          worksheet.Cell(row, 3).Value = plan?.Baseline;
+          worksheet.Cell(row, 4).Value = plan?.CumulativeTarget;
+          worksheet.Cell(row, 5).Value = plan?.QuarterlyRiskActions?.Where(x => x.Quarter == 1).FirstOrDefault()?.IncidentValue;
+          worksheet.Cell(row, 6).Value = plan?.QuarterlyRiskActions?.Where(x => x.Quarter == 2).FirstOrDefault()?.IncidentValue;
+          worksheet.Cell(row, 7).Value = plan?.QuarterlyRiskActions?.Where(x => x.Quarter == 3).FirstOrDefault()?.IncidentValue;
+          worksheet.Cell(row, 8).Value = plan?.QuarterlyRiskActions?.Where(x => x.Quarter == 4).FirstOrDefault()?.IncidentValue;
+          worksheet.Cell(row, 9).Value = plan?.DataCollectionInstrumentMethods;
+          worksheet.Cell(row, 10).Value = plan?.FrequencyOfReporting;
+          worksheet.Cell(row, 11).Value = plan?.MeansOfVerification;
+          worksheet.Cell(row, 12).Value = plan?.ResponsiblePersons;
+          row++;
+        }
+
+        var tableRange = worksheet.Range(1, 1, row - 1, 12);
+        var table = tableRange.CreateTable();
+        tableRange.Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
+        tableRange.Style.Border.InsideBorder = XLBorderStyleValues.Thin;
+        table.ShowAutoFilter = true;
+        table.AutoFilter.IsEnabled = true;
+        table.AutoFilter.Sort(1, XLSortOrder.Ascending);
+
+        // Save the workbook to a memory stream
+        var stream = new MemoryStream();
+        workbook.SaveAs(stream);
+        stream.Position = 0;
+        return stream;
+      }
+      catch (Exception)
+      {
+
+        throw;
+      }
+    }
+
+    public static MemoryStream RiskMonitoringReport(List<RiskTreatmentPlan> plans)
+    {
+      try
+      {
+        var workbook = new XLWorkbook();
+        IXLWorksheet worksheet = workbook.Worksheets.Add("Risk Monitoring Report");
+
+        // Setting the header row
+        worksheet.Cell(1, 1).Value = "Risk Code";
+        worksheet.Cell(1, 2).Value = "Risk Description";
+        worksheet.Cell(1, 3).Value = "Proposed mitigation actions";
+        worksheet.Cell(1, 4).Value = " Actions Undertaken";
+        worksheet.Cell(1, 5).Value = "Status";
+        worksheet.Cell(1, 6).Value = "Risk Incidents/indicators in the period";
+        worksheet.Cell(1, 7).Value = "Incident Value";
+        worksheet.Cell(1, 8).Value = "Inherent  Likelihood";
+        worksheet.Cell(1, 9).Value = "Inherent  Consequence";
+        worksheet.Cell(1, 10).Value = "Inherent  Risk Rating";
+        worksheet.Cell(1, 11).Value = "Residual  Likelihood";
+        worksheet.Cell(1, 12).Value = "Residual  Consequence";
+        worksheet.Cell(1, 13).Value = "Residual  Risk Rating";
+
+        // Style the headers
+        var headerRange = worksheet.Range("A1:M1");
+        headerRange.Style.Fill.BackgroundColor = XLColor.FromHtml("#063241");
+        headerRange.Style.Font.Bold = true;
+        headerRange.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+        headerRange.Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
+
+        // Auto fit columns to content
+        worksheet.Columns().AdjustToContents();
+        AdjustColumnWidths(worksheet, 25, 65);
+
+        int row = 2;
+        foreach (var plan in plans)
+        {
+          worksheet.Cell(row, 1).Value = plan?.RiskRegister?.RiskCode;
+          worksheet.Cell(row, 2).Value = plan?.RiskRegister?.RiskDescription;
+          worksheet.Cell(row, 3).Value = plan?.TreatmentAction;
+          worksheet.Cell(row, 4).Value = plan?.RiskRegister?.ActionTaken;
+
+          string Status = "";
+          var averageImpStatus = plan.QuarterlyRiskActions?.Average(x => x.ImpStatusId);
+
+          if (averageImpStatus < 1)
+          {
+            Status = "Not Implemented";
+          }
+          else if (averageImpStatus < 3)
+          {
+            Status = "Partially Implemented";
+          }
+          else if (averageImpStatus == 3)
+          {
+            Status = "Fully Implemented";
+          }
+          else
+          {
+            Status = "NA";
+          }
+
+          worksheet.Cell(row, 5).Value = Status;
+          worksheet.Cell(row, 6).Value = plan?.IndicatorDescription;
+          worksheet.Cell(row, 7).Value = plan?.QuarterlyRiskActions.Count > 0 ? plan?.QuarterlyRiskActions?.Sum(x => x.IncidentValue) : 0;
+          worksheet.Cell(row, 8).Value = plan?.RiskRegister?.RiskIdentificationFk?.RiskLikelihoodId;
+          worksheet.Cell(row, 9).Value = plan?.RiskRegister?.RiskIdentificationFk?.RiskConsequenceId;
+          worksheet.Cell(row, 10).Value = "";
+          worksheet.Cell(row, 11).Value = plan?.RiskRegister?.RiskLikelihoodId;
+          worksheet.Cell(row, 12).Value = plan?.RiskRegister?.RiskConsequenceId;
+          worksheet.Cell(row, 13).Value = plan?.RiskRegister?.RiskRatingId;
+          row++;
+        }
+
+        var tableRange = worksheet.Range(1, 1, row - 1, 13);
+        var table = tableRange.CreateTable();
+        tableRange.Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
+        tableRange.Style.Border.InsideBorder = XLBorderStyleValues.Thin;
+        table.ShowAutoFilter = true;
+        table.AutoFilter.IsEnabled = true;
+        table.AutoFilter.Sort(1, XLSortOrder.Ascending);
+
+        // Save the workbook to a memory stream
+        var stream = new MemoryStream();
+        workbook.SaveAs(stream);
+        stream.Position = 0;
+        return stream;
+      }
+      catch (Exception)
+      {
+
+        throw;
+      }
+    }
+
+
 
     public static string getAchievement(string achieve)
     {

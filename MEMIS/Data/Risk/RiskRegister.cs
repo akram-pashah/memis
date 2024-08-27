@@ -8,6 +8,7 @@ namespace MEMIS.Data.Risk
   {
     [Key]
     public int RiskRefID { get; set; }
+    public string? RiskCode { get; set; }
     public DateTime IdentifiedDate { get; set; }
     public virtual int? StrategicObjective { get; set; }
 
@@ -35,7 +36,7 @@ namespace MEMIS.Data.Risk
     public string? EvalCriteria { get; set; }
     public virtual int? RiskId { get; set; }
     [ForeignKey("RiskId")]
-    public virtual DeptPlan? RiskIdentificationFk { get; set; }
+    public virtual RiskIdentification? RiskIdentificationFk { get; set; }
     //[Display (Name ="Activity / Additional mitigation strategies")]
     //public string? AdditionalMitigation { get;set; }
     //[Display(Name = "Resources Required for effective risk management")]

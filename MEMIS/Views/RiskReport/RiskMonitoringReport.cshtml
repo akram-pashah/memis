@@ -1,0 +1,155 @@
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+@using MEMIS.Data.Risk;
+@model List<RiskTreatmentPlan>
+@{
+    ViewData["Title"] = "Risk Reports";
+    //Layout = "~/Views/Shared/_PlanningLayout.cshtml";
+    Layout = "~/Pages/Shared/_ContentNavbarLayout.cshtml";
+}
+
+<h4 class="py-3 mb-4">
+    <span class="text-muted fw-light">Risk Reports /</span> Risk Monitoring Report
+</h4>
+
+<div class="row">
+    <div class="col-md-12">
+        <ul class="nav nav-pills flex-column flex-md-row mb-3">
+            <li class="nav-item"><a class="nav-link" href="/RiskReport/Index">Quarterly Report</a></li>
+            <li class="nav-item"><a class="nav-link" href="/RiskReport/AnnualReport">Annual Report</a></li>
+            <li class="nav-item"><a class="nav-link" href="/RiskRegister">Risk Register</a></li>
+            <li class="nav-item"><a class="nav-link" href="/RiskReport/RiskTreatmentPlan">Risk Treatment Plan</a></li>
+            <li class="nav-item"><a class="nav-link active" href="javascript:void(0);">Risk Monitoring Report</a></li>
+        </ul>
+
+        <div class="card mb-4">
+            <h5 class="card-header">
+                <div class="col d-flex justify-content-end mb-3">
+                    <a class="btn btn-outline-success float-end float-right" asp-action="RiskMonitoringReportExcel" target="_blank">Export to Excel</a>
+                </div>
+            </h5>
+
+            <hr class="my-0" />
+
+            <div class="card-body">
+                <div style="width:100%; overflow-x:auto;">
+                    <table class="table table-striped table-bordered table-hover dt-responsive nowrap">
+                        <thead class="table-active">
+                            <tr>
+                                <th>
+                                    Risk Code
+                                </th>
+                                <th>
+                                    Risk Description
+                                </th>
+                                <th>
+                                    Proposed mitigation actions
+                                </th>
+                                <th>
+                                    Actions Undertaken
+                                </th>
+                                <th>
+                                    Status
+                                </th>
+                                <th>
+                                    Risk Incidents/indicators in the period
+                                </th>
+                                <th>
+                                    Incident Value
+                                </th>
+                                <th>
+                                    Inherent  Likelihood
+                                </th>
+                                <th>
+                                    Inherent  Consequence
+                                </th>
+                                <th>
+                                    Inherent  Risk Rating
+                                </th>
+                                <th>
+                                    Residual  Likelihood
+                                </th>
+                                <th>
+                                    Residual  Consequence
+                                </th>
+                                <th>
+                                    Residual  Risk Rating
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        @item.RiskRegister?.RiskCode
+                                    </td>
+                                    <td>
+                                        @item.RiskRegister?.RiskDescription
+                                    </td>
+                                    <td>
+                                        @item.TreatmentAction
+                                    </td>
+                                    <td>
+                                        @item.RiskRegister?.ActionTaken
+                                    </td>
+                                    <td>
+                                        @{
+                                            string Status = "";
+                                            var averageImpStatus = item.QuarterlyRiskActions?.Average(x => x.ImpStatusId);
+
+                                            if (averageImpStatus < 1)
+                                            {
+                                                Status = "Not Implemented";
+                                            }
+                                            else if (averageImpStatus < 3)
+                                            {
+                                                Status = "Partially Implemented";
+                                            }
+                                            else if (averageImpStatus == 3)
+                                            {
+                                                Status = "Fully Implemented";
+                                            }
+                                            else
+                                            {
+                                                Status = "NA";
+                                            }
+                                        }
+                                        @Status;
+                                    </td>
+                                    <td>
+                                        @item.IndicatorDescription
+                                    </td>
+                                    <td>
+                                        @item.QuarterlyRiskActions?.Sum(x => x.IncidentValue);
+                                    </td>
+                                    <td>
+                                        @item.RiskRegister?.RiskIdentificationFk?.RiskLikelihoodId
+                                    </td>
+                                    <td>
+                                        @item.RiskRegister?.RiskIdentificationFk?.RiskConsequenceId
+                                    </td>
+                                    <td>
+                                        @* should calculate and show *@
+                                    </td>
+                                    <td>
+                                        @item.RiskRegister?.RiskLikelihoodId
+                                    </td>
+                                    <td>
+                                        @item.RiskRegister?.RiskConsequenceId
+                                    </td>
+                                    <td>
+                                        @item.RiskRegister?.RiskRatingId
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

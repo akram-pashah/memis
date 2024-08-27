@@ -1,0 +1,140 @@
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+@using MEMIS.Data.Risk;
+@model List<RiskTreatmentPlan>
+@{
+    ViewData["Title"] = "Risk Reports";
+    //Layout = "~/Views/Shared/_PlanningLayout.cshtml";
+    Layout = "~/Pages/Shared/_ContentNavbarLayout.cshtml";
+}
+
+<h4 class="py-3 mb-4">
+    <span class="text-muted fw-light">Risk Reports /</span> Quarterly Report
+</h4>
+
+<div class="row">
+    <div class="col-md-12">
+        <ul class="nav nav-pills flex-column flex-md-row mb-3">
+            <li class="nav-item"><a class="nav-link active" href="javascript:void(0);">Quarterly Report</a></li>
+            <li class="nav-item"><a class="nav-link" asp-action="AnnualReport">Annual Report</a></li>
+            <li class="nav-item"><a class="nav-link" asp-action="RiskRegister">Risk Register</a></li>
+            <li class="nav-item"><a class="nav-link" asp-action="RiskTreatmentPlan">Risk Treatment Plan</a></li>
+            <li class="nav-item"><a class="nav-link" asp-action="RiskMonitoringReport">Risk Monitoring Report</a></li>
+        </ul>
+
+        <div class="card mb-4">
+            <h5 class="card-header">
+                <div class="col d-flex justify-content-end mb-3">
+                    <a class="btn btn-outline-success float-end float-right" asp-action="QuarterlyReportExcel" target="_blank">Export to Excel</a>
+                </div>
+            </h5>
+
+            <hr class="my-0" />
+
+            <div class="card-body">
+                <div style="width:100%; overflow-x:auto;">
+                    <table class="table table-striped table-bordered table-hover dt-responsive nowrap">
+                        <thead class="table-active">
+                            <tr>
+                                <th rowspan="2">
+                                    Action
+                                </th>
+                                <th rowspan="2">
+                                    Indicator Description
+                                </th>
+                                <th rowspan="2">
+                                    Cumulative Target
+                                </th>
+                                <th colspan="4">
+                                    Indicator Value
+                                </th>
+                                <th rowspan="2">
+                                    Status
+                                </th>
+                                <th rowspan="2">
+                                    Data Collection Instrument & Methods
+                                </th>
+                                <th rowspan="2">
+                                    Means Of Verification
+                                </th>
+                                <th rowspan="2">
+                                    Responsible Person(s)
+                                </th>
+                            </tr>
+                            <tr>
+                                <th>Q1</th>
+                                <th>Q2</th>
+                                <th>Q3</th>
+                                <th>Q4</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        @item.TreatmentAction
+                                    </td>
+                                    <td>
+                                        @item.IndicatorDescription
+                                    </td>
+                                    <td>
+                                        @item.CumulativeTarget
+                                    </td>
+                                    <td>
+                                        @item.QuarterlyRiskActions?.Where(x => x.Quarter == 1).FirstOrDefault()?.IncidentValue
+                                    </td>
+                                    <td>
+                                        @item.QuarterlyRiskActions?.Where(x => x.Quarter == 2).FirstOrDefault()?.IncidentValue
+                                    </td>
+                                    <td>
+                                        @item.QuarterlyRiskActions?.Where(x => x.Quarter == 3).FirstOrDefault()?.IncidentValue
+                                    </td>
+                                    <td>
+                                        @item.QuarterlyRiskActions?.Where(x => x.Quarter == 4).FirstOrDefault()?.IncidentValue
+                                    </td>
+                                    <td>
+                                        @{
+                                            string Status = "";
+                                            var averageImpStatus = item.QuarterlyRiskActions?.Count > 0 ? item?.QuarterlyRiskActions?.Average(x => x.ImpStatusId) : 0;
+
+                                            if (averageImpStatus < 1)
+                                            {
+                                                Status = "Not Implemented";
+                                            }
+                                            else if (averageImpStatus < 3)
+                                            {
+                                                Status = "Partially Implemented";
+                                            }
+                                            else if (averageImpStatus == 3)
+                                            {
+                                                Status = "Fully Implemented";
+                                            }
+                                            else
+                                            {
+                                                Status = "NA";
+                                            }
+                                        }
+                                        @Status;
+                                    </td>
+                                    <td>
+                                        @item.DataCollectionInstrumentMethods
+                                    </td>
+                                    <td>
+                                        @item.MeansOfVerification
+                                    </td>
+                                    <td>
+                                        @item.ResponsiblePersons
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
