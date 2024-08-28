@@ -448,6 +448,7 @@ namespace MEMIS.Controllers.Risk
       ViewBag.FocusArea = _context.FocusArea == null ? new List<FocusArea>() : await _context.FocusArea.ToListAsync();
       ViewBag.ActivityList = _context.Activity == null ? new List<Activity>() : await _context.Activity.ToListAsync();
       ViewBag.RiskCategory = _context.RiskCategorys == null ? new List<RiskCategory>() : await _context.RiskCategorys.ToListAsync();
+      ViewBag.Department = _context.Departments == null ? new List<Department>() : await _context.Departments.ToListAsync();
       RiskIdentificationCreateEditDto riskIdentificationCreateEditDto = new RiskIdentificationCreateEditDto();
       return View(riskIdentificationCreateEditDto);
     }
@@ -458,7 +459,7 @@ namespace MEMIS.Controllers.Risk
     public async Task<IActionResult> Create([Bind(
           "IdentifiedDate,StrategicObjective,FocusArea,Activity,BudgetCode" +
           ",RiskDescription,Events,RiskSource,RiskCause,RiskConsequence,RiskConsequenceId," +
-          "RiskLikelihoodId,RiskScore,RiskRank,EvalCriteria,IsVerified,EventsList,intCategory,ExistingMitigation,Weakness,Additional_Mitigation")]RiskIdentificationCreateEditDto dto)
+          "RiskLikelihoodId,RiskScore,RiskRank,EvalCriteria,IsVerified,EventsList,intCategory,ExistingMitigation,Weakness,Additional_Mitigation,intDept,Opportunity,Supporting_Owners")]RiskIdentificationCreateEditDto dto)
     {
       if (ModelState.IsValid && dto.RiskConsequenceId != 0 && dto.RiskLikelihoodId != 0)
       {
@@ -479,7 +480,10 @@ namespace MEMIS.Controllers.Risk
           intCategory= dto.intCategory,
           ExistingMitigation= dto.ExistingMitigation,
           Weakness= dto.Weakness,
-          Additional_Mitigation= dto.Additional_Mitigation
+          Additional_Mitigation= dto.Additional_Mitigation,
+          Opportunity=dto.Opportunity,
+          Supporting_Owners= dto.Supporting_Owners,
+          intDept= dto.intDept
         };
 
         _context.Add(riskIdentification);
@@ -503,6 +507,7 @@ namespace MEMIS.Controllers.Risk
       ViewBag.FocusArea = _context.FocusArea == null ? new List<FocusArea>() : await _context.FocusArea.ToListAsync();
       ViewBag.ActivityList = _context.Activity == null ? new List<Activity>() : await _context.Activity.ToListAsync(); 
       ViewBag.RiskCategory = _context.RiskCategorys == null ? new List<RiskCategory>() : await _context.RiskCategorys.ToListAsync();
+      ViewBag.Department = _context.Departments == null ? new List<Department>() : await _context.Departments.ToListAsync();
       return View(dto);
     }
 

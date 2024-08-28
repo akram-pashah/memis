@@ -4,6 +4,7 @@ using MEMIS.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MEMIS.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240828084018_riskopportunity")]
+    partial class riskopportunity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -2683,9 +2686,6 @@ namespace MEMIS.Migrations
                     b.Property<int>("intCategory")
                         .HasColumnType("int");
 
-                    b.Property<Guid?>("intDept")
-                        .HasColumnType("uniqueidentifier");
-
                     b.HasKey("RiskId");
 
                     b.HasIndex("Activity");
@@ -2695,8 +2695,6 @@ namespace MEMIS.Migrations
                     b.HasIndex("StrategicObjective");
 
                     b.HasIndex("intCategory");
-
-                    b.HasIndex("intDept");
 
                     b.ToTable("RiskIdentification");
                 });
@@ -4183,13 +4181,7 @@ namespace MEMIS.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("MEMIS.Data.Department", "DepartmentFk")
-                        .WithMany()
-                        .HasForeignKey("intDept");
-
                     b.Navigation("ActivityFk");
-
-                    b.Navigation("DepartmentFk");
 
                     b.Navigation("FocusAreaFk");
 

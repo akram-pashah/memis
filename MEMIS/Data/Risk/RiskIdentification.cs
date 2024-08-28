@@ -33,6 +33,12 @@ namespace MEMIS.Data.Risk
     public string? ExistingMitigation { get; set; }
     public string? Weakness { get; set; }
     public string? Additional_Mitigation { get; set; }
+    public string? Opportunity { get; set; }
+    [Display(Name = "Primary Owner")]
+    public virtual Guid? intDept { get; set; }
+    [ForeignKey("intDept")]
+    public virtual Department? DepartmentFk { get; set; }
+    public string? Supporting_Owners { get; set; }
     public bool IsVerified { get; set; }
     public int ApprStatus { get; set; } = 0;
     public ICollection<RiskDetail> RiskDetails { get; set; }

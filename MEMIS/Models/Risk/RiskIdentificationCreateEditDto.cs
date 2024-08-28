@@ -46,6 +46,9 @@ namespace MEMIS.Models.Risk
     public string? ExistingMitigation { get; set; }
     public string? Weakness { get; set; }
     public string? Additional_Mitigation { get; set; }
+    public string? Opportunity { get; set; }
+    public  Guid? intDept { get; set; }
+    public string? Supporting_Owners { get; set; }
 
     public bool IsVerified { get; set; }
         public int ApprStatus { get; set; } = 0;

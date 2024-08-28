@@ -294,19 +294,35 @@
             </div>
             <div class="form-group">
                 <label asp-for="ExistingMitigation" class="control-label">Existing Mitigation</label>
-                <input asp-for="ExistingMitigation" class="form-control" />
+                <input asp-for="ExistingMitigation" class="form-control" style="height:150px" />
                 <span asp-validation-for="ExistingMitigation" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Weakness" class="control-label">Weaknesses</label>
-                <input asp-for="Weakness" class="form-control" />
+                <input asp-for="Weakness" class="form-control" style="height:150px" />
                 <span asp-validation-for="Weakness" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Additional_Mitigation" class="control-label">Proposed Mitigation</label>
-                <input asp-for="Additional_Mitigation" class="form-control" />
+                <input asp-for="Additional_Mitigation" class="form-control" style="height:150px" />
                 <span asp-validation-for="Additional_Mitigation" class="text-danger"></span>
             </div>
+            <div class="form-group">
+                <label asp-for="Opportunity" class="control-label">Opportunity</label>
+                <input asp-for="Opportunity" class="form-control" style="height:150px" />
+                <span asp-validation-for="Opportunity" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="intDept" class="control-label">Primary Owner</label>
+                @Html.DropDownList("intDept", new SelectList(ViewBag.Department, "intDept", "deptName"), new { @class = "form-control form-select", @required = "required" })
+                <span asp-validation-for="intDept" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Supporting_Owners" class="control-label">Supporting Owners</label>
+                <input asp-for="Supporting_Owners" class="form-control" style="height:150px" />
+                <span asp-validation-for="Supporting_Owners" class="text-danger"></span>
+            </div>
+
             <br />
            
             <div class="form-group">
