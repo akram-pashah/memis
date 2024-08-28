@@ -42,6 +42,7 @@ namespace MEMIS.Data
 
     public DbSet<RiskIdent> RiskIdent { get; set; }
     public DbSet<Cause>? Cause { get; set; }
+    public DbSet<RiskCategory>? RiskCategorys { get; set; }
     public DbSet<RiskIdentification>? RiskIdentifications { get; set; }
     public DbSet<RiskMatrix>? RiskMatrixes { get; set; }
     public DbSet<RiskRegister> RiskRegister { get; set; }

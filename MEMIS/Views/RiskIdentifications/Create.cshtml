@@ -43,6 +43,12 @@
             </div>
             <br />
             <div class="form-group">
+                <label asp-for="intCategory" class="control-label">Risk Category</label>
+                @Html.DropDownList("intCategory", new SelectList(ViewBag.RiskCategory, "intCategory", "CategoryName"), new { @class = "form-control form-select", @required = "required" })
+                <span asp-validation-for="intCategory" class="text-danger"></span>
+            </div>
+            <br />
+            <div class="form-group">
                 <label asp-for="RiskDescription" class="control-label">Risk Description</label>
                 <input asp-for="RiskDescription" class="form-control" />
                 <span asp-validation-for="RiskDescription" class="text-danger"></span>
@@ -285,6 +291,21 @@
                 <label asp-for="EvalCriteria" class="control-label">Eval Criteria</label>
                 <textarea asp-for="EvalCriteria" id="EvalCriteria" class="form-control" style="height:150px" required readonly></textarea>
                 <span asp-validation-for="EvalCriteria" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ExistingMitigation" class="control-label">Existing Mitigation</label>
+                <input asp-for="ExistingMitigation" class="form-control" />
+                <span asp-validation-for="ExistingMitigation" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Weakness" class="control-label">Weaknesses</label>
+                <input asp-for="Weakness" class="form-control" />
+                <span asp-validation-for="Weakness" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Additional_Mitigation" class="control-label">Proposed Mitigation</label>
+                <input asp-for="Additional_Mitigation" class="form-control" />
+                <span asp-validation-for="Additional_Mitigation" class="text-danger"></span>
             </div>
             <br />
            

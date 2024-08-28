@@ -17,8 +17,9 @@ namespace MEMIS.Models.Risk
         public int? StrategicObjective { get; set; }
         [Required]
         public int? FocusArea { get; set; }
-        public int Activity { get; set; } 
-        [Required]
+        public int Activity { get; set; }
+        public int intCategory { get; set; }
+    [Required]
         public string RiskDescription { get; set; }
         [Required]
         public List<Event> Events { get; set; } 
@@ -42,7 +43,11 @@ namespace MEMIS.Models.Risk
         public string? RiskRank { get; set; }
         [Required]
         public string? EvalCriteria { get; set; }
-        public bool IsVerified { get; set; }
+    public string? ExistingMitigation { get; set; }
+    public string? Weakness { get; set; }
+    public string? Additional_Mitigation { get; set; }
+
+    public bool IsVerified { get; set; }
         public int ApprStatus { get; set; } = 0;
     }
 }

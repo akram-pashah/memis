@@ -34,15 +34,15 @@ namespace MEMIS.Data
     [MaxLength(1000)]
     public string? OutputTarget { get; set; } 
     [Display(Name = "Target FY 1")]
-    public long? FY1 { get; set; }
+    public string? FY1 { get; set; }
     [Display(Name = "Target FY 2")]
-    public long? FY2 { get; set; }
+    public string? FY2 { get; set; }
     [Display(Name = "Target FY 3")]
-    public long? FY3 { get; set; }
+    public string? FY3 { get; set; }
     [Display(Name = "Target FY 4")]
-    public long? FY4 { get; set; }
+    public string? FY4 { get; set; }
     [Display(Name = "Target FY 5")]
-    public long? FY5 { get; set; } 
+    public string? FY5 { get; set; } 
     [Display(Name = "Means of Verification")]
     [MaxLength(1000)]
     public string? MeansofVerification { get; set; }

@@ -19,6 +19,9 @@ namespace MEMIS.Data.Risk
     public virtual int Activity { get; set; }
     [ForeignKey("Activity")]
     public virtual Activity ActivityFk { get; set; }
+    public virtual int intCategory { get; set; }
+    [ForeignKey("intCategory")]
+    public virtual RiskCategory RiskCategoryFk { get; set; }
     public string RiskDescription { get; set; }
     public string RiskOwner { get; set; }
     [Display(Name = "Risk Consquence ")]
@@ -27,6 +30,9 @@ namespace MEMIS.Data.Risk
     public int RiskScore { get; set; }
     public string? RiskRank { get; set; }
     public string? EvalCriteria { get; set; }
+    public string? ExistingMitigation { get; set; }
+    public string? Weakness { get; set; }
+    public string? Additional_Mitigation { get; set; }
     public bool IsVerified { get; set; }
     public int ApprStatus { get; set; } = 0;
     public ICollection<RiskDetail> RiskDetails { get; set; }

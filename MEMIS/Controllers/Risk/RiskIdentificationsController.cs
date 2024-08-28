@@ -447,6 +447,7 @@ namespace MEMIS.Controllers.Risk
       ViewBag.StrategicPlanList = _context.StrategicObjective == null ? new List<StrategicObjective>() : await _context.StrategicObjective.ToListAsync();
       ViewBag.FocusArea = _context.FocusArea == null ? new List<FocusArea>() : await _context.FocusArea.ToListAsync();
       ViewBag.ActivityList = _context.Activity == null ? new List<Activity>() : await _context.Activity.ToListAsync();
+      ViewBag.RiskCategory = _context.RiskCategorys == null ? new List<RiskCategory>() : await _context.RiskCategorys.ToListAsync();
       RiskIdentificationCreateEditDto riskIdentificationCreateEditDto = new RiskIdentificationCreateEditDto();
       return View(riskIdentificationCreateEditDto);
     }
@@ -457,7 +458,7 @@ namespace MEMIS.Controllers.Risk
     public async Task<IActionResult> Create([Bind(
           "IdentifiedDate,StrategicObjective,FocusArea,Activity,BudgetCode" +
           ",RiskDescription,Events,RiskSource,RiskCause,RiskConsequence,RiskConsequenceId," +
-          "RiskLikelihoodId,RiskScore,RiskRank,EvalCriteria,IsVerified,EventsList")]RiskIdentificationCreateEditDto dto)
+          "RiskLikelihoodId,RiskScore,RiskRank,EvalCriteria,IsVerified,EventsList,intCategory,ExistingMitigation,Weakness,Additional_Mitigation")]RiskIdentificationCreateEditDto dto)
     {
       if (ModelState.IsValid && dto.RiskConsequenceId != 0 && dto.RiskLikelihoodId != 0)
       {
@@ -475,6 +476,10 @@ namespace MEMIS.Controllers.Risk
           RiskRank = dto.RiskRank,
           RiskScore = dto.RiskScore,
           StrategicObjective = dto.StrategicObjective,
+          intCategory= dto.intCategory,
+          ExistingMitigation= dto.ExistingMitigation,
+          Weakness= dto.Weakness,
+          Additional_Mitigation= dto.Additional_Mitigation
         };
 
         _context.Add(riskIdentification);
@@ -496,7 +501,8 @@ namespace MEMIS.Controllers.Risk
       ViewBag.RiskLikelihoodList = GetSelectListForRiskLikelihood();
       ViewBag.StrategicPlanList = _context.StrategicObjective == null ? new List<StrategicObjective>() : await _context.StrategicObjective.ToListAsync();
       ViewBag.FocusArea = _context.FocusArea == null ? new List<FocusArea>() : await _context.FocusArea.ToListAsync();
-      ViewBag.ActivityList = _context.Activity == null ? new List<Activity>() : await _context.Activity.ToListAsync();
+      ViewBag.ActivityList = _context.Activity == null ? new List<Activity>() : await _context.Activity.ToListAsync(); 
+      ViewBag.RiskCategory = _context.RiskCategorys == null ? new List<RiskCategory>() : await _context.RiskCategorys.ToListAsync();
       return View(dto);
     }
 
