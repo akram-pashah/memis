@@ -323,6 +323,15 @@ namespace MEMIS
             };
       return results;
     }
+
+    public static string GetImpact(int? value) => value switch
+    {
+      1 => "Low",
+      2 => "Medium",
+      3 => "High",
+      _ => ""
+    };
+
     public static List<SelectListItem> Influence()
     {
       List<SelectListItem> results = new List<SelectListItem>
@@ -333,6 +342,7 @@ namespace MEMIS
             };
       return results;
     }
+
     public static List<SelectListItem> TypeofIndicator()
     {
       List<SelectListItem> results = new List<SelectListItem>
@@ -378,6 +388,25 @@ namespace MEMIS
 
       return results;
     }
+
+    public static List<SelectListItem> ActivityPlanStatus()
+    {
+      List<SelectListItem> results = new List<SelectListItem>
+            {
+                new SelectListItem() { Text = "Done", Value = "1" },
+                new SelectListItem() { Text = "In-Progress", Value = "2" },
+                new SelectListItem() { Text = "Not Done", Value = "3" },
+            };
+
+      return results;
+    }
+
+    public static string GetActivityPlanStatus(int? value) => value switch
+    {
+      1 => "Done",
+      2 => "In-Progress",
+      _ => "Not Done"
+    };
 
     public static string GetFiscalYearBackgroundColor(double value) =>
     value switch

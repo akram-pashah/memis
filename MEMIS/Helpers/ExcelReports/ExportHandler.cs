@@ -1,5 +1,6 @@
 using ClosedXML.Excel;
 using MEMIS.Data;
+using MEMIS.Data.Project;
 using MEMIS.Data.Risk;
 using MEMIS.Models.Report;
 
@@ -1075,6 +1076,8 @@ namespace MEMIS.Helpers.ExcelReports
       }
     }
 
+    #region risk management reports
+
     public static MemoryStream QuarterlyReport(List<RiskTreatmentPlan> plans)
     {
       try
@@ -1470,8 +1473,257 @@ namespace MEMIS.Helpers.ExcelReports
       }
     }
 
+    #endregion
 
+    #region project management reports
 
+    public static MemoryStream ProjectListReport(List<ProjectInitiation> projects)
+    {
+      try
+      {
+        var workbook = new XLWorkbook();
+        IXLWorksheet worksheet = workbook.Worksheets.Add("Project List");
+
+        // Setting the header row
+        worksheet.Cell(1, 1).Value = "Code";
+        worksheet.Cell(1, 2).Value = "Project Name";
+        worksheet.Cell(1, 3).Value = "Project Type";
+        worksheet.Cell(1, 4).Value = "Project Section";
+        worksheet.Cell(1, 5).Value = "Program";
+        worksheet.Cell(1, 6).Value = "Sub Program";
+        worksheet.Cell(1, 7).Value = "Start Date";
+        worksheet.Cell(1, 8).Value = "End Date";
+        worksheet.Cell(1, 9).Value = "Project Manager";
+        worksheet.Cell(1, 10).Value = "Department";
+
+        // Style the headers
+        var headerRange = worksheet.Range("A1:J1");
+        headerRange.Style.Fill.BackgroundColor = XLColor.FromHtml("#063241");
+        headerRange.Style.Font.Bold = true;
+        headerRange.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+        headerRange.Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
+
+        // Auto fit columns to content
+        worksheet.Columns().AdjustToContents();
+        AdjustColumnWidths(worksheet, 25, 65);
+
+        int row = 2;
+        foreach (var project in projects)
+        {
+          worksheet.Cell(row, 1).Value = project?.Code;
+          worksheet.Cell(row, 2).Value = project?.Name;
+          worksheet.Cell(row, 3).Value = project?.Type;
+          worksheet.Cell(row, 4).Value = project?.Section;
+          worksheet.Cell(row, 5).Value = project?.Program;
+          worksheet.Cell(row, 6).Value = project?.SubProgram;
+          worksheet.Cell(row, 7).Value = project?.StartDate;
+          worksheet.Cell(row, 8).Value = project.EndDate;
+          worksheet.Cell(row, 9).Value = project?.Manager;
+          worksheet.Cell(row, 10).Value = project?.Department.deptName;
+          row++;
+        }
+
+        var tableRange = worksheet.Range(1, 1, row - 1, 10);
+        var table = tableRange.CreateTable();
+        tableRange.Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
+        tableRange.Style.Border.InsideBorder = XLBorderStyleValues.Thin;
+        table.ShowAutoFilter = true;
+        table.AutoFilter.IsEnabled = true;
+        table.AutoFilter.Sort(1, XLSortOrder.Ascending);
+
+        // Save the workbook to a memory stream
+        var stream = new MemoryStream();
+        workbook.SaveAs(stream);
+        stream.Position = 0;
+        return stream;
+      }
+      catch (Exception)
+      {
+
+        throw;
+      }
+    }
+
+    public static MemoryStream ProjectActivityScheduleReport(List<ActivityPlan> activities)
+    {
+      try
+      {
+        var workbook = new XLWorkbook();
+        IXLWorksheet worksheet = workbook.Worksheets.Add("Project Activity Schedule");
+
+        // Setting the header row
+        worksheet.Cell(1, 1).Value = "Task";
+        worksheet.Cell(1, 2).Value = "Task Owner";
+        worksheet.Cell(1, 3).Value = "Start Date";
+        worksheet.Cell(1, 4).Value = "End Date";
+        worksheet.Cell(1, 5).Value = "Status";
+
+        // Style the headers
+        var headerRange = worksheet.Range("A1:E1");
+        headerRange.Style.Fill.BackgroundColor = XLColor.FromHtml("#063241");
+        headerRange.Style.Font.Bold = true;
+        headerRange.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+        headerRange.Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
+
+        // Auto fit columns to content
+        worksheet.Columns().AdjustToContents();
+        AdjustColumnWidths(worksheet, 25, 65);
+
+        int row = 2;
+        foreach (var project in activities)
+        {
+          worksheet.Cell(row, 1).Value = project?.Activity;
+          worksheet.Cell(row, 2).Value = project?.Person;
+          worksheet.Cell(row, 3).Value = project?.StartDate;
+          worksheet.Cell(row, 4).Value = project?.EndDate;
+          worksheet.Cell(row, 5).Value = ListHelper.GetActivityPlanStatus(project?.Status);
+          row++;
+        }
+
+        var tableRange = worksheet.Range(1, 1, row - 1, 5);
+        var table = tableRange.CreateTable();
+        tableRange.Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
+        tableRange.Style.Border.InsideBorder = XLBorderStyleValues.Thin;
+        table.ShowAutoFilter = true;
+        table.AutoFilter.IsEnabled = true;
+        table.AutoFilter.Sort(1, XLSortOrder.Ascending);
+
+        // Save the workbook to a memory stream
+        var stream = new MemoryStream();
+        workbook.SaveAs(stream);
+        stream.Position = 0;
+        return stream;
+      }
+      catch (Exception)
+      {
+
+        throw;
+      }
+    }
+
+    public static MemoryStream ProjectRiskManagementReport(List<ProjectRiskIdentification> riskIdentifications)
+    {
+      try
+      {
+        var workbook = new XLWorkbook();
+        IXLWorksheet worksheet = workbook.Worksheets.Add("Project Risk Management");
+
+        // Setting the header row
+        worksheet.Cell(1, 1).Value = "Risk";
+        worksheet.Cell(1, 2).Value = "Rank";
+
+        // Style the headers
+        var headerRange = worksheet.Range("A1:B1");
+        headerRange.Style.Fill.BackgroundColor = XLColor.FromHtml("#063241");
+        headerRange.Style.Font.Bold = true;
+        headerRange.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+        headerRange.Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
+
+        // Auto fit columns to content
+        worksheet.Columns().AdjustToContents();
+        AdjustColumnWidths(worksheet, 25, 65);
+
+        int row = 2;
+        foreach (var riskIdentification in riskIdentifications)
+        {
+          worksheet.Cell(row, 1).Value = riskIdentification?.Risk;
+          worksheet.Cell(row, 2).Value = riskIdentification?.Rank;
+          row++;
+        }
+
+        var tableRange = worksheet.Range(1, 1, row - 1, 2);
+        var table = tableRange.CreateTable();
+        tableRange.Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
+        tableRange.Style.Border.InsideBorder = XLBorderStyleValues.Thin;
+        table.ShowAutoFilter = true;
+        table.AutoFilter.IsEnabled = true;
+        table.AutoFilter.Sort(1, XLSortOrder.Ascending);
+
+        // Save the workbook to a memory stream
+        var stream = new MemoryStream();
+        workbook.SaveAs(stream);
+        stream.Position = 0;
+        return stream;
+      }
+      catch (Exception)
+      {
+
+        throw;
+      }
+    }
+
+    public static MemoryStream StakeholderManagementReport(List<StakeHolder> stakeHolders)
+    {
+      try
+      {
+        var workbook = new XLWorkbook();
+        IXLWorksheet worksheet = workbook.Worksheets.Add("Stake Holder Management");
+
+        // Setting the header row
+        worksheet.Cell(1, 1).Value = "Stakeholder Name";
+        worksheet.Cell(1, 2).Value = "Contact Person Name";
+        worksheet.Cell(1, 3).Value = "Contact Person Email";
+        worksheet.Cell(1, 4).Value = "Contact Person Phone";
+        worksheet.Cell(1, 5).Value = "Contact Person Address";
+        worksheet.Cell(1, 6).Value = "Contact Person Website";
+        worksheet.Cell(1, 7).Value = "Impact";
+        worksheet.Cell(1, 8).Value = "Influence";
+        worksheet.Cell(1, 9).Value = "What is important to the stakeholder?";
+        worksheet.Cell(1, 10).Value = "How could the stakeholder contribute to the project?";
+        worksheet.Cell(1, 11).Value = "How could the stakeholder block the project?";
+        worksheet.Cell(1, 12).Value = "Strategy for engaging the stakeholder";
+
+        // Style the headers
+        var headerRange = worksheet.Range("A1:L1");
+        headerRange.Style.Fill.BackgroundColor = XLColor.FromHtml("#063241");
+        headerRange.Style.Font.Bold = true;
+        headerRange.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+        headerRange.Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
+
+        // Auto fit columns to content
+        worksheet.Columns().AdjustToContents();
+        AdjustColumnWidths(worksheet, 25, 65);
+
+        int row = 2;
+        foreach (var stakeHolder in stakeHolders)
+        {
+          worksheet.Cell(row, 1).Value = stakeHolder?.StakeholderName;
+          worksheet.Cell(row, 2).Value = stakeHolder?.ContactPersonName;
+          worksheet.Cell(row, 3).Value = stakeHolder?.ContactPersonEmail;
+          worksheet.Cell(row, 4).Value = stakeHolder?.ContactPersonPhone;
+          worksheet.Cell(row, 5).Value = stakeHolder?.ContactPersonAddress;
+          worksheet.Cell(row, 6).Value = stakeHolder?.ContactPersonWebsite;
+          worksheet.Cell(row, 7).Value = ListHelper.GetImpact(stakeHolder?.Impact);
+          worksheet.Cell(row, 8).Value = ListHelper.GetImpact(stakeHolder?.Influence);
+          worksheet.Cell(row, 9).Value = stakeHolder?.StakeHolderImportant;
+          worksheet.Cell(row, 10).Value = stakeHolder?.StakeholderContribution;
+          worksheet.Cell(row, 11).Value = stakeHolder?.Stakeholderblock;
+          worksheet.Cell(row, 12).Value = stakeHolder?.StakeholderStrategy;
+          row++;
+        }
+
+        var tableRange = worksheet.Range(1, 1, row - 1, 12);
+        var table = tableRange.CreateTable();
+        tableRange.Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
+        tableRange.Style.Border.InsideBorder = XLBorderStyleValues.Thin;
+        table.ShowAutoFilter = true;
+        table.AutoFilter.IsEnabled = true;
+        table.AutoFilter.Sort(1, XLSortOrder.Ascending);
+
+        // Save the workbook to a memory stream
+        var stream = new MemoryStream();
+        workbook.SaveAs(stream);
+        stream.Position = 0;
+        return stream;
+      }
+      catch (Exception)
+      {
+
+        throw;
+      }
+    }
+
+    #endregion
     public static string getAchievement(string achieve)
     {
       foreach (var nachieve in ListHelper.AchievementStatus())

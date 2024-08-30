@@ -1,0 +1,86 @@
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+@using MEMIS.Data;
+@model List<ActivityPlan>
+@{
+    ViewData["Title"] = "Project Management Reports";
+    //Layout = "~/Views/Shared/_PlanningLayout.cshtml";
+    Layout = "~/Pages/Shared/_ContentNavbarLayout.cshtml";
+}
+
+<h4 class="py-3 mb-4">
+    <span class="text-muted fw-light">Project Management Reports /</span> Project Activity Schedule Report
+</h4>
+
+<div class="row">
+    <div class="col-md-12">
+        <ul class="nav nav-pills flex-column flex-md-row mb-3">
+            <li class="nav-item"><a class="nav-link" asp-action="Index">Project List Report</a></li>
+            <li class="nav-item"><a class="nav-link active" href="javascript:void(0);">Project Activity Schedule Report</a></li>
+            <li class="nav-item"><a class="nav-link" asp-action="ProjectRiskManagementReport">Project Risk Management Report</a></li>
+            <li class="nav-item"><a class="nav-link" asp-action="StakeholderManagementReport">Stake Holder Management Report</a></li>
+            <li class="nav-item"><a class="nav-link" asp-action="IssueLogReport">Issue Log Report</a></li>
+        </ul>
+
+        <div class="card mb-4">
+            <h5 class="card-header">
+                <div class="col d-flex justify-content-end mb-3">
+                    <a class="btn btn-outline-success float-end float-right" asp-action="ProjectActivityScheduleExcel" target="_blank">Export to Excel</a>
+                </div>
+            </h5>
+
+            <hr class="my-0" />
+
+            <div class="card-body">
+                <div style="width:100%; overflow-x:auto;">
+                    <table class="table table-striped table-bordered table-hover dt-responsive nowrap">
+                        <thead class="table-active">
+                            <tr>
+                                <th>
+                                    @Html.DisplayNameFor(model => model[0].Activity)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model[0].Person)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model[0].StartDate)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model[0].EndDate)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model[0].Status)
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Activity)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Person)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.StartDate)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.EndDate)
+                                    </td>
+                                    <td>
+                                        @ListHelper.GetActivityPlanStatus(item.Status)
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
