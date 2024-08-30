@@ -391,6 +391,13 @@ namespace MEMIS.Controllers.Risk
               RiskScore = objectdto.RiskScore,
               //RiskSource = objectdto.RiskSource,
               StrategicObjective = objectdto.StrategicObjective,
+              intCategory= objectdto.intCategory,
+              intDept= objectdto.intDept,
+              ExistingMitigation=objectdto.ExistingMitigation,
+              Additional_Mitigation= objectdto.Additional_Mitigation,
+              Opportunity= objectdto.Opportunity,
+              Supporting_Owners= objectdto.Supporting_Owners,
+              Weakness= objectdto.Weakness,
               RiskOwner = User.FindFirstValue(ClaimTypes.NameIdentifier),
             };
             _context.Add(riskRegister);

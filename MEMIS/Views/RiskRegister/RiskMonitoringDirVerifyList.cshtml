@@ -47,19 +47,7 @@
                         </th>
                         <th>
                             @Html.DisplayNameFor(model => model.Data[0].RiskDescription)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.Data[0].Events)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.Data[0].RiskSource)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.Data[0].RiskCause)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.Data[0].RiskConsequence)
-                        </th>
+                        </th> 
                         <th>
                             @Html.DisplayNameFor(model => model.Data[0].RiskOwner)
                         </th>
@@ -99,19 +87,7 @@
                             </td>
                             <td>
                                 @Html.DisplayFor(modelItem => item.RiskDescription)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Events)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.RiskSource)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.RiskCause)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.RiskConsequence)
-                            </td>
+                            </td> 
                             <td>
                                 @{
                                     string userName = !string.IsNullOrEmpty(item.RiskOwner) ? ViewBag.Users.FindByIdAsync(item.RiskOwner).Result.UserName : "";

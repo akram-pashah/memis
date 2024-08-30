@@ -19,12 +19,11 @@ namespace MEMIS.Data.Risk
     public virtual FocusArea? FocusAreaFk { get; set; }
     public virtual int Activity { get; set; }
     [ForeignKey("Activity")]
-    public virtual Activity? ActivityFk { get; set; }
+    public virtual Activity? ActivityFk { get; set; } 
     public string RiskDescription { get; set; }
-    public string? Events { get; set; }
-    public string? RiskSource { get; set; }
-    public string? RiskCause { get; set; }
-    public string? RiskConsequence { get; set; }
+    public virtual int intCategory { get; set; }
+    [ForeignKey("intCategory")]
+    public virtual RiskCategory RiskCategoryFk { get; set; } 
     public string? RiskOwner { get; set; }
     public int RiskConsequenceId { get; set; }
     public int RiskLikelihoodId { get; set; }
@@ -34,6 +33,16 @@ namespace MEMIS.Data.Risk
     public int RiskScore { get; set; }
     public string? RiskRank { get; set; }
     public string? EvalCriteria { get; set; }
+    public string? ExistingMitigation { get; set; }
+    public string? Weakness { get; set; }
+    public string? Additional_Mitigation { get; set; }
+    [Display(Name = "Opportunity")]
+    public string? Opportunity { get; set; }
+    [Display(Name = "Primary Owner")]
+    public virtual Guid? intDept { get; set; }
+    [ForeignKey("intDept")]
+    public virtual Department? DepartmentFk { get; set; }
+    public string? Supporting_Owners { get; set; }
     public virtual int? RiskId { get; set; }
     [ForeignKey("RiskId")]
     public virtual RiskIdentification? RiskIdentificationFk { get; set; }
@@ -43,8 +52,8 @@ namespace MEMIS.Data.Risk
     //public string? ResourcesRequired { get; set; }
     //[Display(Name = "By when (expected date/period of implementation)")]
     //public DateTime? ExpectedDate { get; set; }
-    [Display(Name = "Opportunity")]
-    public string? Opportunity { get; set; }
+    
+    
     [Display(Name = "Review/Implementation date")]
     public DateTime? ReviewDate { get; set; }
     public int? ApprStatus { get; set; } = 0;
