@@ -100,6 +100,7 @@ namespace MEMIS.Controllers
 					EndDate = activityPlan.EndDate,
 					Person = activityPlan.Person,
 					Cost = activityPlan.Cost,
+                    Status = activityPlan.Status
 				};
 				_context.Add(_data);
 				await _context.SaveChangesAsync();
