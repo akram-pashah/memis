@@ -1,24 +1,61 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MEMIS.Data
 {
-    [Table("ProjectRiskIdentification")]
-    public class ProjectRiskIdentification
+  [Table("ProjectRiskIdentification")]
+  public class ProjectRiskIdentification
+  {
+    [Key]
+    public int Id { get; set; }
+    public string? Stage { get; set; }
+
+    [Required]
+    public string Risk { get; set; }
+    private int _rank;
+
+    [Display(Name = "Rank")]
+    [Required]
+    public int Rank
     {
-        [Key]
-        public int Id { get; set; }
-
-        [Required]
-        public string Risk { get; set; }
-       
-        [Display(Name = "Rank")]
-        [Required]
-        public int Rank { get; set; }
-
-        [Required]
-        public virtual int? ProjectInitiationId { get; set; }
-        [ForeignKey("ProjectInitiationId")]
-        public virtual ProjectInitiation? ProjectInitiationFk { get; set; }
+      get { return _rank; }
+      private set { _rank = value; } 
     }
+
+    private int _likelihood;
+    public int Likelihood
+    {
+      get { return _likelihood; }
+      set
+      {
+        _likelihood = value;
+        CalculateRank();
+      }
+    }
+
+    private int _severity;
+    public int Severity
+    {
+      get { return _severity; }
+      set
+      {
+        _severity = value;
+        CalculateRank();
+      }
+    }
+    public string? Consequence { get; set; }
+    public string? Mitigation { get; set; }
+    [Display(Name = "Cost Of Implementing The Risk")]
+    public double RiskImplementationCost { get; set; }
+    public string? Ownership { get; set; }
+    private void CalculateRank()
+    {
+      Rank = Likelihood * Severity;
+    }
+
+    [Required]
+    public virtual int? ProjectInitiationId { get; set; }
+    [ForeignKey("ProjectInitiationId")]
+    public virtual ProjectInitiation? ProjectInitiationFk { get; set; }
+  }
 }

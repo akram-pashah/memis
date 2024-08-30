@@ -7,8 +7,18 @@
 @model List<ActivityPlan>
 @{
     ViewData["Title"] = "Project Management Reports";
+
     //Layout = "~/Views/Shared/_PlanningLayout.cshtml";
+
     Layout = "~/Pages/Shared/_ContentNavbarLayout.cshtml";
+
+
+
+
+
+
+
+    var ProjectInitiationId = ViewBag.SelectedProjectInitiationId;
 }
 
 <h4 class="py-3 mb-4">
@@ -26,11 +36,17 @@
         </ul>
 
         <div class="card mb-4">
-            <h5 class="card-header">
-                <div class="col d-flex justify-content-end mb-3">
-                    <a class="btn btn-outline-success float-end float-right" asp-action="ProjectActivityScheduleExcel" target="_blank">Export to Excel</a>
+            <form asp-action="ProjectActivitySchedule" class="card-header row">
+                <div class="col d-flex justify-content-start mb-3">
+                    <select class="form-control form-control-sm" asp-for="@ProjectInitiationId" name="ProjectInitiationId" asp-items="ViewBag.ProjectInitiations">
+                        <option value="">Select Project</option>
+                    </select>
+                    <input type="submit" class="btn btn-primary float-end float-right" value="Load" />
                 </div>
-            </h5>
+                <div class="col d-flex justify-content-end mb-3">
+                    <a class="btn btn-outline-success float-end float-right" asp-action="ProjectActivityScheduleExcel" asp-route-ProjectInitiationId="@ViewBag.SelectedProjectInitiationId" target="_blank">Export to Excel</a>
+                </div>
+            </form>
 
             <hr class="my-0" />
 
@@ -58,6 +74,7 @@
                         </thead>
                         <tbody>
                             @foreach (var item in Model)
+
                             {
                                 <tr>
                                     <td>

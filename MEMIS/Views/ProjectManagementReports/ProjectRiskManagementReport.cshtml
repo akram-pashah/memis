@@ -9,6 +9,8 @@
     ViewData["Title"] = "Project Management Reports";
     //Layout = "~/Views/Shared/_PlanningLayout.cshtml";
     Layout = "~/Pages/Shared/_ContentNavbarLayout.cshtml";
+
+    var ProjectInitiationId = ViewBag.SelectedProjectInitiationId;
 }
 
 <h4 class="py-3 mb-4">
@@ -26,11 +28,17 @@
         </ul>
 
         <div class="card mb-4">
-            <h5 class="card-header">
-                <div class="col d-flex justify-content-end mb-3">
-                    <a class="btn btn-outline-success float-end float-right" asp-action="ProjectRiskManagementReportExcel" target="_blank">Export to Excel</a>
+            <<form asp-action="ProjectRiskManagementReport" class="card-header row">
+                <div class="col d-flex justify-content-start mb-3">
+                    <select class="form-control form-control-sm" asp-for="@ProjectInitiationId" name="ProjectInitiationId" asp-items="ViewBag.ProjectInitiations">
+                        <option value="">Select Project</option>
+                    </select>
+                    <input type="submit" class="btn btn-primary float-end float-right" value="Load" />
                 </div>
-            </h5>
+                <div class="col d-flex justify-content-end mb-3">
+                    <a class="btn btn-outline-success float-end float-right" asp-action="ProjectRiskManagementReportExcel" asp-route-ProjectInitiationId="@ViewBag.SelectedProjectInitiationId" target="_blank">Export to Excel</a>
+                </div>
+            </form>
 
             <hr class="my-0" />
 
@@ -40,10 +48,31 @@
                         <thead class="table-active">
                             <tr>
                                 <th>
+                                    @Html.DisplayNameFor(model => model[0].Stage)
+                                </th>
+                                <th>
                                     @Html.DisplayNameFor(model => model[0].Risk)
                                 </th>
                                 <th>
+                                    @Html.DisplayNameFor(model => model[0].Likelihood)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model[0].Severity)
+                                </th>
+                                <th>
                                     @Html.DisplayNameFor(model => model[0].Rank)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model[0].Consequence)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model[0].Mitigation)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model[0].RiskImplementationCost)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model[0].Ownership)
                                 </th>
                             </tr>
                         </thead>
@@ -52,10 +81,32 @@
                             {
                                 <tr>
                                     <td>
+                                        @Html.DisplayFor(modelItem => item.Stage)
+                                    </td>
+                                    <td>
                                         @Html.DisplayFor(modelItem => item.Risk)
                                     </td>
                                     <td>
-                                        @Html.DisplayFor(modelItem => item.Rank)
+                                        @Enum.GetName(typeof(MEMIS.EnumRiskRank), item.Likelihood)
+                                    </td>
+                                    <td>
+                                        @Enum.GetName(typeof(MEMIS.EnumRiskRank), item.Severity)
+                                    </td>
+                                    <td>
+                                        @* @Enum.GetName(typeof(MEMIS.EnumRiskRank), item.Rank) *@
+                                        @item.Rank
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Consequence)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Mitigation)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.RiskImplementationCost)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Ownership)
                                     </td>
                                 </tr>
                             }
