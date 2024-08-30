@@ -4,6 +4,7 @@ using MEMIS.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MEMIS.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240829234536_AddStatusActivityPlan")]
+    partial class AddStatusActivityPlan
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -2755,9 +2758,6 @@ namespace MEMIS.Migrations
                     b.Property<DateTime?>("ActualDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Additional_Mitigation")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int?>("ApprStatus")
                         .HasColumnType("int");
 
@@ -2770,7 +2770,7 @@ namespace MEMIS.Migrations
                     b.Property<string>("EvalCriteria")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ExistingMitigation")
+                    b.Property<string>("Events")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("FocusArea")
@@ -2788,7 +2788,13 @@ namespace MEMIS.Migrations
                     b.Property<DateTime?>("ReviewDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("RiskCause")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("RiskCode")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("RiskConsequence")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("RiskConsequenceId")
@@ -2834,20 +2840,11 @@ namespace MEMIS.Migrations
                     b.Property<int>("RiskScore")
                         .HasColumnType("int");
 
+                    b.Property<string>("RiskSource")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int?>("StrategicObjective")
                         .HasColumnType("int");
-
-                    b.Property<string>("Supporting_Owners")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Weakness")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("intCategory")
-                        .HasColumnType("int");
-
-                    b.Property<Guid?>("intDept")
-                        .HasColumnType("uniqueidentifier");
 
                     b.Property<int?>("riskTolerence")
                         .HasColumnType("int");
@@ -2864,10 +2861,6 @@ namespace MEMIS.Migrations
                     b.HasIndex("RiskId");
 
                     b.HasIndex("StrategicObjective");
-
-                    b.HasIndex("intCategory");
-
-                    b.HasIndex("intDept");
 
                     b.ToTable("RiskRegister");
                 });
@@ -3087,9 +3080,6 @@ namespace MEMIS.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Numerator")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PropotionWithinTimeline")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ServiceDeliveryTimeline")
@@ -4234,23 +4224,9 @@ namespace MEMIS.Migrations
                         .WithMany()
                         .HasForeignKey("StrategicObjective");
 
-                    b.HasOne("MEMIS.Data.Risk.RiskCategory", "RiskCategoryFk")
-                        .WithMany()
-                        .HasForeignKey("intCategory")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("MEMIS.Data.Department", "DepartmentFk")
-                        .WithMany()
-                        .HasForeignKey("intDept");
-
                     b.Navigation("ActivityFk");
 
-                    b.Navigation("DepartmentFk");
-
                     b.Navigation("FocusAreaFk");
-
-                    b.Navigation("RiskCategoryFk");
 
                     b.Navigation("RiskIdentificationFk");
 

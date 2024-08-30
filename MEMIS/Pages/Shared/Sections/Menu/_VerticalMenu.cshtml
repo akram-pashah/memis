@@ -811,7 +811,7 @@
             </li>
         </ul>
     </li>
-    <li class="menu-item">
+    <li class="menu-item m@(currentPage.StartsWith("/RiskReport") || currentPage.StartsWith("/Reports") || currentPage.StartsWith("/ProjectManagementReports") ? " active open" : "")">
         <a href="javascript:void(0);" class="menu-link menu-toggle">
             <i class="menu-icon tf-icons bx bx-file"></i>
             <div>Reports</div>
@@ -830,6 +830,11 @@
             <li class='menu-item@(currentPage == "/RiskReport" ? " active" : "")'>
                 <a asp-controller="RiskReport" asp-action="Index" class="menu-link">
                     <div>Risk Reports</div>
+                </a>
+            </li>
+            <li class='menu-item@(currentPage == "/ProjectManagementReports" ? " active" : "")'>
+                <a asp-controller="ProjectManagementReports" asp-action="Index" class="menu-link">
+                    <div>Project Management Reports</div>
                 </a>
             </li>
         </ul>

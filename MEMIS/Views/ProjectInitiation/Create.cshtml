@@ -88,6 +88,9 @@
 										<th>
 											@Html.DisplayNameFor(model => model.ActivityPlans[0].Cost)
 										</th>
+										<th>
+											@Html.DisplayNameFor(model => model.ActivityPlans[0].Status)
+										</th>
 										<th></th>
 									</tr>
 								</thead>
@@ -124,6 +127,9 @@
 												}
 												@Html.DisplayFor(m => cost)
 											</td>
+                                            <td>
+                                              @ListHelper.GetActivityPlanStatus(item.Status)
+                                            </td>
 											<td>
 												<button class="btn btn-sm btn-danger delete-activity" type="button" title="Delete" data-item-id="@item.Id"><i class='bx bx-trash-alt'></i> Delete</button>
 											</td>
@@ -149,6 +155,14 @@
 										</td>
 										<td>
 											<input type="number" class="form-control form-control-sm" asp-for="ActivityPlan.Cost" required />
+										</td>
+										<td>
+											<select class="form-control form-control-sm" asp-for="ActivityPlan.Status">
+                                              @foreach(var item in ListHelper.ActivityPlanStatus())
+                                              {
+                                                  <option value="@item.Value">@item.Text</option>
+                                              }
+                                            </select>
 										</td>
 										<td>
 											<button class="btn btn-sm btn-primary" type="submit"><i class='bx bx-save'></i> Save</button>
