@@ -593,7 +593,7 @@ namespace MEMIS.Controllers.Risk
             RiskRank = riskIdentification.RiskRank,
             RiskScore = riskIdentification.RiskScore,
             RiskSources = riskIdentification.RiskSource,
-            StrategicObjective = riskIdentification.StrategicObjective,
+            StrategicObjective = riskIdentification.StrategicObjective, 
             RiskId = riskIdentification.RiskId
           };
           _context.Update(rd);
