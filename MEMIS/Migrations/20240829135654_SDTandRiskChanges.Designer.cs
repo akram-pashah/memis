@@ -4,6 +4,7 @@ using MEMIS.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MEMIS.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240829135654_SDTandRiskChanges")]
+    partial class SDTandRiskChanges
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -373,9 +376,6 @@ namespace MEMIS.Migrations
 
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime2");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -1965,18 +1965,6 @@ namespace MEMIS.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Consequence")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Likelihood")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Mitigation")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Ownership")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int?>("ProjectInitiationId")
                         .IsRequired()
                         .HasColumnType("int");
@@ -1986,15 +1974,6 @@ namespace MEMIS.Migrations
 
                     b.Property<string>("Risk")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<double>("RiskImplementationCost")
-                        .HasColumnType("float");
-
-                    b.Property<int>("Severity")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Stage")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");

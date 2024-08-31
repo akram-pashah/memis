@@ -62,7 +62,7 @@ namespace MEMIS.Controllers
 
             if (returnUrl == null || returnUrl == "/")
             {
-              return RedirectToAction("Home", "Login");
+              return RedirectToAction("Dashboard", "ActivityAsses");
             }
             else
             {

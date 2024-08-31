@@ -1274,11 +1274,11 @@ namespace MEMIS.Helpers.ExcelReports
           worksheet.Cell(row, 2).Value = "";
           worksheet.Cell(row, 3).Value = risk?.RiskDescription;
           worksheet.Cell(row, 4).Value = risk?.RiskRatingCategory;
-          worksheet.Cell(row, 5).Value = risk?.RiskCause;
-          worksheet.Cell(row, 6).Value = risk?.RiskConsequence;
+          worksheet.Cell(row, 5).Value = "";
+          worksheet.Cell(row, 6).Value = "";
           worksheet.Cell(row, 7).Value = "";
           worksheet.Cell(row, 8).Value = risk?.RiskLikelihoodId;
-          worksheet.Cell(row, 9).Value = risk?.RiskConsequence;
+          worksheet.Cell(row, 9).Value = "";
           worksheet.Cell(row, 10).Value = risk?.RiskRatingId;
           worksheet.Cell(row, 11).Value = risk?.ActionTaken;
           worksheet.Cell(row, 12).Value = risk?.Opportunity;

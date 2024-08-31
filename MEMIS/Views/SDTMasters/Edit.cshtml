@@ -52,6 +52,12 @@
             </div>
             <br />
             <div class="form-group">
+                <label asp-for="PropotionWithinTimeline" class="control-label"></label>
+                <textarea asp-for="PropotionWithinTimeline" class="form-control" style="height:100px"></textarea>
+                <span asp-validation-for="PropotionWithinTimeline" class="text-danger"></span>
+            </div>
+            <br />
+            <div class="form-group">
                 <label asp-for="DepartmentId" class="control-label"></label>
                 <select asp-for="DepartmentId" class="form-control" asp-items="ViewBag.DepartmentId"></select>
                 <span asp-validation-for="DepartmentId" class="text-danger"></span>
