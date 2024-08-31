@@ -100,6 +100,7 @@ namespace MEMIS.Controllers
 					EndDate = activityPlan.EndDate,
 					Person = activityPlan.Person,
 					Cost = activityPlan.Cost,
+                    Status = activityPlan.Status
 				};
 				_context.Add(_data);
 				await _context.SaveChangesAsync();
@@ -144,8 +145,15 @@ namespace MEMIS.Controllers
 				ProjectRiskIdentification _data = new()
 				{
 					ProjectInitiationId = riskIdentification.ProjectInitiationId,
+                    Stage = riskIdentification.Stage,
 					Risk = riskIdentification.Risk,
-					Rank = riskIdentification.Rank,
+					//Rank = riskIdentification.Rank,
+                    Likelihood = riskIdentification.Likelihood,
+                    Severity = riskIdentification.Severity,
+                    Consequence = riskIdentification.Consequence,
+                    Mitigation = riskIdentification.Mitigation,
+                    RiskImplementationCost = riskIdentification.RiskImplementationCost,
+                    Ownership = riskIdentification.Ownership,
 					
 				};
 				_context.Add(_data);

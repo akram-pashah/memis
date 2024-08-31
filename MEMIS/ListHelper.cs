@@ -1,9 +1,45 @@
+using MEMIS.Data.Risk;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System.ComponentModel.DataAnnotations;
 
 namespace MEMIS
 {
   public class ListHelper
   {
+    public static List<SelectListItem> GetLikelihood()
+    {
+      return Enum.GetValues(typeof(RiskLikelihood))
+        .Cast<RiskLikelihood>()
+        .Select(e => new SelectListItem
+        {
+          Value = ((int)e).ToString(),
+          Text = GetEnumDisplayNameLikelihood(e)
+        }).ToList();
+    }
+    public static List<SelectListItem> GetSeverity()
+    {
+      return Enum.GetValues(typeof(RiskConsequence))
+        .Cast<RiskConsequence>()
+        .Select(e => new SelectListItem
+        {
+          Value = ((int)e).ToString(),
+          Text = GetEnumDisplayNamSeverity(e)
+        }).ToList();
+    }
+    private static string GetEnumDisplayNameLikelihood(RiskLikelihood value)
+    {
+      var field = value.GetType().GetField(value.ToString());
+      var attribute = (DisplayAttribute)field.GetCustomAttributes(typeof(DisplayAttribute), false).FirstOrDefault();
+
+      return attribute?.Name ?? value.ToString();
+    }
+    private static string GetEnumDisplayNamSeverity(RiskConsequence value)
+    {
+      var field = value.GetType().GetField(value.ToString());
+      var attribute = (DisplayAttribute)field.GetCustomAttributes(typeof(DisplayAttribute), false).FirstOrDefault();
+
+      return attribute?.Name ?? value.ToString();
+    }
     public static List<SelectListItem> ProjectType()
     {
       List<SelectListItem> results = new List<SelectListItem>
@@ -323,6 +359,15 @@ namespace MEMIS
             };
       return results;
     }
+
+    public static string GetImpact(int? value) => value switch
+    {
+      1 => "Low",
+      2 => "Medium",
+      3 => "High",
+      _ => ""
+    };
+
     public static List<SelectListItem> Influence()
     {
       List<SelectListItem> results = new List<SelectListItem>
@@ -333,6 +378,7 @@ namespace MEMIS
             };
       return results;
     }
+
     public static List<SelectListItem> TypeofIndicator()
     {
       List<SelectListItem> results = new List<SelectListItem>
@@ -378,6 +424,25 @@ namespace MEMIS
 
       return results;
     }
+
+    public static List<SelectListItem> ActivityPlanStatus()
+    {
+      List<SelectListItem> results = new List<SelectListItem>
+            {
+                new SelectListItem() { Text = "Done", Value = "1" },
+                new SelectListItem() { Text = "In-Progress", Value = "2" },
+                new SelectListItem() { Text = "Not Done", Value = "3" },
+            };
+
+      return results;
+    }
+
+    public static string GetActivityPlanStatus(int? value) => value switch
+    {
+      1 => "Done",
+      2 => "In-Progress",
+      _ => "Not Done"
+    };
 
     public static string GetFiscalYearBackgroundColor(double value) =>
     value switch
