@@ -19,22 +19,25 @@
                 <label asp-for="intObjective" class="control-label"></label>
                 <select asp-for="intObjective" class="form-control form-select" asp-items="ViewBag.intObjective"></select>
             </div>
-            <br /> 
+            <br />
             <div class="form-group">
                 <label asp-for="intIntervention" class="control-label"></label>
-                <select asp-for="intIntervention" class="form-control form-select" asp-items="ViewBag.intIntervention"></select>
-            </div>
-            <br /> 
-            <div class="form-group">
-                <label asp-for="intAction" class="control-label"></label>
-                <select asp-for="intAction" class="form-control form-select" asp-items="ViewBag.intAction"></select>
+                @Html.DropDownList("intIntervention", new SelectList(ViewBag.StrategicIntervention, "intIntervention", "InterventionName"), new { @class = "form-control form-select", @required = "required", onchange = "loadStrategicActions(this.value)" })
             </div>
             <br />
+            <div class="form-group">
+                <label asp-for="intAction" class="control-label"></label>
+                <select id="StrategicAction" asp-for="intAction" class="form-control" onchange="loadActivities(this.value)">
+                    <option value="">Select Strategic Action</option>
+                </select>
+            </div>
             <br />
             <div class="form-group">
                 <label asp-for="intActivity" class="control-label"></label>
-                <select asp-for="intActivity" class="form-control form-select" asp-items="ViewBag.intActivity"></select>
-            </div> 
+                <select id="Activity" asp-for="intActivity" class="form-control">
+                    <option value="">Select Strategic Activity</option>
+                </select>
+            </div>
             <br />
             <div class="form-group">
                 <label asp-for="Output" class="control-label"></label>
@@ -104,3 +107,30 @@
 @section Scripts {
     @*@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}*@
 }
+<script>
+    function loadStrategicActions(interventionId) {
+        if (interventionId) {
+            $.getJSON('@Url.Action("GetStrategicActions", "ActivityAsses")', { interventionId: interventionId }, function (data) {
+                var $actionDropdown = $('#StrategicAction');
+                $actionDropdown.empty();
+                $actionDropdown.append('<option value="">Select Strategic Action</option>');
+                $.each(data, function (index, item) {
+                    $actionDropdown.append('<option value="' + item.intAction + '">' + item.actionName + '</option>');
+                });
+            });
+        }
+    }
+
+    function loadActivities(actionId) {
+        if (actionId) {
+            $.getJSON('@Url.Action("GetActivities", "ActivityAsses")', { actionId: actionId }, function (data) {
+                var $activityDropdown = $('#Activity');
+                $activityDropdown.empty();
+                $activityDropdown.append('<option value="">Select Activity</option>');
+                $.each(data, function (index, item) {
+                    $activityDropdown.append('<option value="' + item.intActivity + '">' + item.activityName + '</option>');
+                });
+            });
+        }
+    }
+</script>
