@@ -21,6 +21,7 @@ using DocumentFormat.OpenXml.Office2010.Excel;
 using System.Drawing;
 using MEMIS.Pages.Shared;
 using DocumentFormat.OpenXml.Bibliography;
+using MEMIS.ViewModels.Planning;
 
 namespace MEMIS.Controllers
 {
@@ -59,6 +60,58 @@ namespace MEMIS.Controllers
       {
         return Problem("Entity set 'AppDbContext.ActivityAssess'  is null.");
       }
+    }
+
+    public async Task<IActionResult> Dashboard()
+    {
+      var userRoles = getUserRoles();
+      Guid departmentId = Guid.Parse(HttpContext.Session.GetString("Department"));
+
+      var query = _context.ActivityAssess
+        .Include(x => x.StrategicIntervention)
+          .ThenInclude(x => x.StrategicObjective)
+        .Include(x => x.QuaterlyPlans)
+        .Include(x => x.ActivityAssessRegions)
+          .ThenInclude(x => x.QuaterlyPlans)
+        .AsQueryable();
+      var activitiesQuery = query;
+      if (!userRoles.Contains("SuperAdmin"))
+      {
+        activitiesQuery = activitiesQuery.Where(x => x.intDept == departmentId);
+      }
+
+      var activities = await activitiesQuery.ToListAsync();
+
+      var totalActivities = await query.ToListAsync();
+
+      var departments = await _context.Departments.OrderBy(x => x.deptName).ToListAsync();
+
+      var focusAreas = await _context.FocusArea.OrderBy(x => x.FocusAreaName).ToListAsync();
+
+      TotalActivitiesViewModel data = new()
+      {
+        TotalActivities = activities.Count,
+        TotalBudget = activities.Sum(x => x.QuaterlyPlans.Sum(x => x.QBudget) + x.ActivityAssessRegions.Sum(x => x.QuaterlyPlans.Sum(x => x.QBudget))),
+        TotalTarget = activities.Sum(x => x.QuaterlyPlans.Sum(x => x.QTarget) + x.ActivityAssessRegions.Sum(x => x.QuaterlyPlans.Sum(x => x.QTarget))),
+        PendingActivities = activities.Where(x => x.ApprStatus != (int)deptPlanApprStatus.dirapprapproved).Count(),
+        ActivitiesCount = departments.Select(x => totalActivities.Where(a => a.intDept == x.intDept).Count()).ToList(),
+        DepartmentBudgets = departments.Select(x => totalActivities.Where(a => a.intDept == x.intDept).Sum(x => x.QuaterlyPlans.Sum(x => x.QBudget) + x.ActivityAssessRegions.Sum(x => x.QuaterlyPlans.Sum(x => x.QBudget)))).ToList(),
+        Departments = departments.Select(x => x.deptName).ToList(),
+        FocusAreaActivitiesCount = focusAreas.Select(x => totalActivities.Where(a => a.StrategicIntervention.StrategicObjective.intFocus == x.intFocus).Count()).ToList(),
+        FocusAreas = focusAreas.Select(x => x.FocusAreaName).ToList(),
+      };
+
+      foreach (var dept in departments)
+      {
+        data.BudgetWithDepartment.Add(new DepartmentBudget()
+        {
+          Name = dept.deptName,
+          Code = dept.deptCode,
+          Budget = totalActivities.Where(a => a.intDept == dept.intDept).Sum(x => x.QuaterlyPlans.Sum(x => x.QBudget) + x.ActivityAssessRegions.Sum(x => x.QuaterlyPlans.Sum(x => x.QBudget)))
+        });
+      }
+
+      return View(data);
     }
 
     public async Task<IActionResult> AddAnnualPlan()
@@ -1262,7 +1315,7 @@ namespace MEMIS.Controllers
           }
 
           await _context.SaveChangesAsync();
-          
+
           //}
         }
         catch (DbUpdateConcurrencyException)
