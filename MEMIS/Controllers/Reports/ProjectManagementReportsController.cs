@@ -1,6 +1,8 @@
+using DocumentFormat.OpenXml.Office2010.Excel;
 using MEMIS.Data;
 using MEMIS.Helpers.ExcelReports;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
 namespace MEMIS.Controllers.Reports
@@ -34,17 +36,29 @@ namespace MEMIS.Controllers.Reports
       }
     }
 
-    public async Task<IActionResult> ProjectActivitySchedule()
+    public async Task<IActionResult> ProjectActivitySchedule(int? ProjectInitiationId)
     {
-      var list = await _context.ActivityPlans.ToListAsync();
+      var query = _context.ActivityPlans.AsQueryable();
+      if (ProjectInitiationId != null && ProjectInitiationId > 0)
+      {
+        query = query.Where(x => x.ProjectInitiationId == ProjectInitiationId);
+      }
+      var list = await query.ToListAsync();
+      ViewBag.SelectedProjectInitiationId = ProjectInitiationId ?? 0;
+      ViewData["ProjectInitiations"] = new SelectList(_context.ProjectInitiations.OrderBy(d => d.Name), "Id", "Name");
       return View(list);
     }
 
-    public async Task<IActionResult> ProjectActivityScheduleExcel()
+    public async Task<IActionResult> ProjectActivityScheduleExcel(int? ProjectInitiationId)
     {
       try
       {
-        var list = await _context.ActivityPlans.ToListAsync();
+        var query = _context.ActivityPlans.AsQueryable();
+        if (ProjectInitiationId != null && ProjectInitiationId > 0)
+        {
+          query = query.Where(x => x.ProjectInitiationId == ProjectInitiationId);
+        }
+        var list = await query.ToListAsync();
         var stream = ExportHandler.ProjectActivityScheduleReport(list);
         return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Project Activity Schedule Report.xlsx");
       }
@@ -55,17 +69,31 @@ namespace MEMIS.Controllers.Reports
       }
     }
 
-    public async Task<IActionResult> ProjectRiskManagementReport()
+    public async Task<IActionResult> ProjectRiskManagementReport(int? ProjectInitiationId)
     {
-      var list = await _context.ProjectRiskIdentifications.ToListAsync();
+      var query = _context.ProjectRiskIdentifications.AsQueryable();
+      if (ProjectInitiationId != null && ProjectInitiationId > 0)
+      {
+        query = query.Where(x => x.ProjectInitiationId == ProjectInitiationId);
+      }
+
+      var list = await query.ToListAsync();
+      ViewBag.SelectedProjectInitiationId = ProjectInitiationId ?? 0;
+      ViewData["ProjectInitiations"] = new SelectList(_context.ProjectInitiations.OrderBy(d => d.Name), "Id", "Name");
       return View(list);
     }
 
-    public async Task<IActionResult> ProjectRiskManagementReportExcel()
+    public async Task<IActionResult> ProjectRiskManagementReportExcel(int? ProjectInitiationId)
     {
       try
       {
-        var list = await _context.ProjectRiskIdentifications.ToListAsync();
+        var query = _context.ProjectRiskIdentifications.AsQueryable();
+        if (ProjectInitiationId != null && ProjectInitiationId > 0)
+        {
+          query = query.Where(x => x.ProjectInitiationId == ProjectInitiationId);
+        }
+
+        var list = await query.ToListAsync();
         var stream = ExportHandler.ProjectRiskManagementReport(list);
         return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Project Risk Management Report.xlsx");
       }
@@ -76,17 +104,31 @@ namespace MEMIS.Controllers.Reports
       }
     }
 
-    public async Task<IActionResult> StakeholderManagementReport()
+    public async Task<IActionResult> StakeholderManagementReport(int? ProjectInitiationId)
     {
-      var list = await _context.StakeHolder.ToListAsync();
+      var query = _context.StakeHolder.AsQueryable();
+      if (ProjectInitiationId != null && ProjectInitiationId > 0)
+      {
+        query = query.Where(x => x.ProjectInitiationId == ProjectInitiationId);
+      }
+
+      var list = await query.ToListAsync();
+      ViewBag.SelectedProjectInitiationId = ProjectInitiationId ?? 0;
+      ViewData["ProjectInitiations"] = new SelectList(_context.ProjectInitiations.OrderBy(d => d.Name), "Id", "Name");
       return View(list);
     }
 
-    public async Task<IActionResult> StakeholderManagementReportExcel()
+    public async Task<IActionResult> StakeholderManagementReportExcel(int? ProjectInitiationId)
     {
       try
       {
-        var list = await _context.StakeHolder.ToListAsync();
+        var query = _context.StakeHolder.AsQueryable();
+        if (ProjectInitiationId != null && ProjectInitiationId > 0)
+        {
+          query = query.Where(x => x.ProjectInitiationId == ProjectInitiationId);
+        }
+
+        var list = await query.ToListAsync();
         var stream = ExportHandler.StakeholderManagementReport(list);
         return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Stake Holder Management Report.xlsx");
       }

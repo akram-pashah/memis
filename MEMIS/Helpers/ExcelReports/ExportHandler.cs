@@ -1609,11 +1609,18 @@ namespace MEMIS.Helpers.ExcelReports
         IXLWorksheet worksheet = workbook.Worksheets.Add("Project Risk Management");
 
         // Setting the header row
-        worksheet.Cell(1, 1).Value = "Risk";
-        worksheet.Cell(1, 2).Value = "Rank";
+        worksheet.Cell(1, 1).Value = "Stage";
+        worksheet.Cell(1, 2).Value = "Risk";
+        worksheet.Cell(1, 3).Value = "Likelihood";
+        worksheet.Cell(1, 4).Value = "Severity";
+        worksheet.Cell(1, 5).Value = "Rank";
+        worksheet.Cell(1, 6).Value = "Consequence";
+        worksheet.Cell(1, 7).Value = "Mitigation";
+        worksheet.Cell(1, 8).Value = "Cost Of Implementing The Risk";
+        worksheet.Cell(1, 9).Value = "Ownership";
 
         // Style the headers
-        var headerRange = worksheet.Range("A1:B1");
+        var headerRange = worksheet.Range("A1:I1");
         headerRange.Style.Fill.BackgroundColor = XLColor.FromHtml("#063241");
         headerRange.Style.Font.Bold = true;
         headerRange.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
@@ -1626,12 +1633,19 @@ namespace MEMIS.Helpers.ExcelReports
         int row = 2;
         foreach (var riskIdentification in riskIdentifications)
         {
-          worksheet.Cell(row, 1).Value = riskIdentification?.Risk;
-          worksheet.Cell(row, 2).Value = riskIdentification?.Rank;
+          worksheet.Cell(row, 1).Value = riskIdentification?.Stage;
+          worksheet.Cell(row, 2).Value = riskIdentification?.Risk;
+          worksheet.Cell(row, 3).Value = Enum.GetName(typeof(MEMIS.EnumRiskRank), riskIdentification?.Likelihood);
+          worksheet.Cell(row, 4).Value = Enum.GetName(typeof(MEMIS.EnumRiskRank), riskIdentification?.Severity);
+          worksheet.Cell(row, 5).Value = riskIdentification?.Rank;
+          worksheet.Cell(row, 6).Value = riskIdentification?.Consequence;
+          worksheet.Cell(row, 7).Value = riskIdentification?.Mitigation;
+          worksheet.Cell(row, 8).Value = riskIdentification?.RiskImplementationCost;
+          worksheet.Cell(row, 9).Value = riskIdentification?.Ownership;
           row++;
         }
 
-        var tableRange = worksheet.Range(1, 1, row - 1, 2);
+        var tableRange = worksheet.Range(1, 1, row - 1, 9);
         var table = tableRange.CreateTable();
         tableRange.Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
         tableRange.Style.Border.InsideBorder = XLBorderStyleValues.Thin;

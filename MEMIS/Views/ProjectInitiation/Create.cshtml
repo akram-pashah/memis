@@ -178,48 +178,108 @@
 								<thead>
 									<tr>
 										<th>
+											@Html.DisplayNameFor(model => model.ProjectRiskIdentifications[0].Stage)
+										</th>
+										<th>
 											@Html.DisplayNameFor(model => model.ProjectRiskIdentifications[0].Risk)
 										</th>
 										<th>
+											@Html.DisplayNameFor(model => model.ProjectRiskIdentifications[0].Likelihood)
+										</th>
+										<th>
+											@Html.DisplayNameFor(model => model.ProjectRiskIdentifications[0].Severity)
+										</th>
+										<th>
 											@Html.DisplayNameFor(model => model.ProjectRiskIdentifications[0].Rank)
+										</th>
+										<th>
+											@Html.DisplayNameFor(model => model.ProjectRiskIdentifications[0].Consequence)
+										</th>
+										<th>
+											@Html.DisplayNameFor(model => model.ProjectRiskIdentifications[0].Mitigation)
+										</th>
+										<th>
+											@Html.DisplayNameFor(model => model.ProjectRiskIdentifications[0].RiskImplementationCost)
+										</th>
+										<th>
+											@Html.DisplayNameFor(model => model.ProjectRiskIdentifications[0].Ownership)
 										</th>
 
 										<th></th>
 									</tr>
 								</thead>
 								<tbody>
+                                  <tr>
+										
+										<td>
+											<input type="hidden" asp-for="RiskIdentification.ProjectInitiationId" value="@Model.ProjectInitId" />
+											<input type="hidden" asp-for="RiskIdentification.Id" value="0" />
+											<input type="text" class="form-control form-control-sm" asp-for="RiskIdentification.Stage" required />
+										</td>
+                                        <td>
+                                          <input type="text" class="form-control form-control-sm" asp-for="RiskIdentification.Risk" required />
+                                        </td>
+                                        <td>
+                                          <select class="form-control form-control-sm" asp-for="RiskIdentification.Likelihood">
+                                                        @foreach(var item in ListHelper.GetLikelihood())
+                                                        {
+                                                            <option value="@item.Value">@item.Text</option>
+                                                        }
+                                                    </select>
+                                        </td>
+                                        <td>
+                                          <select class="form-control form-control-sm" asp-for="RiskIdentification.Severity">
+                                                        @foreach(var item in ListHelper.GetSeverity())
+                                                        {
+                                                            <option value="@item.Value">@item.Text</option>
+                                                        }
+                                                    </select>
+                                        </td>
+										<td>
+											<select disabled class="form-control form-control-sm" asp-for="RiskIdentification.Rank" asp-items="ViewBag.RiskRank" required>
+												<option value="">Select Risk Rank</option>
+											</select>
+										</td>
+
+                                        <td>
+                                          <input type="text" class="form-control form-control-sm" asp-for="RiskIdentification.Consequence" required />
+                                        </td>
+                                        <td>
+                                          <input type="text" class="form-control form-control-sm" asp-for="RiskIdentification.Mitigation" required />
+                                        </td>
+                                        <td>
+                                          <input type="number" class="form-control form-control-sm" asp-for="RiskIdentification.RiskImplementationCost" required />
+                                        </td>
+                                        <td>
+                                          <input type="text" class="form-control form-control-sm" asp-for="RiskIdentification.Ownership" required />
+                                        </td>
+                                        
+										<td>
+											<button class="btn btn-sm btn-primary" type="submit"><i class='bx bx-save'></i> Save</button>
+										</td>
+									</tr>
 									@foreach (var item in Model.ProjectRiskIdentifications)
 									{
 										<tr data-item-id="@item.Id">
+                                          <td>@item.Stage</td>
 											<td>
 												@Html.DisplayFor(m => item.Risk)
 											</td>
-											<td>
-												@Enum.GetName(typeof(MEMIS.EnumRiskRank), item.Rank)
+                                            <td>@Enum.GetName(typeof(MEMIS.EnumRiskRank), item.Likelihood)</td>
+                                            <td>@Enum.GetName(typeof(MEMIS.EnumRiskRank), item.Severity)</td>
+                                            <td>
+												@* @Enum.GetName(typeof(MEMIS.EnumRiskRank), item.Rank) *@
+                                                @item.Rank
 											</td>
+                                            <td>@item.Consequence</td>
+                                            <td>@item.Mitigation</td>
+                                            <td>@item.RiskImplementationCost</td>
+                                            <td>@item.Ownership</td>
 											<td>
 												<button class="btn btn-sm btn-danger delete-risk" type="button" title="Delete" data-item-id="@item.Id"><i class='bx bx-trash-alt'></i> Delete</button>
 											</td>
 										</tr>
 									}
-									<tr>
-										
-										<td>
-											<input type="hidden" asp-for="RiskIdentification.ProjectInitiationId" value="@Model.ProjectInitId" />
-											<input type="hidden" asp-for="RiskIdentification.Id" value="0" />
-											<input type="text" class="form-control form-control-sm" asp-for="RiskIdentification.Risk" required />
-										</td>
-										<td>
-											<select class="form-control form-control-sm" asp-for="RiskIdentification.Rank" asp-items="ViewBag.RiskRank" required>
-												<option value="">Select Risk Rank</option>
-											</select>
-										</td>
-
-
-										<td>
-											<button class="btn btn-sm btn-primary" type="submit"><i class='bx bx-save'></i> Save</button>
-										</td>
-									</tr>
 								</tbody>
 							</table>
 						</form>

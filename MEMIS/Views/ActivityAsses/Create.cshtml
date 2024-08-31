@@ -9,15 +9,16 @@
 
 <h4>Department Plan</h4>
 <hr />
+
 <div class="row">
     <div>
-        <form asp-action="Create">
+        <form asp-action="Create" onsubmit="return validateQuarters()">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="text-danger">@ViewBag.ErrorMessage</div>
             <div class="col-md-4">
                 <div class="form-group">
                     <label asp-for="intIntervention" class="control-label"></label>
-                    @Html.DropDownList("intIntervention", new SelectList(ViewBag.StrategicIntervention, "intIntervention", "InterventionName"), new { @class = "form-control form-select", @required = "required", onchange="loadStrategicActions(this.value)" })
+                    @Html.DropDownList("intIntervention", new SelectList(ViewBag.StrategicIntervention, "intIntervention", "InterventionName"), new { @class = "form-control form-select", @required = "required", onchange = "loadStrategicActions(this.value)" })
                 </div>
                 <br />
                 <div class="form-group">
@@ -30,8 +31,8 @@
                 <div class="form-group">
                     <label asp-for="intActivity" class="control-label"></label>
                     <select id="Activity" asp-for="intActivity" class="form-control">
-                         <option value="">Select Strategic Activity</option>
-                      </select>
+                        <option value="">Select Strategic Activity</option>
+                    </select>
                 </div>
                 <br />
                 <div class="form-group">
@@ -86,7 +87,13 @@
                 <div class="input-group">
                     <div class="col">
                         <label asp-for="Quarter" class="control-label">Quarter</label>
-                        <select id="Quarter" class="form-control" asp-items="ViewBag.Quarter"></select>
+                        <select id="Quarter" class="form-control">
+                            <option value="">Select Quarter</option>
+                            <option value="1">Quarter 1</option>
+                            <option value="2">Quarter 2</option>
+                            <option value="3">Quarter 3</option>
+                            <option value="4">Quarter 4</option>
+                        </select>
                         <span asp-validation-for="Quarter" class="text-danger"></span>
                     </div>
                     <div class="col">
@@ -99,13 +106,16 @@
                         <input id="QBudget" class="form-control" type="number" />
                         <span asp-validation-for="QBudget" class="text-danger"></span>
                     </div>
-                    <div class="col-auto align-self-end">
+                    <div class="col align-content-end">
+                        @* <label class="form-control"></label> *@
                         <button type="button" class="btn btn-outline-primary" onclick="addQuarterDetails()">
                             <i class="bx bx-plus-circle"></i>
                         </button>
                         <button class="btn btn-outline-primary" type="button" data-bs-toggle="collapse" data-bs-target="#accordionQuarterDetailsCollapse" aria-expanded="false" aria-controls="accordionQuarterDetailsCollapse">
                             <i class="bx bx-collapse-alt"></i>
                         </button>
+                        <span hidden class="text-danger"></span>
+
                     </div>
                 </div>
                 <div id="quarterValidation" class="text-danger"></div>
@@ -137,7 +147,7 @@
                                                     <select asp-for="QuaterlyPlans[i].Quarter" readonly class="form-control" asp-items="ViewBag.Quarter"></select>
                                                 </td>
                                                 <td>
-                                                    <input asp-for="QuaterlyPlans[i].QTarget" readonly />
+                                                    <input asp-for="QuaterlyPlans[i].QTarget" readonly class="form-control" />
                                                 </td>
                                                 <td>
                                                     <input asp-for="QuaterlyPlans[i].QBudget" readonly class="form-control" />
@@ -153,9 +163,10 @@
                         </div>
                     </div>
                 </div>
+
+
             </div>
 
-           
             <br />
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
@@ -169,16 +180,32 @@
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }
 
 <script>
-    var quarterOptions = $('#Quarter').html(); // Store the HTML content of the Quarter dropdown
+   
+    $(document).ready(function () {
+        $('#quarterDetailsTable').DataTable({
+            "columnDefs": [
+                { "orderable": false, "targets": 4 } // Disable sorting for the last column (Delete button)
+            ],
+            "paging": false, // Disable pagination
+            "ordering": true, // Enable sorting
+            "info": false // Disable info display (Showing X of Y entries)
+        });
+    });
+
+    var initialQuarterOptions = $('#Quarter').html(); 
 
     function addQuarterDetails() {
         var quarter = $('#Quarter').val();
         var target = $('#QTarget').val();
         var budget = $('#QBudget').val();
+
+        $('#Quarter').html(initialQuarterOptions);
 
         if (!quarter || !target || !budget) {
             $('#quarterValidation').text("All fields are required.");
@@ -192,7 +219,7 @@
             var selectedQuarter = $(this).find('select[name*="Quarter"]').val();
             if (selectedQuarter === quarter) {
                 exists = true;
-                return false; // Break out of the loop
+                return false; 
             }
         });
 
@@ -201,15 +228,7 @@
             return;
         }
 
-        var $tableBody = $('#quarterDetailsTable tbody');
-        var index;
-
-        if ($tableBody.find('tr:first').text().trim() === "No data available in table") {
-            $tableBody.find('tr:first').remove();
-            index = 0;
-        } else {
-            index = $tableBody.find('tr').length;
-        }
+        var $table = $('#quarterDetailsTable').DataTable();
 
         var options = '';
         $('#Quarter option').each(function () {
@@ -219,37 +238,35 @@
             options += `<option value="${value}" ${selected}>${text}</option>`;
         });
 
-        var row = `
-                <tr>
-                    <td>${index + 1}</td>
-                    <td>
-                        <select name="QuaterlyPlans[${index}].Quarter" readonly class="form-control">
-                            ${options}
-                        </select>
-                    </td>
-                        <td><input name="QuaterlyPlans[${index}].QTarget" value="${target}" readonly class="form-control" /></td>
-                        <td><input name="QuaterlyPlans[${index}].QBudget" value="${budget}" readonly class="form-control" /></td>
-                    <td>
-                        <button type="button" class="btn btn-danger delete-btn" onclick="removeQuarterDetails(this)" data-toggle="tooltip" data-placement="top" title="Delete">
-                            <i class="bx bx-message-square-x"></i>
-                        </button>
-                    </td>
-                </tr>`;
+        var rowNode = $table.row.add([
+            $table.rows().count() + 1, 
+            `<select name="QuaterlyPlans[${$table.rows().count()}].Quarter" readonly class="form-control">
+                ${options}
+             </select>`,
+            `<input name="QuaterlyPlans[${$table.rows().count()}].QTarget" value="${target}" readonly class="form-control" />`,
+            `<input name="QuaterlyPlans[${$table.rows().count()}].QBudget" value="${budget}" readonly class="form-control" />`,
+            `<button type="button" class="btn btn-danger delete-btn" onclick="removeQuarterDetails(this)" data-toggle="tooltip" data-placement="top" title="Delete">
+                <i class="bx bx-message-square-x"></i>
+             </button>`
+        ]).draw(false).node(); 
 
-        $tableBody.append(row);
-
-        // Clear the inputs
+        // Reset input fields
         $('#Quarter').val('');
         $('#QTarget').val('');
         $('#QBudget').val('');
 
+        // Show the accordion section
         $('#accordionQuarterDetailsCollapse').addClass('show');
     }
 
     function removeQuarterDetails(button) {
-        $(button).closest('tr').remove();
-    }
+        var $table = $('#quarterDetailsTable').DataTable();
+        $table.row($(button).parents('tr')).remove().draw();
 
+        $table.rows().every(function (rowIdx, tableLoop, rowLoop) {
+            this.cell(rowIdx, 0).data(rowIdx + 1);
+        });
+    }
 
     function SetBudgetValue() {
         var target = $('#QTarget').val();
@@ -284,6 +301,19 @@
                     $activityDropdown.append('<option value="' + item.intActivity + '">' + item.activityName + '</option>');
                 });
             });
+        }
+    }
+
+    function validateQuarters() {
+        var $tableBody = $('#quarterDetailsTable tbody');
+        var rowCount = $tableBody.find('tr').length;
+
+        if (rowCount === 0) {
+            $('#formValidation').text("Please add at least one quarter.");
+            return false; // Prevent form submission
+        } else {
+            $('#formValidation').text(""); // Clear any previous validation messages
+            return true; // Allow form submission
         }
     }
 

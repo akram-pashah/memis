@@ -21,6 +21,7 @@ using DocumentFormat.OpenXml.Office2010.Excel;
 using System.Drawing;
 using MEMIS.Pages.Shared;
 using DocumentFormat.OpenXml.Bibliography;
+using MEMIS.ViewModels.Planning;
 
 namespace MEMIS.Controllers
 {
@@ -61,8 +62,65 @@ namespace MEMIS.Controllers
       }
     }
 
+    public async Task<IActionResult> Dashboard()
+    {
+      var userRoles = getUserRoles();
+      Guid departmentId = Guid.Parse(HttpContext.Session.GetString("Department"));
+
+      var query = _context.ActivityAssess
+        .Include(x => x.StrategicIntervention)
+          .ThenInclude(x => x.StrategicObjective)
+        .Include(x => x.QuaterlyPlans)
+        .Include(x => x.ActivityAssessRegions)
+          .ThenInclude(x => x.QuaterlyPlans)
+        .AsQueryable();
+      var activitiesQuery = query;
+      if (!userRoles.Contains("SuperAdmin"))
+      {
+        activitiesQuery = activitiesQuery.Where(x => x.intDept == departmentId);
+      }
+
+      var activities = await activitiesQuery.ToListAsync();
+
+      var totalActivities = await query.ToListAsync();
+
+      var departments = await _context.Departments.OrderBy(x => x.deptName).ToListAsync();
+
+      var focusAreas = await _context.FocusArea.OrderBy(x => x.FocusAreaName).ToListAsync();
+
+      TotalActivitiesViewModel data = new()
+      {
+        TotalActivities = activities.Count,
+        TotalBudget = activities.Sum(x => x.QuaterlyPlans.Sum(x => x.QBudget) + x.ActivityAssessRegions.Sum(x => x.QuaterlyPlans.Sum(x => x.QBudget))),
+        TotalTarget = activities.Sum(x => x.QuaterlyPlans.Sum(x => x.QTarget) + x.ActivityAssessRegions.Sum(x => x.QuaterlyPlans.Sum(x => x.QTarget))),
+        PendingActivities = activities.Where(x => x.ApprStatus != (int)deptPlanApprStatus.dirapprapproved).Count(),
+        ActivitiesCount = departments.Select(x => totalActivities.Where(a => a.intDept == x.intDept).Count()).ToList(),
+        DepartmentBudgets = departments.Select(x => totalActivities.Where(a => a.intDept == x.intDept).Sum(x => x.QuaterlyPlans.Sum(x => x.QBudget) + x.ActivityAssessRegions.Sum(x => x.QuaterlyPlans.Sum(x => x.QBudget)))).ToList(),
+        Departments = departments.Select(x => x.deptName).ToList(),
+        FocusAreaActivitiesCount = focusAreas.Select(x => totalActivities.Where(a => a.StrategicIntervention.StrategicObjective.intFocus == x.intFocus).Count()).ToList(),
+        FocusAreas = focusAreas.Select(x => x.FocusAreaName).ToList(),
+      };
+
+      foreach (var dept in departments)
+      {
+        data.BudgetWithDepartment.Add(new DepartmentBudget()
+        {
+          Name = dept.deptName,
+          Code = dept.deptCode,
+          Budget = totalActivities.Where(a => a.intDept == dept.intDept).Sum(x => x.QuaterlyPlans.Sum(x => x.QBudget) + x.ActivityAssessRegions.Sum(x => x.QuaterlyPlans.Sum(x => x.QBudget)))
+        });
+      }
+
+      return View(data);
+    }
+
     public async Task<IActionResult> AddAnnualPlan()
     {
+      if (HttpContext.Session.GetString("Department") == null)
+      {
+        return View();
+      }
+
       Guid departmentId = Guid.Parse(HttpContext.Session.GetString("Department"));
       var userRoles = getUserRoles();
       var contextData = _context.AnnualImplemtationPlan.Include(a => a.ActivityFk).Include(a => a.DepartmentFk).Include(a => a.FocusAreaFk).Include(a => a.StrategicActionFk).Include(a => a.StrategicInterventionFk).Include(a => a.StrategicObjectiveFk);
@@ -394,6 +452,24 @@ namespace MEMIS.Controllers
           BudgetCost = _context.ActivityAssess.Where(x => x.intDept == x.intDept && (x.actType == 1)).Sum(x => x.budgetAmount)
         });
 
+        //if (activityAssess.actType == 1)
+        //{
+        //  var quarterlyPlans = await _context.ActivityAssessRegion
+        //    .Include(x => x.QuaterlyPlans)
+        //    .Where(x => x.intAssess == id)
+        //    .SelectMany(x => x.QuaterlyPlans)
+        //    .GroupBy(x => x.Quarter)
+        //    .Select(x => new QuaterlyPlan()
+        //    {
+        //      Quarter = x.Key,
+        //      QTarget = x.Sum(y => y.QTarget),
+        //      QBudget = x.Sum(y => y.QBudget),
+        //    })
+        //    .ToListAsync();
+
+        //  activityAssess.QuaterlyPlans = quarterlyPlans;
+        //}
+
         var consolidatedRegionalPlan = await _context.ActivityAssessRegion
           .Include(x => x.ActivityAssessFk)
           .ThenInclude(x => x.StrategicIntervention)
@@ -421,8 +497,7 @@ namespace MEMIS.Controllers
             actType = 2,
             IdentifiedRisks = g.FirstOrDefault().ActivityAssessFk.IdentifiedRisks,
             QuaterlyPlans = g.SelectMany(a => a.ActivityAssessFk.QuaterlyPlans).ToList()
-          })
-          .ToListAsync();
+          }).ToListAsync();
 
         var groupedDeptData = await _context.ActivityAssess.Include(a => a.DepartmentFk)
             .Where(a => (a.actType == 1) && a.ApprStatus == 0)
@@ -462,6 +537,8 @@ namespace MEMIS.Controllers
           .Include(x => x.StrategicAction)
           .Include(x => x.ActivityFk)
           .Include(x => x.QuaterlyPlans)
+          .Include(x => x.ActivityAssessRegions)
+            .ThenInclude(x => x.QuaterlyPlans)
             .Where(a => (a.actType == 0) && a.ApprStatus == 0).ToListAsync();
 
         List<ActivityAssess> regPlans = await _context.ActivityAssess
@@ -472,7 +549,8 @@ namespace MEMIS.Controllers
 
         var result = new PagedResult<ActivityAssess>
         {
-          Data = deptPlans.Concat(regPlans).ToList(),
+          Data = deptPlans.ToList(),
+          //Data = deptPlans.Concat(regPlans).ToList(),
           TotalItems = _context.ActivityAssess.Count(),
           PageNumber = pageNumber,
           PageSize = combinedData.Count()
@@ -772,13 +850,15 @@ namespace MEMIS.Controllers
     {
       int pageSize = 10;
       var offset = (pageSize * pageNumber) - pageSize;
+      List<ActivityAssess> activityAssesses = new List<ActivityAssess>();
+
       if (_context.ActivityAssess != null)
       {
         var userRoles = getUserRoles();
-        var query = _context.ActivityAssess.Include(m => m.StrategicIntervention).Include(m => m.StrategicAction).Include(s => s.ActivityFk)
+        var query = _context.ActivityAssess.Include(m => m.StrategicIntervention).Include(m => m.StrategicAction).Include(y => y.QuaterlyPlans).Include(s => s.ActivityFk).Include(v => v.ActivityAssessRegions).ThenInclude(x => x.QuaterlyPlans)
             .Where(x => x.ApprStatus == (int)(deptPlanApprStatus.hodreviewed));
 
-        var dat = userRoles.Contains("SuperAdmin") ? await query.ToListAsync() : await query.Where(x => x.intDept == Guid.Parse(HttpContext.Session.GetString("Department"))).ToListAsync();
+        activityAssesses =  userRoles.Contains("SuperAdmin") ? await query.ToListAsync() : await query.Where(x => x.intDept == Guid.Parse(HttpContext.Session.GetString("Department"))).ToListAsync();
 
         //var result = new PagedResult<ActivityAssess>
         //{
@@ -788,7 +868,7 @@ namespace MEMIS.Controllers
         //  PageSize = _context.ActivityAssess.Count()
         //};
         ViewBag.Users = _userManager;
-        return View(dat);
+        return View(activityAssesses);
       }
       else
       {
@@ -883,7 +963,7 @@ namespace MEMIS.Controllers
       var offset = (pageSize * pageNumber) - pageSize;
       if (_context.ActivityAssess != null)
       {
-        var dat = _context.ActivityAssess.Include(m => m.StrategicIntervention).Include(m => m.StrategicAction).Include(s => s.ActivityFk)
+        var dat = _context.ActivityAssess.Include(m => m.StrategicIntervention).Include(m => m.StrategicAction).Include(s => s.ActivityFk).Include(x => x.ActivityAssessRegions).ThenInclude(x => x.QuaterlyPlans).Include(x => x.QuaterlyPlans)
             .Where(x => x.ApprStatus == (int)(deptPlanApprStatus.dirapprove)).ToList();
 
         //var result = new PagedResult<ActivityAssess>
@@ -987,7 +1067,7 @@ namespace MEMIS.Controllers
       var offset = (pageSize * pageNumber) - pageSize;
       if (_context.ActivityAssess != null)
       {
-        var dat = _context.ActivityAssess.Include(m => m.StrategicIntervention).Include(m => m.StrategicAction).Include(s => s.ActivityFk)
+        var dat = _context.ActivityAssess.Include(m => m.StrategicIntervention).Include(m => m.StrategicAction).Include(s => s.ActivityFk).Include(x => x.QuaterlyPlans).Include(y => y.ActivityAssessRegions).ThenInclude(z => z.QuaterlyPlans)
             .Where(x => x.ApprStatus == (int)(deptPlanApprStatus.meOfficerVerified)).ToList();
 
         //var result = new PagedResult<ActivityAssess>
@@ -1091,7 +1171,7 @@ namespace MEMIS.Controllers
       var offset = (pageSize * pageNumber) - pageSize;
       if (_context.ActivityAssess != null)
       {
-        var dat = _context.ActivityAssess.Include(m => m.StrategicIntervention).Include(m => m.StrategicAction).Include(s => s.ActivityFk)
+        var dat = _context.ActivityAssess.Include(m => m.StrategicIntervention).Include(m => m.StrategicAction).Include(s => s.ActivityFk).Include(x => x.QuaterlyPlans).Include(x => x.ActivityAssessRegions).ThenInclude(x => x.QuaterlyPlans)
             .Where(x => x.ApprStatus == (int)(deptPlanApprStatus.headBpdVerified)).ToList();
 
         ViewBag.Users = _userManager;
@@ -1235,7 +1315,7 @@ namespace MEMIS.Controllers
           }
 
           await _context.SaveChangesAsync();
-          
+
           //}
         }
         catch (DbUpdateConcurrencyException)
@@ -1446,10 +1526,9 @@ namespace MEMIS.Controllers
                             .Where(sa => sa.intIntervention == dto.intIntervention)
                             .Select(sa => new { sa.intAction, sa.actionName })
                             .ToList();
-      ViewBag.Activity = _context.Activity
-                               .Where(a => a.intAction == dto.intAction)
-                               .Select(a => new { a.intActivity, a.activityName })
-                               .ToList();
+     
+      ViewBag.Activity = _context.Activity == null ? new List<Activity>() : await _context.Activity.ToListAsync();
+
       ViewData["Quarter"] = ListHelper.Quarter();
       ViewBag.Depts = await _context.Departments.ToListAsync();
       //ViewData["intDept"] = new SelectList(_context.Departments, "intDept", "deptName", dto.intDept);
@@ -1528,7 +1607,7 @@ namespace MEMIS.Controllers
       ViewBag.StrategicAction = _context.StrategicAction == null ? new List<StrategicAction>() : await _context.StrategicAction.ToListAsync();
       ViewBag.Activity = _context.Activity == null ? new List<Activity>() : await _context.Activity.ToListAsync();
       ViewData["Quarter"] = ListHelper.Quarter();
-      ViewData["intDept"] = new SelectList(_context.Departments, "intDept", "deptName", deptPlan.intDept);
+      ViewBag.Depts = await _context.Departments.ToListAsync();
 
       return View(deptPlan);
     }

@@ -231,32 +231,9 @@ namespace MEMIS.Controllers.ME
       {
         foreach (var item in appDbContext)
         {
-          // Retrieve QuaterlyPlans for each DeptPlan item
-          var quaterlyplans = _context.QuaterlyPlans
-              .Where(x => x.ActivityAssessmentId == item.intDeptPlan)
-              .ToList();
-
           // Calculate sums for each quarter
-          item.Q1Target = quaterlyplans.Where(x => x.Quarter == "1").Sum(x => x.QTarget);
-          item.Q1Budget = quaterlyplans.Where(x => x.Quarter == "1").Sum(x => x.QBudget);
-          item.Q1Actual = quaterlyplans.Where(x => x.Quarter == "1").Sum(x => x.QActual);
-          item.Q1AmtSpent = quaterlyplans.Where(x => x.Quarter == "1").Sum(x => x.QAmtSpent);
-          item.Q1Justification = quaterlyplans.Where(x => x.Quarter == "1").FirstOrDefault()?.QJustification;
-          item.Q2Target = quaterlyplans.Where(x => x.Quarter == "2").Sum(x => x.QTarget);
-          item.Q2Budget = quaterlyplans.Where(x => x.Quarter == "2").Sum(x => x.QBudget);
-          item.Q2Actual = quaterlyplans.Where(x => x.Quarter == "2").Sum(x => x.QActual);
-          item.Q2AmtSpent = quaterlyplans.Where(x => x.Quarter == "2").Sum(x => x.QAmtSpent);
-          item.Q2Justification = quaterlyplans.Where(x => x.Quarter == "2").FirstOrDefault()?.QJustification;
-          item.Q3Target = quaterlyplans.Where(x => x.Quarter == "3").Sum(x => x.QTarget);
-          item.Q3Budget = quaterlyplans.Where(x => x.Quarter == "3").Sum(x => x.QBudget);
-          item.Q3Actual = quaterlyplans.Where(x => x.Quarter == "3").Sum(x => x.QActual);
-          item.Q3AmtSpent = quaterlyplans.Where(x => x.Quarter == "3").Sum(x => x.QAmtSpent);
-          item.Q3Justification = quaterlyplans.Where(x => x.Quarter == "3").FirstOrDefault()?.QJustification;
-          item.Q4Target = quaterlyplans.Where(x => x.Quarter == "4").Sum(x => x.QTarget);
-          item.Q4Budget = quaterlyplans.Where(x => x.Quarter == "4").Sum(x => x.QBudget);
-          item.Q4Actual = quaterlyplans.Where(x => x.Quarter == "4").Sum(x => x.QActual);
-          item.Q4AmtSpent = quaterlyplans.Where(x => x.Quarter == "4").Sum(x => x.QAmtSpent);
-          item.Q4Justification = quaterlyplans.Where(x => x.Quarter == "4").FirstOrDefault()?.QJustification;
+          item.Q1Target = item?.QuaterlyPlans.Sum(x => x.QTarget);
+          
         }
       }
       return appDbContext;

@@ -14,6 +14,7 @@
     <div class="card-header">
         <h2 class="card-title">Work Plan Approval [Director DCS]</h2>
     </div>
+   
 
     <div class="card">
         <form id="activityAssessForm" method="post" asp-action="DeptPlanVerification">
@@ -55,13 +56,8 @@
                                 <th>
                                     @Html.DisplayNameFor(model => model[0].IdentifiedRisks)
                                 </th>
-                                @*                         <th>
-                                @Html.DisplayNameFor(model => model.Data[0].QTarget)
-                                </th>
-                                <th>
-                                @Html.DisplayNameFor(model => model.Data[0].QBudget)
-                                </th>
-                                *@
+                               <th>Target</th>
+                               <th>Budget</th>
                                 <th></th>
                             </tr>
                         </thead>
@@ -124,13 +120,8 @@
                                     <td>
                                         @Html.DisplayFor(modelItem => item.IdentifiedRisks)
                                     </td>
-                                    @*                             <td>
-                                @Html.DisplayFor(modelItem => item.QTarget)
-                                </td>
-                                <td>
-                                @Html.DisplayFor(modelItem => item.QBudget)
-                                </td>
-                                *@
+                                      <td>@(item.QuaterlyPlans?.Sum(x => x.QTarget) + item.ActivityAssessRegions?.Where(x => x.QuaterlyPlans.Any()).Sum(x => x.QuaterlyPlans.Sum(x => x.QTarget)))</td>
+                                    <td>@(item.QuaterlyPlans?.Sum(x => x.QBudget) + item.ActivityAssessRegions?.Where(x => x.QuaterlyPlans.Any()).Sum(x => x.QuaterlyPlans.Sum(x => x.QBudget)))</td>
                                     <td>
                                         <div class="btn-group" role="group" aria-label="Actions">
                                             <a asp-action="Details" asp-route-id="@item.intAssess" class="btn btn-info" data-toggle="tooltip" data-placement="top" title="Details">
@@ -160,7 +151,7 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <select name="apprStatus" class="w-100 form-control">
-                                    <option value="9">Verified</option>
+                                    <option value="9">Approved</option>
                                     <option value="10">Rejected</option>
                                 </select>
                             </div>
@@ -283,5 +274,6 @@
                 $('input[name="selectedIds"]').prop('checked', this.checked);
             });
         });
+    
     </script>
 }
