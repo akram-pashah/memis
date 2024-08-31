@@ -10,6 +10,8 @@
 
 @* <h1>Department Plan Verification [M & E Officer]</h1>
  *@
+
+
 <div class="card">
     <div class="card-header">
         <h2 class="card-title">Department Plan Verification [Head BPD]</h2>
@@ -55,13 +57,9 @@
                                 <th>
                                     @Html.DisplayNameFor(model => model[0].IdentifiedRisks)
                                 </th>
-                                @*                         <th>
-                                @Html.DisplayNameFor(model => model.Data[0].QTarget)
-                                </th>
-                                <th>
-                                @Html.DisplayNameFor(model => model.Data[0].QBudget)
-                                </th>
-                                *@
+                                <th>Target</th>
+                                <th>Budget</th>
+
                                 <th></th>
                             </tr>
                         </thead>
@@ -124,13 +122,8 @@
                                     <td>
                                         @Html.DisplayFor(modelItem => item.IdentifiedRisks)
                                     </td>
-                                    @*                             <td>
-                                @Html.DisplayFor(modelItem => item.QTarget)
-                                </td>
-                                <td>
-                                @Html.DisplayFor(modelItem => item.QBudget)
-                                </td>
-                                *@
+                                    <td>@(item.QuaterlyPlans?.Sum(x => x.QTarget) + item.ActivityAssessRegions?.Where(x => x.QuaterlyPlans.Any()).Sum(x => x.QuaterlyPlans.Sum(x => x.QTarget)))</td>
+                                    <td>@(item.QuaterlyPlans?.Sum(x => x.QBudget) + item.ActivityAssessRegions?.Where(x => x.QuaterlyPlans.Any()).Sum(x => x.QuaterlyPlans.Sum(x => x.QBudget)))</td>
                                     <td>
                                         <div class="btn-group" role="group" aria-label="Actions">
                                             <a asp-action="Details" asp-route-id="@item.intAssess" class="btn btn-info" data-toggle="tooltip" data-placement="top" title="Details">
@@ -284,5 +277,7 @@
                 $('input[name="selectedIds"]').prop('checked', this.checked);
             });
         });
+
+
     </script>
 }

@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Migrations\20240810041234_AssessmentRegionChanges.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Remove="wwwroot\js\riskidentification.js~RF209946.TMP" />
   </ItemGroup>
 

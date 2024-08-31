@@ -33,7 +33,7 @@ namespace MEMIS.Models
     public string? justification { get; set; }
     [Display(Name = "Budget Amount")]
     public double? budgetAmount { get; set; }
-    [Display(Name = "Quarter")]
+    [Display(Name = "Quarter"), ]
     public int? Quarter { get; set; }
     [Display(Name = "Quarterly Target")]
     public double? QTarget { get; set; }
