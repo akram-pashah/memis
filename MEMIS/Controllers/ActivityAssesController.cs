@@ -145,8 +145,8 @@ namespace MEMIS.Controllers
         _context.ActivityAssess.Add(activityAssess);
         await _context.SaveChangesAsync();
 
-        _context.AnnualImplemtationPlan.Remove(AnnualPlan);
-        await _context.SaveChangesAsync();
+        //_context.AnnualImplemtationPlan.Remove(AnnualPlan);
+        //await _context.SaveChangesAsync();
 
         return RedirectToAction(nameof(Edit), new { Id = activityAssess.intAssess });
       }

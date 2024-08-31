@@ -55,18 +55,18 @@ namespace MEMIS.Helpers.ExcelReports
         int row = 2;
         foreach (var plan in plans)
         {
-          worksheet.Cell(row, 1).Value = "";
-          worksheet.Cell(row, 2).Value = "";
-          worksheet.Cell(row, 3).Value = "";
-          worksheet.Cell(row, 4).Value = plan?.intActivity;
-          worksheet.Cell(row, 5).Value = "";
-          worksheet.Cell(row, 6).Value = "";
+          worksheet.Cell(row, 1).Value = plan.StrategicObjectiveFK?.ObjectiveName;
+          worksheet.Cell(row, 2).Value = plan.StrategicInterventionFK?.InterventionName;
+          worksheet.Cell(row, 3).Value = plan.StrategicActionFK?.actionName;
+          worksheet.Cell(row, 4).Value = plan?.ActivityFK?.activityName;
+          worksheet.Cell(row, 5).Value = plan.Output;
+          worksheet.Cell(row, 6).Value = plan.OutputTarget;
           worksheet.Cell(row, 7).Value = plan?.FY1;
           worksheet.Cell(row, 8).Value = plan?.FY2;
           worksheet.Cell(row, 9).Value = plan?.FY3;
           worksheet.Cell(row, 10).Value = plan?.FY4;
           worksheet.Cell(row, 11).Value = plan?.FY5;
-          worksheet.Cell(row, 12).Value = "";
+          worksheet.Cell(row, 12).Value = plan?.MeansofVerification;
           worksheet.Cell(row, 13).Value = plan?.ResponsibleParty;
 
           row++;
@@ -227,7 +227,7 @@ namespace MEMIS.Helpers.ExcelReports
           worksheet.Cell(row, 4).Value = activityAssess?.ActivityFk?.activityName;
           worksheet.Cell(row, 5).Value = activityAssess?.outputIndicator;
           worksheet.Cell(row, 6).Value = activityAssess?.baseline;
-          worksheet.Cell(row, 7).Value = activityAssess?.QTarget;
+          worksheet.Cell(row, 7).Value = activityAssess?.comparativeTarget;
           worksheet.Cell(row, 8).Value = activityAssess?.budgetCode;
           worksheet.Cell(row, 9).Value = activityAssess?.budgetAmount;
           worksheet.Cell(row, 10).Value = activityAssess?.QuaterlyPlans.FirstOrDefault(x => x.Quarter == "1")?.QTarget;
@@ -307,7 +307,7 @@ namespace MEMIS.Helpers.ExcelReports
           worksheet.Cell(row, 2).Value = activityAssess?.StrategicAction;
           worksheet.Cell(row, 3).Value = activityAssess?.activity;
           worksheet.Cell(row, 4).Value = activityAssess?.ImplementationStatus?.ImpStatusName;
-          worksheet.Cell(row, 5).Value = activityAssess?.QuaterlyPlans?.FirstOrDefault()?.ActivityAssess?.DepartmentFk?.deptName;
+          worksheet.Cell(row, 5).Value = activityAssess?.DepartmentFk?.deptName;
 
           row++;
         }
