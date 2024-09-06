@@ -8,6 +8,10 @@ namespace MEMIS.Data
   {
     [Key]
     public int intDeptPlan { get; set; }
+    [Display(Name = "Focus Area")]
+    public virtual int? intFocus { get; set; }
+    [ForeignKey("intFocus")]
+    public virtual FocusArea? FocusArea { get; set; }
     public string strategicObjective { get; set; }
     [Display(Name = "Strategic Intervention")]
     public string strategicIntervention { get; set; }
@@ -79,7 +83,7 @@ namespace MEMIS.Data
     public int ImpStatusId { get; set; } = 1;
     public virtual ImplementationStatus? ImplementationStatus { get; set; }
     [Display(Name = "Financial Year")]
-    public int Fyear = DateTime.Now.Year;
+    public int Fyear { get; set; } = DateTime.Now.Year;
     [Display(Name = "Responsible Party")]
     public virtual Guid? intDept { get; set; }
     [ForeignKey("intDept")]
@@ -87,9 +91,9 @@ namespace MEMIS.Data
 
     [Display(Name = "Justification")]
     public string? AnnualJustification { get; set; }
-    public virtual List<QuaterlyPlan> QuaterlyPlans { get; set; }
+    public virtual List<QuaterlyPlan>? QuaterlyPlans { get; set; }
     public long? ActivityAssesmentStatus { get; set; } = 0;
     public int? actType { get; set; } = 0; 
-    public virtual ICollection<ActivityAssessmentRegion> ActivityAssessmentRegions { get; set; }
+    public virtual ICollection<ActivityAssessmentRegion>? ActivityAssessmentRegions { get; set; }
   }
 }

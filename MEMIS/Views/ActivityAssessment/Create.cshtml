@@ -36,24 +36,23 @@
             
             <br />
             <div class="form-group">
+                <label asp-for="strategicObjective" class="control-label"></label>
+                @Html.DropDownList("StrategicObjective", new SelectList(ViewBag.StrategicObjective, "intObjective", "ObjectiveName"), new { @class = "form-control form-select", @required = "required" })
+            </div>
+            <br />
+            <div class="form-group">
                 <label asp-for="strategicIntervention" class="control-label"></label>
-                @Html.DropDownList("intIntervention", new SelectList(ViewBag.StrategicIntervention, "intIntervention", "InterventionName"), new { @class = "form-control form-select", @required = "required" })
+                @Html.DropDownList("strategicIntervention", new SelectList(ViewBag.StrategicIntervention, "intIntervention", "InterventionName"), new { @class = "form-control form-select", @required = "required" })
             </div>
             <br />
             <div class="form-group">
                 <label asp-for="StrategicAction" class="control-label"></label>
-                @Html.DropDownList("StrategicObjective", new SelectList(ViewBag.StrategicAction, "intAction", "actionName"), new { @class = "form-control form-select", @required = "required" })
-            </div>
-            <br />
-            <div class="form-group">
-                <label asp-for="strategicObjective" class="control-label"></label>
-                @Html.DropDownList("StrategicObjective", new SelectList(ViewBag.Activity, "intActivity", "activityName"), new { @class = "form-control form-select", @required = "required" })
+                @Html.DropDownList("StrategicAction", new SelectList(ViewBag.StrategicAction, "intAction", "actionName"), new { @class = "form-control form-select", @required = "required" })
             </div>
             <br />
             <div class="form-group">
                 <label asp-for="activity" class="control-label"></label>
-                <input asp-for="activity" class="form-control" />
-                <span asp-validation-for="activity" class="text-danger"></span>
+                @Html.DropDownList("Activity", new SelectList(ViewBag.Activity, "intActivity", "activityName"), new { @class = "form-control form-select", @required = "required" })
             </div>
             <br />
             <div class="form-group">
@@ -301,8 +300,8 @@
                                         <td><input name="QuaterlyPlans[${index}].QTarget" value="${target}" class="form-control"  /></td>
                                         <td><input name="QuaterlyPlans[${index}].QBudget" value="${budget}" class="form-control" /></td>
                                         <td><input name="QuaterlyPlans[${index}].QActual" value="${Actual}" class="form-control"  /></td>
-                                                <td><input name="QuaterlyPlans[${index}].QAchievement" value="${Achievement}" class="form-control"  /></td>
                                         <td><input name="QuaterlyPlans[${index}].QAmtSpent" value="${AmtSpent}" class="form-control"  /></td>
+                                                <td><input name="QuaterlyPlans[${index}].QAchievement" value="${Achievement}" class="form-control"  /></td>
                                         <td><input name="QuaterlyPlans[${index}].QJustification" value="${Justification}" class="form-control" /></td>
                                         <td>
                                             <button type="button" class="btn btn-danger delete-btn" onclick="removeQuarterDetails(this)" data-toggle="tooltip" data-placement="top" title="Delete">

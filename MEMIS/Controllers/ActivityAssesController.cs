@@ -1249,6 +1249,7 @@ namespace MEMIS.Controllers
             Guid departmentId = Guid.Parse(HttpContext.Session.GetString("Department"));
             ActivityAssessment activityAssessment = new()
             {
+              intFocus = activityAsses?.StrategicIntervention?.StrategicObjective?.intFocus,
               strategicObjective = activityAsses?.StrategicIntervention?.StrategicObjective?.ObjectiveName ?? "",
               strategicIntervention = activityAsses?.StrategicIntervention?.InterventionName ?? "",
               StrategicAction = activityAsses?.StrategicAction?.actionName ?? "",
@@ -1760,6 +1761,7 @@ namespace MEMIS.Controllers
             {
               ActivityAssessment activityAssessment = new()
               {
+                intFocus = activityAsses?.StrategicIntervention?.StrategicObjective?.intFocus,
                 strategicObjective = activityAsses?.StrategicIntervention?.StrategicObjective?.ObjectiveName ?? "",
                 strategicIntervention = activityAsses?.StrategicIntervention?.InterventionName ?? "",
                 StrategicAction = activityAsses?.StrategicAction?.actionName ?? "",
