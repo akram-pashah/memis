@@ -153,6 +153,22 @@ namespace MEMIS.Controllers.ME
         yearPercentages.Add(percentageCompletion);
       }
 
+      Dictionary<int, List<double>> yearFAsData = new();
+
+      foreach (var year in financialYears)
+      {
+        List<double> percentages = [];
+        foreach (var focusArea in focusAreas)
+        {
+          var activites = _context.ActivityAssessment.Where(x => x.Fyear == year && x.intFocus == focusArea.Id).ToList();
+          var fullyCompletedActivites = activites.Count;
+          var percentageCompletion = fullyCompletedActivites > 0 ? (activites.Select(x => GetCompletionValue(x.ImpStatusId))
+                                      .Sum() / fullyCompletedActivites) * 100 : 0;
+          percentages.Add(percentageCompletion);
+        }
+        yearFAsData.Add(year, percentages);
+      }
+
       TotalActivityAssessmentDetailsViewModel data = new()
       {
         TotalActivitiesFullyImplemented = orgActivitiesquery.Where(x => x.ImpStatusId == 3).Count(),
@@ -166,6 +182,11 @@ namespace MEMIS.Controllers.ME
           data = x.Value
         }).ToList(),
         FocusAreas = focusAreas.Select(x => x.Name).ToList(),
+        YearlyFocusAreaTrend = yearFAsData.Select(x => new ChartDataSeries()
+        {
+          name = x.Key.ToString(),
+          data = x.Value
+        }).ToList(),
         FocusAreasPercentages = focusAreaPercentages,
         YearlyStrategicPlanTrend = new List<ChartDataSeries>()
         {

@@ -13,6 +13,7 @@ namespace MEMIS.ViewModels.ME
     public List<double> FocusAreasPercentages { get; set; } = [];
     public List<string> Years = GetYearsSince2016();
     public List<ChartDataSeries> YearlyStrategicPlanTrend = new();
+    public List<ChartDataSeries> YearlyFocusAreaTrend = new();
 
     private static List<string> GetYearsSince2016()
     {
