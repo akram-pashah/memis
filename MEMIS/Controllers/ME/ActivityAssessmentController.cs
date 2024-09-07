@@ -105,20 +105,52 @@ namespace MEMIS.Controllers.ME
         .ToList();
 
       var financialYears = GetFinancialYears();
-      Dictionary<int, List<int>> yearSIImpData = new();
+      Dictionary<int, List<double>> yearSIImpData = new();
 
       foreach (var year in financialYears)
       {
-        List<int> percentages = [];
+        List<double> percentages = [];
         foreach (var strategicIntervetion in StrategicInterventions)
         {
           var totalActivities = _context.ActivityAssessment.Where(x => x.Fyear == year && x.strategicIntervention == strategicIntervetion.Id).Count();
           var fullyCompletedActivites = _context.ActivityAssessment.Where(x => x.Fyear == year && x.strategicIntervention == strategicIntervetion.Id && x.ImpStatusId == 3).Count();
-          var completionPercentage = totalActivities > 0 ?(fullyCompletedActivites * 100) / totalActivities : 0;
+          var completionPercentage = totalActivities > 0 ? (fullyCompletedActivites * 100) / totalActivities : 0;
 
           percentages.Add(completionPercentage);
         }
         yearSIImpData.Add(year, percentages);
+      }
+
+      var focusAreas = await _context.FocusArea
+        .Select(x => new
+        {
+          Id = x.intFocus,
+          Name = x.FocusAreaName
+        })
+        .Distinct()
+        .OrderBy(x => x.Name)
+        .ToListAsync();
+
+      List<double> focusAreaPercentages = [];
+
+      foreach (var focusArea in focusAreas)
+      {
+        var focusAreaQuery = _context.ActivityAssessment.Where(x => x.intFocus == focusArea.Id).ToList();
+        var totalfocusAreaActivities = focusAreaQuery.Count;
+        var percentageCompletion = totalfocusAreaActivities > 0 ? (focusAreaQuery.Select(x => GetCompletionValue(x.ImpStatusId))
+                                      .Sum() / totalfocusAreaActivities) * 100 : 0;
+        focusAreaPercentages.Add(percentageCompletion);
+      }
+
+      List<double> yearPercentages = [];
+
+      for (int year = 2016; year <= DateTime.Now.Year + 1; year++)
+      {
+        var yearQuery = _context.ActivityAssessment.Where(x => x.Fyear == year).ToList();
+        var totalyearActivities = yearQuery.Count;
+        var percentageCompletion = totalyearActivities > 0 ? (yearQuery.Select(x => GetCompletionValue(x.ImpStatusId))
+                                      .Sum() / totalyearActivities) * 100 : 0;
+        yearPercentages.Add(percentageCompletion);
       }
 
       TotalActivityAssessmentDetailsViewModel data = new()
@@ -132,10 +164,36 @@ namespace MEMIS.Controllers.ME
         {
           name = x.Key.ToString(),
           data = x.Value
-        }).ToList()
+        }).ToList(),
+        FocusAreas = focusAreas.Select(x => x.Name).ToList(),
+        FocusAreasPercentages = focusAreaPercentages,
+        YearlyStrategicPlanTrend = new List<ChartDataSeries>()
+        {
+          new ChartDataSeries()
+          {
+            name = "Overall Performance for Strategic Plan",
+            data = yearPercentages
+          },
+          new ChartDataSeries()
+          {
+            name = "Target Line",
+            data = yearPercentages.Select(x => 90.0).ToList()
+          }
+        }
       };
 
       return View(data);
+    }
+
+    private double GetCompletionValue(int impStatusId)
+    {
+      return impStatusId switch
+      {
+        1 => 0,    // 0% completion
+        2 => 0.5,  // 50% completion
+        3 => 1,    // 100% completion
+        _ => 0     // Default to 0 if impStatusId is invalid or unexpected
+      };
     }
 
     private static List<int> GetFinancialYears()
