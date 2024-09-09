@@ -80,7 +80,7 @@
                     {
                         <tr>
                             <td>
-                                @Html.DisplayFor(modelItem => item.IdentifiedDate)
+                                  @item.IdentifiedDate.ToString("dd-MMM-yyyy")
                             </td>
                             <td>
                                 @Html.DisplayFor(modelItem => item.FocusAreaFk.FocusAreaName)

@@ -457,6 +457,7 @@ namespace MEMIS.Controllers.Risk
       ViewBag.RiskCategory = _context.RiskCategorys == null ? new List<RiskCategory>() : await _context.RiskCategorys.ToListAsync();
       ViewBag.Department = _context.Departments == null ? new List<Department>() : await _context.Departments.ToListAsync();
       RiskIdentificationCreateEditDto riskIdentificationCreateEditDto = new RiskIdentificationCreateEditDto();
+      riskIdentificationCreateEditDto.IdentifiedDate = DateTime.Today;
       return View(riskIdentificationCreateEditDto);
     }
 
