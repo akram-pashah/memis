@@ -25,7 +25,12 @@ namespace MEMIS.Controllers.Reports
 
     public async Task<IActionResult> planningIndex()
     {
-      var list = await _context.ProgramImplementationPlan.ToListAsync();
+      var list = await _context.ProgramImplementationPlan
+        .Include(x => x.StrategicObjectiveFK)
+        .Include(x => x.StrategicInterventionFK)
+        .Include(x => x.StrategicActionFK)
+        .Include(x => x.ActivityFK)
+        .ToListAsync();
       return View(list);
     }
 
@@ -33,7 +38,12 @@ namespace MEMIS.Controllers.Reports
     {
       try
       {
-        var list = await _context.ProgramImplementationPlan.ToListAsync();
+        var list = await _context.ProgramImplementationPlan
+          .Include(x => x.StrategicObjectiveFK)
+          .Include(x => x.StrategicInterventionFK)
+          .Include(x => x.StrategicActionFK)
+          .Include(x => x.ActivityFK)
+          .ToListAsync();
         var stream = ExportHandler.StrategicImplementationPlanReport(list);
         stream.Position = 0;
         return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Strategic Implementation Plan.xlsx");
@@ -118,14 +128,16 @@ namespace MEMIS.Controllers.Reports
       {
         ViewBag.Departments = new SelectList(await _context.Departments.ToListAsync(), "intDept", "deptName", selectedDeptId);
 
-        var list = _context.ActivityAssessment.Include(m => m.ImplementationStatus)
+        var list = _context.ActivityAssessment
+          .Include(x => x.DepartmentFk)
+          .Include(m => m.ImplementationStatus)
           .Include(m => m.QuaterlyPlans)
           .ThenInclude(x => x.ActivityAssess)
           .ThenInclude(m => m.DepartmentFk).AsQueryable();
 
         if (selectedDeptId.HasValue)
         {
-          list = list.Where(a => a.QuaterlyPlans.Any() && a.QuaterlyPlans.FirstOrDefault().ActivityAssess != null && a.QuaterlyPlans.FirstOrDefault().ActivityAssess.DepartmentFk != null && a.QuaterlyPlans.FirstOrDefault().ActivityAssess.DepartmentFk.intDept == selectedDeptId.Value);
+          list = list.Where(a => a.intDept == selectedDeptId.Value);
         }
         //if (!string.IsNullOrEmpty(quarter))
         //{
@@ -159,11 +171,13 @@ namespace MEMIS.Controllers.Reports
     {
       try
       {
-        var list = _context.ActivityAssessment.Include(x => x.QuaterlyPlans).ThenInclude(x => x.ActivityAssess).ThenInclude(x => x.DepartmentFk).AsQueryable();
+        var list = _context.ActivityAssessment
+          .Include(x => x.DepartmentFk)
+          .Include(x => x.QuaterlyPlans).ThenInclude(x => x.ActivityAssess).ThenInclude(x => x.DepartmentFk).AsQueryable();
 
         if (selectedDeptId.HasValue)
         {
-          list = list.Where(a => a.QuaterlyPlans.Any() && a.QuaterlyPlans.FirstOrDefault().ActivityAssess.intDept == selectedDeptId.Value);
+          list = list.Where(a => a.intDept == selectedDeptId.Value);
         }
         if (!string.IsNullOrEmpty(quarter))
         {

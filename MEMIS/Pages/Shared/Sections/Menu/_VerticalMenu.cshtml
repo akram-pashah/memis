@@ -28,7 +28,7 @@
     @* ! Full version menu-items *@
     <ul class="menu-inner py-1">
         <!-- Dashboards -->
-        <li class='menu-item@(currentPage.EndsWith("/") || currentPage.StartsWith("/NDP") || currentPage.StartsWith("/ProgramImplementationPlans") || currentPage.StartsWith("/FocusAreas") || currentPage.StartsWith("/StrategicObjectives") || currentPage.StartsWith("/StrategicInterventions") || currentPage.StartsWith("/StrategicActions") || currentPage.StartsWith("/Activities") || currentPage.StartsWith("/AnnualImplemtationPlans") || currentPage.StartsWith("/DeptPlan")  || currentPage.StartsWith("/ActivityAsses")? " active open" : "")'>
+        <li class='menu-item@(!currentPage.StartsWith("/ActivityAssessment") && (currentPage.EndsWith("/") || currentPage.StartsWith("/NDP") || currentPage.StartsWith("/ProgramImplementationPlans") || currentPage.StartsWith("/FocusAreas") || currentPage.StartsWith("/StrategicObjectives") || currentPage.StartsWith("/StrategicInterventions") || currentPage.StartsWith("/StrategicActions") || currentPage.StartsWith("/Activities") || currentPage.StartsWith("/AnnualImplemtationPlans") || currentPage.StartsWith("/DeptPlan")  || currentPage.StartsWith("/ActivityAsses"))? " active open" : "")'>
             <a href="javascript:void(0);" onclick="goToPlanningDashboard()" class="menu-link menu-toggle">
                 <i class="menu-icon tf-icons bx bx-home-circle"></i>
                 <div>Planning</div>
@@ -143,7 +143,7 @@
       || currentPage.StartsWith("/KPIAssessment") || currentPage.StartsWith("/KPIAssessment/VerifyByHOD") || currentPage.StartsWith("/KPIAssessment/VerifyByDirector") || currentPage.StartsWith("/KPIAssessment/VerifyByMEOfficer")
       || currentPage.StartsWith("/KPIAssessment/VerifyByHBPD") || currentPage.StartsWith("/KPIAssessment/VerifyByDDCS") ? " active open" : "")'>
 
-            <a href="javascript:void(0);" class="menu-link menu-toggle">
+            <a href="javascript:void(0);" onclick="goToMEDashboard()" class="menu-link menu-toggle">
                 <i class="menu-icon tf-icons bx bx-layout"></i>
                 <div>M & E</div>
             </a>
@@ -786,5 +786,8 @@
 <script type="text/javascript">
     function goToPlanningDashboard() {
         window.location.href = "/ActivityAsses/Dashboard";
+    }
+    function goToMEDashboard() {
+        window.location.href = "/ActivityAssessment/Dashboard";
     }
 </script>

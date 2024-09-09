@@ -19,7 +19,7 @@
     <div class="col-md-12">
         <ul class="nav nav-pills flex-column flex-md-row mb-3">
             <li class="nav-item"><a class="nav-link active" href="javascript:void(0);">Programe Implementation Plan</a></li>
-            <li class="nav-item"><a class="nav-link" href="ConsolDeptPlan">Consolidated Department Plan</a></li>
+            <li class="nav-item"><a class="nav-link" href="ConsolDeptPlan">Annual Detailed Results Framework</a></li>
             <li class="nav-item"><a class="nav-link" href="/Reports/ActivityImplementationStatus">Activity Implementation Status Report</a></li>
             <li class="nav-item"><a class="nav-link" href="/Reports/StrategicPlanActivityImplementationTracker">Strategic Plan Activity Implementation Tracker</a></li>
         </ul>
@@ -83,23 +83,22 @@
                             {
                                 <tr>
                                     <td>
-                                        &nbsp;
+                                        @item.StrategicObjectiveFK?.ObjectiveName
                                     </td>
                                     <td>
-                                        &nbsp;
-                                        
+                                        @item.StrategicInterventionFK?.InterventionName
                                     </td>
                                     <td>
-                                        &nbsp;
+                                        @item.StrategicActionFK?.actionName
                                     </td>
                                     <td>
-                                        @Html.DisplayFor(modelItem => item.ActivityFK.activityName)
+                                        @item.ActivityFK?.activityName
                                     </td>
                                     <td>
-                                        &nbsp;
+                                        @item.Output
                                     </td>
                                     <td>
-                                        &nbsp;
+                                        @item.OutputTarget
                                     </td>
                                     <td>
                                         @Html.DisplayFor(modelItem => item.FY1)
@@ -117,7 +116,7 @@
                                         @Html.DisplayFor(modelItem => item.FY5)
                                     </td>
                                     <td>
-                                        &nbsp;
+                                        @item.MeansofVerification
                                     </td>
                                     <td>
                                         @Html.DisplayFor(modelItem => item.ResponsibleParty)
