@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
@@ -9,31 +9,34 @@ namespace MEMIS.Migrations
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
-        {
-            migrationBuilder.DropColumn(
-                name: "FYEAR",
-                table: "ActivityAssessment");
+    {
+      migrationBuilder.AddColumn<int>(
+            name: "FYEAR",
+            table: "ActivityAssessment",
+            type: "int",
+            nullable: true);
 
-            migrationBuilder.AddColumn<string>(
-                name: "outputIndicator",
-                table: "AnnualImplemtationPlan",
-                type: "nvarchar(max)",
-                nullable: false,
-                defaultValue: "");
-        }
+
+      migrationBuilder.AddColumn<string>(
+          name: "outputIndicator",
+          table: "AnnualImplemtationPlan",
+          type: "nvarchar(max)",
+          nullable: false,
+          defaultValue: "");
+    }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropColumn(
-                name: "outputIndicator",
-                table: "AnnualImplemtationPlan");
+      migrationBuilder.DropColumn(
+          name: "outputIndicator",
+          table: "AnnualImplemtationPlan");
 
-            migrationBuilder.AddColumn<int>(
+
+
+      migrationBuilder.DropColumn(
                 name: "FYEAR",
-                table: "ActivityAssessment",
-                type: "int",
-                nullable: true);
-        }
+                table: "ActivityAssessment");
+    }
     }
 }
