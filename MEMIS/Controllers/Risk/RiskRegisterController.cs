@@ -1,18 +1,16 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
+using cloudscribe.Pagination.Models;
 using MEMIS.Data;
 using MEMIS.Data.Risk;
 using MEMIS.Models;
-using cloudscribe.Pagination.Models;
-using Microsoft.AspNetCore.Identity;
-using System.Security.Claims;
-using Microsoft.AspNetCore.Authorization;
 using MEMIS.Models.Risk;
+using MEMIS.ViewModels.ME;
+using MEMIS.ViewModels.RiskManagement;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace MEMIS.Controllers.Risk
 {
@@ -28,6 +26,12 @@ namespace MEMIS.Controllers.Risk
       _userManager = userManager;
     }
 
+    private string[] getUserRoles()
+    {
+      string userRolesString = HttpContext.Session.GetString("UserRoles");
+      string[] userRoles = userRolesString?.Split(',', StringSplitOptions.RemoveEmptyEntries) ?? Array.Empty<string>();
+      return userRoles;
+    }
 
     public IActionResult Index(int pageNumber = 1)
     {
@@ -54,6 +58,282 @@ namespace MEMIS.Controllers.Risk
       {
         return Problem("Entity set 'AppDbContext.RiskRegister'  is null.");
       }
+    }
+
+    public async Task<IActionResult> Dashboard()
+    {
+      var userRoles = getUserRoles();
+      Guid departmentId = Guid.Parse(HttpContext.Session.GetString("Department"));
+
+      var orgActivitiesquery = _context.ActivityAssessment
+        .AsQueryable();
+      var activitiesQuery = orgActivitiesquery;
+      if (!userRoles.Contains("SuperAdmin"))
+      {
+        activitiesQuery = orgActivitiesquery.Where(x => x.intDept == departmentId);
+      }
+
+      var orgSDTsquery = _context.SDTAssessment
+        .Include(x => x.SDTMasterFk)
+        .AsQueryable();
+      //var SDTsQuery = orgSDTsquery;
+      //if (!userRoles.Contains("SuperAdmin"))
+      //{
+      //  SDTsQuery = orgSDTsquery.Where(x => x.SDTMasterFk != null && x.SDTMasterFk.DepartmentId == departmentId);
+      //}
+
+      var orgKPIsquery = _context.KPIAssessment
+        .Include(x => x.KPIMasterFk)
+        .AsQueryable();
+      //var KPIsQuery = orgKPIsquery;
+      //if (!userRoles.Contains("SuperAdmin"))
+      //{
+      //  KPIsQuery = orgKPIsquery.Where(x => x.KPIMasterFk != null && x.KPIMasterFk.DepartmentId == departmentId);
+      //}
+
+      var kpiData = _context.KPIAssessment
+        .Where(k => k.Achieved != null)
+        .AsEnumerable()
+        .Select(k => double.Parse(k.Achieved));
+
+      var kpiAverage = kpiData.Any() ? kpiData.Average() : 0;
+
+      // Query to get the average rating from SDTAssessment
+      var sdtData = _context.SDTAssessment
+          .Where(s => s.AchivementStatus != null)
+          .AsEnumerable()
+          .Select(s => double.Parse(s.AchivementStatus));
+
+      var sdtAverage = sdtData.Any() ? sdtData.Average() : 0;
+
+      // Combine and calculate the overall average
+      var combinedAverage = (kpiAverage + sdtAverage) / 2;
+
+      // Convert the average to a percentage
+      var percentageValue = combinedAverage * 100;
+
+      var fullyImplementedStatusId = 3;
+
+      var StrategicInterventions = _context.ActivityAssessment
+        .ToList()  // Fetch data into memory
+        .Select(x => new
+        {
+          Id = x.strategicIntervention,  // Now `int.Parse` is used on in-memory data
+          Name = _context.StrategicIntervention
+                    .Where(s => s.intIntervention == int.Parse(x.strategicIntervention))
+                    .Select(s => s.InterventionName)
+                    .FirstOrDefault()  // Using `FirstOrDefault()` to handle cases where no match is found
+        })
+        .Distinct()
+        .OrderBy(x => x.Id)
+        .ToList();
+
+      var financialYears = GetFinancialYears();
+      Dictionary<int, List<double>> yearSIImpData = new();
+
+      foreach (var year in financialYears)
+      {
+        List<double> percentages = [];
+        foreach (var strategicIntervetion in StrategicInterventions)
+        {
+          var totalActivities = _context.ActivityAssessment.Where(x => x.Fyear == year && x.strategicIntervention == strategicIntervetion.Id).Count();
+          var fullyCompletedActivites = _context.ActivityAssessment.Where(x => x.Fyear == year && x.strategicIntervention == strategicIntervetion.Id && x.ImpStatusId == 3).Count();
+          var completionPercentage = totalActivities > 0 ? (fullyCompletedActivites * 100) / totalActivities : 0;
+
+          percentages.Add(completionPercentage);
+        }
+        yearSIImpData.Add(year, percentages);
+      }
+
+      var focusAreas = await _context.FocusArea
+        .Select(x => new
+        {
+          Id = x.intFocus,
+          Name = x.FocusAreaName
+        })
+        .Distinct()
+        .OrderBy(x => x.Name)
+        .ToListAsync();
+
+      List<double> focusAreaPercentages = [];
+
+      foreach (var focusArea in focusAreas)
+      {
+        var focusAreaQuery = _context.ActivityAssessment.Where(x => x.intFocus == focusArea.Id).ToList();
+        var totalfocusAreaActivities = focusAreaQuery.Count;
+        var percentageCompletion = totalfocusAreaActivities > 0 ? (focusAreaQuery.Select(x => GetCompletionValue(x.ImpStatusId))
+                                      .Sum() / totalfocusAreaActivities) * 100 : 0;
+        focusAreaPercentages.Add(percentageCompletion);
+      }
+
+      List<double> yearPercentages = [];
+
+      for (int year = 2016; year <= DateTime.Now.Year + 1; year++)
+      {
+        var yearQuery = _context.ActivityAssessment.Where(x => x.Fyear == year).ToList();
+        var totalyearActivities = yearQuery.Count;
+        var percentageCompletion = totalyearActivities > 0 ? (yearQuery.Select(x => GetCompletionValue(x.ImpStatusId))
+                                      .Sum() / totalyearActivities) * 100 : 0;
+        yearPercentages.Add(percentageCompletion);
+      }
+
+      Dictionary<int, List<double>> yearFAsData = new();
+
+      foreach (var year in financialYears)
+      {
+        List<double> percentages = [];
+        foreach (var focusArea in focusAreas)
+        {
+          var activites = _context.ActivityAssessment.Where(x => x.Fyear == year && x.intFocus == focusArea.Id).ToList();
+          var fullyCompletedActivites = activites.Count;
+          var percentageCompletion = fullyCompletedActivites > 0 ? (activites.Select(x => GetCompletionValue(x.ImpStatusId))
+                                      .Sum() / fullyCompletedActivites) * 100 : 0;
+          percentages.Add(percentageCompletion);
+        }
+        yearFAsData.Add(year, percentages);
+      }
+
+      List<double> implementedCounts = [];
+
+      double fullyImplementedCount = _context.QuarterlyRiskActions.Where(x => x.ImpStatusId == 3).Count();
+      double partiallyImplementedCount = _context.QuarterlyRiskActions.Where(x => x.ImpStatusId == 2).Count();
+      double notImplementedCount = _context.QuarterlyRiskActions.Where(x => x.ImpStatusId == 1).Count();
+
+      implementedCounts.Add(fullyImplementedCount + partiallyImplementedCount + notImplementedCount);
+      implementedCounts.Add(fullyImplementedCount);
+      implementedCounts.Add(partiallyImplementedCount);
+      implementedCounts.Add(notImplementedCount);
+
+      var categories = _context.RiskCategorys.OrderBy(x => x.CategoryName).Select(x => new
+      {
+        Id = x.intCategory,
+        Name = x.CategoryName
+      }).ToList();
+
+      List<ChartDataSeries> categoryWiseRisksDataSeries = [];
+
+      List<double> CategoryRisks = [];
+      List<double> CurrentYearCategoryRisks = [];
+
+      foreach (var category in categories)
+      {
+        var categoryRisks = _context.RiskRegister.Include(x => x.RiskTreatmentPlans).ThenInclude(x => x.QuarterlyRiskActions).Where(x => x.intCategory == category.Id && x.IdentifiedDate.Year == DateTime.Now.Year).SelectMany(x => x.RiskTreatmentPlans.SelectMany(y => y.QuarterlyRiskActions)).ToList();
+        var quarter1Risks = categoryRisks.Where(x => x.Quarter == 1).Sum(x => x.NoOfIncedents);
+        var quarter2Risks = categoryRisks.Where(x => x.Quarter == 2).Sum(x => x.NoOfIncedents);
+        var quarter3Risks = categoryRisks.Where(x => x.Quarter == 3).Sum(x => x.NoOfIncedents);
+        var quarter4Risks = categoryRisks.Where(x => x.Quarter == 4).Sum(x => x.NoOfIncedents);
+
+        List<double> quartersData = [];
+        quartersData.Add(quarter1Risks ?? 0);
+        quartersData.Add(quarter2Risks ?? 0);
+        quartersData.Add(quarter3Risks ?? 0);
+        quartersData.Add(quarter4Risks ?? 0);
+
+        categoryWiseRisksDataSeries.Add(new ChartDataSeries
+        {
+          name = category.Name,
+          data = quartersData,
+        });
+
+        double? categoryRiskCount = _context.RiskRegister.Where(x => x.intCategory == category.Id).Count();
+        CategoryRisks.Add(categoryRiskCount ?? 0);
+        double? currentYearCategoryRiskCount = _context.RiskRegister.Where(x => x.intCategory == category.Id && x.IdentifiedDate.Year == DateTime.Now.Year).Count();
+        CurrentYearCategoryRisks.Add(currentYearCategoryRiskCount ?? 0);
+      }
+
+      RiskDashboardViewModel data = new()
+      {
+        TotalRiskInRiskRegister = _context.RiskRegister.Count(),
+        TotalActions = _context.RiskRegister.Include(x => x.RiskTreatmentPlans).ThenInclude(x => x.QuarterlyRiskActions).ToList().Where(x => x.RiskTreatmentPlans.Any() && x.RiskTreatmentPlans.Any(x => x.QuarterlyRiskActions != null && x.QuarterlyRiskActions.Any())).Sum(x => x.RiskTreatmentPlans.Sum(y => y.QuarterlyRiskActions.Count)),
+        TotalActionsImplemented = _context.RiskRegister.Include(x => x.RiskTreatmentPlans).ThenInclude(x => x.QuarterlyRiskActions).ToList().Where(x => x.RiskTreatmentPlans.Any() && x.RiskTreatmentPlans.Any(x => x.QuarterlyRiskActions != null && x.QuarterlyRiskActions.Any() && x.QuarterlyRiskActions.Any(z => z.ImpStatusId == 3))).Sum(x => x.RiskTreatmentPlans.Sum(y => y.QuarterlyRiskActions.Count)),
+        TotalActionsNotImplemented = _context.RiskRegister.Include(x => x.RiskTreatmentPlans).ThenInclude(x => x.QuarterlyRiskActions).ToList().Where(x => x.RiskTreatmentPlans.Any() && x.RiskTreatmentPlans.Any(x => x.QuarterlyRiskActions != null && x.QuarterlyRiskActions.Any() && x.QuarterlyRiskActions.Any(z => z.ImpStatusId != 3))).Sum(x => x.RiskTreatmentPlans.Sum(y => y.QuarterlyRiskActions.Count)),
+        ImplementedCounts = implementedCounts,
+        CategoryWiseRiskMovementTrend = categoryWiseRisksDataSeries,
+        Colors = GenerateRandomColors(categories.Count),
+        Categories = categories.Select(x => x.Name).ToList(),
+        CategoryRisks = CategoryRisks,
+        CurrentYearCategoryRisks = CurrentYearCategoryRisks,
+
+        StrategicInterventions = StrategicInterventions.Select(x => x.Name).ToList(),
+        YearlyStrategicInterventionTrend = yearSIImpData.Select(x => new ChartDataSeries()
+        {
+          name = x.Key.ToString(),
+          data = x.Value
+        }).ToList(),
+        FocusAreas = focusAreas.Select(x => x.Name).ToList(),
+        YearlyFocusAreaTrend = yearFAsData.Select(x => new ChartDataSeries()
+        {
+          name = x.Key.ToString(),
+          data = x.Value
+        }).ToList(),
+        FocusAreasPercentages = focusAreaPercentages,
+        YearlyStrategicPlanTrend = new List<ChartDataSeries>()
+        {
+          new ChartDataSeries()
+          {
+            name = "Overall Performance for Strategic Plan",
+            data = yearPercentages
+          },
+          new ChartDataSeries()
+          {
+            name = "Target Line",
+            data = yearPercentages.Select(x => 90.0).ToList()
+          }
+        }
+      };
+
+      return View(data);
+    }
+
+    static List<string> GenerateRandomColors(int count)
+    {
+      Random random = new Random();
+      HashSet<string> colors = new HashSet<string>();
+
+      while (colors.Count < count)
+      {
+        // Generate random RGB values
+        int r = random.Next(256);
+        int g = random.Next(256);
+        int b = random.Next(256);
+
+        // Convert RGB to hexadecimal format
+        string hexColor = $"#{r:X2}{g:X2}{b:X2}";
+
+        // Add only unique colors
+        colors.Add(hexColor);
+      }
+
+      return new List<string>(colors);
+    }
+
+    private double GetCompletionValue(int impStatusId)
+    {
+      return impStatusId switch
+      {
+        1 => 0,    // 0% completion
+        2 => 0.5,  // 50% completion
+        3 => 1,    // 100% completion
+        _ => 0     // Default to 0 if impStatusId is invalid or unexpected
+      };
+    }
+
+    private static List<int> GetFinancialYears()
+    {
+      int currentYear = DateTime.Now.Year;
+      List<int> financialYears = new List<int>();
+
+      // Find the starting year (FY1) based on the current year
+      int startYear = currentYear - ((currentYear - 1) % 5); // FY1 starts at the closest year divisible by 5 + 1
+
+      // Calculate 5 financial years starting from the determined startYear
+      for (int i = 0; i < 5; i++)
+      {
+        int fy = startYear + i;
+        financialYears.Add(fy);
+      }
+
+      return financialYears;
     }
 
     public IActionResult RiskTolerence(int pageNumber = 1)
@@ -100,14 +380,14 @@ namespace MEMIS.Controllers.Risk
       {
         RiskRefID = riskIdentification.RiskRefID,
         Activity = riskIdentification.Activity,
-        EvalCriteria = riskIdentification.EvalCriteria, 
+        EvalCriteria = riskIdentification.EvalCriteria,
         FocusArea = riskIdentification.FocusArea,
-        IdentifiedDate = riskIdentification.IdentifiedDate, 
+        IdentifiedDate = riskIdentification.IdentifiedDate,
         RiskConsequenceId = riskIdentification.RiskConsequenceId,
         RiskDescription = riskIdentification.RiskDescription,
         RiskLikelihoodId = riskIdentification.RiskLikelihoodId,
         RiskRank = riskIdentification.RiskRank,
-        RiskScore = riskIdentification.RiskScore, 
+        RiskScore = riskIdentification.RiskScore,
         StrategicObjective = riskIdentification.StrategicObjective,
       };
       var riskLikelihoodList = new List<SelectListItem>
@@ -224,14 +504,14 @@ namespace MEMIS.Controllers.Risk
       {
         RiskRefID = riskIdentification.RiskRefID,
         Activity = riskIdentification.Activity,
-        EvalCriteria = riskIdentification.EvalCriteria, 
+        EvalCriteria = riskIdentification.EvalCriteria,
         FocusArea = riskIdentification.FocusArea,
-        IdentifiedDate = riskIdentification.IdentifiedDate, 
+        IdentifiedDate = riskIdentification.IdentifiedDate,
         RiskConsequenceId = riskIdentification.RiskConsequenceId,
         RiskDescription = riskIdentification.RiskDescription,
         RiskLikelihoodId = riskIdentification.RiskLikelihoodId,
         RiskRank = riskIdentification.RiskRank,
-        RiskScore = riskIdentification.RiskScore, 
+        RiskScore = riskIdentification.RiskScore,
         StrategicObjective = riskIdentification.StrategicObjective,
         //AdditionalMitigation = riskIdentification.AdditionalMitigation,
         //ResourcesRequired= riskIdentification.ResourcesRequired,
@@ -417,7 +697,7 @@ namespace MEMIS.Controllers.Risk
             _context.Update(riskRegister);
             _context.SaveChanges();
 
-            
+
           }
           catch (DbUpdateConcurrencyException)
           {
@@ -479,9 +759,9 @@ namespace MEMIS.Controllers.Risk
         _context.QuarterlyRiskActions.Add(quarterlyRiskAction);
         _context.SaveChanges();
 
-        if(quarterlyRiskAction.Quarter == 1)
+        if (quarterlyRiskAction.Quarter == 1)
         {
-          int riskId = (int)_context.RiskTreatmentPlans.Where(x => x.RiskRefID !=null && x.TreatmentPlanId == quarterlyRiskAction.TreatmentPlanId).Select(x => x.RiskRefID).First();
+          int riskId = (int)_context.RiskTreatmentPlans.Where(x => x.RiskRefID != null && x.TreatmentPlanId == quarterlyRiskAction.TreatmentPlanId).Select(x => x.RiskRefID).First();
           Data.Risk.RiskRegister riskRegister = _context.RiskRegister.First(x => x.RiskRefID == riskId);
           riskRegister.RiskConsequenceId = await GetRiskConsequence(riskRegister.RiskRefID);
           riskRegister.RiskLikelihoodId = await GetRiskLikelihood(riskRegister.RiskRefID);
@@ -598,22 +878,22 @@ namespace MEMIS.Controllers.Risk
       {
         RiskRefID = riskIdentification.RiskRefID,
         Activity = riskIdentification.Activity,
-        EvalCriteria = riskIdentification.EvalCriteria, 
+        EvalCriteria = riskIdentification.EvalCriteria,
         FocusArea = riskIdentification.FocusArea,
-        IdentifiedDate = riskIdentification.IdentifiedDate, 
+        IdentifiedDate = riskIdentification.IdentifiedDate,
         RiskConsequenceId = riskIdentification.RiskConsequenceId,
         RiskDescription = riskIdentification.RiskDescription,
         RiskLikelihoodId = riskIdentification.RiskLikelihoodId,
         RiskRank = riskIdentification.RiskRank,
-        RiskScore = riskIdentification.RiskScore, 
+        RiskScore = riskIdentification.RiskScore,
         StrategicObjective = riskIdentification.StrategicObjective,
         ActivityBudget = riskIdentification.ActivityBudget,
         //AdditionalMitigation = riskIdentification.AdditionalMitigation,
         //ResourcesRequired = riskIdentification.ResourcesRequired,
         //ExpectedDate = riskIdentification.ExpectedDate,
-        riskTolerenceJustification= riskIdentification.riskTolerenceJustification,
+        riskTolerenceJustification = riskIdentification.riskTolerenceJustification,
         RiskTreatmentPlans = riskIdentification.RiskTreatmentPlans,
-        
+
       };
       var riskLikelihoodList = new List<SelectListItem>
     {
@@ -736,14 +1016,14 @@ namespace MEMIS.Controllers.Risk
       {
         RiskRefID = riskIdentification.RiskRefID,
         Activity = riskIdentification.Activity,
-        EvalCriteria = riskIdentification.EvalCriteria, 
+        EvalCriteria = riskIdentification.EvalCriteria,
         FocusArea = riskIdentification.FocusArea,
-        IdentifiedDate = riskIdentification.IdentifiedDate, 
+        IdentifiedDate = riskIdentification.IdentifiedDate,
         RiskConsequenceId = riskIdentification.RiskConsequenceId,
         RiskDescription = riskIdentification.RiskDescription,
         RiskLikelihoodId = riskIdentification.RiskLikelihoodId,
         RiskRank = riskIdentification.RiskRank,
-        RiskScore = riskIdentification.RiskScore, 
+        RiskScore = riskIdentification.RiskScore,
         StrategicObjective = riskIdentification.StrategicObjective,
         //AdditionalMitigation = riskIdentification.AdditionalMitigation,
         //ResourcesRequired = riskIdentification.ResourcesRequired,
@@ -873,14 +1153,14 @@ namespace MEMIS.Controllers.Risk
       {
         RiskRefID = riskIdentification.RiskRefID,
         Activity = riskIdentification.Activity,
-        EvalCriteria = riskIdentification.EvalCriteria, 
+        EvalCriteria = riskIdentification.EvalCriteria,
         FocusArea = riskIdentification.FocusArea,
-        IdentifiedDate = riskIdentification.IdentifiedDate, 
+        IdentifiedDate = riskIdentification.IdentifiedDate,
         RiskConsequenceId = riskIdentification.RiskConsequenceId,
         RiskDescription = riskIdentification.RiskDescription,
         RiskLikelihoodId = riskIdentification.RiskLikelihoodId,
         RiskRank = riskIdentification.RiskRank,
-        RiskScore = riskIdentification.RiskScore, 
+        RiskScore = riskIdentification.RiskScore,
         StrategicObjective = riskIdentification.StrategicObjective,
         RiskTreatmentPlans = riskIdentification.RiskTreatmentPlans,
         //AdditionalMitigation = riskIdentification.AdditionalMitigation,
@@ -1012,14 +1292,14 @@ namespace MEMIS.Controllers.Risk
       {
         RiskRefID = riskIdentification.RiskRefID,
         Activity = riskIdentification.Activity,
-        EvalCriteria = riskIdentification.EvalCriteria, 
+        EvalCriteria = riskIdentification.EvalCriteria,
         FocusArea = riskIdentification.FocusArea,
-        IdentifiedDate = riskIdentification.IdentifiedDate, 
+        IdentifiedDate = riskIdentification.IdentifiedDate,
         RiskConsequenceId = riskIdentification.RiskConsequenceId,
         RiskDescription = riskIdentification.RiskDescription,
         RiskLikelihoodId = riskIdentification.RiskLikelihoodId,
         RiskRank = riskIdentification.RiskRank,
-        RiskScore = riskIdentification.RiskScore, 
+        RiskScore = riskIdentification.RiskScore,
         StrategicObjective = riskIdentification.StrategicObjective,
         //AdditionalMitigation = riskIdentification.AdditionalMitigation,
         //ResourcesRequired = riskIdentification.ResourcesRequired,
@@ -1168,14 +1448,14 @@ namespace MEMIS.Controllers.Risk
       {
         RiskRefID = riskIdentification.RiskRefID,
         Activity = riskIdentification.Activity,
-        EvalCriteria = riskIdentification.EvalCriteria, 
+        EvalCriteria = riskIdentification.EvalCriteria,
         FocusArea = riskIdentification.FocusArea,
-        IdentifiedDate = riskIdentification.IdentifiedDate,  
+        IdentifiedDate = riskIdentification.IdentifiedDate,
         RiskConsequenceId = riskIdentification.RiskConsequenceId,
         RiskDescription = riskIdentification.RiskDescription,
         RiskLikelihoodId = riskIdentification.RiskLikelihoodId,
         RiskRank = riskIdentification.RiskRank,
-        RiskScore = riskIdentification.RiskScore, 
+        RiskScore = riskIdentification.RiskScore,
         StrategicObjective = riskIdentification.StrategicObjective,
         //AdditionalMitigation = riskIdentification.AdditionalMitigation,
         //ResourcesRequired = riskIdentification.ResourcesRequired,
@@ -1298,14 +1578,14 @@ namespace MEMIS.Controllers.Risk
       {
         RiskRefID = riskIdentification.RiskRefID,
         Activity = riskIdentification.Activity,
-        EvalCriteria = riskIdentification.EvalCriteria, 
+        EvalCriteria = riskIdentification.EvalCriteria,
         FocusArea = riskIdentification.FocusArea,
-        IdentifiedDate = riskIdentification.IdentifiedDate, 
+        IdentifiedDate = riskIdentification.IdentifiedDate,
         RiskConsequenceId = riskIdentification.RiskConsequenceId,
         RiskDescription = riskIdentification.RiskDescription,
         RiskLikelihoodId = riskIdentification.RiskLikelihoodId,
         RiskRank = riskIdentification.RiskRank,
-        RiskScore = riskIdentification.RiskScore, 
+        RiskScore = riskIdentification.RiskScore,
         StrategicObjective = riskIdentification.StrategicObjective,
         //AdditionalMitigation = riskIdentification.AdditionalMitigation,
         //ResourcesRequired = riskIdentification.ResourcesRequired,
@@ -1428,14 +1708,14 @@ namespace MEMIS.Controllers.Risk
       {
         RiskRefID = riskIdentification.RiskRefID,
         Activity = riskIdentification.Activity,
-        EvalCriteria = riskIdentification.EvalCriteria, 
+        EvalCriteria = riskIdentification.EvalCriteria,
         FocusArea = riskIdentification.FocusArea,
-        IdentifiedDate = riskIdentification.IdentifiedDate,  
+        IdentifiedDate = riskIdentification.IdentifiedDate,
         RiskConsequenceId = riskIdentification.RiskConsequenceId,
         RiskDescription = riskIdentification.RiskDescription,
         RiskLikelihoodId = riskIdentification.RiskLikelihoodId,
         RiskRank = riskIdentification.RiskRank,
-        RiskScore = riskIdentification.RiskScore, 
+        RiskScore = riskIdentification.RiskScore,
         StrategicObjective = riskIdentification.StrategicObjective,
         //AdditionalMitigation = riskIdentification.AdditionalMitigation,
         //ResourcesRequired = riskIdentification.ResourcesRequired,
@@ -1560,14 +1840,14 @@ namespace MEMIS.Controllers.Risk
       {
         RiskRefID = riskIdentification.RiskRefID,
         Activity = riskIdentification.Activity,
-        EvalCriteria = riskIdentification.EvalCriteria, 
+        EvalCriteria = riskIdentification.EvalCriteria,
         FocusArea = riskIdentification.FocusArea,
-        IdentifiedDate = riskIdentification.IdentifiedDate, 
+        IdentifiedDate = riskIdentification.IdentifiedDate,
         RiskConsequenceId = riskIdentification.RiskConsequenceId,
         RiskDescription = riskIdentification.RiskDescription,
         RiskLikelihoodId = riskIdentification.RiskLikelihoodId,
         RiskRank = riskIdentification.RiskRank,
-        RiskScore = riskIdentification.RiskScore, 
+        RiskScore = riskIdentification.RiskScore,
         StrategicObjective = riskIdentification.StrategicObjective,
         //AdditionalMitigation = riskIdentification.AdditionalMitigation,
         //ResourcesRequired = riskIdentification.ResourcesRequired,
@@ -1694,14 +1974,14 @@ namespace MEMIS.Controllers.Risk
         RiskRefID = riskIdentification.RiskRefID,
         Activity = riskIdentification.Activity,
 
-        EvalCriteria = riskIdentification.EvalCriteria, 
+        EvalCriteria = riskIdentification.EvalCriteria,
         FocusArea = riskIdentification.FocusArea,
-        IdentifiedDate = riskIdentification.IdentifiedDate, 
+        IdentifiedDate = riskIdentification.IdentifiedDate,
         RiskConsequenceId = riskIdentification.RiskConsequenceId,
         RiskDescription = riskIdentification.RiskDescription,
         RiskLikelihoodId = riskIdentification.RiskLikelihoodId,
         RiskRank = riskIdentification.RiskRank,
-        RiskScore = riskIdentification.RiskScore, 
+        RiskScore = riskIdentification.RiskScore,
         StrategicObjective = riskIdentification.StrategicObjective,
         //AdditionalMitigation = riskIdentification.AdditionalMitigation,
         //ResourcesRequired = riskIdentification.ResourcesRequired,
@@ -1831,14 +2111,14 @@ namespace MEMIS.Controllers.Risk
         RiskRefID = riskIdentification.RiskRefID,
         Activity = riskIdentification.Activity,
 
-        EvalCriteria = riskIdentification.EvalCriteria, 
+        EvalCriteria = riskIdentification.EvalCriteria,
         FocusArea = riskIdentification.FocusArea,
-        IdentifiedDate = riskIdentification.IdentifiedDate, 
+        IdentifiedDate = riskIdentification.IdentifiedDate,
         RiskConsequenceId = riskIdentification.RiskConsequenceId,
         RiskDescription = riskIdentification.RiskDescription,
         RiskLikelihoodId = riskIdentification.RiskLikelihoodId,
         RiskRank = riskIdentification.RiskRank,
-        RiskScore = riskIdentification.RiskScore, 
+        RiskScore = riskIdentification.RiskScore,
         StrategicObjective = riskIdentification.StrategicObjective,
         //AdditionalMitigation = riskIdentification.AdditionalMitigation,
         //ResourcesRequired = riskIdentification.ResourcesRequired,
@@ -1967,14 +2247,14 @@ namespace MEMIS.Controllers.Risk
         RiskRefID = riskIdentification.RiskRefID,
         Activity = riskIdentification.Activity,
 
-        EvalCriteria = riskIdentification.EvalCriteria, 
+        EvalCriteria = riskIdentification.EvalCriteria,
         FocusArea = riskIdentification.FocusArea,
-        IdentifiedDate = riskIdentification.IdentifiedDate, 
+        IdentifiedDate = riskIdentification.IdentifiedDate,
         RiskConsequenceId = riskIdentification.RiskConsequenceId,
         RiskDescription = riskIdentification.RiskDescription,
         RiskLikelihoodId = riskIdentification.RiskLikelihoodId,
         RiskRank = riskIdentification.RiskRank,
-        RiskScore = riskIdentification.RiskScore, 
+        RiskScore = riskIdentification.RiskScore,
         StrategicObjective = riskIdentification.StrategicObjective,
         //AdditionalMitigation = riskIdentification.AdditionalMitigation,
         //ResourcesRequired = riskIdentification.ResourcesRequired,
@@ -2098,15 +2378,15 @@ namespace MEMIS.Controllers.Risk
         RiskRegister riskIdentification = new RiskRegister
         {
           Activity = dto.Activity,
-          EvalCriteria = dto.EvalCriteria, 
+          EvalCriteria = dto.EvalCriteria,
           FocusArea = dto.FocusArea,
-          IdentifiedDate = dto.IdentifiedDate, 
+          IdentifiedDate = dto.IdentifiedDate,
           RiskConsequenceId = dto.RiskConsequenceId,
           RiskDescription = dto.RiskDescription,
           RiskLikelihoodId = dto.RiskLikelihoodId,
           RiskOwner = User.FindFirstValue(ClaimTypes.NameIdentifier),
           RiskRank = dto.RiskRank,
-          RiskScore = dto.RiskScore, 
+          RiskScore = dto.RiskScore,
           StrategicObjective = dto.StrategicObjective,
         };
         _context.Add(riskIdentification);
@@ -2148,15 +2428,15 @@ namespace MEMIS.Controllers.Risk
       {
         Activity = riskIdentification.Activity,
 
-        EvalCriteria = riskIdentification.EvalCriteria, 
+        EvalCriteria = riskIdentification.EvalCriteria,
         FocusArea = (int)riskIdentification.FocusArea,
-        IdentifiedDate = riskIdentification.IdentifiedDate,  
+        IdentifiedDate = riskIdentification.IdentifiedDate,
         RiskConsequenceId = riskIdentification.RiskConsequenceId,
         RiskDescription = riskIdentification.RiskDescription,
         RiskRefID = riskIdentification.RiskRefID,
         RiskLikelihoodId = riskIdentification.RiskLikelihoodId,
         RiskRank = riskIdentification.RiskRank,
-        RiskScore = riskIdentification.RiskScore, 
+        RiskScore = riskIdentification.RiskScore,
         StrategicObjective = (int)riskIdentification.StrategicObjective,
 
       };
@@ -2196,15 +2476,15 @@ namespace MEMIS.Controllers.Risk
           {
             Activity = riskIdentification.Activity,
 
-            EvalCriteria = riskIdentification.EvalCriteria, 
+            EvalCriteria = riskIdentification.EvalCriteria,
             FocusArea = riskIdentification.FocusArea,
-            IdentifiedDate = riskIdentification.IdentifiedDate,  
+            IdentifiedDate = riskIdentification.IdentifiedDate,
             RiskConsequenceId = riskIdentification.RiskConsequenceId,
             RiskDescription = riskIdentification.RiskDescription,
             RiskLikelihoodId = riskIdentification.RiskLikelihoodId,
             RiskOwner = User.FindFirstValue(ClaimTypes.NameIdentifier),
             RiskRank = riskIdentification.RiskRank,
-            RiskScore = riskIdentification.RiskScore, 
+            RiskScore = riskIdentification.RiskScore,
             StrategicObjective = riskIdentification.StrategicObjective,
             RiskRefID = riskIdentification.RiskRefID
           };

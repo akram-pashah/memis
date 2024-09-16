@@ -1,21 +1,14 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
+using cloudscribe.Pagination.Models;
 using MEMIS.Data;
 using MEMIS.Data.Risk;
 using MEMIS.Models;
-using cloudscribe.Pagination.Models;
-using Microsoft.AspNetCore.Identity;
-using System.Security.Claims;
-using Microsoft.AspNetCore.Authorization;
 using MEMIS.Models.Risk;
-using System.Data.SqlClient;
-using System.ComponentModel.DataAnnotations;
-using System.Text.Json;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace MEMIS.Controllers.Risk
 {
@@ -57,6 +50,32 @@ namespace MEMIS.Controllers.Risk
       {
         return Problem("Entity set 'AppDbContext.RiskIdentifications'  is null.");
       }
+    }
+
+    private string[] getUserRoles()
+    {
+      string userRolesString = HttpContext.Session.GetString("UserRoles");
+      string[] userRoles = userRolesString?.Split(',', StringSplitOptions.RemoveEmptyEntries) ?? Array.Empty<string>();
+      return userRoles;
+    }
+
+    public async Task<IActionResult> Dashboard()
+    {
+      var userRoles = getUserRoles();
+      Guid departmentId = Guid.Parse(HttpContext.Session.GetString("Department"));
+
+      return View();
+    }
+
+    private double GetCompletionValue(int impStatusId)
+    {
+      return impStatusId switch
+      {
+        1 => 0,    // 0% completion
+        2 => 0.5,  // 50% completion
+        3 => 1,    // 100% completion
+        _ => 0     // Default to 0 if impStatusId is invalid or unexpected
+      };
     }
 
     public IActionResult Verify(int pageNumber = 1)
@@ -391,13 +410,13 @@ namespace MEMIS.Controllers.Risk
               RiskScore = objectdto.RiskScore,
               //RiskSource = objectdto.RiskSource,
               StrategicObjective = objectdto.StrategicObjective,
-              intCategory= objectdto.intCategory,
-              intDept= objectdto.intDept,
-              ExistingMitigation=objectdto.ExistingMitigation,
-              Additional_Mitigation= objectdto.Additional_Mitigation,
-              Opportunity= objectdto.Opportunity,
-              Supporting_Owners= objectdto.Supporting_Owners,
-              Weakness= objectdto.Weakness,
+              intCategory = objectdto.intCategory,
+              intDept = objectdto.intDept,
+              ExistingMitigation = objectdto.ExistingMitigation,
+              Additional_Mitigation = objectdto.Additional_Mitigation,
+              Opportunity = objectdto.Opportunity,
+              Supporting_Owners = objectdto.Supporting_Owners,
+              Weakness = objectdto.Weakness,
               RiskOwner = User.FindFirstValue(ClaimTypes.NameIdentifier),
             };
             _context.Add(riskRegister);
@@ -485,13 +504,13 @@ namespace MEMIS.Controllers.Risk
           RiskRank = dto.RiskRank,
           RiskScore = dto.RiskScore,
           StrategicObjective = dto.StrategicObjective,
-          intCategory= dto.intCategory,
-          ExistingMitigation= dto.ExistingMitigation,
-          Weakness= dto.Weakness,
-          Additional_Mitigation= dto.Additional_Mitigation,
-          Opportunity=dto.Opportunity,
-          Supporting_Owners= dto.Supporting_Owners,
-          intDept= dto.intDept
+          intCategory = dto.intCategory,
+          ExistingMitigation = dto.ExistingMitigation,
+          Weakness = dto.Weakness,
+          Additional_Mitigation = dto.Additional_Mitigation,
+          Opportunity = dto.Opportunity,
+          Supporting_Owners = dto.Supporting_Owners,
+          intDept = dto.intDept
         };
 
         _context.Add(riskIdentification);
@@ -513,7 +532,7 @@ namespace MEMIS.Controllers.Risk
       ViewBag.RiskLikelihoodList = GetSelectListForRiskLikelihood();
       ViewBag.StrategicPlanList = _context.StrategicObjective == null ? new List<StrategicObjective>() : await _context.StrategicObjective.ToListAsync();
       ViewBag.FocusArea = _context.FocusArea == null ? new List<FocusArea>() : await _context.FocusArea.ToListAsync();
-      ViewBag.ActivityList = _context.Activity == null ? new List<Activity>() : await _context.Activity.ToListAsync(); 
+      ViewBag.ActivityList = _context.Activity == null ? new List<Activity>() : await _context.Activity.ToListAsync();
       ViewBag.RiskCategory = _context.RiskCategorys == null ? new List<RiskCategory>() : await _context.RiskCategorys.ToListAsync();
       ViewBag.Department = _context.Departments == null ? new List<Department>() : await _context.Departments.ToListAsync();
       return View(dto);
@@ -594,7 +613,7 @@ namespace MEMIS.Controllers.Risk
             RiskRank = riskIdentification.RiskRank,
             RiskScore = riskIdentification.RiskScore,
             RiskSources = riskIdentification.RiskSource,
-            StrategicObjective = riskIdentification.StrategicObjective, 
+            StrategicObjective = riskIdentification.StrategicObjective,
             RiskId = riskIdentification.RiskId
           };
           _context.Update(rd);
