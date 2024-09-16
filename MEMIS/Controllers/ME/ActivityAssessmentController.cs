@@ -518,7 +518,10 @@ namespace MEMIS.Controllers.ME
         {
           // Calculate sums for each quarter
           item.Q1Target = item?.QuaterlyPlans.Sum(x => x.QTarget);
-
+          item.strategicObjective = _context.StrategicObjective.Where(x => x.intObjective == int.Parse(item.strategicObjective)).Select(x => x.ObjectiveName).FirstOrDefault() ?? "";
+          item.strategicIntervention = _context.StrategicIntervention.Where(x => x.intIntervention == int.Parse(item.strategicIntervention)).Select(x => x.InterventionName).FirstOrDefault() ?? "";
+          item.StrategicAction = _context.StrategicAction.Where(x => x.intAction == int.Parse(item.StrategicAction)).Select(x => x.actionName).FirstOrDefault() ?? "";
+          item.activity = _context.Activity.Where(x => x.intActivity == int.Parse(item.activity)).Select(x => x.activityName).FirstOrDefault() ?? "";
         }
       }
       return appDbContext;
@@ -605,6 +608,8 @@ namespace MEMIS.Controllers.ME
             foreach (var item in region.QuaterlyPlans)
             {
               item.ActivityAssessmentRegionId = activityAssessmentRegion.intRegionAssess;
+              
+
             }
           }
 
@@ -831,10 +836,22 @@ namespace MEMIS.Controllers.ME
       EditActivityAssessmentDto editActivityAssessmentDto = new()
       {
         intDeptPlan = activityAssessment.intDeptPlan,
-        strategicObjective = activityAssessment.strategicObjective,
-        strategicIntervention = activityAssessment.strategicIntervention,
-        StrategicAction = activityAssessment.StrategicAction,
-        activity = activityAssessment.activity,
+        strategicObjective = _context.StrategicObjective
+              .Where(x => x.intObjective == int.Parse(activityAssessment.strategicObjective))
+              .Select(x => x.ObjectiveName)
+              .FirstOrDefault() ?? "",
+        strategicIntervention = _context.StrategicIntervention
+              .Where(x => x.intIntervention == int.Parse(activityAssessment.strategicIntervention))
+              .Select(x => x.InterventionName)
+              .FirstOrDefault() ?? "",
+        StrategicAction = _context.StrategicAction
+              .Where(x => x.intAction == int.Parse(activityAssessment.StrategicAction))
+              .Select(x => x.actionName)
+              .FirstOrDefault() ?? "",
+        activity = _context.Activity
+              .Where(x => x.intActivity == int.Parse(activityAssessment.activity))
+              .Select(x => x.activityName)
+              .FirstOrDefault() ?? "",
         outputIndicator = activityAssessment.outputIndicator,
         baseline = activityAssessment.baseline,
         budgetCode = activityAssessment.budgetCode,

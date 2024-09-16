@@ -382,13 +382,13 @@ namespace MEMIS.Controllers.Risk
     }
 
     [HttpPost]
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> RiskTreatmentSubmit(RiskRegister riskRegister)
+    //[ValidateAntiForgeryToken]
+    public IActionResult RiskTreatmentSubmit(RiskRegister riskRegister)
     {
       if (ModelState.IsValid && riskRegister.RiskRefID == 0)
       {
         _context.RiskRegister.Add(riskRegister);
-        await _context.SaveChangesAsync();
+        _context.SaveChangesAsync();
         return RedirectToAction(nameof(RiskTolerence));
       }
       else
@@ -402,8 +402,8 @@ namespace MEMIS.Controllers.Risk
             //{
             //  return NotFound();
             //}
-            riskRegister.RiskResidualConsequenceId = await GetRiskConsequence(riskRegister.RiskRefID);
-            riskRegister.RiskResidualLikelihoodId = await GetRiskLikelihood(riskRegister.RiskRefID);
+            riskRegister.RiskResidualConsequenceId = GetRiskConsequence(riskRegister.RiskRefID).Result;
+            riskRegister.RiskResidualLikelihoodId = GetRiskLikelihood(riskRegister.RiskRefID).Result;
             //riskRegister.RiskConsequenceId = await GetRiskConsequence(riskRegister.RiskRefID);
             //riskRegister.RiskLikelihoodId = await GetRiskLikelihood(riskRegister.RiskRefID);
             (int RiskRating, string RiskCategory, string Color) = GetRiskRating(riskRegister.RiskLikelihoodId, riskRegister.RiskConsequenceId);
@@ -415,7 +415,7 @@ namespace MEMIS.Controllers.Risk
             //pp.ResourcesRequired = objectdto.ResourcesRequired;
             //pp.ExpectedDate=   objectdto.ExpectedDate;
             _context.Update(riskRegister);
-            await _context.SaveChangesAsync();
+            _context.SaveChanges();
 
             
           }
@@ -444,9 +444,9 @@ namespace MEMIS.Controllers.Risk
 
       ViewBag.RiskConsequenceList = GetSelectListForRiskConsequence();
       ViewBag.RiskLikelihoodList = GetSelectListForRiskLikelihood();
-      ViewBag.StrategicPlanList = _context.StrategicObjective == null ? new List<StrategicObjective>() : await _context.StrategicObjective.ToListAsync();
-      ViewBag.FocusArea = _context.FocusArea == null ? new List<FocusArea>() : await _context.FocusArea.ToListAsync();
-      ViewBag.ActivityList = _context.Activity == null ? new List<Activity>() : await _context.Activity.ToListAsync();
+      ViewBag.StrategicPlanList = _context.StrategicObjective == null ? new List<StrategicObjective>() : _context.StrategicObjective.ToList();
+      ViewBag.FocusArea = _context.FocusArea == null ? new List<FocusArea>() : _context.FocusArea.ToList();
+      ViewBag.ActivityList = _context.Activity == null ? new List<Activity>() : _context.Activity.ToList();
       ViewData["Approval"] = ListHelper.ApprovalStatus();
       ViewData["RiskRank"] = ListHelper.RiskRank();
       return View(riskRegister);
@@ -467,7 +467,7 @@ namespace MEMIS.Controllers.Risk
                                      .ToList();
         return RedirectToAction(nameof(RiskTreatmentSubmit), new { id = treatmentPlan.RiskRefID });
       }
-      return BadRequest();
+      return RedirectToAction(nameof(RiskTreatmentSubmit), new { id = treatmentPlan.RiskRefID });
     }
 
     [HttpPost]
@@ -588,7 +588,8 @@ namespace MEMIS.Controllers.Risk
       }
 
       var riskIdentification = await _context.RiskRegister.Include(m => m.StrategicPlanFk).Include(m => m.ActivityFk).Include(m => m.FocusAreaFk).Include(m => m.RiskIdentificationFk)
-          .Where(m => m.RiskRefID == id).FirstOrDefaultAsync();
+        .Include(x => x.RiskTreatmentPlans)
+        .Where(m => m.RiskRefID == id).FirstOrDefaultAsync();
       if (riskIdentification == null)
       {
         return NotFound();
@@ -606,9 +607,13 @@ namespace MEMIS.Controllers.Risk
         RiskRank = riskIdentification.RiskRank,
         RiskScore = riskIdentification.RiskScore, 
         StrategicObjective = riskIdentification.StrategicObjective,
+        ActivityBudget = riskIdentification.ActivityBudget,
         //AdditionalMitigation = riskIdentification.AdditionalMitigation,
         //ResourcesRequired = riskIdentification.ResourcesRequired,
         //ExpectedDate = riskIdentification.ExpectedDate,
+        riskTolerenceJustification= riskIdentification.riskTolerenceJustification,
+        RiskTreatmentPlans = riskIdentification.RiskTreatmentPlans,
+        
       };
       var riskLikelihoodList = new List<SelectListItem>
     {
@@ -721,6 +726,7 @@ namespace MEMIS.Controllers.Risk
       }
 
       var riskIdentification = await _context.RiskRegister.Include(m => m.StrategicPlanFk).Include(m => m.ActivityFk).Include(m => m.FocusAreaFk).Include(m => m.RiskIdentificationFk)
+          .Include(x => x.RiskTreatmentPlans)
           .Where(m => m.RiskRefID == id).FirstOrDefaultAsync();
       if (riskIdentification == null)
       {
@@ -742,6 +748,9 @@ namespace MEMIS.Controllers.Risk
         //AdditionalMitigation = riskIdentification.AdditionalMitigation,
         //ResourcesRequired = riskIdentification.ResourcesRequired,
         //ExpectedDate = riskIdentification.ExpectedDate,
+        ActivityBudget = riskIdentification.ActivityBudget,
+        riskTolerenceJustification = riskIdentification.riskTolerenceJustification,
+        RiskTreatmentPlans = riskIdentification.RiskTreatmentPlans
       };
       var riskLikelihoodList = new List<SelectListItem>
     {
@@ -854,6 +863,7 @@ namespace MEMIS.Controllers.Risk
       }
 
       var riskIdentification = await _context.RiskRegister.Include(m => m.StrategicPlanFk).Include(m => m.ActivityFk).Include(m => m.FocusAreaFk).Include(m => m.RiskIdentificationFk)
+          .Include(x => x.RiskTreatmentPlans)
           .Where(m => m.RiskRefID == id).FirstOrDefaultAsync();
       if (riskIdentification == null)
       {
@@ -872,9 +882,12 @@ namespace MEMIS.Controllers.Risk
         RiskRank = riskIdentification.RiskRank,
         RiskScore = riskIdentification.RiskScore, 
         StrategicObjective = riskIdentification.StrategicObjective,
+        RiskTreatmentPlans = riskIdentification.RiskTreatmentPlans,
         //AdditionalMitigation = riskIdentification.AdditionalMitigation,
         //ResourcesRequired = riskIdentification.ResourcesRequired,
         //ExpectedDate = riskIdentification.ExpectedDate,
+        ActivityBudget = riskIdentification.ActivityBudget,
+        riskTolerenceJustification = riskIdentification.riskTolerenceJustification,
       };
 
       var riskLikelihoodList = new List<SelectListItem>
