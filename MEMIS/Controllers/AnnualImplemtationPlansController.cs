@@ -89,7 +89,8 @@ namespace MEMIS.Controllers
       ViewData["intFocus"] = new SelectList(_context.FocusArea, "intFocus", "FocusAreaName");
       ViewData["intAction"] = new SelectList(_context.StrategicAction, "intAction", "actionName");
       ViewData["intIntervention"] = new SelectList(_context.StrategicIntervention, "intIntervention", "InterventionName");
-      ViewData["intObjective"] = new SelectList(_context.StrategicObjective, "intObjective", "ObjectiveName"); 
+      ViewData["intObjective"] = new SelectList(_context.StrategicObjective, "intObjective", "ObjectiveName");
+      ViewBag.FocusAreas=_context.FocusArea.ToList();
       return View();
     }
 
