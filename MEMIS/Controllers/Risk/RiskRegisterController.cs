@@ -171,6 +171,9 @@ namespace MEMIS.Controllers.Risk
         CurrentYearCategoryRisks.Add(currentYearCategoryRiskCount ?? 0);
       }
 
+      var currentRisks = _context.RiskRegister.Where(x => x.IdentifiedDate.Year == DateTime.Now.Year).Count();
+      var previousYearRisks = _context.RiskRegister.Where(x => x.IdentifiedDate.Year == (DateTime.Now.Year - 1)).Count();
+
       RiskDashboardViewModel data = new()
       {
         TotalRiskInRiskRegister = _context.RiskRegister.Count(),
@@ -184,6 +187,8 @@ namespace MEMIS.Controllers.Risk
         Categories = categories.Select(x => x.Name).ToList(),
         CategoryRisks = CategoryRisks,
         CurrentYearCategoryRisks = CurrentYearCategoryRisks,
+        TotalRisksReduced = previousYearRisks - currentRisks > 0 ? previousYearRisks - currentRisks : 0,
+        TotalRisksIncreased = currentRisks - previousYearRisks > 0 ? currentRisks - previousYearRisks : 0,
 
         FocusAreas = chartFocusAreas.Select(x => x.Name).ToList(),
         RisksFocusAreaTrend = focusAreaWiseRisks,
