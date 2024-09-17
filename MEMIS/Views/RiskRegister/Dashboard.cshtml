@@ -65,12 +65,14 @@
             }
 
             initializeChart();
+            corporateRiskImplementationStatusChart();
             categoryWiseRiskMovementTrendLine();
-            strategicInterTrendAnalysis();
+            // strategicInterTrendAnalysis();
             risksByCategoryPercentage();
             currentYearRisksByCategoryPercentage();
             // focusAreaTrendLine();
             focusAreaTrendAnalysis();
+            currentYearSummaryPieChart();
         })();
 
         var chart = null;
@@ -146,7 +148,7 @@
           labels: {
             show: false,
             formatter: function (val) {
-              return val + "%";
+              return val;
             }
           }
         
@@ -162,7 +164,97 @@
         }
         };
 
-            chart = new ApexCharts(document.querySelector("#implementationStatusChart"), options);
+           var chart12 = new ApexCharts(document.querySelector("#implementationStatusChart"), options);
+            chart12.render();
+        }
+
+        function corporateRiskImplementationStatusChart() {
+            if (chart) {
+                chart.destroy();
+                chart = null;
+            }
+
+            var options = {
+          series: [{
+          name: 'Actions',
+          data: @Html.Raw(JsonSerializer.Serialize(Model.CorporateImplementedCounts)),
+        }],
+          chart: {
+          height: 350,
+          type: 'bar',
+        },
+        plotOptions: {
+          bar: {
+            borderRadius: 10,
+            dataLabels: {
+              position: 'top', // top, center, bottom
+            },
+          }
+        },
+        dataLabels: {
+          enabled: true,
+          formatter: function (val) {
+            return val;
+          },
+          offsetY: -20,
+          style: {
+            fontSize: '12px',
+            colors: ["#304758"]
+          }
+        },
+        
+        xaxis: {
+          categories: ["Total", "Fully Implemented", "Partially Implemented", "Not Implemented"],
+          position: 'top',
+          axisBorder: {
+            show: false
+          },
+          axisTicks: {
+            show: false
+          },
+          crosshairs: {
+            fill: {
+              type: 'gradient',
+              gradient: {
+                colorFrom: '#D8E3F0',
+                colorTo: '#BED1E6',
+                stops: [0, 100],
+                opacityFrom: 0.4,
+                opacityTo: 0.5,
+              }
+            }
+          },
+          tooltip: {
+            enabled: true,
+          }
+        },
+        yaxis: {
+          axisBorder: {
+            show: false
+          },
+          axisTicks: {
+            show: false,
+          },
+          labels: {
+            show: false,
+            formatter: function (val) {
+              return val + "%";
+            }
+          }
+        
+        },
+        title: {
+          text: 'Strategic Risk Actions - Implementation Status',
+          floating: true,
+          offsetY: 330,
+          align: 'center',
+          style: {
+            color: '#444'
+          }
+        }
+        };
+
+            chart = new ApexCharts(document.querySelector("#implementationStatusCorporateChart"), options);
             chart.render();
         }
 
@@ -183,51 +275,75 @@
         //         });
         // }
 
-        function strategicInterTrendAnalysis(){
-          var options = {
-          series:@Html.Raw(JsonSerializer.Serialize(Model.YearlyStrategicInterventionTrend)),
+        // function strategicInterTrendAnalysis(){
+        //   var options = {
+        //   series:@Html.Raw(JsonSerializer.Serialize(Model.YearlyStrategicInterventionTrend)),
+        //   chart: {
+        //   type: 'bar',
+        // },
+        // plotOptions: {
+        //   bar: {
+        //     horizontal: true,
+        //     columnWidth: '55%',
+        //     endingShape: 'rounded'
+        //   },
+        // },
+        // dataLabels: {
+        //   enabled: false
+        // },
+        // stroke: {
+        //   show: true,
+        //   width: 2,
+        //   colors: ['transparent']
+        // },
+        // xaxis: {
+        //   categories: @Html.Raw(JsonSerializer.Serialize(Model.StrategicInterventions)),
+        // },
+        // yaxis: {
+        //   title: {
+        //     text: 'Trend Analysis of Strategic Interventions Fully Implemented'
+        //   }
+        // },
+        // fill: {
+        //   opacity: 1
+        // },
+        // tooltip: {
+        //   y: {
+        //     formatter: function (val) {
+        //       return val + "%"
+        //     }
+        //   }
+        // }
+        // };
+
+        // var chart = new ApexCharts(document.querySelector("#strategicIntervTrendAnalysis"), options);
+        // chart.render();
+        // }
+
+        function currentYearSummaryPieChart(){
+         var options = {
+          series: @Html.Raw(JsonSerializer.Serialize(Model.CategoryRisks)),
           chart: {
-          type: 'bar',
+          width: 580,
+          type: 'pie',
         },
-        plotOptions: {
-          bar: {
-            horizontal: true,
-            columnWidth: '55%',
-            endingShape: 'rounded'
-          },
-        },
-        dataLabels: {
-          enabled: false
-        },
-        stroke: {
-          show: true,
-          width: 2,
-          colors: ['transparent']
-        },
-        xaxis: {
-          categories: @Html.Raw(JsonSerializer.Serialize(Model.StrategicInterventions)),
-        },
-        yaxis: {
-          title: {
-            text: 'Trend Analysis of Strategic Interventions Fully Implemented'
-          }
-        },
-        fill: {
-          opacity: 1
-        },
-        tooltip: {
-          y: {
-            formatter: function (val) {
-              return val + "%"
+          labels: @Html.Raw(JsonSerializer.Serialize(Model.Categories)),
+          responsive: [{
+            breakpoint: 480,
+            options: {
+              chart: {
+                width: 400
+              },
+              legend: {
+                position: 'bottom'
+              }
             }
-          }
-        }
+          }]
         };
 
-        var chart = new ApexCharts(document.querySelector("#strategicIntervTrendAnalysis"), options);
+        var chart = new ApexCharts(document.querySelector("#currentYearSummaryPieChart"), options);
         chart.render();
         }
-
         function risksByCategoryPercentage(){
          var options = {
           series: @Html.Raw(JsonSerializer.Serialize(Model.CategoryRisks)),
@@ -348,7 +464,7 @@
 
                 function focusAreaTrendAnalysis(){
           var options = {
-          series:@Html.Raw(JsonSerializer.Serialize(Model.YearlyFocusAreaTrend)),
+          series:@Html.Raw(JsonSerializer.Serialize(Model.RisksFocusAreaTrend)),
           chart: {
           type: 'bar',
         },
@@ -372,7 +488,7 @@
         },
         yaxis: {
           title: {
-            text: 'Comparitive Analysis of the Strategic Interventions Output Achievement'
+            text: 'Current Year Summary Of The Register Per Thematic Area'
           }
         },
         fill: {
@@ -381,7 +497,7 @@
         tooltip: {
           y: {
             formatter: function (val) {
-              return val + "%"
+              return val
             }
           }
         }
@@ -674,32 +790,49 @@
         </div>
     </div>
     <!--/ Order Statistics -->
-    <!-- Expense Overview -->
-    @* <div class="col-md-12 col-lg-12 order-1 mb-4">
-        <div class="card h-100">
-            <div class="card-header">
-                Strategic Plan Performance Trend Analysis since 2016
-            </div>
-            <div class="card-body px-0">
-                <div class="tab-content p-0">
-                    <div class="tab-pane fade show active" id="navs-tabs-line-card-income" role="tabpanel">
-                        <div id="trendAnalysisLineChart"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div> *@
-    <!--/ Expense Overview -->
     <!-- Transactions -->
-    @* <div class="col-md-12 col-lg-12 order-2 mb-4">
+    <div class="col-md-12 col-lg-12 order-2 mb-4">
         <div class="card h-100">
             <div class="card-header d-flex align-items-center justify-content-between">
-                <h5 class="card-title m-0 me-2">Comparitive Analysis of the Strategic Interventions Output Achievement by Focus Areas</h5>
+                <h5 class="card-title m-0 me-2">Current Year Summary Of The Register Per Thematic Area</h5>
             </div>
             <div class="card-body">
                 <div id="focusAreaTrendAnalysis"></div>
             </div>
         </div>
-    </div> *@
+    </div>
     <!--/ Transactions -->
+        <!-- Expense Overview -->
+    <div class="col-md-12 col-lg-12 order-1 mb-4">
+        <div class="card h-100">
+            <div class="card-header">
+                Current Year Summary Of The Register
+            </div>
+            <div class="card-body px-0">
+                <div class="tab-content p-0">
+                    <div class="tab-pane fade show active" id="navs-tabs-line-card-income" role="tabpanel">
+                        <div id="currentYearSummaryPieChart"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--/ Expense Overview -->
+        <!-- Expense Overview -->
+    <div class="col-md-12 col-lg-12 order-1 mb-4">
+        <div class="card h-100">
+            <div class="card-header">
+                Strategic (Corporate Category) Risk Actions Implementation Status For
+            </div>
+            <div class="card-body px-0">
+                <div class="tab-content p-0">
+                    <div class="tab-pane fade show active" id="navs-tabs-line-card-income" role="tabpanel">
+                        <div id="implementationStatusCorporateChart"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--/ Expense Overview -->
+
 </div>

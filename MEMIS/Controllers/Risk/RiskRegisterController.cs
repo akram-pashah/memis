@@ -65,86 +65,6 @@ namespace MEMIS.Controllers.Risk
       var userRoles = getUserRoles();
       Guid departmentId = Guid.Parse(HttpContext.Session.GetString("Department"));
 
-      var orgActivitiesquery = _context.ActivityAssessment
-        .AsQueryable();
-      var activitiesQuery = orgActivitiesquery;
-      if (!userRoles.Contains("SuperAdmin"))
-      {
-        activitiesQuery = orgActivitiesquery.Where(x => x.intDept == departmentId);
-      }
-
-      var orgSDTsquery = _context.SDTAssessment
-        .Include(x => x.SDTMasterFk)
-        .AsQueryable();
-      //var SDTsQuery = orgSDTsquery;
-      //if (!userRoles.Contains("SuperAdmin"))
-      //{
-      //  SDTsQuery = orgSDTsquery.Where(x => x.SDTMasterFk != null && x.SDTMasterFk.DepartmentId == departmentId);
-      //}
-
-      var orgKPIsquery = _context.KPIAssessment
-        .Include(x => x.KPIMasterFk)
-        .AsQueryable();
-      //var KPIsQuery = orgKPIsquery;
-      //if (!userRoles.Contains("SuperAdmin"))
-      //{
-      //  KPIsQuery = orgKPIsquery.Where(x => x.KPIMasterFk != null && x.KPIMasterFk.DepartmentId == departmentId);
-      //}
-
-      var kpiData = _context.KPIAssessment
-        .Where(k => k.Achieved != null)
-        .AsEnumerable()
-        .Select(k => double.Parse(k.Achieved));
-
-      var kpiAverage = kpiData.Any() ? kpiData.Average() : 0;
-
-      // Query to get the average rating from SDTAssessment
-      var sdtData = _context.SDTAssessment
-          .Where(s => s.AchivementStatus != null)
-          .AsEnumerable()
-          .Select(s => double.Parse(s.AchivementStatus));
-
-      var sdtAverage = sdtData.Any() ? sdtData.Average() : 0;
-
-      // Combine and calculate the overall average
-      var combinedAverage = (kpiAverage + sdtAverage) / 2;
-
-      // Convert the average to a percentage
-      var percentageValue = combinedAverage * 100;
-
-      var fullyImplementedStatusId = 3;
-
-      var StrategicInterventions = _context.ActivityAssessment
-        .ToList()  // Fetch data into memory
-        .Select(x => new
-        {
-          Id = x.strategicIntervention,  // Now `int.Parse` is used on in-memory data
-          Name = _context.StrategicIntervention
-                    .Where(s => s.intIntervention == int.Parse(x.strategicIntervention))
-                    .Select(s => s.InterventionName)
-                    .FirstOrDefault()  // Using `FirstOrDefault()` to handle cases where no match is found
-        })
-        .Distinct()
-        .OrderBy(x => x.Id)
-        .ToList();
-
-      var financialYears = GetFinancialYears();
-      Dictionary<int, List<double>> yearSIImpData = new();
-
-      foreach (var year in financialYears)
-      {
-        List<double> percentages = [];
-        foreach (var strategicIntervetion in StrategicInterventions)
-        {
-          var totalActivities = _context.ActivityAssessment.Where(x => x.Fyear == year && x.strategicIntervention == strategicIntervetion.Id).Count();
-          var fullyCompletedActivites = _context.ActivityAssessment.Where(x => x.Fyear == year && x.strategicIntervention == strategicIntervetion.Id && x.ImpStatusId == 3).Count();
-          var completionPercentage = totalActivities > 0 ? (fullyCompletedActivites * 100) / totalActivities : 0;
-
-          percentages.Add(completionPercentage);
-        }
-        yearSIImpData.Add(year, percentages);
-      }
-
       var focusAreas = await _context.FocusArea
         .Select(x => new
         {
@@ -155,43 +75,42 @@ namespace MEMIS.Controllers.Risk
         .OrderBy(x => x.Name)
         .ToListAsync();
 
-      List<double> focusAreaPercentages = [];
+      List<ChartDataSeries> focusAreaWiseRisks = [];
+      List<double> noOfRisks = [];
+      List<double> noOfMitigationActions = [];
+      double totalNoOfRisks = 0;
+      double totalNoOfActions = 0;
 
       foreach (var focusArea in focusAreas)
       {
-        var focusAreaQuery = _context.ActivityAssessment.Where(x => x.intFocus == focusArea.Id).ToList();
-        var totalfocusAreaActivities = focusAreaQuery.Count;
-        var percentageCompletion = totalfocusAreaActivities > 0 ? (focusAreaQuery.Select(x => GetCompletionValue(x.ImpStatusId))
-                                      .Sum() / totalfocusAreaActivities) * 100 : 0;
-        focusAreaPercentages.Add(percentageCompletion);
+        int focusAreaRisks = _context.RiskRegister.Where(x => x.FocusArea == focusArea.Id).Count();
+        int totalActions = _context.RiskRegister.Include(x => x.RiskTreatmentPlans).ThenInclude(x => x.QuarterlyRiskActions)
+          .ToList()
+          .Where(x => x.FocusArea == focusArea.Id && x.RiskTreatmentPlans.Any() && x.RiskTreatmentPlans.Any(y => y.QuarterlyRiskActions != null && y.QuarterlyRiskActions.Any())).Sum(x => x.RiskTreatmentPlans.Sum(y => y.QuarterlyRiskActions.Count));
+        noOfRisks.Add(focusAreaRisks);
+        noOfMitigationActions.Add(totalActions);
       }
 
-      List<double> yearPercentages = [];
-
-      for (int year = 2016; year <= DateTime.Now.Year + 1; year++)
+      var chartFocusAreas = focusAreas;
+      chartFocusAreas.Add(new
       {
-        var yearQuery = _context.ActivityAssessment.Where(x => x.Fyear == year).ToList();
-        var totalyearActivities = yearQuery.Count;
-        var percentageCompletion = totalyearActivities > 0 ? (yearQuery.Select(x => GetCompletionValue(x.ImpStatusId))
-                                      .Sum() / totalyearActivities) * 100 : 0;
-        yearPercentages.Add(percentageCompletion);
-      }
+        Id = DateTime.Now.Nanosecond,
+        Name = "Total"
+      });
+      noOfRisks.Add(totalNoOfRisks);
+      noOfMitigationActions.Add(totalNoOfActions);
 
-      Dictionary<int, List<double>> yearFAsData = new();
-
-      foreach (var year in financialYears)
+      focusAreaWiseRisks.Add(new ChartDataSeries()
       {
-        List<double> percentages = [];
-        foreach (var focusArea in focusAreas)
-        {
-          var activites = _context.ActivityAssessment.Where(x => x.Fyear == year && x.intFocus == focusArea.Id).ToList();
-          var fullyCompletedActivites = activites.Count;
-          var percentageCompletion = fullyCompletedActivites > 0 ? (activites.Select(x => GetCompletionValue(x.ImpStatusId))
-                                      .Sum() / fullyCompletedActivites) * 100 : 0;
-          percentages.Add(percentageCompletion);
-        }
-        yearFAsData.Add(year, percentages);
-      }
+        name = "No. of Risks",
+        data = noOfRisks
+      });
+      focusAreaWiseRisks.Add(new ChartDataSeries()
+      {
+        name = "Mitigation Actions",
+        data = noOfMitigationActions
+      });
+
 
       List<double> implementedCounts = [];
 
@@ -203,6 +122,17 @@ namespace MEMIS.Controllers.Risk
       implementedCounts.Add(fullyImplementedCount);
       implementedCounts.Add(partiallyImplementedCount);
       implementedCounts.Add(notImplementedCount);
+
+      List<double> implementedCorporateCounts = [];
+
+      double fullyImplementedCorporateCount = _context.QuarterlyRiskActions.Where(x => x.ImpStatusId == 3).Count();
+      double partiallyImplementedCorporateCount = _context.QuarterlyRiskActions.Where(x => x.ImpStatusId == 2).Count();
+      double notImplementedCorporateCount = _context.QuarterlyRiskActions.Where(x => x.ImpStatusId == 1).Count();
+
+      implementedCorporateCounts.Add(fullyImplementedCorporateCount + partiallyImplementedCorporateCount + notImplementedCorporateCount);
+      implementedCorporateCounts.Add(fullyImplementedCorporateCount);
+      implementedCorporateCounts.Add(partiallyImplementedCorporateCount);
+      implementedCorporateCounts.Add(notImplementedCorporateCount);
 
       var categories = _context.RiskCategorys.OrderBy(x => x.CategoryName).Select(x => new
       {
@@ -248,38 +178,15 @@ namespace MEMIS.Controllers.Risk
         TotalActionsImplemented = _context.RiskRegister.Include(x => x.RiskTreatmentPlans).ThenInclude(x => x.QuarterlyRiskActions).ToList().Where(x => x.RiskTreatmentPlans.Any() && x.RiskTreatmentPlans.Any(x => x.QuarterlyRiskActions != null && x.QuarterlyRiskActions.Any() && x.QuarterlyRiskActions.Any(z => z.ImpStatusId == 3))).Sum(x => x.RiskTreatmentPlans.Sum(y => y.QuarterlyRiskActions.Where(x => x.ImpStatusId == 3).Count())),
         TotalActionsNotImplemented = _context.RiskRegister.Include(x => x.RiskTreatmentPlans).ThenInclude(x => x.QuarterlyRiskActions).ToList().Where(x => x.RiskTreatmentPlans.Any() && x.RiskTreatmentPlans.Any(x => x.QuarterlyRiskActions != null && x.QuarterlyRiskActions.Any() && x.QuarterlyRiskActions.Any(z => z.ImpStatusId != 3))).Sum(x => x.RiskTreatmentPlans.Sum(y => y.QuarterlyRiskActions.Where(x => x.ImpStatusId != 3).Count())),
         ImplementedCounts = implementedCounts,
+        CorporateImplementedCounts = implementedCorporateCounts,
         CategoryWiseRiskMovementTrend = categoryWiseRisksDataSeries,
         Colors = GenerateRandomColors(categories.Count),
         Categories = categories.Select(x => x.Name).ToList(),
         CategoryRisks = CategoryRisks,
         CurrentYearCategoryRisks = CurrentYearCategoryRisks,
 
-        StrategicInterventions = StrategicInterventions.Select(x => x.Name).ToList(),
-        YearlyStrategicInterventionTrend = yearSIImpData.Select(x => new ChartDataSeries()
-        {
-          name = x.Key.ToString(),
-          data = x.Value
-        }).ToList(),
-        FocusAreas = focusAreas.Select(x => x.Name).ToList(),
-        YearlyFocusAreaTrend = yearFAsData.Select(x => new ChartDataSeries()
-        {
-          name = x.Key.ToString(),
-          data = x.Value
-        }).ToList(),
-        FocusAreasPercentages = focusAreaPercentages,
-        YearlyStrategicPlanTrend = new List<ChartDataSeries>()
-        {
-          new ChartDataSeries()
-          {
-            name = "Overall Performance for Strategic Plan",
-            data = yearPercentages
-          },
-          new ChartDataSeries()
-          {
-            name = "Target Line",
-            data = yearPercentages.Select(x => 90.0).ToList()
-          }
-        }
+        FocusAreas = chartFocusAreas.Select(x => x.Name).ToList(),
+        RisksFocusAreaTrend = focusAreaWiseRisks,
       };
 
       return View(data);

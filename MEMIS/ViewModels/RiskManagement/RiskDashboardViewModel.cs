@@ -11,6 +11,7 @@ namespace MEMIS.ViewModels.RiskManagement
     public int TotalRisksReduced { get; set; }
     public int TotalRisksIncreased { get; set; }
     public List<double> ImplementedCounts { get; set; } = [];
+    public List<double> CorporateImplementedCounts { get; set; } = [];
     public List<double> CategoryRisks { get; set; } = [];
     public List<double> CurrentYearCategoryRisks { get; set; } = [];
     public List<string> Categories = [];
@@ -24,7 +25,7 @@ namespace MEMIS.ViewModels.RiskManagement
     public List<double> FocusAreasPercentages { get; set; } = [];
     public List<string> Years = GetYearsSince2016();
     public List<ChartDataSeries> YearlyStrategicPlanTrend = new();
-    public List<ChartDataSeries> YearlyFocusAreaTrend = new();
+    public List<ChartDataSeries> RisksFocusAreaTrend = new();
 
     private static List<string> GetYearsSince2016()
     {
