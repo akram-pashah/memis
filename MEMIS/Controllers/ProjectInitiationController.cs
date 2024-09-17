@@ -371,30 +371,30 @@ namespace MEMIS.Controllers
 		}
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public async Task<IActionResult> AddStakeholder(StakeholderDto stakeholderdto)
+		public async Task<IActionResult> AddStakeholder(ProjectInitiationDetailsDto stakeholderdto)
 		{
 			if (ModelState.IsValid)
 			{
-				StakeHolder _data = new()
-				{
-					ProjectInitiationId = stakeholderdto.ProjectInitiationId,
-					StakeholderName = stakeholderdto.StakeholderName,
-					ContactPersonName = stakeholderdto.ContactPersonName,
-					ContactPersonEmail = stakeholderdto.ContactPersonEmail,
-					ContactPersonAddress = stakeholderdto.ContactPersonAddress,
-					ContactPersonPhone = stakeholderdto.ContactPersonPhone,
-					ContactPersonWebsite = stakeholderdto.ContactPersonWebsite,
-					Impact=stakeholderdto.Impact,
-					Influence=stakeholderdto.Influence,
-					StakeHolderImportant=stakeholderdto.StakeHolderImportant,
-					StakeholderContribution=stakeholderdto.StakeholderContribution,
-					Stakeholderblock=stakeholderdto.Stakeholderblock,
-					StakeholderStrategy=stakeholderdto.StakeholderStrategy,
+				//StakeHolder _data = new()
+				//{
+				//	ProjectInitiationId = stakeholderdto.ProjectInitiationId,
+				//	StakeholderName = stakeholderdto.StakeholderName,
+				//	ContactPersonName = stakeholderdto.ContactPersonName,
+				//	ContactPersonEmail = stakeholderdto.ContactPersonEmail,
+				//	ContactPersonAddress = stakeholderdto.ContactPersonAddress,
+				//	ContactPersonPhone = stakeholderdto.ContactPersonPhone,
+				//	ContactPersonWebsite = stakeholderdto.ContactPersonWebsite,
+				//	Impact=stakeholderdto.Impact,
+				//	Influence=stakeholderdto.Influence,
+				//	StakeHolderImportant=stakeholderdto.StakeHolderImportant,
+				//	StakeholderContribution=stakeholderdto.StakeholderContribution,
+				//	Stakeholderblock=stakeholderdto.Stakeholderblock,
+				//	StakeholderStrategy=stakeholderdto.StakeholderStrategy,
 
-				};
-				_context.Add(_data);
-				await _context.SaveChangesAsync();
-				return RedirectToAction(nameof(Add), new { id = stakeholderdto.ProjectInitiationId });
+				//};
+				//_context.Add(_data);
+				//await _context.SaveChangesAsync();
+				//return RedirectToAction(nameof(Add), new { id = stakeholderdto.ProjectInitiationId });
 			}
 			return RedirectToAction(nameof(Add));
 		}
