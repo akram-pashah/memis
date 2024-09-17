@@ -1,15 +1,11 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using cloudscribe.Pagination.Models;
+using MEMIS.Data;
+using MEMIS.Helpers.ExcelReports;
+using MEMIS.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using MEMIS.Data;
-using cloudscribe.Pagination.Models;
-using MEMIS.Models;
-using Microsoft.AspNetCore.Identity;
-using MEMIS.Helpers.ExcelReports;
 
 namespace MEMIS.Controllers
 {
@@ -81,6 +77,46 @@ namespace MEMIS.Controllers
       return View(annualImplemtationPlan);
     }
 
+    [HttpGet]
+    public JsonResult GetStrategicObjectives(int focusAreaId)
+    {
+      var strategicObjectives = _context.StrategicObjective
+                                        .Where(so => so.intFocus == focusAreaId)
+                                        .Select(so => new { so.intObjective, so.ObjectiveName })
+                                        .ToList();
+      return Json(strategicObjectives);
+    }
+
+    [HttpGet]
+    public JsonResult GetStrategicInterventions(int objectiveId)
+    {
+      var interventions = _context.StrategicIntervention
+                                  .Where(si => si.intObjective == objectiveId)
+                                  .Select(si => new { si.intIntervention, si.InterventionName })
+                                  .ToList();
+      return Json(interventions);
+    }
+
+    [HttpGet]
+    public JsonResult GetStrategicActions(int interventionId)
+    {
+      var actions = _context.StrategicAction
+                            .Where(sa => sa.intIntervention == interventionId)
+                            .Select(sa => new { sa.intAction, sa.actionName })
+                            .ToList();
+      return Json(actions);
+    }
+
+    [HttpGet]
+    public JsonResult GetActivities(int actionId)
+    {
+      var activities = _context.Activity
+                               .Where(a => a.intAction == actionId)
+                               .Select(a => new { a.intActivity, a.activityName })
+                               .ToList();
+      return Json(activities);
+    }
+
     // GET: AnnualImplemtationPlans/Create
     public IActionResult Create()
     {
@@ -90,7 +126,7 @@ namespace MEMIS.Controllers
       ViewData["intAction"] = new SelectList(_context.StrategicAction, "intAction", "actionName");
       ViewData["intIntervention"] = new SelectList(_context.StrategicIntervention, "intIntervention", "InterventionName");
       ViewData["intObjective"] = new SelectList(_context.StrategicObjective, "intObjective", "ObjectiveName");
-      ViewBag.FocusAreas=_context.FocusArea.ToList();
+      ViewBag.FocusAreas = _context.FocusArea.ToList();
       return View();
     }
 

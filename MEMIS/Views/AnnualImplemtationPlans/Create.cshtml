@@ -1,9 +1,9 @@
 @model MEMIS.Data.AnnualImplemtationPlan
 
 @{
-  ViewData["Title"] = "Create";
-  //Layout = "~/Views/Shared/_PlanningLayout.cshtml";
-  Layout = "~/Pages/Shared/_ContentNavbarLayout.cshtml";
+    ViewData["Title"] = "Create";
+    //Layout = "~/Views/Shared/_PlanningLayout.cshtml";
+    Layout = "~/Pages/Shared/_ContentNavbarLayout.cshtml";
 }
 
 <h1>Create</h1>
@@ -52,7 +52,12 @@
                 </select>
             </div>
             <br />
-            c
+            <div class="form-group">
+                <label asp-for="intActivity" class="control-label"></label>
+                <select id="Activity" asp-for="intActivity" class="form-control">
+                    <option value="">Select Activity</option>
+                </select>
+            </div>
             <br />
             <div class="form-group">
                 <label asp-for="baseline" class="control-label"></label>
@@ -86,7 +91,7 @@
             <br />
             <div class="form-group">
                 <label asp-for="intDept" class="control-label"></label>
-                <select asp-for="intDept" class ="form-control" asp-items="ViewBag.intDept"></select>
+                <select asp-for="intDept" class="form-control" asp-items="ViewBag.intDept"></select>
             </div>
             <br />
             <div class="form-group">
@@ -105,7 +110,7 @@
 }*@
 
 @section Scripts {
-  <script>
+    <script>
         function loadStrategicObjectives(focusAreaId) {
             if (focusAreaId) {
                 $.getJSON('@Url.Action("GetStrategicObjectives")', { focusAreaId: focusAreaId }, function (data) {
@@ -113,7 +118,7 @@
                     $objectiveDropdown.empty();
                     $objectiveDropdown.append('<option value="">Select Strategic Objective</option>');
                     $.each(data, function (index, item) {
-                        $objectiveDropdown.append('<option value="' + item.intObjective + '">' + item.ObjectiveName + '</option>');
+                        $objectiveDropdown.append('<option value="' + item.intObjective + '">' + item.objectiveName + '</option>');
                     });
                 });
             }
@@ -126,7 +131,7 @@
                     $interventionDropdown.empty();
                     $interventionDropdown.append('<option value="">Select Strategic Intervention</option>');
                     $.each(data, function (index, item) {
-                        $interventionDropdown.append('<option value="' + item.intIntervention + '">' + item.InterventionName + '</option>');
+                        $interventionDropdown.append('<option value="' + item.intIntervention + '">' + item.interventionName + '</option>');
                     });
                 });
             }
