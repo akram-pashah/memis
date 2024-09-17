@@ -1,5 +1,6 @@
 using MEMIS.Data;
 using MEMIS.Data.Project;
+using MEMIS.Models.Project;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
