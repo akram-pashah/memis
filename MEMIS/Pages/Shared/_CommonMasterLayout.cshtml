@@ -14,7 +14,69 @@
 
     @{
         string title = ViewData["title"] as string ?? "";
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         string appName = TempData.Peek("appName") as string ?? "";
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         string productPage = TempData.Peek("productPage") as string ?? "";
     }
     <title>@title | @appName</title>
@@ -80,7 +142,8 @@
     <!-- Main JS-->
     <script src='~/js/main.js'></script>
     <script async defer src="https://buttons.github.io/buttons.js"></script>
-    // <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    //
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/js/jquery.dataTables.min.js"></script>
     <link href="~/css/jquery.dataTables.css" rel="stylesheet" />
 
@@ -109,21 +172,21 @@
             window.reinitializeDataTable = reinitializeDataTable;
         });
         $(document).ready(function () {
-            $('form').submit(function (e) {
-                e.preventDefault(); // Prevent the default form submission
+            // $('form').submit(function (e) {
+            //     e.preventDefault(); // Prevent the default form submission
 
-                // Trigger the modal dialog
-                $('#submitModal').modal('show');
-            });
+            //     // Trigger the modal dialog
+            //     $('#submitModal').modal('show');
+            // });
 
             // Handle the form submission once the user confirms in the modal
-            $('#confirmSubmit').click(function () {
-                // Hide the modal
-                $('#submitModal').modal('hide');
+            // $('#confirmSubmit').click(function () {
+            //     // Hide the modal
+            //     $('#submitModal').modal('hide');
 
-                // Submit the form
-                $('form').off('submit').submit();
-            });
+            //     // Submit the form
+            //     $('form').off('submit').submit();
+            // });
         });
     </script>
     <!-- Page Scripts-->
@@ -134,7 +197,7 @@
     @*<script src="~/js/site.js" asp-append-version="true"></script>*@
     <script src="~/js/form-validation.js"></script>
 
-    
+
     <script type="text/javascript">
         $(document).ready(function () {
             $('select').each(function () {
