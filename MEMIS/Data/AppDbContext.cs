@@ -72,6 +72,7 @@ namespace MEMIS.Data
     public DbSet<ProjectOthersTab>? ProjectOthersTab { get; set; }
 
     public DbSet<StakeHolder>? StakeHolder { get; set; }
+    public DbSet<ProjectSubmittalTracker> ProjectSubmittalTracker {  get; set; }
 
     public DbSet<MEMIS.Data.Activity>? Activity { get; set; }
     public DbSet<RiskDetail> RiskDetails { get; set; }

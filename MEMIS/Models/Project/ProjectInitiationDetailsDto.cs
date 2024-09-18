@@ -11,22 +11,24 @@ using System.Threading.Tasks;
 
 namespace MEMIS.Models
 {
-    public class ProjectInitiationDetailsDto
-    {
-        public int ProjectInitId { get; set; }
+  public class ProjectInitiationDetailsDto
+  {
+    public int ProjectInitId { get; set; }
 
-		public ActivityPlanDto ActivityPlan { get; set; }
-		public ProjectPaymentDto ProjectPayment { get; set; }
-		public ProjectRiskIdentificationDto RiskIdentification { get; set; }
-		public ProjectOthersTab ProjectOthersTab { get; set; }
-		public StakeHolder StakeHolder { get; set; }
-        public MonitoringAndControl MonitoringAndControl { get; set; }
-		public List<ActivityPlan> ActivityPlans { get; set; }
-        public List<ProjectPayment> ProjectPayments { get; set; }
-        public List<ProjectRiskIdentification> ProjectRiskIdentifications { get; set; }
-        public List<ProjectOthersTab> ProjectOthersTabs { get; set; }
-		public List<StakeHolder> StakeHolders { get; set; }
-        public List<MonitoringAndControl> MonitoringAndControls { get; set; }
+    public ActivityPlanDto ActivityPlan { get; set; }
+    public ProjectPaymentDto ProjectPayment { get; set; }
+    public ProjectRiskIdentificationDto RiskIdentification { get; set; }
+    public ProjectOthersTab ProjectOthersTab { get; set; }
+    public StakeHolder StakeHolder { get; set; }
+    public MonitoringAndControl MonitoringAndControl { get; set; }
+    public ProjectSubmittalTracker ProjectSubmittalTracker { get; set; }
+    public List<ActivityPlan> ActivityPlans { get; set; }
+    public List<ProjectPayment> ProjectPayments { get; set; }
+    public List<ProjectRiskIdentification> ProjectRiskIdentifications { get; set; }
+    public List<ProjectOthersTab> ProjectOthersTabs { get; set; }
+    public List<StakeHolder> StakeHolders { get; set; }
+    public List<MonitoringAndControl> MonitoringAndControls { get; set; }
+    public List<ProjectSubmittalTracker> SubmittalTrackers { get; set; }
 
-    }
+  }
 }
