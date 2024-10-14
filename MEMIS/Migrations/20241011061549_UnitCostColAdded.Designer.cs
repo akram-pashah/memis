@@ -4,6 +4,7 @@ using MEMIS.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MEMIS.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241011061549_UnitCostColAdded")]
+    partial class UnitCostColAdded
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -76,6 +79,9 @@ namespace MEMIS.Migrations
                     b.Property<int?>("Quarter")
                         .HasColumnType("int");
 
+                    b.Property<double?>("UnitCost")
+                        .HasColumnType("float");
+
                     b.Property<int?>("actType")
                         .HasColumnType("int");
 
@@ -108,9 +114,6 @@ namespace MEMIS.Migrations
 
                     b.Property<string>("outputIndicator")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<double?>("unitCost")
-                        .HasColumnType("float");
 
                     b.HasKey("intAssess");
 
@@ -145,6 +148,9 @@ namespace MEMIS.Migrations
                     b.Property<int?>("Quarter")
                         .HasColumnType("int");
 
+                    b.Property<double?>("UnitCost")
+                        .HasColumnType("float");
+
                     b.Property<double?>("budgetAmount")
                         .HasColumnType("float");
 
@@ -153,9 +159,6 @@ namespace MEMIS.Migrations
 
                     b.Property<Guid?>("intRegion")
                         .HasColumnType("uniqueidentifier");
-
-                    b.Property<double?>("unitCost")
-                        .HasColumnType("float");
 
                     b.HasKey("intRegionAssess");
 
@@ -339,6 +342,9 @@ namespace MEMIS.Migrations
                     b.Property<int?>("Quarter")
                         .HasColumnType("int");
 
+                    b.Property<double?>("UnitCost")
+                        .HasColumnType("float");
+
                     b.Property<double?>("budgetAmount")
                         .HasColumnType("float");
 
@@ -350,9 +356,6 @@ namespace MEMIS.Migrations
 
                     b.Property<Guid?>("intRegion")
                         .HasColumnType("uniqueidentifier");
-
-                    b.Property<double?>("unitCost")
-                        .HasColumnType("float");
 
                     b.HasKey("intRegionAssess");
 
@@ -415,6 +418,9 @@ namespace MEMIS.Migrations
                     b.Property<string>("Risk")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<double?>("UnitCost")
+                        .HasColumnType("float");
+
                     b.Property<int?>("Year")
                         .HasColumnType("int");
 
@@ -455,9 +461,6 @@ namespace MEMIS.Migrations
                     b.Property<string>("subProgram")
                         .HasMaxLength(1000)
                         .HasColumnType("nvarchar(1000)");
-
-                    b.Property<double?>("unitCost")
-                        .HasColumnType("float");
 
                     b.HasKey("Id");
 
@@ -1712,6 +1715,9 @@ namespace MEMIS.Migrations
                         .HasMaxLength(1000)
                         .HasColumnType("nvarchar(1000)");
 
+                    b.Property<double?>("UnitCost")
+                        .HasColumnType("float");
+
                     b.Property<int?>("intAction")
                         .HasColumnType("int");
 
@@ -1723,9 +1729,6 @@ namespace MEMIS.Migrations
 
                     b.Property<int?>("intObjective")
                         .HasColumnType("int");
-
-                    b.Property<double?>("unitCost")
-                        .HasColumnType("float");
 
                     b.HasKey("Id");
 
@@ -2118,9 +2121,6 @@ namespace MEMIS.Migrations
 
                     b.Property<string>("Quarter")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<double?>("UnitCost")
-                        .HasColumnType("float");
 
                     b.HasKey("Id");
 

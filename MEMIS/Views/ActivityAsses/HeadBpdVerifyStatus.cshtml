@@ -14,92 +14,98 @@
     <div class="card-body">
         <form asp-action="HeadBpdVerifyStatus" method="post">
             <div class="row">
-                <div class="col-md-6">
+              <div class="col-md-6">
 
 
-                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                    <input type="hidden" asp-for="intAssess" />
-                    @*             <div class="form-group">
-                    <label asp-for="StrategicObjective" class="control-label"></label>
-                    @Html.DropDownList("StrategicObjective", new SelectList(ViewBag.StrategicPlanList, "Id", "strategicObjective", Model.StrategicObjective), new { @class = "form-control form-select", @required = "required" })
-                    <span asp-validation-for="StrategicObjective" class="text-danger"></span>
-                    </div>
-                    <br />
-                    *@            <div class="form-group">
-                        <input asp-for="intAssess" hidden />
-                        <label asp-for="intIntervention" class="control-label"></label>
-                        @Html.DropDownList("intIntervention", new SelectList(ViewBag.StrategicIntervention, "intIntervention", "InterventionName"), new { @class = "form-control form-select", @required = "required" })
-                    </div>
-                    <br />
-                    <div class="form-group">
-                        <label asp-for="intAction" class="control-label"></label>
-                        @Html.DropDownList("intAction", new SelectList(ViewBag.StrategicAction, "intAction", "actionName"), new { @class = "form-control form-select", @required = "required" })
-                    </div>
-                    <br />
-                    <div class="form-group">
-                        <label asp-for="intActivity" class="control-label"></label>
-                        @Html.DropDownList("intActivity", new SelectList(ViewBag.Activity, "intActivity", "activityName"), new { @class = "form-control form-select", @required = "required" })
-                    </div>
-                    <br />
-                    <div class="form-group">
-                        <label asp-for="outputIndicator" class="control-label"></label>
-                        <input asp-for="outputIndicator" class="form-control" />
-                        <span asp-validation-for="outputIndicator" class="text-danger"></span>
-                    </div>
-                    <br />
-                    <div class="form-group">
-                        <label asp-for="baseline" class="control-label"></label>
-                        <input asp-for="baseline" class="form-control" type="number" />
-                        <span asp-validation-for="baseline" class="text-danger"></span>
-                    </div>
-                    <br />
-                    <div class="form-group">
-                        <label asp-for="budgetCode" class="control-label"></label>
-                        <input asp-for="budgetCode" class="form-control" type="number" />
-                        <span asp-validation-for="budgetCode" class="text-danger"></span>
-                    </div>
-                    <br />
-                    <div class="form-group">
-                        <label asp-for="comparativeTarget" class="control-label"></label>
-                        <input asp-for="comparativeTarget" class="form-control" type="number" />
-                        <span asp-validation-for="comparativeTarget" class="text-danger"></span>
-                    </div>
-                    <br />
-                    <div class="form-group">
-                        <label asp-for="justification" class="control-label"></label>
-                        <input asp-for="justification" class="form-control" />
-                        <span asp-validation-for="justification" class="text-danger"></span>
-                    </div>
-                    <br />
-                    <div class="form-group">
-                        <label asp-for="budgetAmount" class="control-label"></label>
-                        <input asp-for="budgetAmount" id="budgetAmount" class="form-control" type="number" />
-                        <span asp-validation-for="budgetAmount" class="text-danger"></span>
-                    </div>
-                    <br />
-                    <div class="form-group">
-                        <label asp-for="IdentifiedRisks" class="control-label"></label>
-                        <input asp-for="IdentifiedRisks" class="form-control" type="text" />
-                        <span asp-validation-for="IdentifiedRisks" class="text-danger"></span>
-                    </div>
-                    <br />
-                    <div class="form-group">
-                        <label asp-for="intDept" class="control-label"></label>
-                        @Html.DropDownList("intDept", new SelectList(ViewBag.Depts, "intDept", "deptName"), new { @class = "form-control form-select", @required = "required" })
-                        @* <select asp-for="intDept" class="form-control" asp-items="ViewBag.Depts"></select> *@
-                    </div>
-                    <br />
-                    <div class="form-group">
-                        <label asp-for="ApprStatus" class="control-label">Approval Status</label>
-                        <select asp-for="ApprStatus" class="form-control" asp-items="ViewBag.Approval"></select>
-                        <span asp-validation-for="ApprStatus" class="text-danger"></span>
-                    </div>
-                    <br />
-                    <div class="form-group">
-                        <input type="submit" value="Submit" class="btn btn-primary" />
-                    </div>
-
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="intAssess" />
+                @*             <div class="form-group">
+    <label asp-for="StrategicObjective" class="control-label"></label>
+    @Html.DropDownList("StrategicObjective", new SelectList(ViewBag.StrategicPlanList, "Id", "strategicObjective", Model.StrategicObjective), new { @class = "form-control form-select", @required = "required" })
+    <span asp-validation-for="StrategicObjective" class="text-danger"></span>
+    </div>
+    <br />
+                *@            <div class="form-group">
+                  <input asp-for="intAssess" hidden />
+                  <label asp-for="intIntervention" class="control-label"></label>
+                  @Html.DropDownList("intIntervention", new SelectList(ViewBag.StrategicIntervention, "intIntervention", "InterventionName"), new { @class = "form-control form-select", @required = "required" })
                 </div>
+                <br />
+                <div class="form-group">
+                  <label asp-for="intAction" class="control-label"></label>
+                  @Html.DropDownList("intAction", new SelectList(ViewBag.StrategicAction, "intAction", "actionName"), new { @class = "form-control form-select", @required = "required" })
+                </div>
+                <br />
+                <div class="form-group">
+                  <label asp-for="intActivity" class="control-label"></label>
+                  @Html.DropDownList("intActivity", new SelectList(ViewBag.Activity, "intActivity", "activityName"), new { @class = "form-control form-select", @required = "required" })
+                </div>
+                <br />
+                <div class="form-group">
+                  <label asp-for="outputIndicator" class="control-label"></label>
+                  <input asp-for="outputIndicator" class="form-control" />
+                  <span asp-validation-for="outputIndicator" class="text-danger"></span>
+                </div>
+                <br />
+                <div class="form-group">
+                  <label asp-for="baseline" class="control-label"></label>
+                  <input asp-for="baseline" class="form-control" type="number" />
+                  <span asp-validation-for="baseline" class="text-danger"></span>
+                </div>
+                <br />
+                <div class="form-group">
+                  <label asp-for="budgetCode" class="control-label"></label>
+                  <input asp-for="budgetCode" class="form-control" type="number" />
+                  <span asp-validation-for="budgetCode" class="text-danger"></span>
+                </div>
+                <br />
+                <div class="form-group">
+                  <label asp-for="comparativeTarget" class="control-label"></label>
+                  <input asp-for="comparativeTarget" class="form-control" type="number" />
+                  <span asp-validation-for="comparativeTarget" class="text-danger"></span>
+                </div>
+                <br />
+                <div class="form-group">
+                  <label asp-for="justification" class="control-label"></label>
+                  <input asp-for="justification" class="form-control" />
+                  <span asp-validation-for="justification" class="text-danger"></span>
+                </div>
+                <br />
+                <div class="form-group">
+                  <label asp-for="budgetAmount" class="control-label"></label>
+                  <input asp-for="budgetAmount" id="budgetAmount" class="form-control" type="number" />
+                  <span asp-validation-for="budgetAmount" class="text-danger"></span>
+                </div>
+                <br />
+                <div class="form-group">
+                  <label asp-for="unitCost" class="control-label"></label>
+                  <input asp-for="unitCost"  class="form-control" type="number" />
+                  <span asp-validation-for="unitCost" class="text-danger"></span>
+                </div>
+                <br/>
+                <div class="form-group">
+                  <label asp-for="IdentifiedRisks" class="control-label"></label>
+                  <input asp-for="IdentifiedRisks" class="form-control" type="text" />
+                  <span asp-validation-for="IdentifiedRisks" class="text-danger"></span>
+                </div>
+                <br />
+                <div class="form-group">
+                  <label asp-for="intDept" class="control-label"></label>
+                  @Html.DropDownList("intDept", new SelectList(ViewBag.Depts, "intDept", "deptName"), new { @class = "form-control form-select", @required = "required" })
+                  @* <select asp-for="intDept" class="form-control" asp-items="ViewBag.Depts"></select> *@
+                </div>
+                <br />
+                <div class="form-group">
+                  <label asp-for="ApprStatus" class="control-label">Approval Status</label>
+                  <select asp-for="ApprStatus" class="form-control" asp-items="ViewBag.Approval"></select>
+                  <span asp-validation-for="ApprStatus" class="text-danger"></span>
+                </div>
+                <br />
+                <div class="form-group">
+                  <input type="submit" value="Submit" class="btn btn-primary" />
+                </div>
+
+              </div>
                 <div class="col-md-6">
                     <div class="input-group">
                         <div class="col">
@@ -140,27 +146,31 @@
                                                 <th>Quarter</th>
                                                 <th>Target</th>
                                                 <th>Budget</th>
+                                              <th>UnitCost</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             @for (int i = 0; i < Model.QuaterlyPlans?.Count; i++)
                                             {
                                                 <tr>
-                                                    <td>
-                                                        @(i + 1)
-                                                        @* <input asp-for="QuaterlyPlans.ToList()[i].Id" class="form-control" hidden />
-                                                    <input asp-for="QuaterlyPlans.ToList()[i].DeptPlanId" class="form-control" hidden />
-                                                    <input asp-for="QuaterlyPlans.ToList()[i].ActivityAccessId" class="form-control" hidden /> *@
-                                                    </td>
-                                                    <td>
-                                                        <label class="form-control">@Model.QuaterlyPlans.ToList()[i].Quarter</label>
-                                                    </td>
-                                                    <td>
-                                                        <input class="form-control" asp-for="QuaterlyPlans.ToList()[i].QTarget" />
-                                                    </td>
-                                                    <td>
-                                                        <input class="form-control" asp-for="QuaterlyPlans.ToList()[i].QBudget" />
-                                                    </td>
+                                                  <td>
+                                                    @(i + 1)
+                                                    @* <input asp-for="QuaterlyPlans.ToList()[i].Id" class="form-control" hidden />
+      <input asp-for="QuaterlyPlans.ToList()[i].DeptPlanId" class="form-control" hidden />
+      <input asp-for="QuaterlyPlans.ToList()[i].ActivityAccessId" class="form-control" hidden /> *@
+                                                  </td>
+                                                  <td>
+                                                    <label class="form-control">@Model.QuaterlyPlans.ToList()[i].Quarter</label>
+                                                  </td>
+                                                  <td>
+                                                    <input class="form-control" asp-for="QuaterlyPlans.ToList()[i].QTarget" />
+                                                  </td>
+                                                  <td>
+                                                    <input class="form-control" asp-for="QuaterlyPlans.ToList()[i].QBudget" />
+                                                  </td>
+                                                  <td>
+                                                    <input class="form-control" asp-for="QuaterlyPlans.ToList()[i].UnitCost" />
+                                                  </td>
                                                 </tr>
                                             }
                                         </tbody>
@@ -178,6 +188,7 @@
                                                     <th>Quarter</th>
                                                     <th>Target</th>
                                                     <th>Budget</th>
+                                                  <th>UnitCost</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -200,7 +211,9 @@
                                                         <td>
                                                             <input class="form-control" asp-for="@region.QuaterlyPlans.ToList()[i].QBudget" />
                                                         </td>
-
+                                                        <td>
+                                                          <input class="form-control" asp-for="@region.QuaterlyPlans.ToList()[i].UnitCost" />
+                                                        </td>
                                                     </tr>
                                                 }
                                             </tbody>

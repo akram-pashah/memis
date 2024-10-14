@@ -31,6 +31,7 @@
                         <th>@Html.DisplayNameFor(model => model.Data[0].budgetAmount)</th>
                         <th>@Html.DisplayNameFor(model => model.Data[0].QTarget)</th>
                         <th>@Html.DisplayNameFor(model => model.Data[0].QBudget)</th>
+                        <th>@Html.DisplayNameFor(model => model.Data[0].unitCost)</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -38,57 +39,59 @@
                     @foreach (var item in Model.Data)
                     {
                         <tr>
-                            <td>
-                                @if (!string.IsNullOrEmpty(item.DepartmentFk?.deptName))
-                                {
-                                    <span>@item.DepartmentFk?.deptName</span>
-                                }
-                                else
-                                {
-                                    <span>N/A</span>
-                                }
-                            <td>@Html.DisplayFor(modelItem => item.StrategicIntervention.InterventionName)</td>
-                            <td>@Html.DisplayFor(modelItem => item.StrategicAction.actionName)</td>
-                            <td>@Html.DisplayFor(modelItem => item.ActivityFk.activityName)</td>
-                            <td>@Html.DisplayFor(modelItem => item.outputIndicator)</td>
-                            <td>@Html.DisplayFor(modelItem => item.baseline)</td>
-                            <td>@Html.DisplayFor(modelItem => item.comparativeTarget)</td>
-                            <td>@Html.DisplayFor(modelItem => item.justification)</td>
-                            <td>@Html.DisplayFor(modelItem => item.budgetAmount)</td>
-                            <td>@(item.QuaterlyPlans?.Sum(x => x.QTarget)  + item.ActivityAssessRegions?.Where(x => x.QuaterlyPlans.Any()).Sum(x => x.QuaterlyPlans.Sum(x => x.QTarget)) )</td>
-                            <td>@(item.QuaterlyPlans?.Sum(x => x.QBudget)  + item.ActivityAssessRegions?.Where(x => x.QuaterlyPlans.Any()).Sum(x => x.QuaterlyPlans.Sum(x => x.QBudget)) )</td>
-                            <td>
-                                    @{
-                                        if (item.actType == 0)
-                                        {
-                                            // <a asp-action="ShowConsolidatedDeptPlan" asp-route-id="@item.intAssess" data-toggle="tooltip" data-placement="top" title="Details">
-                                            //     <i class="bx bx-detail"></i>
-                                            // </a>
-                                        <div class="btn-group" role="group" aria-label="Actions">
-                                            <a asp-action="Details" asp-route-id="@item.intAssess" class="btn btn-info" data-toggle="tooltip" data-placement="top" title="Details">
-                                                <i class='bx bx-detail'></i>
-                                            </a>
-                                            <a asp-action="HeadVerifyStatus" asp-route-id="@item.intAssess" asp-route-IsVerified="True" class="btn btn-warning" data-toggle="tooltip" data-placement="top" title="Verify">
-                                                <i class='bx bx-check'></i>
-                                            </a>
-                                        </div>
-                                        }
-                                        else if (item.actType == 1)
-                                        {
-                                            // <a asp-action="ShowConsolidatedRegionalAssessment" asp-route-id="@item.intAssess" data-toggle="tooltip" data-placement="top" title="Details">
-                                            //     <i class="bx bx-detail"></i>
-                                            // </a>
-                                        <div class="btn-group" role="group" aria-label="Actions">
-                                            <a asp-action="Details" asp-route-id="@item.intAssess" class="btn btn-info" data-toggle="tooltip" data-placement="top" title="Details">
-                                                <i class='bx bx-detail'></i>
-                                            </a>
-                                            <a asp-action="HeadVerifyStatus" asp-route-id="@item.intAssess" asp-route-IsVerified="True" class="btn btn-warning" data-toggle="tooltip" data-placement="top" title="Verify">
-                                                <i class='bx bx-check'></i>
-                                            </a>
-                                        </div>
-                                        }
-                                    }
-                            </td>
+                          <td>
+                            @if (!string.IsNullOrEmpty(item.DepartmentFk?.deptName))
+                            {
+                              <span>@item.DepartmentFk?.deptName</span>
+                            }
+                            else
+                            {
+                              <span>N/A</span>
+                            }
+                          <td>@Html.DisplayFor(modelItem => item.StrategicIntervention.InterventionName)</td>
+                          <td>@Html.DisplayFor(modelItem => item.StrategicAction.actionName)</td>
+                          <td>@Html.DisplayFor(modelItem => item.ActivityFk.activityName)</td>
+                          <td>@Html.DisplayFor(modelItem => item.outputIndicator)</td>
+                          <td>@Html.DisplayFor(modelItem => item.baseline)</td>
+                          <td>@Html.DisplayFor(modelItem => item.comparativeTarget)</td>
+                          <td>@Html.DisplayFor(modelItem => item.justification)</td>
+                          <td>@Html.DisplayFor(modelItem => item.budgetAmount)</td>
+                          <td>@(item.QuaterlyPlans?.Sum(x => x.QTarget)  + item.ActivityAssessRegions?.Where(x => x.QuaterlyPlans.Any()).Sum(x => x.QuaterlyPlans.Sum(x => x.QTarget)) )</td>
+                          <td>@(item.QuaterlyPlans?.Sum(x => x.QBudget)  + item.ActivityAssessRegions?.Where(x => x.QuaterlyPlans.Any()).Sum(x => x.QuaterlyPlans.Sum(x => x.QBudget)) )</td>
+                          <td>@Html.DisplayFor(modelItem => item.unitCost)</td>
+
+                          <td>
+                            @{
+                              if (item.actType == 0)
+                              {
+                                // <a asp-action="ShowConsolidatedDeptPlan" asp-route-id="@item.intAssess" data-toggle="tooltip" data-placement="top" title="Details">
+                                //     <i class="bx bx-detail"></i>
+                                // </a>
+                                <div class="btn-group" role="group" aria-label="Actions">
+                                  <a asp-action="Details" asp-route-id="@item.intAssess" class="btn btn-info" data-toggle="tooltip" data-placement="top" title="Details">
+                                    <i class='bx bx-detail'></i>
+                                  </a>
+                                  <a asp-action="HeadVerifyStatus" asp-route-id="@item.intAssess" asp-route-IsVerified="True" class="btn btn-warning" data-toggle="tooltip" data-placement="top" title="Verify">
+                                    <i class='bx bx-check'></i>
+                                  </a>
+                                </div>
+                              }
+                              else if (item.actType == 1)
+                              {
+                                // <a asp-action="ShowConsolidatedRegionalAssessment" asp-route-id="@item.intAssess" data-toggle="tooltip" data-placement="top" title="Details">
+                                //     <i class="bx bx-detail"></i>
+                                // </a>
+                                <div class="btn-group" role="group" aria-label="Actions">
+                                  <a asp-action="Details" asp-route-id="@item.intAssess" class="btn btn-info" data-toggle="tooltip" data-placement="top" title="Details">
+                                    <i class='bx bx-detail'></i>
+                                  </a>
+                                  <a asp-action="HeadVerifyStatus" asp-route-id="@item.intAssess" asp-route-IsVerified="True" class="btn btn-warning" data-toggle="tooltip" data-placement="top" title="Verify">
+                                    <i class='bx bx-check'></i>
+                                  </a>
+                                </div>
+                              }
+                            }
+                          </td>
                         </tr>
                     }
                 </tbody>

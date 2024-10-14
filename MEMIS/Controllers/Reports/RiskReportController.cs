@@ -1,5 +1,6 @@
 using MEMIS.Data;
 using MEMIS.Helpers.ExcelReports;
+using MEMIS.Helpers.PdfReports;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.IO;
@@ -27,6 +28,20 @@ namespace MEMIS.Controllers.Reports
         var list = await _context.RiskTreatmentPlans.Include(x => x.QuarterlyRiskActions).ToListAsync();
         var stream = ExportHandler.QuarterlyReport(list);
         return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Quarterly Report.xlsx");
+      }
+      catch (Exception ex)
+      {
+
+        throw;
+      }
+    }
+    public async Task<IActionResult> QuarterlyReportPdf()
+    {
+      try
+      {
+        var list = await _context.RiskTreatmentPlans.Include(x => x.QuarterlyRiskActions).ToListAsync();
+        var stream = PdfHandler.QuarterlyReportToPdf(list);
+          return File(stream, "application/pdf", "Quarterly Report.pdf");
       }
       catch (Exception ex)
       {
@@ -63,6 +78,20 @@ namespace MEMIS.Controllers.Reports
         throw;
       }
     }
+    public async Task<IActionResult> AnnualReportPdf()
+    {
+      try
+      {
+        var list = await _context.RiskRegister.ToListAsync();
+        var stream = PdfHandler.AnnualReportPdf(list);
+          return File(stream, "application/pdf", "Annual Report.pdf");
+      }
+      catch (Exception ex)
+      {
+
+        throw;
+      }
+    }
 
     public async Task<IActionResult> RiskRegister()
     {
@@ -92,6 +121,19 @@ namespace MEMIS.Controllers.Reports
         throw;
       }
     }
+    public async Task<IActionResult> RiskRegisterPdf()
+    {
+      try
+      {
+        var list = await _context.RiskRegister.ToListAsync();
+        var stream = PdfHandler.RiskRegisterReportPdf(list);
+        return File(stream, "application/pdf", "Risk Register.pdf");
+      }
+      catch (Exception ex)
+      {
+        throw;
+      }
+    }
 
     public async Task<IActionResult> RiskTreatmentPlan()
     {
@@ -114,6 +156,20 @@ namespace MEMIS.Controllers.Reports
         var list = await _context.RiskTreatmentPlans.ToListAsync();
         var stream = ExportHandler.RiskTreatmentReport(list);
         return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Risk Treatment Plan.xlsx");
+      }
+      catch (Exception ex)
+      {
+
+        throw;
+      }
+    }
+    public async Task<IActionResult> RiskTreatmentPlanPdf()
+    {
+      try
+      {
+        var list = await _context.RiskTreatmentPlans.ToListAsync();
+        var stream = PdfHandler.RiskTreatmentReportPdf(list);
+        return File(stream, "application/pdf", "Risk Treatment Plan.pdf");
       }
       catch (Exception ex)
       {
@@ -149,6 +205,21 @@ namespace MEMIS.Controllers.Reports
       catch (Exception ex)
       {
 
+        throw;
+      }
+    }
+    public async Task<IActionResult> RiskMonitoringReportPdf()
+    {
+      try
+      {
+        var list = await _context.RiskTreatmentPlans.Include(x => x.RiskRegister)
+          .ThenInclude(x => x.RiskIdentificationFk)
+          .Include(x => x.QuarterlyRiskActions).ToListAsync();
+        var stream = PdfHandler.RiskMonitoringReportPdf(list);
+        return File(stream, "application/pdf", "Risk Monitoring Plan.pdf");
+      }
+      catch (Exception ex)
+      {
         throw;
       }
     }

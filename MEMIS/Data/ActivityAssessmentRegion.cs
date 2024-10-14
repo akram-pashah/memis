@@ -32,6 +32,8 @@ namespace MEMIS.Data
     public double? QAmtSpent { get; set; }
     [Display(Name = "Regional Justification")]
     public double? QRegJustification { get; set; }
+    [Display(Name = "Unit Cost")]
+    public double? unitCost { get; set; }
     [Display(Name = "Appral Status")]
     public int? ApprStatus { get; set; } = 0;
     [Display(Name = "Financial Year")]

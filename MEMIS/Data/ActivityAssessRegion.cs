@@ -16,6 +16,8 @@ namespace MEMIS.Data
     public virtual Guid? intRegion { get; set; }
     [ForeignKey("intRegion")]
     public virtual Region? Region { get; set; }
+    [Display(Name = "Unit Cost")]
+    public double? unitCost { get; set; }
     public double? budgetAmount { get; set; }
     [Display(Name = "Quarter")]
     public int? Quarter { get; set; }

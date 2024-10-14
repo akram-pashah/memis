@@ -53,6 +53,7 @@ namespace MEMIS.Controllers
     }
 
 
+
     // GET: AnnualImplemtationPlans/Details/5
     public async Task<IActionResult> Details(int? id)
     {
@@ -135,7 +136,7 @@ namespace MEMIS.Controllers
     // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create([Bind("Id,subProgram,intFocus,intObjective,intIntervention,intAction,intActivity,baseline,Year,annualTarget,meansofVerification,Risk,intDept")] AnnualImplemtationPlan annualImplemtationPlan)
+    public async Task<IActionResult> Create([Bind("Id,subProgram,intFocus,intObjective,intIntervention,intAction,intActivity,baseline,Year,annualTarget,meansofVerification,Risk,intDept,unitCost")] AnnualImplemtationPlan annualImplemtationPlan)
     {
       if (ModelState.IsValid)
       {
@@ -160,7 +161,7 @@ namespace MEMIS.Controllers
         return NotFound();
       }
 
-      var annualImplemtationPlan = await _context.AnnualImplemtationPlan.FindAsync(id);
+      var annualImplemtationPlan = await _context.AnnualImplemtationPlan.FirstOrDefaultAsync(x =>x.Id == id);
       if (annualImplemtationPlan == null)
       {
         return NotFound();
@@ -179,7 +180,7 @@ namespace MEMIS.Controllers
     // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Edit(int id, [Bind("Id,subProgram,intFocus,intObjective,intIntervention,intAction,intActivity,baseline,Year,annualTarget,meansofVerification,Risk,intDept")] AnnualImplemtationPlan annualImplemtationPlan)
+    public async Task<IActionResult> Edit(int id, [Bind("Id,subProgram,intFocus,intObjective,intIntervention,intAction,intActivity,baseline,Year,annualTarget,meansofVerification,Risk,intDept,unitCost")] AnnualImplemtationPlan annualImplemtationPlan)
     {
       if (id != annualImplemtationPlan.Id)
       {
@@ -296,5 +297,62 @@ namespace MEMIS.Controllers
     {
       return (_context.AnnualImplemtationPlan?.Any(e => e.Id == id)).GetValueOrDefault();
     }
+
+    private string[] getUserRoles()
+    {
+      string userRolesString = HttpContext.Session.GetString("UserRoles");
+      string[] userRoles = userRolesString?.Split(',', StringSplitOptions.RemoveEmptyEntries) ?? Array.Empty<string>();
+      return userRoles;
+    }
+
+    public async Task<IActionResult> AddProgrammePlan()
+    {
+      if (HttpContext.Session.GetString("Department") == null)
+      {
+        return View();
+      }
+      var contextData = _context.ProgramImplementationPlan.Include(a => a.StrategicObjectiveFK).Include(a => a.StrategicInterventionFK).Include(a => a.StrategicActionFK).Include(a => a.ActivityFK);
+      ViewBag.FYear = ListHelper.FYear();
+      return View(await contextData.ToListAsync());
+    }
+
+    public async Task<IActionResult> MoveProgrammePlan(int Id, int FYear)
+    {
+
+      ProgramImplementationPlan? ImplemtationPlan = await _context.ProgramImplementationPlan.Include(a => a.ActivityFK).Include(a => a.StrategicObjectiveFK).Include(a => a.StrategicInterventionFK).Include(a => a.StrategicActionFK).Include(a => a.ActivityFK).Where(x => x.Id == Id).FirstOrDefaultAsync();
+      int startYear = GetFinancialYear(FYear);
+
+      if (ImplemtationPlan != null)
+      {
+        AnnualImplemtationPlan annualImplementation = new()
+        {
+          intIntervention = ImplemtationPlan.intIntervention,
+          intAction = ImplemtationPlan.intAction,
+          intActivity = ImplemtationPlan.intActivity,
+          intObjective = ImplemtationPlan.intObjective,
+          meansofVerification = ImplemtationPlan.MeansofVerification,
+          outputIndicator = ImplemtationPlan.Output,
+          Year = startYear
+        };
+        _context.AnnualImplemtationPlan.Add(annualImplementation);
+        await _context.SaveChangesAsync();
+
+        return RedirectToAction(nameof(Edit), new { Id = annualImplementation.Id });
+      }
+      else
+      {
+        return NotFound();
+      }
+
+    }
+    private static int GetFinancialYear(int FYear)
+    {
+      int currentYear = DateTime.Now.Year;
+      int startYear = currentYear - (currentYear % 5) + FYear;
+
+      return startYear;
+    }
+
+
   }
 }

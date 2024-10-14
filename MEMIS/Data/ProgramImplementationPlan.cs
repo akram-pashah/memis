@@ -24,8 +24,8 @@ namespace MEMIS.Data
     public virtual int? intActivity { get; set; }
     [ForeignKey("intActivity")]
     public virtual Activity? ActivityFK { get; set; }
-
-    
+    [Display(Name = "Unit Cost")]
+    public double? unitCost { get; set; }
     [Required]
     [Display(Name = "Output Indicator")]
     [MaxLength(1000)]

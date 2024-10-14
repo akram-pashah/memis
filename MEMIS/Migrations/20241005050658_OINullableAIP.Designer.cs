@@ -4,6 +4,7 @@ using MEMIS.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MEMIS.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241005050658_OINullableAIP")]
+    partial class OINullableAIP
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -109,9 +112,6 @@ namespace MEMIS.Migrations
                     b.Property<string>("outputIndicator")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<double?>("unitCost")
-                        .HasColumnType("float");
-
                     b.HasKey("intAssess");
 
                     b.HasIndex("intAction");
@@ -153,9 +153,6 @@ namespace MEMIS.Migrations
 
                     b.Property<Guid?>("intRegion")
                         .HasColumnType("uniqueidentifier");
-
-                    b.Property<double?>("unitCost")
-                        .HasColumnType("float");
 
                     b.HasKey("intRegionAssess");
 
@@ -351,9 +348,6 @@ namespace MEMIS.Migrations
                     b.Property<Guid?>("intRegion")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<double?>("unitCost")
-                        .HasColumnType("float");
-
                     b.HasKey("intRegionAssess");
 
                     b.HasIndex("intAssess");
@@ -416,30 +410,39 @@ namespace MEMIS.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("Year")
+                        .IsRequired()
                         .HasColumnType("int");
 
-                    b.Property<long?>("annualTarget")
-                        .HasColumnType("bigint");
+                    b.Property<string>("annualTarget")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<long?>("baseline")
+                        .IsRequired()
                         .HasColumnType("bigint");
 
                     b.Property<int?>("intAction")
+                        .IsRequired()
                         .HasColumnType("int");
 
                     b.Property<int?>("intActivity")
+                        .IsRequired()
                         .HasColumnType("int");
 
                     b.Property<Guid?>("intDept")
+                        .IsRequired()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<int?>("intFocus")
+                        .IsRequired()
                         .HasColumnType("int");
 
                     b.Property<int?>("intIntervention")
+                        .IsRequired()
                         .HasColumnType("int");
 
                     b.Property<int?>("intObjective")
+                        .IsRequired()
                         .HasColumnType("int");
 
                     b.Property<string>("meansofVerification")
@@ -453,11 +456,9 @@ namespace MEMIS.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("subProgram")
+                        .IsRequired()
                         .HasMaxLength(1000)
                         .HasColumnType("nvarchar(1000)");
-
-                    b.Property<double?>("unitCost")
-                        .HasColumnType("float");
 
                     b.HasKey("Id");
 
@@ -1724,9 +1725,6 @@ namespace MEMIS.Migrations
                     b.Property<int?>("intObjective")
                         .HasColumnType("int");
 
-                    b.Property<double?>("unitCost")
-                        .HasColumnType("float");
-
                     b.HasKey("Id");
 
                     b.HasIndex("intAction");
@@ -2118,9 +2116,6 @@ namespace MEMIS.Migrations
 
                     b.Property<string>("Quarter")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<double?>("UnitCost")
-                        .HasColumnType("float");
 
                     b.HasKey("Id");
 
@@ -3769,27 +3764,39 @@ namespace MEMIS.Migrations
                 {
                     b.HasOne("MEMIS.Data.StrategicAction", "StrategicActionFk")
                         .WithMany()
-                        .HasForeignKey("intAction");
+                        .HasForeignKey("intAction")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("MEMIS.Data.Activity", "ActivityFk")
                         .WithMany()
-                        .HasForeignKey("intActivity");
+                        .HasForeignKey("intActivity")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("MEMIS.Data.Department", "DepartmentFk")
                         .WithMany()
-                        .HasForeignKey("intDept");
+                        .HasForeignKey("intDept")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("MEMIS.Data.FocusArea", "FocusAreaFk")
                         .WithMany()
-                        .HasForeignKey("intFocus");
+                        .HasForeignKey("intFocus")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("MEMIS.Data.StrategicIntervention", "StrategicInterventionFk")
                         .WithMany()
-                        .HasForeignKey("intIntervention");
+                        .HasForeignKey("intIntervention")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("MEMIS.Data.StrategicObjective", "StrategicObjectiveFk")
                         .WithMany()
-                        .HasForeignKey("intObjective");
+                        .HasForeignKey("intObjective")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("ActivityFk");
 

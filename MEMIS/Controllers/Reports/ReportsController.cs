@@ -1,11 +1,14 @@
 using MEMIS.Data;
 using MEMIS.Helpers.ExcelReports;
+using MEMIS.Helpers.PdfReports;
+using MEMIS.Migrations;
 using MEMIS.Models.Report;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System.IO;
 using System.Numerics;
+
 
 namespace MEMIS.Controllers.Reports
 {
@@ -54,6 +57,26 @@ namespace MEMIS.Controllers.Reports
         throw;
       }
     }
+    public async Task<IActionResult> ExportToPdf()
+    {
+      try
+      {
+        var list = await _context.ProgramImplementationPlan
+        .Include(x => x.StrategicObjectiveFK)
+          .Include(x => x.StrategicInterventionFK)
+          .Include(x => x.StrategicActionFK)
+          .Include(x => x.ActivityFK)
+          .ToListAsync();
+
+        var stream = PdfHandler.StrategicImplementationPlanReportToPdf(list);
+        return File(stream.ToArray(), "application/pdf", "Strategic Implementation Plan.pdf");       
+      }
+      catch (Exception ex)
+      {
+        throw;
+      }
+    }
+
 
     public async Task<IActionResult> ConsolDeptPlan(Guid? selectedDeptId, string? quarter)
     {
@@ -120,7 +143,31 @@ namespace MEMIS.Controllers.Reports
         throw;
       }
     }
+    public async Task<IActionResult> ConsolidatedExportToPdf(Guid? selectedDeptId, string? quarter)
+    {
+      try
+      {
+        var list = _context.ActivityAssess.Include(m => m.StrategicAction).Include(m => m.StrategicIntervention).ThenInclude(x => x.StrategicObjective).Include(m => m.ActivityFk).Include(x => x.QuaterlyPlans).Include(x=>x.DepartmentFk).AsQueryable();
 
+        if (selectedDeptId.HasValue)
+        {
+          list = list.Where(a => a.intDept == selectedDeptId.Value);
+        }
+        if (!string.IsNullOrEmpty(quarter))
+        {
+          list = list.Where(x => x.QuaterlyPlans.Where(x => x.Quarter == quarter).Any());
+        }
+
+        using (var stream = PdfHandler.AnnualDetailedResultsFrameworkReportPdf(await list.ToListAsync()))
+        {
+          return File(stream.ToArray(), "application/pdf", "Annual Detailed Results Framework.pdf");
+        }
+      }
+      catch (Exception ex)
+      {
+        throw;
+      }
+    }
     //, string? quarter
     public async Task<IActionResult> ActivityImplementationStatus(Guid? selectedDeptId)
     {
@@ -143,10 +190,20 @@ namespace MEMIS.Controllers.Reports
         //{
         //  list = list.Where(x => x.QuaterlyPlans.Where(x => x.Quarter == quarter).Any());
         //}
-
+        var activityAssessments = await list.ToListAsync();
+        foreach (var item in activityAssessments)
+        {
+          item.strategicIntervention = _context.StrategicIntervention
+              .Where(x => x.intIntervention == int.Parse(item.strategicIntervention))
+              .Select(x => x.InterventionName)
+              .FirstOrDefault() ?? "";
+          item.StrategicAction = _context.StrategicAction
+              .Where(x => x.intAction == int.Parse(item.StrategicAction))
+              .Select(x => x.actionName)
+              .FirstOrDefault() ?? "";
+          item.activity = _context.Activity.Where(x => x.intActivity == int.Parse(item.activity)).Select(x => x.activityName).FirstOrDefault() ?? "";
+        }
         ViewData["SelectedDeptId"] = selectedDeptId;
-        //ViewData["SelectedQuarter"] = quarter;
-
         return View(await list.ToListAsync());
       }
       catch (Exception ex)
@@ -183,11 +240,61 @@ namespace MEMIS.Controllers.Reports
         {
           list = list.Where(x => x.QuaterlyPlans.Where(x => x.Quarter == quarter).Any());
         }
-
+        var activityAssessments = await list.ToListAsync();
+        foreach (var item in activityAssessments)
+        {
+          item.strategicIntervention = _context.StrategicIntervention
+              .Where(x => x.intIntervention == int.Parse(item.strategicIntervention))
+              .Select(x => x.InterventionName)
+              .FirstOrDefault() ?? "";
+          item.StrategicAction = _context.StrategicAction
+              .Where(x => x.intAction == int.Parse(item.StrategicAction))
+              .Select(x => x.actionName)
+              .FirstOrDefault() ?? "";
+          item.activity = _context.Activity.Where(x => x.intActivity == int.Parse(item.activity)).Select(x => x.activityName).FirstOrDefault() ?? "";
+        }
         var stream = ExportHandler.ActivityImplementationStatusExport(await list.ToListAsync());
         stream.Position = 0;
         return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Activity Implementation Status Report.xlsx");
       }
+      catch (Exception ex)
+      {
+
+        throw;
+      }
+    }
+    public async Task<IActionResult> ActivityImplementationStatusExportToPdf(Guid? selectedDeptId, string? quarter)
+    {
+      try
+      {
+        var list = _context.ActivityAssessment
+          .Include(x => x.DepartmentFk)
+          .Include(x => x.QuaterlyPlans).ThenInclude(x => x.ActivityAssess).ThenInclude(x => x.DepartmentFk).Include(x => x.ImplementationStatus).AsQueryable();
+
+        if (selectedDeptId.HasValue)
+        {
+          list = list.Where(a => a.intDept == selectedDeptId.Value);
+        }
+        if (!string.IsNullOrEmpty(quarter))
+        {
+          list = list.Where(x => x.QuaterlyPlans.Where(x => x.Quarter == quarter).Any());
+        }
+        var activityAssessments = await list.ToListAsync();
+        foreach (var item in activityAssessments)
+        {
+          item.strategicIntervention = _context.StrategicIntervention
+              .Where(x => x.intIntervention == int.Parse(item.strategicIntervention))
+              .Select(x => x.InterventionName)
+              .FirstOrDefault() ?? "";
+          item.StrategicAction = _context.StrategicAction
+              .Where(x => x.intAction == int.Parse(item.StrategicAction))
+              .Select(x => x.actionName)
+              .FirstOrDefault() ?? "";
+          item.activity = _context.Activity.Where(x => x.intActivity == int.Parse(item.activity)).Select(x => x.activityName).FirstOrDefault() ?? "";
+        }
+        var stream = PdfHandler.ActivityImplementationStatusExportPdf(await list.ToListAsync());
+          return File(stream, "application/pdf", "Activity Implementation Status Report.pdf");
+        }
       catch (Exception ex)
       {
 
@@ -231,6 +338,22 @@ namespace MEMIS.Controllers.Reports
         var stream = ExportHandler.StrategicPlanActivityImplementationTrackerExport(list);
         stream.Position = 0;
         return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Activity Implementation Tracker.xlsx");
+      }
+      catch (Exception ex)
+      {
+
+        throw;
+      }
+    }
+    public async Task<IActionResult> StrategicPlanActivityImplementationTrackerExportToPdf(Guid? selectedDeptId, string? quarter)
+    {
+      try
+      {
+        List<StrategicObjectiveReport> list = await GetStrategicPlanReportAsync();
+
+        var stream = PdfHandler.StrategicPlanOutputMonitoringTrackerExportPdf(list);
+        stream.Position = 0;
+        return File(stream, "application/pdf", "Activity Implementation Tracker.pdf");
       }
       catch (Exception ex)
       {
@@ -452,6 +575,21 @@ namespace MEMIS.Controllers.Reports
         throw;
       }
     }
+    public async Task<IActionResult> SDTExportToPdf()
+    {
+      try
+      {
+        var list = await _context.SDTAssessment.Include(s => s.SDTMasterFk).Include(s => s.SDTMasterFk.DepartmentFk).ToListAsync();
+        var stream = PdfHandler.SDTQuarterlyPerformanceReportPdf(list);
+        stream.Position = 0;
+        return File(stream, "application/pdf", "SDT Quarterly Performances.pdf");
+      }
+      catch (Exception ex)
+      {
+
+        throw;
+      }
+    }
 
     public async Task<IActionResult> KpiAssessment()
     {
@@ -475,6 +613,21 @@ namespace MEMIS.Controllers.Reports
         throw;
       }
     }
+    public async Task<IActionResult> KPIExportToPdf()
+    {
+      try
+      {
+        var list = await _context.KPIAssessment.ToListAsync();
+        var stream = PdfHandler.KPIMandEReportPdf(list);
+        stream.Position = 0;
+        return File(stream, "application/pdf", "KPI M&E.pdf");
+      }
+      catch (Exception ex)
+      {
+
+        throw;
+      }
+    }
 
     public async Task<IActionResult> KPIMandEFramework()
     {
@@ -491,6 +644,20 @@ namespace MEMIS.Controllers.Reports
         var stream = ExportHandler.KPIMandEFrameworkReport(list);
         stream.Position = 0;
         return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "KPI M&E Framework Report.xlsx");
+      }
+      catch (Exception ex)
+      {
+        throw;
+      }
+    }
+    public async Task<IActionResult> KPIMandEFrameworkReportPdf()
+    {
+      try
+      {
+        var list = await _context.KPIMasters.ToListAsync();
+        var stream = PdfHandler.KPIMandEFrameworkReportPdf(list);
+        stream.Position = 0;
+        return File(stream, "application/pdf", "KPI M&E Framework Report.pdf");
       }
       catch (Exception ex)
       {
@@ -527,7 +694,14 @@ namespace MEMIS.Controllers.Reports
         .Include(x => x.ImplementationStatus)
         .Include(x => x.DepartmentFk)
         .ToListAsync();
-
+      foreach (var item in list)
+      {
+        item.StrategicAction = _context.StrategicAction
+            .Where(x => x.intAction == int.Parse(item.StrategicAction))
+            .Select(x => x.actionName)
+            .FirstOrDefault() ?? "";
+        item.activity = _context.Activity.Where(x => x.intActivity == int.Parse(item.activity)).Select(x => x.activityName).FirstOrDefault() ?? "";
+      }
       return View(list);
     }
 
@@ -537,10 +711,35 @@ namespace MEMIS.Controllers.Reports
         .Include(x => x.ImplementationStatus)
         .Include(x => x.DepartmentFk)
         .ToListAsync();
-
+      foreach (var item in list)
+      {
+        item.StrategicAction = _context.StrategicAction
+            .Where(x => x.intAction == int.Parse(item.StrategicAction))
+            .Select(x => x.actionName)
+            .FirstOrDefault() ?? "";
+        item.activity = _context.Activity.Where(x => x.intActivity == int.Parse(item.activity)).Select(x => x.activityName).FirstOrDefault() ?? "";
+      }
       var stream = ExportHandler.OpTargetPerfAcheivReport(list);
       stream.Position = 0;
       return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Output/Target Performance Achievement Report.xlsx");
+    }
+    public async Task<IActionResult> OpTargetPerfAchievReportPdf()
+    {
+      List<ActivityAssessment> list = await _context.ActivityAssessment
+        .Include(x => x.ImplementationStatus)
+        .Include(x => x.DepartmentFk)
+        .ToListAsync();
+      foreach (var item in list)
+      {
+        item.StrategicAction = _context.StrategicAction
+            .Where(x => x.intAction == int.Parse(item.StrategicAction))
+            .Select(x => x.actionName)
+            .FirstOrDefault() ?? "";
+        item.activity = _context.Activity.Where(x => x.intActivity == int.Parse(item.activity)).Select(x => x.activityName).FirstOrDefault() ?? "";
+      }
+      var stream = PdfHandler.OpTargetPerfAcheivReportPdf(list);
+      stream.Position = 0;
+      return File(stream, "application/pdf", "Output/Target Performance Achievement Report.pdf");
     }
 
     public async Task<IActionResult> StrategicActionPerfAchievReport()
@@ -560,7 +759,13 @@ namespace MEMIS.Controllers.Reports
             ) * 100
         })
         .ToListAsync();
-
+      foreach (var item in list)
+      {
+        item.StrategicAction = _context.StrategicAction
+            .Where(x => x.intAction == int.Parse(item.StrategicAction))
+            .Select(x => x.actionName)
+            .FirstOrDefault() ?? "";
+      }
       return View(list);
     }
 
@@ -581,10 +786,44 @@ namespace MEMIS.Controllers.Reports
             ) * 100
         })
         .ToListAsync();
-
+      foreach (var item in list)
+      {
+        item.StrategicAction = _context.StrategicAction
+            .Where(x => x.intAction == int.Parse(item.StrategicAction))
+            .Select(x => x.actionName)
+            .FirstOrDefault() ?? "";
+      }
       var stream = ExportHandler.StrategicActionPerfAchievReport(list);
       stream.Position = 0;
       return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Strategic Action Performance Achievement.xlsx");
+    }
+    public async Task<IActionResult> StrategicActionPerfAchievReportPdf()
+    {
+      List<StrategicActionPerformanceAchievementDto> list = await _context.ActivityAssessment
+        .Include(x => x.ImplementationStatus)
+        .GroupBy(x => x.StrategicAction)
+        .Select(x => new StrategicActionPerformanceAchievementDto()
+        {
+          StrategicAction = x.Key,
+          PerformanceAchievementStatus = x.Average(a =>
+                a.ImplementationStatus != null
+                ? a.ImplementationStatus.ImpStatusName == "Fully Implemented" ? 1
+                : a.ImplementationStatus.ImpStatusName == "Partially Implemented" ? 0.5
+                : 0
+                : 0
+            ) * 100
+        })
+        .ToListAsync();
+      foreach (var item in list)
+      {
+        item.StrategicAction = _context.StrategicAction
+            .Where(x => x.intAction == int.Parse(item.StrategicAction))
+            .Select(x => x.actionName)
+            .FirstOrDefault() ?? "";
+      }
+      var stream = PdfHandler.StrategicActionPerfAchievReportPdf(list);
+      stream.Position = 0;
+      return File(stream, "application/pdf", "Strategic Action Performance Achievement.pdf");
     }
 
     public async Task<IActionResult> StrategicInterventionPerfAchievReport()
@@ -604,7 +843,7 @@ namespace MEMIS.Controllers.Reports
             ) * 100
         })
         .ToListAsync();
-
+      
       return View(list);
     }
 
@@ -630,7 +869,28 @@ namespace MEMIS.Controllers.Reports
       stream.Position = 0;
       return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Strategic Intervention Performance Achievement.xlsx");
     }
+    public async Task<IActionResult> StrategicInterventionPerfAchievReportPdf()
+    {
+      List<StrategicInterventionPerformanceAchievementDto> list = await _context.ActivityAssessment
+        .Include(x => x.ImplementationStatus)
+        .GroupBy(x => x.strategicIntervention)
+        .Select(x => new StrategicInterventionPerformanceAchievementDto()
+        {
+          StrategicIntervention = x.Key,
+          PerformanceAchievementStatus = x.Average(a =>
+                a.ImplementationStatus != null
+                ? a.ImplementationStatus.ImpStatusName == "Fully Implemented" ? 1
+                : a.ImplementationStatus.ImpStatusName == "Partially Implemented" ? 0.5
+                : 0
+                : 0
+            ) * 100
+        })
+        .ToListAsync();
 
+      var stream = PdfHandler.StrategicInterventionPerfAchievReportPdf(list);
+      stream.Position = 0;
+      return File(stream, "application/pdf", "Strategic Intervention Performance Achievement.pdf");
+    }
     public async Task<IActionResult> StrategicObjectivePerfAchievReport()
     {
       List<StrategicObjectivePerformanceAchievementDto> list = await _context.ActivityAssessment
@@ -648,7 +908,6 @@ namespace MEMIS.Controllers.Reports
             ) * 100
         })
         .ToListAsync();
-
       return View(list);
     }
 
@@ -669,10 +928,32 @@ namespace MEMIS.Controllers.Reports
             ) * 100
         })
         .ToListAsync();
-
       var stream = ExportHandler.StrategicObjectivePerfAchievReport(list);
       stream.Position = 0;
       return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Strategic Intervention Performance Achievement.xlsx");
+    }
+
+    public async Task<IActionResult> StrategicObjectivePerfAchievReportPdf()
+    {
+      List<StrategicObjectivePerformanceAchievementDto> list = await _context.ActivityAssessment
+        .Include(x => x.ImplementationStatus)
+        .GroupBy(x => x.strategicObjective)
+        .Select(x => new StrategicObjectivePerformanceAchievementDto()
+        {
+          StrategicObjective = x.Key,
+          PerformanceAchievementStatus = x.Average(a =>
+                a.ImplementationStatus != null
+                ? a.ImplementationStatus.ImpStatusName == "Fully Implemented" ? 1
+                : a.ImplementationStatus.ImpStatusName == "Partially Implemented" ? 0.5
+                : 0
+                : 0
+            ) * 100
+        })
+        .ToListAsync();
+
+      var stream = PdfHandler.StrategicObjectivePerfAchievReportPdf(list);
+      stream.Position = 0;
+      return File(stream, "application/pdf", "Strategic Intervention Performance Achievement.pdf");
     }
 
     public async Task<IActionResult> OutcomePerformanceAchievementReport()
@@ -681,7 +962,10 @@ namespace MEMIS.Controllers.Reports
         .Include(x => x.ImplementationStatus)
         .Include(x => x.DepartmentFk)
         .ToListAsync();
-
+      foreach(var item in list)
+      {
+        item.strategicObjective = _context.StrategicObjective.Where(x => x.intObjective == int.Parse(item.strategicObjective)).Select(x => x.ObjectiveName).FirstOrDefault() ?? "";
+      }
       return View(list);
     }
 
@@ -691,10 +975,27 @@ namespace MEMIS.Controllers.Reports
        .Include(x => x.ImplementationStatus)
        .Include(x => x.DepartmentFk)
        .ToListAsync();
-
+      foreach (var item in list)
+      {
+        item.strategicObjective = _context.StrategicObjective.Where(x => x.intObjective == int.Parse(item.strategicObjective)).Select(x => x.ObjectiveName).FirstOrDefault() ?? "";
+      }
       var stream = ExportHandler.OutcomePerfAchievReport(list);
       stream.Position = 0;
       return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Outcome Performance Achievement Report.xlsx");
+    }
+    public async Task<IActionResult> OutcomePerformanceAchievementReportPdf()
+    {
+      List<ActivityAssessment> list = await _context.ActivityAssessment
+       .Include(x => x.ImplementationStatus)
+       .Include(x => x.DepartmentFk)
+       .ToListAsync();
+      foreach (var item in list)
+      {
+        item.strategicObjective = _context.StrategicObjective.Where(x => x.intObjective == int.Parse(item.strategicObjective)).Select(x => x.ObjectiveName).FirstOrDefault() ?? "";
+      }
+      var stream = PdfHandler.OutcomePerfAchievReportPdf(list);
+      stream.Position = 0;
+      return File(stream, "application/pdf", "Outcome Performance Achievement Report.pdf");
     }
 
     public async Task<IActionResult> ImpactPerformanceAchievementReport()
@@ -703,7 +1004,10 @@ namespace MEMIS.Controllers.Reports
         .Include(x => x.ImplementationStatus)
         .Include(x => x.DepartmentFk)
         .ToListAsync();
-
+      foreach (var item in list)
+      {
+        item.strategicObjective = _context.StrategicObjective.Where(x => x.intObjective == int.Parse(item.strategicObjective)).Select(x => x.ObjectiveName).FirstOrDefault() ?? "";
+      }
       return View(list);
     }
 
@@ -713,10 +1017,28 @@ namespace MEMIS.Controllers.Reports
        .Include(x => x.ImplementationStatus)
        .Include(x => x.DepartmentFk)
        .ToListAsync();
-
+      foreach (var item in list)
+      {
+        item.strategicObjective = _context.StrategicObjective.Where(x => x.intObjective == int.Parse(item.strategicObjective)).Select(x => x.ObjectiveName).FirstOrDefault() ?? "";
+      }
       var stream = ExportHandler.ImpactPerfAchievReport(list);
       stream.Position = 0;
       return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Impact Performance Achievement Report.xlsx");
+    }
+
+    public async Task<IActionResult> ImpactPerformanceAchievementReportPdf()
+    {
+      List<ActivityAssessment> list = await _context.ActivityAssessment
+       .Include(x => x.ImplementationStatus)
+       .Include(x => x.DepartmentFk)
+       .ToListAsync();
+      foreach (var item in list)
+      {
+        item.strategicObjective = _context.StrategicObjective.Where(x => x.intObjective == int.Parse(item.strategicObjective)).Select(x => x.ObjectiveName).FirstOrDefault() ?? "";
+      }
+      var stream = PdfHandler.ImpactPerfAchievReportPdf(list);
+      stream.Position = 0;
+      return File(stream, "application/pdf", "Impact Performance Achievement Report.pdf");
     }
 
     public async Task<IActionResult> SDTMAndEFrameworkReport()
@@ -737,6 +1059,15 @@ namespace MEMIS.Controllers.Reports
       var stream = ExportHandler.SdtMAndEFrameworkReport(list);
       stream.Position = 0;
       return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "SDT M&E Framework Report.xlsx");
+    }
+    public async Task<IActionResult> SDTMAndEFrameworkReportPdf()
+    {
+      List<SDTMaster> list = await _context.SDTMasters
+       .Include(x => x.DepartmentFk)
+       .ToListAsync();
+      var stream = PdfHandler.SdtMAndEFrameworkReportPdf(list);
+      stream.Position = 0;
+      return File(stream, "application/pdf", "SDT M&E Framework Report.pdf");
     }
 
   }

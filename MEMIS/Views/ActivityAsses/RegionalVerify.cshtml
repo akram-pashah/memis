@@ -34,6 +34,9 @@
                          Quarterly Budget
                        </th>
                        <th>
+                         Unit Cost
+                       </th>
+                       <th>
                          Actions
                        </th>
                     </tr>
@@ -42,29 +45,32 @@
                     @foreach (var item in Model)
                     {
                         <tr>
-                            <td>
-                                <input type="checkbox" @(item.ApprStatus == 1 ? "checked" : "") name="selectedIds" value="@item.intRegionAssess" />
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Region.regionName)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.budgetAmount)
-                            </td>
-                            <td>
-                                @item.QuaterlyPlans.Count
-                            </td>
-                            <td>
-                                @item.QuaterlyPlans.Sum(x => x.QTarget)
-                            </td>
-                            <td>
-                                @item.QuaterlyPlans.Sum(x => x.QBudget)
-                            </td>
-                            <td>
-                                <button type="button" class="btn btn-info" data-id="@item.intRegionAssess">
-                                    View Details
-                                </button>
-                            </td>
+                          <td>
+                            <input type="checkbox" @(item.ApprStatus == 1 ? "checked" : "") name="selectedIds" value="@item.intRegionAssess" />
+                          </td>
+                          <td>
+                            @Html.DisplayFor(modelItem => item.Region.regionName)
+                          </td>
+                          <td>
+                            @Html.DisplayFor(modelItem => item.budgetAmount)
+                          </td>
+                          <td>
+                            @item.QuaterlyPlans.Count
+                          </td>
+                          <td>
+                            @item.QuaterlyPlans.Sum(x => x.QTarget)
+                          </td>
+                          <td>
+                            @item.QuaterlyPlans.Sum(x => x.QBudget)
+                          </td>
+                          <td>
+                            @item.QuaterlyPlans.Sum(x => x.UnitCost)
+                          </td>
+                          <td>
+                            <button type="button" class="btn btn-info" data-id="@item.intRegionAssess">
+                              View Details
+                            </button>
+                          </td>
                         </tr>
                     }
                 </tbody>

@@ -26,6 +26,7 @@ namespace MEMIS.Data
     [ForeignKey("DeptPlan")]
     public int? DeptPlanId { get; set; }
     public DeptPlan? DeptPlan { get; set; }
+    public double? UnitCost { get; set; }
 
     [ForeignKey("ActivityAssessment")]
     public int? ActivityAssessmentId { get; set; }

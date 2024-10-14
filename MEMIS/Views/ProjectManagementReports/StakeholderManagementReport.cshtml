@@ -40,7 +40,9 @@
                     <input type="submit" class="btn btn-primary float-end float-right" value="Load" />
                 </div>
                 <div class="col d-flex justify-content-end mb-3">
-                    <a class="btn btn-outline-success float-end float-right" asp-action="StakeholderManagementReportExcel" asp-route-ProjectInitiationId="@ViewBag.SelectedProjectInitiationId" target="_blank">Export to Excel</a>
+                  <a class="btn btn-outline-success float-end float-right" asp-action="StakeholderManagementReportExcel" asp-route-ProjectInitiationId="@ViewBag.SelectedProjectInitiationId" target="_blank">Export to Excel</a>
+                  <a class="btn btn-outline-danger float-end float-right" asp-action="StakeholderManagementReportPdf" asp-route-ProjectInitiationId="@ViewBag.SelectedProjectInitiationId" target="_blank">Export to Pdf</a>
+
                 </div>
             </form>
 

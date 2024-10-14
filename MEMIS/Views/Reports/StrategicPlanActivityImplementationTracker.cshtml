@@ -46,11 +46,13 @@
                                 </div> *@
                             </div>
                             <div class="col-4">
-                                <div class="form-group">
-                                    <label>&nbsp;</label>
-                                </div>
-                                @* <button type="submit" name="action" value="Load" class="btn btn-primary">Load</button> *@
-                                <button type="submit" name="action" value="Export" class="btn btn-outline-success float-end float-right">Export to Excel</button>
+                              <div class="form-group">
+                                <label>&nbsp;</label>
+                              </div>
+                              @* <button type="submit" name="action" value="Load" class="btn btn-primary">Load</button> *@
+                              <button type="submit" name="action" value="Export" class="btn btn-outline-success float-end float-right">Export to Excel</button>
+                              <button type="submit" name="action" value="Pdf" class="btn btn-outline-danger float-end float-right">Export to Pdf</button>
+
                             </div>
                         </div>
                     </form>
@@ -195,6 +197,14 @@
             this.action = '@Url.Action("StrategicPlanActivityImplementationTracker")';
         }
     });
+    document.querySelector('form').addEventListener('submit', function (event) {
+    var action = event.submitter.value;
+    if (action === 'Pdf') {
+        this.action = '@Url.Action("StrategicPlanActivityImplementationTrackerExportToPdf", new { action = "Pdf" })';
+    } else {
+        this.action = '@Url.Action("StrategicPlanActivityImplementationTracker")';
+    }
+});
 
     $(document).on('click', 'button[data-id]', function () {
         var id = $(this).data('id');

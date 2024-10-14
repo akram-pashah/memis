@@ -97,7 +97,7 @@ namespace MEMIS.Controllers
         ActivitiesCount = departments.Select(x => totalActivities.Where(a => a.intDept == x.intDept).Count()).ToList(),
         DepartmentBudgets = departments.Select(x => totalActivities.Where(a => a.intDept == x.intDept).Sum(x => x.QuaterlyPlans.Sum(x => x.QBudget) + x.ActivityAssessRegions.Sum(x => x.QuaterlyPlans.Sum(x => x.QBudget)))).ToList(),
         Departments = departments.Select(x => x.deptName).ToList(),
-        FocusAreaActivitiesCount = focusAreas.Select(x => totalActivities.Where(a => a.StrategicIntervention.StrategicObjective.intFocus == x.intFocus).Count()).ToList(),
+        FocusAreaActivitiesCount = focusAreas.Select(x => totalActivities.Where(a => a.StrategicIntervention != null && a.StrategicIntervention.StrategicObjective != null && a.StrategicIntervention.StrategicObjective.intFocus == x.intFocus).Count()).ToList(),
         FocusAreas = focusAreas.Select(x => x.FocusAreaName).ToList(),
       };
 
@@ -258,6 +258,7 @@ namespace MEMIS.Controllers
             Quarter = assess.Quarter,
             QTarget = assess.QuaterlyPlans.Sum(x => x.QTarget),
             QBudget = assess.QuaterlyPlans.Sum(x => x.QBudget),
+            unitCost=assess.QuaterlyPlans.Sum(x=>x.UnitCost),
             budgetAmount = assess.budgetAmount,
           };
 
@@ -308,6 +309,7 @@ namespace MEMIS.Controllers
         activityAssessDto.budgetAmount = region.budgetAmount;
         activityAssessDto.QTarget = region.QTarget;
         activityAssessDto.QBudget = region.QBudget;
+        activityAssessDto.unitCost = region.unitCost;
         activityAssessDto.QuaterlyPlans = region.QuaterlyPlans.ToList();
         ViewData["Quarter"] = ListHelper.Quarter();
         return View(activityAssessDto);
@@ -493,6 +495,7 @@ namespace MEMIS.Controllers
             baseline = g.FirstOrDefault().ActivityAssessFk.baseline,
             justification = g.FirstOrDefault().ActivityAssessFk.justification,
             QBudget = g.SelectMany(a => a.ActivityAssessFk.QuaterlyPlans).Sum(a => a.QBudget),
+            unitCost=g.SelectMany(a=>a.ActivityAssessFk.QuaterlyPlans).Sum(a=>a.UnitCost),
             ApprStatus = g.FirstOrDefault().ActivityAssessFk.ApprStatus,
             actType = 2,
             IdentifiedRisks = g.FirstOrDefault().ActivityAssessFk.IdentifiedRisks,
@@ -516,6 +519,7 @@ namespace MEMIS.Controllers
               baseline = g.FirstOrDefault().baseline,
               justification = g.FirstOrDefault().justification,
               QBudget = g.SelectMany(a => a.QuaterlyPlans).Sum(a => a.QBudget),
+              unitCost=g.SelectMany(a=>a.QuaterlyPlans).Sum(a =>a.UnitCost),
               ApprStatus = g.FirstOrDefault().ApprStatus,
               actType = 1,
               IdentifiedRisks = g.FirstOrDefault().IdentifiedRisks,
@@ -549,8 +553,8 @@ namespace MEMIS.Controllers
 
         var result = new PagedResult<ActivityAssess>
         {
-          Data = deptPlans.ToList(),
-          //Data = deptPlans.Concat(regPlans).ToList(),
+          //Data = deptPlans.ToList(),
+          Data = deptPlans.Concat(regPlans).ToList(),
           TotalItems = _context.ActivityAssess.Count(),
           PageNumber = pageNumber,
           PageSize = combinedData.Count()
@@ -792,6 +796,7 @@ namespace MEMIS.Controllers
             Quarter = x.Key,
             QTarget = x.Sum(y => y.QTarget),
             QBudget = x.Sum(y => y.QBudget),
+            UnitCost=x.Sum(y =>y.UnitCost),
           })
           .ToListAsync();
 
@@ -902,6 +907,7 @@ namespace MEMIS.Controllers
             Quarter = x.Key,
             QTarget = x.Sum(y => y.QTarget),
             QBudget = x.Sum(y => y.QBudget),
+            UnitCost=x.Sum(y=>y.UnitCost),
           })
           .ToListAsync();
 
@@ -1009,6 +1015,7 @@ namespace MEMIS.Controllers
         baseline = deptPlan.baseline,
         QTarget = deptPlan.QTarget,
         QBudget = deptPlan.QBudget,
+        unitCost=deptPlan.unitCost,
         comparativeTarget = deptPlan.comparativeTarget,
         justification = deptPlan.justification,
         budgetAmount = deptPlan.budgetAmount,
@@ -1113,6 +1120,7 @@ namespace MEMIS.Controllers
         baseline = deptPlan.baseline,
         QTarget = deptPlan.QTarget,
         QBudget = deptPlan.QBudget,
+        unitCost=deptPlan.unitCost,
         comparativeTarget = deptPlan.comparativeTarget,
         justification = deptPlan.justification,
         budgetAmount = deptPlan.budgetAmount,
@@ -1210,6 +1218,7 @@ namespace MEMIS.Controllers
         baseline = deptPlan.baseline,
         QTarget = deptPlan.QTarget,
         QBudget = deptPlan.QBudget,
+        unitCost=deptPlan.unitCost,
         comparativeTarget = deptPlan.comparativeTarget,
         justification = deptPlan.justification,
         budgetAmount = deptPlan.budgetAmount,
@@ -1250,10 +1259,10 @@ namespace MEMIS.Controllers
             ActivityAssessment activityAssessment = new()
             {
               intFocus = activityAsses?.StrategicIntervention?.StrategicObjective?.intFocus,
-              strategicObjective = activityAsses?.StrategicIntervention?.StrategicObjective?.ObjectiveName ?? "",
-              strategicIntervention = activityAsses?.StrategicIntervention?.InterventionName ?? "",
-              StrategicAction = activityAsses?.StrategicAction?.actionName ?? "",
-              activity = activityAsses?.ActivityFk?.activityName ?? "",
+              strategicObjective = activityAsses?.StrategicIntervention?.intObjective?.ToString() ?? "",
+              strategicIntervention = activityAsses?.intIntervention?.ToString() ?? "",
+              StrategicAction = activityAsses?.intAction?.ToString() ?? "",
+              activity = activityAsses?.intActivity?.ToString() ?? "",
               outputIndicator = activityAsses?.outputIndicator ?? "",
               baseline = activityAsses?.baseline,
               budgetCode = activityAsses?.budgetCode,
@@ -1297,6 +1306,7 @@ namespace MEMIS.Controllers
                 Quarter = region.Quarter,
                 QTarget = region.QTarget,
                 QBudget = region.QBudget,
+                unitCost=region.unitCost,
               };
 
               _context.ActivityAssessmentRegion.Add(activityAssessmentRegion);
@@ -1363,6 +1373,7 @@ namespace MEMIS.Controllers
             Quarter = x.Key,
             QTarget = x.Sum(y => y.QTarget),
             QBudget = x.Sum(y => y.QBudget),
+            UnitCost=x.Sum(y=>y.UnitCost),
           })
           .ToListAsync();
 
@@ -1456,6 +1467,7 @@ namespace MEMIS.Controllers
           Quarter = dto.Quarter,
           QTarget = dto.QTarget,
           QBudget = dto.QBudget,
+          unitCost=dto.unitCost,
           comparativeTarget = dto.comparativeTarget,
           justification = dto.justification,
           budgetAmount = dto.budgetAmount,
@@ -1514,6 +1526,7 @@ namespace MEMIS.Controllers
         Quarter = deptPlan.Quarter,
         QTarget = deptPlan.QTarget,
         QBudget = deptPlan.QBudget,
+        unitCost=deptPlan.unitCost,
         comparativeTarget = deptPlan.comparativeTarget,
         justification = deptPlan.justification,
         budgetAmount = deptPlan.budgetAmount,
@@ -1539,7 +1552,7 @@ namespace MEMIS.Controllers
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Edit(int id, [Bind("intAssess,intIntervention,intAction,intActivity,outputIndicator,baseline,budgetCode,unitCost,comparativeTarget,justification,budgetAmount,IdentifiedRisks,intDept,QuaterlyPlans")] ActivityAssessDto deptPlan)
+    public async Task<IActionResult> Edit(int id, [Bind("intAssess,intIntervention,intAction,intActivity,outputIndicator,baseline,budgetCode,unitCost,comparativeTarget,justification,budgetAmount,IdentifiedRisks,intDept,QuaterlyPlans,unitCost")] ActivityAssessDto deptPlan)
     {
       if (id != deptPlan.intAssess)
       {
@@ -1585,6 +1598,7 @@ namespace MEMIS.Controllers
           original.comparativeTarget = deptPlan.comparativeTarget;
           original.justification = deptPlan.justification;
           original.budgetAmount = deptPlan.budgetAmount;
+          original.unitCost = deptPlan.unitCost;
           original.IdentifiedRisks = deptPlan.IdentifiedRisks;
           original.intDept = deptPlan.intDept;
 
@@ -1762,10 +1776,10 @@ namespace MEMIS.Controllers
               ActivityAssessment activityAssessment = new()
               {
                 intFocus = activityAsses?.StrategicIntervention?.StrategicObjective?.intFocus,
-                strategicObjective = activityAsses?.StrategicIntervention?.StrategicObjective?.ObjectiveName ?? "",
-                strategicIntervention = activityAsses?.StrategicIntervention?.InterventionName ?? "",
-                StrategicAction = activityAsses?.StrategicAction?.actionName ?? "",
-                activity = activityAsses?.ActivityFk?.activityName ?? "",
+                strategicObjective = activityAsses?.StrategicIntervention?.intObjective?.ToString() ?? "",
+                strategicIntervention = activityAsses?.intIntervention?.ToString() ?? "",
+                StrategicAction = activityAsses?.intAction?.ToString() ?? "",
+                activity = activityAsses?.intActivity?.ToString() ?? "",
                 outputIndicator = activityAsses?.outputIndicator ?? "",
                 baseline = activityAsses?.baseline,
                 budgetCode = activityAsses?.budgetCode,

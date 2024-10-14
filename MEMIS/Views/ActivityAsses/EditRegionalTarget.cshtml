@@ -23,40 +23,45 @@
                 <span asp-validation-for="budgetAmount" class="text-danger"></span>
             </div>
             <div class="col">
-                <div class="input-group">
-                    <div class="col">
-                        <label asp-for="Quarter" class="control-label">Quarter</label>
-                        <select id="Quarter" class="form-control">
-                            <option value="">Select Quarter</option>
-                            <option value="1">Quarter 1</option>
-                            <option value="2">Quarter 2</option>
-                            <option value="3">Quarter 3</option>
-                            <option value="4">Quarter 4</option>
-                        </select>
-                        <span asp-validation-for="Quarter" class="text-danger"></span>
-                    </div>
-                    <div class="col">
-                        <label asp-for="QTarget" class="control-label">Target</label>
-                        <input id="QTarget" class="form-control" type="number" />
-                        <span asp-validation-for="QTarget" class="text-danger"></span>
-                    </div>
-                    <div class="col">
-                        <label asp-for="QBudget" class="control-label">Budget</label>
-                        <input id="QBudget" class="form-control" type="number" />
-                        <span asp-validation-for="QBudget" class="text-danger"></span>
-                    </div>
-                    <div class="col align-content-end">
-                        @* <label class="form-control"></label> *@
-                        <button type="button" class="btn btn-outline-primary" onclick="addQuarterDetails()">
-                            <i class="bx bx-plus-circle"></i>
-                        </button>
-                        <button class="btn btn-outline-primary" type="button" data-bs-toggle="collapse" data-bs-target="#accordionQuarterDetailsCollapse" aria-expanded="false" aria-controls="accordionQuarterDetailsCollapse">
-                            <i class="bx bx-collapse-alt"></i>
-                        </button>
-                        <span hidden class="text-danger"></span>
-
-                    </div>
+              <div class="input-group">
+                <div class="col">
+                  <label asp-for="Quarter" class="control-label">Quarter</label>
+                  <select id="Quarter" class="form-control">
+                    <option value="">Select Quarter</option>
+                    <option value="1">Quarter 1</option>
+                    <option value="2">Quarter 2</option>
+                    <option value="3">Quarter 3</option>
+                    <option value="4">Quarter 4</option>
+                  </select>
+                  <span asp-validation-for="Quarter" class="text-danger"></span>
                 </div>
+                <div class="col">
+                  <label asp-for="QTarget" class="control-label">Target</label>
+                  <input id="QTarget" class="form-control" type="number" />
+                  <span asp-validation-for="QTarget" class="text-danger"></span>
+                </div>
+                <div class="col">
+                  <label asp-for="QBudget" class="control-label">Budget</label>
+                  <input id="QBudget" class="form-control" type="number" />
+                  <span asp-validation-for="QBudget" class="text-danger"></span>
+                </div>
+                <div class="col">
+                  <label  class="control-label">UnitCost</label>
+                  <input id="UnitCost" class="form-control" type="number" />
+                  <span  class="text-danger"></span>
+                </div>
+                <div class="col align-content-end">
+                  @* <label class="form-control"></label> *@
+                  <button type="button" class="btn btn-outline-primary" onclick="addQuarterDetails()">
+                    <i class="bx bx-plus-circle"></i>
+                  </button>
+                  <button class="btn btn-outline-primary" type="button" data-bs-toggle="collapse" data-bs-target="#accordionQuarterDetailsCollapse" aria-expanded="false" aria-controls="accordionQuarterDetailsCollapse">
+                    <i class="bx bx-collapse-alt"></i>
+                  </button>
+                  <span hidden class="text-danger"></span>
+
+                </div>
+              </div>
                 <div id="quarterValidation" class="text-danger"></div>
                 <div class="accordion" id="accordionQuarterDetails">
                     <div class="card accordion-item">
@@ -69,6 +74,7 @@
                                             <th>Quarter</th>
                                             <th>Target</th>
                                             <th>Budget</th>
+                                          <th>UnitCost</th>
                                             <th>Action</th>
                                         </tr>
                                     </thead>
@@ -76,24 +82,27 @@
                                         @for (int i = 0; i < Model.QuaterlyPlans?.Count; i++)
                                         {
                                             <tr>
-                                                <td>
-                                                    @(i + 1)
-                                                    <input asp-for="QuaterlyPlans[i].Id" class="form-control" hidden />
-                                                    <input asp-for="QuaterlyPlans[i].DeptPlanId" class="form-control" hidden />
-                                                    <input asp-for="QuaterlyPlans[i].ActivityAccessId" class="form-control" hidden />
-                                                </td>
-                                                <td>
-                                                    <select asp-for="QuaterlyPlans[i].Quarter" readonly class="form-control" asp-items="ViewBag.Quarter"></select>
-                                                </td>
-                                                <td>
-                                                    <input asp-for="QuaterlyPlans[i].QTarget" class="form-control" readonly />
-                                                </td>
-                                                <td>
-                                                    <input asp-for="QuaterlyPlans[i].QBudget" readonly class="form-control" />
-                                                </td>
-                                                <td>
-                                                    <a class="btn btn-danger delete-btn" onclick="removeEvent(this)" data-toggle="tooltip" data-placement="top" title="Delete"><i class="bx bx-message-square-x"></i></a>
-                                                </td>
+                                              <td>
+                                                @(i + 1)
+                                                <input asp-for="QuaterlyPlans[i].Id" class="form-control" hidden />
+                                                <input asp-for="QuaterlyPlans[i].DeptPlanId" class="form-control" hidden />
+                                                <input asp-for="QuaterlyPlans[i].ActivityAccessId" class="form-control" hidden />
+                                              </td>
+                                              <td>
+                                                <select asp-for="QuaterlyPlans[i].Quarter" readonly class="form-control" asp-items="ViewBag.Quarter"></select>
+                                              </td>
+                                              <td>
+                                                <input asp-for="QuaterlyPlans[i].QTarget" class="form-control" readonly />
+                                              </td>
+                                              <td>
+                                                <input asp-for="QuaterlyPlans[i].QBudget" readonly class="form-control" />
+                                              </td>
+                                              <td>
+                                                <input asp-for="QuaterlyPlans[i].UnitCost" readonly class="form-control" />
+                                              </td>
+                                              <td>
+                                                <a class="btn btn-danger delete-btn" onclick="removeEvent(this)" data-toggle="tooltip" data-placement="top" title="Delete"><i class="bx bx-message-square-x"></i></a>
+                                              </td>
                                             </tr>
                                         }
                                     </tbody>
@@ -119,7 +128,7 @@
     $(document).ready(function () {
         $('#quarterDetailsTable').DataTable({
             "columnDefs": [
-                { "orderable": false, "targets": 4 } // Disable sorting for the last column (Delete button)
+                { "orderable": false, "targets": 5 } // Disable sorting for the last column (Delete button)
             ],
             "paging": false, // Disable pagination
             "ordering": true, // Enable sorting
@@ -151,7 +160,7 @@
         var quarter = $('#Quarter').val();
         var target = $('#QTarget').val();
         var budget = $('#QBudget').val();
-
+      var UnitCost = $('#UnitCost').val();
         $('#Quarter').html(initialQuarterOptions);
 
         if (!quarter || !target || !budget) {
@@ -191,7 +200,9 @@
                     ${options}
                  </select>`,
             `<input name="QuaterlyPlans[${$table.rows().count()}].QTarget" value="${target}" readonly class="form-control" />`,
-            `<input name="QuaterlyPlans[${$table.rows().count()}].QBudget" value="${budget}" readonly class="form-control" />`,
+          `<input name="QuaterlyPlans[${$table.rows().count()}].QBudget" value="${budget}" readonly class="form-control" />`,
+          `<input name="QuaterlyPlans[${$table.rows().count()}].UnitCost" value="${UnitCost}" readonly class="form-control" />`,
+
             `<button type="button" class="btn btn-danger delete-btn" onclick="removeQuarterDetails(this)" data-toggle="tooltip" data-placement="top" title="Delete">
                     <i class="bx bx-message-square-x"></i>
                  </button>`
@@ -201,7 +212,7 @@
         $('#Quarter').val('');
         $('#QTarget').val('');
         $('#QBudget').val('');
-
+      $('#UnitCost').val('');
         // Show the accordion section
         $('#accordionQuarterDetailsCollapse').addClass('show');
     }
@@ -218,7 +229,7 @@
     function SetBudgetValue() {
         var target = $('#QTarget').val();
         var budgetAmount = $('#budgetAmount').val();
-
+        var unitCost = $('#unitCost').val();
         if (target != null && budgetAmount != null) {
             var budVal = target * budgetAmount;
             $('#QBudget').val(budVal);

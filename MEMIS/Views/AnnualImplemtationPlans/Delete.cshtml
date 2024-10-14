@@ -13,78 +13,84 @@
     <h4>Annualised Strategic Plan Implementation Action Plan</h4>
     <hr />
     <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.subProgram)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.subProgram)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.FocusAreaFk)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.FocusAreaFk.FocusAreaName)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.StrategicObjectiveFk)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.StrategicObjectiveFk.ObjectiveCode)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.StrategicInterventionFk)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.StrategicInterventionFk.InterventionCode)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.StrategicActionFk)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.StrategicActionFk.actionCode)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ActivityFk)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ActivityFk.activityCode)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.baseline)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.baseline)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Year)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Year)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.annualTarget)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.annualTarget)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.meansofVerification)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.meansofVerification)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Risk)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Risk)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.DepartmentFk)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.DepartmentFk.deptCode)
-        </dd>
+      <dt class="col-sm-2">
+        @Html.DisplayNameFor(model => model.subProgram)
+      </dt>
+      <dd class="col-sm-10">
+        @Html.DisplayFor(model => model.subProgram)
+      </dd>
+      <dt class="col-sm-2">
+        @Html.DisplayNameFor(model => model.FocusAreaFk)
+      </dt>
+      <dd class="col-sm-10">
+        @Html.DisplayFor(model => model.FocusAreaFk.FocusAreaName)
+      </dd>
+      <dt class="col-sm-2">
+        @Html.DisplayNameFor(model => model.StrategicObjectiveFk)
+      </dt>
+      <dd class="col-sm-10">
+        @Html.DisplayFor(model => model.StrategicObjectiveFk.ObjectiveCode)
+      </dd>
+      <dt class="col-sm-2">
+        @Html.DisplayNameFor(model => model.StrategicInterventionFk)
+      </dt>
+      <dd class="col-sm-10">
+        @Html.DisplayFor(model => model.StrategicInterventionFk.InterventionCode)
+      </dd>
+      <dt class="col-sm-2">
+        @Html.DisplayNameFor(model => model.StrategicActionFk)
+      </dt>
+      <dd class="col-sm-10">
+        @Html.DisplayFor(model => model.StrategicActionFk.actionCode)
+      </dd>
+      <dt class="col-sm-2">
+        @Html.DisplayNameFor(model => model.ActivityFk)
+      </dt>
+      <dd class="col-sm-10">
+        @Html.DisplayFor(model => model.ActivityFk.activityCode)
+      </dd>
+      <dt class="col-sm-2">
+        @Html.DisplayNameFor(model => model.baseline)
+      </dt>
+      <dd class="col-sm-10">
+        @Html.DisplayFor(model => model.baseline)
+      </dd>
+      <dt class="col-sm-2">
+        @Html.DisplayNameFor(model => model.Year)
+      </dt>
+      <dd class="col-sm-10">
+        @Html.DisplayFor(model => model.Year)
+      </dd>
+      <dt class="col-sm-2">
+        @Html.DisplayNameFor(model => model.annualTarget)
+      </dt>
+      <dd class="col-sm-10">
+        @Html.DisplayFor(model => model.annualTarget)
+      </dd>
+      <dt class="col-sm-2">
+        @Html.DisplayNameFor(model => model.unitCost)
+      </dt>
+      <dd class="col-sm-10">
+        @Html.DisplayFor(model => model.unitCost)
+      </dd>
+      <dt class="col-sm-2">
+        @Html.DisplayNameFor(model => model.meansofVerification)
+      </dt>
+      <dd class="col-sm-10">
+        @Html.DisplayFor(model => model.meansofVerification)
+      </dd>
+      <dt class="col-sm-2">
+        @Html.DisplayNameFor(model => model.Risk)
+      </dt>
+      <dd class="col-sm-10">
+        @Html.DisplayFor(model => model.Risk)
+      </dd>
+      <dt class="col-sm-2">
+        @Html.DisplayNameFor(model => model.DepartmentFk)
+      </dt>
+      <dd class="col-sm-10">
+        @Html.DisplayFor(model => model.DepartmentFk.deptCode)
+      </dd>
     </dl>
     
     <form asp-action="Delete">
