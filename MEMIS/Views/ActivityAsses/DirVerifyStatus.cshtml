@@ -65,6 +65,12 @@
                 </div>
                 <br />
                 <div class="form-group">
+                  <label asp-for="unitCost" class="control-label"></label>
+                  <input asp-for="unitCost" class="form-control" type="number" />
+                  <span asp-validation-for="unitCost" class="text-danger"></span>
+                </div>
+                <br />
+                <div class="form-group">
                   <label asp-for="justification" class="control-label"></label>
                   <input asp-for="justification" class="form-control" />
                   <span asp-validation-for="justification" class="text-danger"></span>
@@ -76,12 +82,6 @@
                   <span asp-validation-for="budgetAmount" class="text-danger"></span>
                 </div>
                 <br />
-                <div class="form-group">
-                  <label asp-for="unitCost" class="control-label"></label>
-                  <input asp-for="unitCost"  class="form-control" type="number" />
-                  <span asp-validation-for="unitCost" class="text-danger"></span>
-                </div>
-                <br/>
                 <div class="form-group">
                   <label asp-for="IdentifiedRisks" class="control-label"></label>
                   <input asp-for="IdentifiedRisks" class="form-control" type="text" />

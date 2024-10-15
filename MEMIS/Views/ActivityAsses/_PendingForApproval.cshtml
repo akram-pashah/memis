@@ -4,8 +4,8 @@
                         <thead>
                           <tr>
                             @* <th>
-                              <input type="checkbox" id="selectAll" />
-                            </th> *@
+      <input type="checkbox" id="selectAll" />
+    </th> *@
                             <th>
                               @Html.DisplayNameFor(model => model[0].StrategicIntervention.InterventionName)
                             </th>
@@ -25,13 +25,13 @@
                               @Html.DisplayNameFor(model => model[0].comparativeTarget)
                             </th>
                             <th>
+                              @Html.DisplayNameFor(model => model[0].unitCost)
+                            </th>
+                            <th>
                               @Html.DisplayNameFor(model => model[0].justification)
                             </th>
                             <th>
                               @Html.DisplayNameFor(model => model[0].budgetAmount)
-                            </th>
-                            <th>
-                              @Html.DisplayNameFor(model => model[0].unitCost)
                             </th>
                             <th>
                               @Html.DisplayNameFor(model => model[0].Quarter)
@@ -49,8 +49,8 @@
                             {
                                 <tr>
                                   @* <td>
-                                    <input type="checkbox" @(item.ApprStatus == 7 ? "checked" : "") name="selectedIds" value="@item.intAssess" />
-                                  </td> *@
+      <input type="checkbox" @(item.ApprStatus == 7 ? "checked" : "") name="selectedIds" value="@item.intAssess" />
+    </td> *@
                                   <td>
                                     @if (item.StrategicIntervention != null)
                                     {
@@ -92,13 +92,13 @@
                                     @Html.DisplayFor(modelItem => item.comparativeTarget)
                                   </td>
                                   <td>
+                                    @Html.DisplayFor(modelItem => item.unitCost)
+                                  </td>
+                                  <td>
                                     @Html.DisplayFor(modelItem => item.justification)
                                   </td>
                                   <td>
                                     @Html.DisplayFor(modelItem => item.budgetAmount)
-                                  </td>
-                                  <td>
-                                    @Html.DisplayFor(modelItem => item.unitCost)
                                   </td>
                                   <td>
                                     @Html.DisplayFor(modelItem => item.Quarter)

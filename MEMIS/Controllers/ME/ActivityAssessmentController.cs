@@ -540,6 +540,7 @@ namespace MEMIS.Controllers.ME
         activityAssessDto.intRegionAssess = region.intRegionAssess;
         activityAssessDto.budgetAmount = region.budgetAmount;
         activityAssessDto.QTarget = region.QTarget;
+        activityAssessDto.unitCost = region.unitCost;
         activityAssessDto.QBudget = region.QBudget;
         activityAssessDto.QuaterlyPlans = region.QuaterlyPlans.ToList();
         ViewData["Quarter"] = ListHelper.Quarter();
@@ -590,6 +591,7 @@ namespace MEMIS.Controllers.ME
               intRegion = activityAssessRegion.intRegion,
               budgetAmount = activityAssessRegion.budgetAmount,
               Quarter = activityAssessRegion.Quarter,
+              unitCost = activityAssessmentRegion.unitCost,
             };
             _context.ActivityAssessmentRegion.Add(activityAssessmentRegion);
           }
@@ -599,6 +601,7 @@ namespace MEMIS.Controllers.ME
             activityAssessmentRegion.intRegion = activityAssessRegion.intRegion;
             activityAssessmentRegion.budgetAmount = activityAssessRegion.budgetAmount;
             activityAssessmentRegion.Quarter = activityAssessRegion.Quarter;
+            activityAssessmentRegion.unitCost = activityAssessmentRegion.unitCost;
 
             foreach (var item in region.QuaterlyPlans)
             {

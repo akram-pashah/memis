@@ -30,6 +30,8 @@ namespace MEMIS.Models
     public double? budgetCode { get; set; }
     [Display(Name = "Comparative Target")]
     public double? comparativeTarget { get; set; }
+    [Display(Name = "Unit Cost")]
+    public double? unitCost { get; set; }
     [Display(Name = "Justification")]
     public string? justification { get; set; }
     [Display(Name = "Budget Amount")]

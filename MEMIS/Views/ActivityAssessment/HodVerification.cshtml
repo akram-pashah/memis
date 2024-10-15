@@ -67,130 +67,130 @@
         <form id="activityForm" method="post" asp-action="VerificationUpdate">
             <table class="table table-striped table-bordered table-hover dt-responsive nowrap" id="datatable">
                 <thead class="table-active">
-                    <tr>
-                        <th>
-                            <input type="checkbox" id="selectAll" />
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.strategicObjective)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.strategicIntervention)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.StrategicAction)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.activity)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.outputIndicator)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.baseline)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.budgetCode)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.unitCost)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.comparativeTarget)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.justification)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.budgetAmount)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.AnnualAchievement)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.TotAmtSpent)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.ImplementationStatus)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.AnnualJustification)
-                        </th>
-                        <th>
-                          Target
-                        </th>
-                        <th>Actions</th>
-                    </tr>
+                  <tr>
+                    <th>
+                      <input type="checkbox" id="selectAll" />
+                    </th>
+                    <th>
+                      @Html.DisplayNameFor(model => model.strategicObjective)
+                    </th>
+                    <th>
+                      @Html.DisplayNameFor(model => model.strategicIntervention)
+                    </th>
+                    <th>
+                      @Html.DisplayNameFor(model => model.StrategicAction)
+                    </th>
+                    <th>
+                      @Html.DisplayNameFor(model => model.activity)
+                    </th>
+                    <th>
+                      @Html.DisplayNameFor(model => model.outputIndicator)
+                    </th>
+                    <th>
+                      @Html.DisplayNameFor(model => model.baseline)
+                    </th>
+                    <th>
+                      @Html.DisplayNameFor(model => model.budgetCode)
+                    </th>
+                    <th>
+                      @Html.DisplayNameFor(model => model.comparativeTarget)
+                    </th>
+                    <th>
+                      @Html.DisplayNameFor(model => model.unitCost)
+                    </th>
+                    <th>
+                      @Html.DisplayNameFor(model => model.justification)
+                    </th>
+                    <th>
+                      @Html.DisplayNameFor(model => model.budgetAmount)
+                    </th>
+                    <th>
+                      @Html.DisplayNameFor(model => model.AnnualAchievement)
+                    </th>
+                    <th>
+                      @Html.DisplayNameFor(model => model.TotAmtSpent)
+                    </th>
+                    <th>
+                      @Html.DisplayNameFor(model => model.ImplementationStatus)
+                    </th>
+                    <th>
+                      @Html.DisplayNameFor(model => model.AnnualJustification)
+                    </th>
+                    <th>
+                      Target
+                    </th>
+                    <th>Actions</th>
+                  </tr>
                 </thead>
                 <tbody>
                     @foreach (var item in Model)
                     {
                         <tr>
-                            <td>
-                                <input type="checkbox" @(item.ActivityAssesmentStatus == 0 ? "checked" : "") name="selectedIds" value="@item.intDeptPlan" />
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.strategicObjective)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.strategicIntervention)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.StrategicAction)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.activity)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.outputIndicator)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.baseline)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.budgetCode)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.unitCost)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.comparativeTarget)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.justification)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.budgetAmount)
-                            </td>
+                          <td>
+                            <input type="checkbox" @(item.ActivityAssesmentStatus == 0 ? "checked" : "") name="selectedIds" value="@item.intDeptPlan" />
+                          </td>
+                          <td>
+                            @Html.DisplayFor(modelItem => item.strategicObjective)
+                          </td>
+                          <td>
+                            @Html.DisplayFor(modelItem => item.strategicIntervention)
+                          </td>
+                          <td>
+                            @Html.DisplayFor(modelItem => item.StrategicAction)
+                          </td>
+                          <td>
+                            @Html.DisplayFor(modelItem => item.activity)
+                          </td>
+                          <td>
+                            @Html.DisplayFor(modelItem => item.outputIndicator)
+                          </td>
+                          <td>
+                            @Html.DisplayFor(modelItem => item.baseline)
+                          </td>
+                          <td>
+                            @Html.DisplayFor(modelItem => item.budgetCode)
+                          </td>
+                          <td>
+                            @Html.DisplayFor(modelItem => item.comparativeTarget)
+                          </td>
+                          <td>
+                            @Html.DisplayFor(modelItem => item.unitCost)
+                          </td>
+                          <td>
+                            @Html.DisplayFor(modelItem => item.justification)
+                          </td>
+                          <td>
+                            @Html.DisplayFor(modelItem => item.budgetAmount)
+                          </td>
 
-                            <td>
-                                @Html.DisplayFor(modelItem => item.AnnualAchievement)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.TotAmtSpent)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.ImplementationStatus.ImpStatusId)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.AnnualJustification)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Q1Target)
-                            </td>
-                            <td>
-                                <div class="btn-group" role="group" aria-label="Actions">
-                                    @if (item.actType == 0)
-                                    {
-                                        <a asp-action="Edit" asp-route-id="@item.intDeptPlan" class="btn btn-secondary" data-toggle="tooltip" data-placement="top" title="Edit">
-                                            <i class='bx bx-edit'></i>
-                                        </a>
-                                    }
-                                    <a asp-action="Details" asp-route-id="@item.intDeptPlan" class="btn btn-info" data-toggle="tooltip" data-placement="top" title="View">
-                                        <i class='bx bx-detail'></i>
-                                    </a>
-                                </div>
-                            </td>
+                          <td>
+                            @Html.DisplayFor(modelItem => item.AnnualAchievement)
+                          </td>
+                          <td>
+                            @Html.DisplayFor(modelItem => item.TotAmtSpent)
+                          </td>
+                          <td>
+                            @Html.DisplayFor(modelItem => item.ImplementationStatus.ImpStatusId)
+                          </td>
+                          <td>
+                            @Html.DisplayFor(modelItem => item.AnnualJustification)
+                          </td>
+                          <td>
+                            @Html.DisplayFor(modelItem => item.Q1Target)
+                          </td>
+                          <td>
+                            <div class="btn-group" role="group" aria-label="Actions">
+                              @if (item.actType == 0)
+                              {
+                                <a asp-action="Edit" asp-route-id="@item.intDeptPlan" class="btn btn-secondary" data-toggle="tooltip" data-placement="top" title="Edit">
+                                  <i class='bx bx-edit'></i>
+                                </a>
+                              }
+                              <a asp-action="Details" asp-route-id="@item.intDeptPlan" class="btn btn-info" data-toggle="tooltip" data-placement="top" title="View">
+                                <i class='bx bx-detail'></i>
+                              </a>
+                            </div>
+                          </td>
                         </tr>
                     }
                 </tbody>

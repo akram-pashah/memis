@@ -19,21 +19,22 @@
         <div style="width:100%; overflow-x:auto;margin-top:20px;">
             <table class="table table-bordered table-striped table-hover dt-responsive nowrap">
                 <thead>
-                    <tr>
-                        <th>Department</th>
-                        <th>Strategic Intervention</th>
-                        <th>Strategic Action</th>
-                        <th>Activity</th>
-                        <th>@Html.DisplayNameFor(model => model.Data[0].outputIndicator)</th>
-                        <th>@Html.DisplayNameFor(model => model.Data[0].baseline)</th>
-                        <th>@Html.DisplayNameFor(model => model.Data[0].comparativeTarget)</th>
-                        <th>@Html.DisplayNameFor(model => model.Data[0].justification)</th>
-                        <th>@Html.DisplayNameFor(model => model.Data[0].budgetAmount)</th>
-                        <th>@Html.DisplayNameFor(model => model.Data[0].QTarget)</th>
-                        <th>@Html.DisplayNameFor(model => model.Data[0].QBudget)</th>
-                        <th>@Html.DisplayNameFor(model => model.Data[0].unitCost)</th>
-                        <th>Actions</th>
-                    </tr>
+                  <tr>
+                    <th>Department</th>
+                    <th>Strategic Intervention</th>
+                    <th>Strategic Action</th>
+                    <th>Activity</th>
+                    <th>@Html.DisplayNameFor(model => model.Data[0].outputIndicator)</th>
+                    <th>@Html.DisplayNameFor(model => model.Data[0].baseline)</th>
+                    <th>@Html.DisplayNameFor(model => model.Data[0].comparativeTarget)</th>
+                    <th>@Html.DisplayNameFor(model => model.Data[0].justification)</th>
+                    <th>@Html.DisplayNameFor(model => model.Data[0].budgetAmount)</th>
+                    <th>@Html.DisplayNameFor(model => model.Data[0].QTarget)</th>
+                    <th>@Html.DisplayNameFor(model => model.Data[0].unitCost)</th>
+                    <th>@Html.DisplayNameFor(model => model.Data[0].QBudget)</th>
+
+                    <th>Actions</th>
+                  </tr>
                 </thead>
                 <tbody>
                     @foreach (var item in Model.Data)
@@ -57,8 +58,9 @@
                           <td>@Html.DisplayFor(modelItem => item.justification)</td>
                           <td>@Html.DisplayFor(modelItem => item.budgetAmount)</td>
                           <td>@(item.QuaterlyPlans?.Sum(x => x.QTarget)  + item.ActivityAssessRegions?.Where(x => x.QuaterlyPlans.Any()).Sum(x => x.QuaterlyPlans.Sum(x => x.QTarget)) )</td>
-                          <td>@(item.QuaterlyPlans?.Sum(x => x.QBudget)  + item.ActivityAssessRegions?.Where(x => x.QuaterlyPlans.Any()).Sum(x => x.QuaterlyPlans.Sum(x => x.QBudget)) )</td>
                           <td>@Html.DisplayFor(modelItem => item.unitCost)</td>
+                          <td>@(item.QuaterlyPlans?.Sum(x => x.QBudget)  + item.ActivityAssessRegions?.Where(x => x.QuaterlyPlans.Any()).Sum(x => x.QuaterlyPlans.Sum(x => x.QBudget)) )</td>
+
 
                           <td>
                             @{

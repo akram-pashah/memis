@@ -205,10 +205,9 @@
             `<select name="QuaterlyPlans[${$table.rows().count()}].Quarter" readonly class="form-control">
                     ${options}
                  </select>`,
-            `<input name="QuaterlyPlans[${$table.rows().count()}].QTarget" value="${target}" readonly class="form-control" />`,
-          `<input name="QuaterlyPlans[${$table.rows().count()}].QBudget" value="${budget}" readonly class="form-control" />`,
+          `<input name="QuaterlyPlans[${$table.rows().count()}].QTarget" value="${target}" readonly class="form-control" />`,
           `<input name="QuaterlyPlans[${$table.rows().count()}].UnitCost" value="${UnitCost}" readonly class="form-control" />`,
-
+          `<input name="QuaterlyPlans[${$table.rows().count()}].QBudget" value="${budget}" readonly class="form-control" />`,
             `<button type="button" class="btn btn-danger delete-btn" onclick="removeQuarterDetails(this)" data-toggle="tooltip" data-placement="top" title="Delete">
                     <i class="bx bx-message-square-x"></i>
                  </button>`
