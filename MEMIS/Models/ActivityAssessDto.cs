@@ -1,6 +1,6 @@
 using MEMIS.Data;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MEMIS.Models
 {
@@ -35,7 +35,7 @@ namespace MEMIS.Models
     public string? justification { get; set; }
     [Display(Name = "Budget Amount")]
     public double? budgetAmount { get; set; }
-    [Display(Name = "Quarter"), ]
+    [Display(Name = "Quarter"),]
     public int? Quarter { get; set; }
     [Display(Name = "Quarterly Target")]
     public double? QTarget { get; set; }
@@ -49,6 +49,6 @@ namespace MEMIS.Models
     public Guid? intDept { get; set; }
 
     public Guid? intRegion { get; set; }
-    public List<QuaterlyPlan> QuaterlyPlans { get; set; } 
+    public List<QuaterlyPlan> QuaterlyPlans { get; set; }
   }
 }

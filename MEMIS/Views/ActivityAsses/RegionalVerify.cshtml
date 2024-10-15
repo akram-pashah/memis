@@ -30,11 +30,11 @@
                        <th>
                          Quarterly Target
                        </th>
+                        <th>
+                            Unit Cost
+                        </th>
                        <th>
                          Quarterly Budget
-                       </th>
-                       <th>
-                         Unit Cost
                        </th>
                        <th>
                          Actions
@@ -60,11 +60,11 @@
                           <td>
                             @item.QuaterlyPlans.Sum(x => x.QTarget)
                           </td>
+                            <td>
+                                @item.QuaterlyPlans.Sum(x => x.UnitCost)
+                            </td>
                           <td>
                             @item.QuaterlyPlans.Sum(x => x.QBudget)
-                          </td>
-                          <td>
-                            @item.QuaterlyPlans.Sum(x => x.UnitCost)
                           </td>
                           <td>
                             <button type="button" class="btn btn-info" data-id="@item.intRegionAssess">

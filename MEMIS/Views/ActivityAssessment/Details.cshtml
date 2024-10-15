@@ -149,6 +149,7 @@
                                             <th>Quarter</th>
                                             <th>Target</th>
                                             <th>Budget</th>
+                                            <th>Unit Cost</th>
                                             <th>Actual</th>
                                             <th>Amt Spent</th>
                                             <th>Achievement</th>
@@ -173,6 +174,9 @@
                                                 </td>
                                                 <td>
                                                     <label class="form-control">@Model.QuaterlyPlans.ToList()[i].QBudget</label>
+                                                </td>
+                                                <td>
+                                                    <label class="form-control">@Model.QuaterlyPlans.ToList()[i].UnitCost</label>
                                                 </td>
                                                 <td>
                                                     <label class="form-control">@Model.QuaterlyPlans.ToList()[i].QActual</label>
@@ -203,6 +207,7 @@
                                                 <th>Quarter</th>
                                                 <th>Target</th>
                                                 <th>Budget</th>
+                                                <th>Unit Cost</th>
                                                 <th>Actual</th>
                                                 <th>Amt Spent</th>
                                                 <th>Achievement</th>
@@ -227,6 +232,9 @@
                                                     </td>
                                                     <td>
                                                         <label class='form-control'>@region.QuaterlyPlans.ToList()[i].QBudget</label>
+                                                    </td>
+                                                    <td>
+                                                        <label class='form-control'>@region.QuaterlyPlans.ToList()[i].UnitCost</label>
                                                     </td>
                                                     <td>
                                                         <label class='form-control'>@region.QuaterlyPlans.ToList()[i].QActual</label>

@@ -96,6 +96,12 @@
                     stacked: true,
                     stackType: '100%'
                 },
+                zoom: {
+            enabled: true
+          },
+          toolbar: {
+            show: true
+          },
                 responsive: [{
                     breakpoint: 480,
                     options: {
@@ -106,7 +112,25 @@
                         }
                     }
                 }],
+                plotOptions: {
+                  bar: {
+                    horizontal: false,
+                    borderRadius: 10,
+                    borderRadiusApplication: 'end', // 'around', 'end'
+                    borderRadiusWhenStacked: 'last', // 'all', 'last'
+                    dataLabels: {
+                      total: {
+                        enabled: true,
+                        style: {
+                          fontSize: '13px',
+                          fontWeight: 900
+                        }
+                      }
+                    }
+                  },
+                },
                 xaxis: {
+                  type: 'category',
                     categories: seriesData.categories,
                 },
                 fill: {
@@ -153,6 +177,12 @@
             endingShape: 'rounded'
           },
         },
+        zoom: {
+            enabled: true
+          },
+          toolbar: {
+            show: true
+          },
         dataLabels: {
           enabled: false
         },
@@ -203,6 +233,12 @@
             },
           }
         },
+        zoom: {
+            enabled: true
+          },
+          toolbar: {
+            show: true
+          },
         dataLabels: {
           enabled: true,
           formatter: function (val) {
@@ -285,10 +321,10 @@
             opacity: 0.2
           },
           zoom: {
-            enabled: false
+            enabled: true
           },
           toolbar: {
-            show: false
+            show: true
           }
         },
         colors: ['#77B6EA', '#f5500a'],
@@ -344,6 +380,12 @@
           chart: {
           type: 'bar',
         },
+        zoom: {
+            enabled: true
+          },
+          toolbar: {
+            show: true
+          },
         plotOptions: {
           bar: {
             horizontal: true,
@@ -424,7 +466,7 @@
                                     <i class="bx bx-dots-vertical-rounded"></i>
                                 </button>
                                 <div class="dropdown-menu dropdown-menu-end" aria-labelledby="cardOpt3">
-                                    <a class="dropdown-item" href="javascript:void(0);">View More</a>
+                                    <a class="dropdown-item" href="/ActivityAssessment">View More</a>
                                 </div>
                             </div>
                         </div>
@@ -445,7 +487,7 @@
                                     <i class="bx bx-dots-vertical-rounded"></i>
                                 </button>
                                 <div class="dropdown-menu dropdown-menu-end" aria-labelledby="cardOpt6">
-                                    <a class="dropdown-item" href="javascript:void(0);">View More</a>
+                                    <a class="dropdown-item" href="/SDTAssessments">View More</a>
                                 </div>
                             </div>
                         </div>
@@ -493,8 +535,8 @@
                                     <i class="bx bx-dots-vertical-rounded"></i>
                                 </button>
                                 <div class="dropdown-menu dropdown-menu-end" aria-labelledby="cardOpt4">
-                                    <a class="dropdown-item" href="javascript:void(0);">View More</a>
-                                    <a class="dropdown-item" href="javascript:void(0);">Delete</a>
+                                    <a class="dropdown-item" href="/KPIAssessment">View More</a>
+                                    @* <a class="dropdown-item" href="javascript:void(0);">Delete</a> *@
                                 </div>
                             </div>
                         </div>

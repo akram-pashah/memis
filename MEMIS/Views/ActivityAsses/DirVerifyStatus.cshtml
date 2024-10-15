@@ -144,8 +144,8 @@
                                             <th>Id</th>
                                             <th>Quarter</th>
                                             <th>Target</th>
+                                            <th>UnitCost</th>
                                             <th>Budget</th>
-                                          <th>UnitCost</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -164,11 +164,11 @@
                                               <td>
                                                 <label class="form-control">@Model.QuaterlyPlans.ToList()[i].QTarget</label>
                                               </td>
+                                                <td>
+                                                    <label class="form-control">@Model.QuaterlyPlans.ToList()[i].UnitCost</label>
+                                                </td>
                                               <td>
                                                 <label class="form-control">@Model.QuaterlyPlans.ToList()[i].QBudget</label>
-                                              </td>
-                                              <td>
-                                                <label class="form-control">@Model.QuaterlyPlans.ToList()[i].UnitCost</label>
                                               </td>
                                             </tr>
                                         }
@@ -186,8 +186,8 @@
                                                 <th>Region</th>
                                                 <th>Quarter</th>
                                                 <th>Target</th>
+                                                <th>UnitCost</th>
                                                 <th>Budget</th>
-                                              <th>UnitCost</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -207,13 +207,12 @@
                                                   <td>
                                                     <label class="form-control">@region.QuaterlyPlans.ToList()[i].QTarget</label>
                                                   </td>
+                                                    <td>
+                                                        <label class='form-control'>@region.QuaterlyPlans.ToList()[i].UnitCost</label>
+                                                    </td>
                                                   <td>
                                                     <label class='form-control'>@region.QuaterlyPlans.ToList()[i].QBudget</label>
                                                   </td>
-                                                  <td>
-                                                    <label class='form-control'>@region.QuaterlyPlans.ToList()[i].UnitCost</label>
-                                                  </td>
-
                                                 </tr>
                                             }
                                         </tbody>

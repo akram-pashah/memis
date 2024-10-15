@@ -1,27 +1,14 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using cloudscribe.Pagination.Models;
+using MEMIS.Data;
+using MEMIS.Data.Risk;
+using MEMIS.Helpers.ExcelReports;
+using MEMIS.Models;
+using MEMIS.ViewModels;
+using MEMIS.ViewModels.Planning;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using MEMIS.Data;
-using MEMIS.Data.Risk;
-using MEMIS.Models;
-using cloudscribe.Pagination.Models;
-using Microsoft.AspNetCore.Identity;
-using System.Security.Claims;
-using Microsoft.AspNetCore.Authorization;
-using MEMIS.Models.Risk;
-using MEMIS.ViewModels;
-using MEMIS.Helpers.ExcelReports;
-using Humanizer;
-using DocumentFormat.OpenXml.Wordprocessing;
-using DocumentFormat.OpenXml.Office2010.Excel;
-using System.Drawing;
-using MEMIS.Pages.Shared;
-using DocumentFormat.OpenXml.Bibliography;
-using MEMIS.ViewModels.Planning;
 
 namespace MEMIS.Controllers
 {
@@ -258,7 +245,7 @@ namespace MEMIS.Controllers
             Quarter = assess.Quarter,
             QTarget = assess.QuaterlyPlans.Sum(x => x.QTarget),
             QBudget = assess.QuaterlyPlans.Sum(x => x.QBudget),
-            unitCost=assess.QuaterlyPlans.Sum(x=>x.UnitCost),
+            unitCost = assess.QuaterlyPlans.Sum(x => x.UnitCost),
             budgetAmount = assess.budgetAmount,
           };
 
@@ -495,7 +482,7 @@ namespace MEMIS.Controllers
             baseline = g.FirstOrDefault().ActivityAssessFk.baseline,
             justification = g.FirstOrDefault().ActivityAssessFk.justification,
             QBudget = g.SelectMany(a => a.ActivityAssessFk.QuaterlyPlans).Sum(a => a.QBudget),
-            unitCost=g.SelectMany(a=>a.ActivityAssessFk.QuaterlyPlans).Sum(a=>a.UnitCost),
+            unitCost = g.SelectMany(a => a.ActivityAssessFk.QuaterlyPlans).Sum(a => a.UnitCost),
             ApprStatus = g.FirstOrDefault().ActivityAssessFk.ApprStatus,
             actType = 2,
             IdentifiedRisks = g.FirstOrDefault().ActivityAssessFk.IdentifiedRisks,
@@ -519,7 +506,7 @@ namespace MEMIS.Controllers
               baseline = g.FirstOrDefault().baseline,
               justification = g.FirstOrDefault().justification,
               QBudget = g.SelectMany(a => a.QuaterlyPlans).Sum(a => a.QBudget),
-              unitCost=g.SelectMany(a=>a.QuaterlyPlans).Sum(a =>a.UnitCost),
+              unitCost = g.SelectMany(a => a.QuaterlyPlans).Sum(a => a.UnitCost),
               ApprStatus = g.FirstOrDefault().ApprStatus,
               actType = 1,
               IdentifiedRisks = g.FirstOrDefault().IdentifiedRisks,
@@ -796,7 +783,7 @@ namespace MEMIS.Controllers
             Quarter = x.Key,
             QTarget = x.Sum(y => y.QTarget),
             QBudget = x.Sum(y => y.QBudget),
-            UnitCost=x.Sum(y =>y.UnitCost),
+            UnitCost = x.Sum(y => y.UnitCost),
           })
           .ToListAsync();
 
@@ -863,7 +850,7 @@ namespace MEMIS.Controllers
         var query = _context.ActivityAssess.Include(m => m.StrategicIntervention).Include(m => m.StrategicAction).Include(y => y.QuaterlyPlans).Include(s => s.ActivityFk).Include(v => v.ActivityAssessRegions).ThenInclude(x => x.QuaterlyPlans)
             .Where(x => x.ApprStatus == (int)(deptPlanApprStatus.hodreviewed));
 
-        activityAssesses =  userRoles.Contains("SuperAdmin") ? await query.ToListAsync() : await query.Where(x => x.intDept == Guid.Parse(HttpContext.Session.GetString("Department"))).ToListAsync();
+        activityAssesses = userRoles.Contains("SuperAdmin") ? await query.ToListAsync() : await query.Where(x => x.intDept == Guid.Parse(HttpContext.Session.GetString("Department"))).ToListAsync();
 
         //var result = new PagedResult<ActivityAssess>
         //{
@@ -907,7 +894,7 @@ namespace MEMIS.Controllers
             Quarter = x.Key,
             QTarget = x.Sum(y => y.QTarget),
             QBudget = x.Sum(y => y.QBudget),
-            UnitCost=x.Sum(y=>y.UnitCost),
+            UnitCost = x.Sum(y => y.UnitCost),
           })
           .ToListAsync();
 
@@ -1015,7 +1002,7 @@ namespace MEMIS.Controllers
         baseline = deptPlan.baseline,
         QTarget = deptPlan.QTarget,
         QBudget = deptPlan.QBudget,
-        unitCost=deptPlan.unitCost,
+        unitCost = deptPlan.unitCost,
         comparativeTarget = deptPlan.comparativeTarget,
         justification = deptPlan.justification,
         budgetAmount = deptPlan.budgetAmount,
@@ -1120,7 +1107,7 @@ namespace MEMIS.Controllers
         baseline = deptPlan.baseline,
         QTarget = deptPlan.QTarget,
         QBudget = deptPlan.QBudget,
-        unitCost=deptPlan.unitCost,
+        unitCost = deptPlan.unitCost,
         comparativeTarget = deptPlan.comparativeTarget,
         justification = deptPlan.justification,
         budgetAmount = deptPlan.budgetAmount,
@@ -1190,6 +1177,16 @@ namespace MEMIS.Controllers
         return Problem("Entity set 'AppDbContext.ActivityAssess'  is null.");
       }
     }
+
+    [HttpGet]
+    public async Task<IActionResult> GetPendingActivityAssess()
+    {
+      var dat = await _context.ActivityAssess.Include(m => m.StrategicIntervention).Include(m => m.StrategicAction).Include(s => s.ActivityFk).Include(x => x.QuaterlyPlans).Include(x => x.ActivityAssessRegions).ThenInclude(x => x.QuaterlyPlans)
+            .Where(x => x.ApprStatus == (int)(deptPlanApprStatus.headBpdVerified)).ToListAsync();
+
+      return PartialView("_PendingForApproval", dat);
+    }
+
     public async Task<IActionResult> DirApprStatus(int? id)
     {
       if (id == null || _context.ActivityAssess == null)
@@ -1218,7 +1215,7 @@ namespace MEMIS.Controllers
         baseline = deptPlan.baseline,
         QTarget = deptPlan.QTarget,
         QBudget = deptPlan.QBudget,
-        unitCost=deptPlan.unitCost,
+        unitCost = deptPlan.unitCost,
         comparativeTarget = deptPlan.comparativeTarget,
         justification = deptPlan.justification,
         budgetAmount = deptPlan.budgetAmount,
@@ -1306,7 +1303,7 @@ namespace MEMIS.Controllers
                 Quarter = region.Quarter,
                 QTarget = region.QTarget,
                 QBudget = region.QBudget,
-                unitCost=region.unitCost,
+                unitCost = region.unitCost,
               };
 
               _context.ActivityAssessmentRegion.Add(activityAssessmentRegion);
@@ -1373,7 +1370,7 @@ namespace MEMIS.Controllers
             Quarter = x.Key,
             QTarget = x.Sum(y => y.QTarget),
             QBudget = x.Sum(y => y.QBudget),
-            UnitCost=x.Sum(y=>y.UnitCost),
+            UnitCost = x.Sum(y => y.UnitCost),
           })
           .ToListAsync();
 
@@ -1467,7 +1464,7 @@ namespace MEMIS.Controllers
           Quarter = dto.Quarter,
           QTarget = dto.QTarget,
           QBudget = dto.QBudget,
-          unitCost=dto.unitCost,
+          unitCost = dto.unitCost,
           comparativeTarget = dto.comparativeTarget,
           justification = dto.justification,
           budgetAmount = dto.budgetAmount,
@@ -1526,7 +1523,7 @@ namespace MEMIS.Controllers
         Quarter = deptPlan.Quarter,
         QTarget = deptPlan.QTarget,
         QBudget = deptPlan.QBudget,
-        unitCost=deptPlan.unitCost,
+        unitCost = deptPlan.unitCost,
         comparativeTarget = deptPlan.comparativeTarget,
         justification = deptPlan.justification,
         budgetAmount = deptPlan.budgetAmount,
@@ -1540,7 +1537,7 @@ namespace MEMIS.Controllers
                             .Where(sa => sa.intIntervention == dto.intIntervention)
                             .Select(sa => new { sa.intAction, sa.actionName })
                             .ToList();
-     
+
       ViewBag.Activity = _context.Activity == null ? new List<Activity>() : await _context.Activity.ToListAsync();
 
       ViewData["Quarter"] = ListHelper.Quarter();
@@ -1784,6 +1781,7 @@ namespace MEMIS.Controllers
                 baseline = activityAsses?.baseline,
                 budgetCode = activityAsses?.budgetCode,
                 comparativeTarget = activityAsses?.comparativeTarget,
+                unitCost = activityAsses?.unitCost,
                 justification = activityAsses?.justification,
                 budgetAmount = activityAsses?.budgetAmount,
                 intDept = departmentId,
@@ -1822,6 +1820,7 @@ namespace MEMIS.Controllers
                     budgetAmount = region?.budgetAmount,
                     Quarter = region.Quarter,
                     QTarget = region.QTarget,
+                    unitCost = region.unitCost,
                   };
 
                   _context.ActivityAssessmentRegion.Add(activityAssessmentRegion);

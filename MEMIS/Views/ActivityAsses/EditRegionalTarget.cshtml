@@ -37,18 +37,18 @@
                 </div>
                 <div class="col">
                   <label asp-for="QTarget" class="control-label">Target</label>
-                  <input id="QTarget" class="form-control" type="number" />
+                        <input onkeyup="setBudgetAmount()" id="QTarget" class="form-control" type="number" />
                   <span asp-validation-for="QTarget" class="text-danger"></span>
                 </div>
+                    <div class="col">
+                        <label class="control-label">UnitCost</label>
+                        <input onkeyup="setBudgetAmount()" id="UnitCost" class="form-control" type="number" />
+                        <span class="text-danger"></span>
+                    </div>
                 <div class="col">
                   <label asp-for="QBudget" class="control-label">Budget</label>
                   <input id="QBudget" class="form-control" type="number" />
                   <span asp-validation-for="QBudget" class="text-danger"></span>
-                </div>
-                <div class="col">
-                  <label  class="control-label">UnitCost</label>
-                  <input id="UnitCost" class="form-control" type="number" />
-                  <span  class="text-danger"></span>
                 </div>
                 <div class="col align-content-end">
                   @* <label class="form-control"></label> *@
@@ -73,8 +73,8 @@
                                             <th>Id</th>
                                             <th>Quarter</th>
                                             <th>Target</th>
+                                            <th>UnitCost</th>
                                             <th>Budget</th>
-                                          <th>UnitCost</th>
                                             <th>Action</th>
                                         </tr>
                                     </thead>
@@ -94,11 +94,11 @@
                                               <td>
                                                 <input asp-for="QuaterlyPlans[i].QTarget" class="form-control" readonly />
                                               </td>
+                                                <td>
+                                                    <input asp-for="QuaterlyPlans[i].UnitCost" readonly class="form-control" />
+                                                </td>
                                               <td>
                                                 <input asp-for="QuaterlyPlans[i].QBudget" readonly class="form-control" />
-                                              </td>
-                                              <td>
-                                                <input asp-for="QuaterlyPlans[i].UnitCost" readonly class="form-control" />
                                               </td>
                                               <td>
                                                 <a class="btn btn-danger delete-btn" onclick="removeEvent(this)" data-toggle="tooltip" data-placement="top" title="Delete"><i class="bx bx-message-square-x"></i></a>
@@ -156,11 +156,17 @@
 
     var initialQuarterOptions = $('#Quarter').html();
 
+    function setBudgetAmount() {
+        var target = $('#QTarget').val();
+        var UnitCost = $('#UnitCost').val();
+        $('#QBudget').val(target * UnitCost);
+    }
+
     function addQuarterDetails() {
         var quarter = $('#Quarter').val();
         var target = $('#QTarget').val();
+        var UnitCost = $('#UnitCost').val();
         var budget = $('#QBudget').val();
-      var UnitCost = $('#UnitCost').val();
         $('#Quarter').html(initialQuarterOptions);
 
         if (!quarter || !target || !budget) {

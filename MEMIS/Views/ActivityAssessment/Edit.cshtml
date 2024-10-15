@@ -81,6 +81,12 @@
                     </div>
                     <br />
                     <div class="form-group">
+                        <label asp-for="unitCost" class="control-label"></label>
+                        <input asp-for="unitCost" type="number" class="form-control" />
+                        <span asp-validation-for="unitCost" class="text-danger"></span>
+                    </div>
+                    <br />
+                    <div class="form-group">
                         <label asp-for="justification" class="control-label"></label>
                         <input asp-for="justification" class="form-control" />
                         <span asp-validation-for="justification" class="text-danger"></span>
@@ -95,30 +101,34 @@
 
                     <div class="form-group">
                         <div class="input-group">
-                            <div class="col">
+                            <div class="col-2">
                                 <select id="Quarter" class="form-control" asp-items="ViewBag.Quarter"></select>
                                 <span id="quarterValidation" class="text-danger"></span>
                             </div>
-                            <div class="col">
+                            <div class="col-2">
                                 <input id="QTarget" class="form-control" type="number" />
                                 <span asp-validation-for="Q1Target" class="text-danger"></span>
                             </div>
-                            <div class="col">
+                            <div class="col-2">
                                 <input id="QBudget" class="form-control" type="number" />
                                 <span asp-validation-for="Q1Budget" class="text-danger"></span>
                             </div>
-                            <div class="col">
+                            <div class="col-2">
+                                <input id="QUnitCost" class="form-control" type="number" />
+                                <span class="text-danger"></span>
+                            </div>
+                            <div class="col-2">
                                 <input id="QActual" class="form-control" type="number" />
                                 <span asp-validation-for="Q1Actual" class="text-danger"></span>
                             </div>
-                            <div class="col">
+                            <div class="col-2">
                                 <input id="QAmtSpent" class="form-control" type="number" />
                                 <span asp-validation-for="Q1AmtSpent" class="text-danger"></span>
                             </div>
-                            <div class="col">
+                            <div class="col-3">
                                 <input id="QAchievement" class="form-control" type="number" />
                             </div>
-                            <div class="col">
+                            <div class="col-3">
                                 <input id="QJustification" class="form-control" />
                                 <span asp-validation-for="Q1Justification" class="text-danger"></span>
                             </div>
@@ -142,6 +152,7 @@
                                                     <th>Quarter</th>
                                                     <th>Target</th>
                                                     <th>Budget</th>
+                                                    <th>Unit Cost</th>
                                                     <th>Actual</th>
                                                     <th>Amt Spent</th>
                                                     <th>Achievement</th>
@@ -165,6 +176,9 @@
                                                         </td>
                                                         <td>
                                                             <input asp-for="QuaterlyPlans[i].QTarget" class="form-control" />
+                                                        </td>
+                                                        <td>
+                                                            <input asp-for="QuaterlyPlans[i].UnitCost" class="form-control" />
                                                         </td>
                                                         <td>
                                                             <input asp-for="QuaterlyPlans[i].QBudget" class="form-control" />
@@ -229,13 +243,14 @@
         function addQuarterDetails() {
             const quarter = document.getElementById('Quarter').value;
             const target = document.getElementById('QTarget').value;
+            const UnitCost = document.getElementById('QUnitCost').value;
             const budget = document.getElementById('QBudget').value;
             const actual = document.getElementById('QActual').value;
             const amtSpent = document.getElementById('QAmtSpent').value;
             const achievement = document.getElementById('QAchievement').value;
             const justification = document.getElementById('QJustification').value;
 
-            if (!quarter || !target || !budget || !actual || !amtSpent || !achievement || !justification) {
+            if (!quarter || !target || !budget || !actual || !UnitCost || !amtSpent || !achievement || !justification) {
                 document.getElementById('quarterValidation').textContent = 'Please fill in all fields.';
                 return;
             }
@@ -253,6 +268,7 @@
                         </td>
                         <td><select name="QuaterlyPlans[${rowCount}].Quarter" class="form-control" asp-items="ViewBag.Quarter">${quarter}</select></td>
                         <td><input name="QuaterlyPlans[${rowCount}].QTarget" value="${target}" class="form-control" /></td>
+                        <td><input name="QuaterlyPlans[${rowCount}].UnitCost" value="${UnitCost}" class="form-control" /></td>
                         <td><input name="QuaterlyPlans[${rowCount}].QBudget" value="${budget}" class="form-control" /></td>
                         <td><input name="QuaterlyPlans[${rowCount}].QActual" value="${actual}" class="form-control" /></td>
                         <td><input name="QuaterlyPlans[${rowCount}].QAmtSpent" value="${amtSpent}" class="form-control" /></td>
@@ -264,6 +280,7 @@
             // Clear the form fields after adding
             document.getElementById('Quarter').value = '';
             document.getElementById('QTarget').value = '';
+            document.getElementById('QUnitCost').value = '';
             document.getElementById('QBudget').value = '';
             document.getElementById('QActual').value = '';
             document.getElementById('QAmtSpent').value = '';

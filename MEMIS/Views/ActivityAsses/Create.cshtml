@@ -55,9 +55,15 @@
               <br />
               <div class="form-group">
                 <label asp-for="comparativeTarget" class="control-label"></label>
-                <input asp-for="comparativeTarget" class="form-control" type="number" />
+                    <input id="comparativeTarget" asp-for="comparativeTarget" class="form-control" type="number" onkeyup="setBudgetAmount()" />
                 <span asp-validation-for="comparativeTarget" class="text-danger"></span>
               </div>
+                <br />
+                <div class="form-group">
+                    <label asp-for="unitCost" class="control-label"></label>
+                    <input id="UnitCost" asp-for="unitCost" class="form-control" type="number" onkeyup="setBudgetAmount()" />
+                    <span asp-validation-for="unitCost" class="text-danger"></span>
+                </div>
               <br />
               <div class="form-group">
                 <label asp-for="justification" class="control-label"></label>
@@ -69,12 +75,6 @@
                 <label asp-for="budgetAmount" class="control-label"></label>
                 <input asp-for="budgetAmount" id="budgetAmount" class="form-control" type="number" />
                 <span asp-validation-for="budgetAmount" class="text-danger"></span>
-              </div>
-              <br />
-              <div class="form-group">
-                <label asp-for="unitCost" class="control-label"></label>
-                <input asp-for="unitCost"  class="form-control" type="number" />
-                <span asp-validation-for="unitCost" class="text-danger"></span>
               </div>
               <div class="form-group">
                 <label asp-for="IdentifiedRisks" class="control-label"></label>
@@ -103,18 +103,18 @@
                 </div>
                 <div class="col">
                   <label asp-for="QTarget" class="control-label">Target</label>
-                  <input id="QTarget" class="form-control" type="number" />
+                        <input id="QTarget" onkeyup="setQBudgetAmount()" class="form-control" type="number" />
                   <span asp-validation-for="QTarget" class="text-danger"></span>
                 </div>
+                    <div class="col">
+                        <label class="control-label">UnitCost</label>
+                        <input onkeyup="setQBudgetAmount()" id="QUnitCost" class="form-control" type="number" />
+                        <span class="text-danger"></span>
+                    </div>
                 <div class="col">
                   <label asp-for="QBudget" class="control-label">Budget</label>
                   <input id="QBudget" class="form-control" type="number" />
                   <span asp-validation-for="QBudget" class="text-danger"></span>
-                </div>
-                <div class="col">
-                  <label class="control-label">UnitCost</label>
-                  <input id="UnitCost" class="form-control" type="number" />
-                  <span class="text-danger"></span>
                 </div>
                 <div class="col align-content-end">
                   @* <label class="form-control"></label> *@
@@ -139,8 +139,8 @@
                                             <th>Id</th>
                                             <th>Quarter</th>
                                             <th>Target</th>
+                                            <th>UnitCost</th>
                                             <th>Budget</th>
-                                          <th>UnitCost</th>
                                             <th>Action</th>
                                         </tr>
                                     </thead>
@@ -160,11 +160,11 @@
                                               <td>
                                                 <input asp-for="QuaterlyPlans[i].QTarget" readonly class="form-control" />
                                               </td>
+                                                <td>
+                                                    <input asp-for="QuaterlyPlans[i].UnitCost" readonly class="form-control" />
+                                                </td>
                                               <td>
                                                 <input asp-for="QuaterlyPlans[i].QBudget" readonly class="form-control" />
-                                              </td>
-                                              <td>
-                                                <input asp-for="QuaterlyPlans[i].UnitCost" readonly class="form-control" />
                                               </td>
                                               <td>
                                                 <a class="btn btn-danger delete-btn" onclick="removeEvent(this)" data-toggle="tooltip" data-placement="top" title="Delete"><i class="bx bx-message-square-x"></i></a>
@@ -212,13 +212,25 @@
         });
     });
 
-    var initialQuarterOptions = $('#Quarter').html(); 
+    var initialQuarterOptions = $('#Quarter').html();
+
+    function setBudgetAmount() {
+        var target = $('#comparativeTarget').val();
+        var UnitCost = $('#UnitCost').val();
+        $('#budgetAmount').val(target * UnitCost);
+    }
+
+    function setQBudgetAmount() {
+        var target = $('#QTarget').val();
+        var UnitCost = $('#QUnitCost').val();
+        $('#QBudget').val(target * UnitCost);
+    }
 
     function addQuarterDetails() {
         var quarter = $('#Quarter').val();
         var target = $('#QTarget').val();
         var budget = $('#QBudget').val();
-      var unitCost = $('#UnitCost').val();
+        var unitCost = $('#QUnitCost').val();
         $('#Quarter').html(initialQuarterOptions);
 
         if (!quarter || !target || !budget) {
@@ -258,8 +270,8 @@
                 ${options}
              </select>`,
             `<input name="QuaterlyPlans[${$table.rows().count()}].QTarget" value="${target}" readonly class="form-control" />`,
+            `<input name="QuaterlyPlans[${$table.rows().count()}].UnitCost" value="${unitCost}" readonly class="form-control" />`,
           `<input name="QuaterlyPlans[${$table.rows().count()}].QBudget" value="${budget}" readonly class="form-control" />`,
-          `<input name="QuaterlyPlans[${$table.rows().count()}].UnitCost" value="${unitCost}" readonly class="form-control" />`,
 
             `<button type="button" class="btn btn-danger delete-btn" onclick="removeQuarterDetails(this)" data-toggle="tooltip" data-placement="top" title="Delete">
                 <i class="bx bx-message-square-x"></i>
@@ -270,7 +282,7 @@
         $('#Quarter').val('');
         $('#QTarget').val('');
         $('#QBudget').val('');
-      $('#UnitCost').val('');
+        $('#QUnitCost').val('');
         // Show the accordion section
         $('#accordionQuarterDetailsCollapse').addClass('show');
     }

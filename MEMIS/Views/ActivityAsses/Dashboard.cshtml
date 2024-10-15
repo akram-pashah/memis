@@ -9,246 +9,280 @@
 
 
 
+
+
+
+
     Layout = "~/Pages/Shared/_ContentNavbarLayout.cshtml";
+
+
+
+
 
 
 
     var userDetails = new
 
+
+
     {
+
+
 
         UserName = httpContextAccessor.HttpContext?.Session.GetString("UserName"),
 
+
+
         UserRoles = httpContextAccessor.HttpContext.Session.GetString("UserRoles")
+
+
 
     };
 }
 @section VendorStyles {
-    <link rel="stylesheet" href="~/vendor/libs/apex-charts/apex-charts.css" />
+        <link rel="stylesheet" href="~/vendor/libs/apex-charts/apex-charts.css" />
 }
 @section VendorScripts {
-    <script src="~/vendor/libs/apex-charts/apexcharts.js"></script>
+        <script src="~/vendor/libs/apex-charts/apexcharts.js"></script>
 }
 @section PageScripts {
-    <script src="~/js/dashboards-analytics.js"></script>
-    <script type="text/javascript">
-        (function () {
-            var options = {
-                series: [{
-                    // name: 'Inflation',
-                    data: @Html.Raw(JsonSerializer.Serialize(Model.ActivitiesCount)),
-                    // data: [0, 2.3, 3.1, 4.0, 10.1, 4.0, 3.6, 3.2, 2.3, 1.4, 0.8, 0.5, 0.2]
-                }],
-                chart: {
-                    height: 350,
-                    type: 'bar',
-                },
-                plotOptions: {
-                    bar: {
-                        borderRadius: 10,
-                        borderRadiusApplication: 'end',
-                        horizontal: true,
-                    }
-                },
-                dataLabels: {
-                    enabled: false,
-                    // formatter: function (val) {
-                    //     return val;
-                    // },
-                    // offsetY: -20,
-                    // style: {
-                    //     fontSize: '12px',
-                    //     colors: ["#304758"]
-                    // }
-                },
-
-                xaxis: {
-                    categories: @Html.Raw(JsonSerializer.Serialize(Model.Departments)),
-                    // categories: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
-                    // position: 'top',
-                    // axisBorder: {
-                    //     show: false
-                    // },
-                    // axisTicks: {
-                    //     show: false
-                    // },
-                    crosshairs: {
-                        fill: {
-                            type: 'gradient',
-                            gradient: {
-                                colorFrom: '#D8E3F0',
-                                colorTo: '#BED1E6',
-                                stops: [0, 100],
-                                opacityFrom: 0.4,
-                                opacityTo: 0.5,
-                            }
+        <script src="~/js/dashboards-analytics.js"></script>
+        <script type="text/javascript">
+            (function () {
+                var options = {
+                    series: [{
+                        // name: 'Inflation',
+                        data: @Html.Raw(JsonSerializer.Serialize(Model.ActivitiesCount)),
+                        // data: [0, 2.3, 3.1, 4.0, 10.1, 4.0, 3.6, 3.2, 2.3, 1.4, 0.8, 0.5, 0.2]
+                    }],
+                    chart: {
+                        height: 350,
+                        type: 'bar',
+                    },
+                    zoom: {
+                enabled: true
+              },
+              toolbar: {
+                show: true
+              },
+                    plotOptions: {
+                        bar: {
+                            borderRadius: 10,
+                            borderRadiusApplication: 'end',
+                            horizontal: true,
                         }
                     },
-                    tooltip: {
-                        enabled: true,
-                    }
-                },
-                // yaxis: {
-                //     axisBorder: {
-                //         show: false
-                //     },
-                //     axisTicks: {
-                //         show: false,
-                //     },
-                //     labels: {
-                //         show: false,
-                //         formatter: function (val) {
-                //             return val + "%";
-                //         }
-                //     }
+                    dataLabels: {
+                        enabled: false,
+                        // formatter: function (val) {
+                        //     return val;
+                        // },
+                        // offsetY: -20,
+                        // style: {
+                        //     fontSize: '12px',
+                        //     colors: ["#304758"]
+                        // }
+                    },
 
-                // },
-                title: {
-                    text: 'Department wise Activities',
-                    floating: true,
-                    // offsetY: 330,
-                    align: 'center',
-                    style: {
-                        color: '#444'
-                    }
-                }
-            };
-
-            var chart = new ApexCharts(document.querySelector("#departmentActivitiesChart"), options);
-            chart.render();
-        })();
-        (function () {
-            var options = {
-                series: [{
-                    // name: 'Inflation',
-                    data: @Html.Raw(JsonSerializer.Serialize(Model.FocusAreaActivitiesCount)),
-                    // data: [0, 2.3, 3.1, 4.0, 10.1, 4.0, 3.6, 3.2, 2.3, 1.4, 0.8, 0.5, 0.2]
-                }],
-                chart: {
-                    height: 350,
-                    type: 'bar',
-                },
-                plotOptions: {
-                    bar: {
-                        borderRadius: 10,
-                        dataLabels: {
-                            position: 'top', // top, center, bottom
+                    xaxis: {
+                        categories: @Html.Raw(JsonSerializer.Serialize(Model.Departments)),
+                        // categories: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+                        // position: 'top',
+                        // axisBorder: {
+                        //     show: false
+                        // },
+                        // axisTicks: {
+                        //     show: false
+                        // },
+                        crosshairs: {
+                            fill: {
+                                type: 'gradient',
+                                gradient: {
+                                    colorFrom: '#D8E3F0',
+                                    colorTo: '#BED1E6',
+                                    stops: [0, 100],
+                                    opacityFrom: 0.4,
+                                    opacityTo: 0.5,
+                                }
+                            }
                         },
-                    }
-                },
-                dataLabels: {
-                    enabled: true,
-                    formatter: function (val) {
-                        return val;
+                        tooltip: {
+                            enabled: true,
+                        }
                     },
-                    offsetY: -20,
-                    style: {
-                        fontSize: '12px',
-                        colors: ["#304758"]
-                    }
-                },
+                    // yaxis: {
+                    //     axisBorder: {
+                    //         show: false
+                    //     },
+                    //     axisTicks: {
+                    //         show: false,
+                    //     },
+                    //     labels: {
+                    //         show: false,
+                    //         formatter: function (val) {
+                    //             return val + "%";
+                    //         }
+                    //     }
 
-                xaxis: {
-                    categories: @Html.Raw(JsonSerializer.Serialize(Model.FocusAreas)),
-                    // categories: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
-                    position: 'top',
-                    axisBorder: {
-                        show: false
+                    // },
+                    title: {
+                        text: 'Department wise Activities',
+                        floating: true,
+                        // offsetY: 330,
+                        align: 'center',
+                        style: {
+                            color: '#444'
+                        }
+                    }
+                };
+
+                var chart = new ApexCharts(document.querySelector("#departmentActivitiesChart"), options);
+                chart.render();
+            })();
+            (function () {
+                var options = {
+                    series: [{
+                        // name: 'Inflation',
+                        data: @Html.Raw(JsonSerializer.Serialize(Model.FocusAreaActivitiesCount)),
+                        // data: [0, 2.3, 3.1, 4.0, 10.1, 4.0, 3.6, 3.2, 2.3, 1.4, 0.8, 0.5, 0.2]
+                    }],
+                    chart: {
+                        height: 350,
+                        type: 'bar',
                     },
-                    axisTicks: {
-                        show: false
+                    zoom: {
+                enabled: true
+              },
+              toolbar: {
+                show: true
+              },
+                    plotOptions: {
+                        bar: {
+                            borderRadius: 10,
+                            dataLabels: {
+                                position: 'top', // top, center, bottom
+                            },
+                        }
                     },
-                    crosshairs: {
-                        fill: {
-                            type: 'gradient',
-                            gradient: {
-                                colorFrom: '#D8E3F0',
-                                colorTo: '#BED1E6',
-                                stops: [0, 100],
-                                opacityFrom: 0.4,
-                                opacityTo: 0.5,
+                    dataLabels: {
+                        enabled: true,
+                        formatter: function (val) {
+                            return val;
+                        },
+                        offsetY: -20,
+                        style: {
+                            fontSize: '12px',
+                            colors: ["#304758"]
+                        }
+                    },
+
+                    xaxis: {
+                        categories: @Html.Raw(JsonSerializer.Serialize(Model.FocusAreas)),
+                        // categories: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+                        position: 'top',
+                        axisBorder: {
+                            show: false
+                        },
+                        axisTicks: {
+                            show: false
+                        },
+                        crosshairs: {
+                            fill: {
+                                type: 'gradient',
+                                gradient: {
+                                    colorFrom: '#D8E3F0',
+                                    colorTo: '#BED1E6',
+                                    stops: [0, 100],
+                                    opacityFrom: 0.4,
+                                    opacityTo: 0.5,
+                                }
+                            }
+                        },
+                        tooltip: {
+                            enabled: true,
+                        }
+                    },
+                    colors: ['#9f80fd'],
+                    yaxis: {
+                        axisBorder: {
+                            show: false
+                        },
+                        axisTicks: {
+                            show: false,
+                        },
+                        labels: {
+                            show: true,
+                            formatter: function (val) {
+                                return val;
                             }
                         }
+
                     },
-                    tooltip: {
-                        enabled: true,
-                    }
-                },
-                colors: ['#9f80fd'],
-                yaxis: {
-                    axisBorder: {
-                        show: false
-                    },
-                    axisTicks: {
-                        show: false,
-                    },
-                    labels: {
-                        show: false,
-                        formatter: function (val) {
-                            return val + "%";
+                    title: {
+                        text: 'Focus Area wise Activities',
+                        floating: true,
+                        offsetY: 330,
+                        align: 'center',
+                        style: {
+                            color: '#444'
                         }
                     }
+                };
 
-                },
-                title: {
-                    text: 'Focus Area wise Activities',
-                    floating: true,
-                    offsetY: 330,
-                    align: 'center',
-                    style: {
-                        color: '#444'
-                    }
-                }
-            };
-
-            var chart = new ApexCharts(document.querySelector("#focusAreaActivitiesChart"), options);
-            chart.render();
-        })();
-        (function () {
-            var options = {
-                series: @Html.Raw(JsonSerializer.Serialize(Model.DepartmentBudgets)),
-                chart: {
-                    width: '100%',
-                    height: 450,
-                    type: 'pie',
-                },
-                colors: ['#9f80fd'],
-                labels: @Html.Raw(JsonSerializer.Serialize(Model.Departments)),
-                theme: {
-          monochrome: {
-            enabled: true,
-          },
-        },
-        plotOptions: {
-          pie: {
-            dataLabels: {
-              offset: -5,
+                var chart = new ApexCharts(document.querySelector("#focusAreaActivitiesChart"), options);
+                chart.render();
+            })();
+            (function () {
+                var options = {
+                    series: @Html.Raw(JsonSerializer.Serialize(Model.DepartmentBudgets)),
+                    chart: {
+                        width: '100%',
+                        height: 450,
+                        type: 'pie',
+                    },
+                    zoom: {
+                enabled: true
+              },
+              toolbar: {
+                show: true
+              },
+                    colors: ['#9f80fd'],
+                    labels: @Html.Raw(JsonSerializer.Serialize(Model.Departments)),
+                    theme: {
+              monochrome: {
+                enabled: true,
+              },
             },
-          },
-        },
-        grid: {
-          // padding: {
-          //   top: 0,
-          //   bottom: 0,
-          //   left: 0,
-          //   right: 0,
-          // },
-        },
-        dataLabels: {
-          formatter(val, opts) {
-            const name = opts.w.globals.labels[opts.seriesIndex]
-            return [name, val.toFixed(1) + '%']
-          },
-        },
-        legend: {
-          show: false,
-        },
-            };
+            plotOptions: {
+              pie: {
+                dataLabels: {
+                  offset: -5,
+                },
+              },
+            },
+            grid: {
+              // padding: {
+              //   top: 0,
+              //   bottom: 0,
+              //   left: 0,
+              //   right: 0,
+              // },
+            },
+            dataLabels: {
+              formatter(val, opts) {
+                const name = opts.w.globals.labels[opts.seriesIndex]
+                return [name, val.toFixed(1) + '%']
+              },
+            },
+            legend: {
+              show: false,
+            },
+                };
 
-            var chart = new ApexCharts(document.querySelector("#departmentBudgetChart"), options);
-            chart.render();
-        })();
-    </script>
+                var chart = new ApexCharts(document.querySelector("#departmentBudgetChart"), options);
+                chart.render();
+            })();
+        </script>
 }
 
 @* ************** Content ************** *@
@@ -292,7 +326,7 @@
                                     <i class="bx bx-dots-vertical-rounded"></i>
                                 </button>
                                 <div class="dropdown-menu dropdown-menu-end" aria-labelledby="cardOpt3">
-                                    <a class="dropdown-item" href="javascript:void(0);">View More</a>
+                                    <a class="dropdown-item" href="/ActivityAsses">View More</a>
                                     @* <a class="dropdown-item" href="javascript:void(0);">Delete</a> *@
                                 </div>
                             </div>
@@ -394,7 +428,7 @@
                                 </button>
                                 <div class="dropdown-menu dropdown-menu-end" aria-labelledby="cardOpt4">
                                     <a class="dropdown-item" href="javascript:void(0);">View More</a>
-                                    <a class="dropdown-item" href="javascript:void(0);">Delete</a>
+                                    @* <a class="dropdown-item" href="javascript:void(0);">Delete</a> *@
                                 </div>
                             </div>
                         </div>
@@ -415,7 +449,8 @@
                                     <i class="bx bx-dots-vertical-rounded"></i>
                                 </button>
                                 <div class="dropdown-menu" aria-labelledby="cardOpt1">
-                                    <a class="dropdown-item" href="javascript:void(0);">View More</a>
+                                    <a class="dropdown-item" id="pendingActivityAssess" href="javascript:void(0);">View More</a>
+                                    @* <a class="dropdown-item" href="/ActivityAsses">View More</a> *@
                                 </div>
                             </div>
                         </div>
@@ -572,7 +607,7 @@
     </div>
     <!--/ Order Statistics -->
     <!-- Expense Overview -->
-@*     <div class="col-md-6 col-lg-6 order-1 mb-4">
+    @*     <div class="col-md-6 col-lg-6 order-1 mb-4">
         <div class="card h-100">
             <div class="card-header">
                 <ul class="nav nav-pills" role="tablist">
@@ -639,23 +674,24 @@
             </div>
             <div class="card-body">
                 <ul class="p-0 m-0">
-                  @foreach(var dept in Model.BudgetWithDepartment){
-                    <li class="d-flex mb-4 pb-1">
-                        @* <div class="avatar flex-shrink-0 me-3">
+                    @foreach (var dept in Model.BudgetWithDepartment)
+                    {
+                        <li class="d-flex mb-4 pb-1">
+                            @* <div class="avatar flex-shrink-0 me-3">
                             <img src="~/img/icons/unicons/paypal.png" alt="User" class="rounded">
                         </div> *@
-                        <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-                            <div class="me-2">
-                                <small class="text-muted d-block mb-1">@dept.Code</small>
-                                <h6 class="mb-0">@dept.Name</h6>
+                            <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
+                                <div class="me-2">
+                                    <small class="text-muted d-block mb-1">@dept.Code</small>
+                                    <h6 class="mb-0">@dept.Name</h6>
+                                </div>
+                                <div class="user-progress d-flex align-items-center gap-1">
+                                    <h6 class="mb-0">@dept.Budget</h6> <span class="text-muted"></span>
+                                </div>
                             </div>
-                            <div class="user-progress d-flex align-items-center gap-1">
-                                <h6 class="mb-0">@dept.Budget</h6> <span class="text-muted"></span>
-                            </div>
-                        </div>
-                    </li>
-                  }
-@*                     <li class="d-flex mb-4 pb-1">
+                        </li>
+                    }
+                    @*                     <li class="d-flex mb-4 pb-1">
                         <div class="avatar flex-shrink-0 me-3">
                             <img src="~/img/icons/unicons/wallet.png" alt="User" class="rounded">
                         </div>
@@ -731,3 +767,42 @@
     </div>
     <!--/ Transactions -->
 </div>
+
+<div class="modal fade" id="activityAssessModal" tabindex="-1" role="dialog" aria-labelledby="activityAssessModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-fullscreen" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="activityAssessModalLabel">Activity Assess Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Content will be loaded here -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@* <script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+ *@<script>
+
+    $(document).on('click', '#pendingActivityAssess', function () {
+        // var id = $(this).data('id');
+
+        $.ajax({
+            url: '@Url.Action("GetPendingActivityAssess", "ActivityAsses")',
+            type: 'GET',
+            // data: { id: id },
+            success: function (data) {
+                $('#activityAssessModal .modal-body').html(data);
+                $('#activityAssessModal').modal('show');
+            },
+            error: function () {
+                alert('Failed to load details.');
+            }
+        });
+    });
+</script>

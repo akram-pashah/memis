@@ -1,15 +1,10 @@
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+using DocumentFormat.OpenXml.InkML;
+using MEMIS.Data;
+using MEMIS.Models;
+using MEMIS.ViewModels.ME;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using MEMIS.Data;
-using MEMIS.Models;
-using MEMIS.Migrations;
-using Microsoft.AspNetCore.Mvc.ApplicationParts;
-using MEMIS.ViewModels.ME;
-using DocumentFormat.OpenXml.InkML;
 
 namespace MEMIS.Controllers.ME
 {
@@ -495,19 +490,19 @@ namespace MEMIS.Controllers.ME
         .Include(a => a.ImplementationStatus)
         .AsQueryable();
 
-      if (Status != 0 && Status != null)
+      if (Status != 0)
       {
         query = query.Where(s => s.ActivityAssesmentStatus == Status);
       }
 
       if (isHod)
       {
-        query = query.Where(x => x.QuaterlyPlans.Any() && x.QuaterlyPlans.Where(y => !string.IsNullOrEmpty(y.QAchievement)).Any() && x.ActivityAssesmentStatus == Status);
+        query = query.Where(x => x.QuaterlyPlans != null && x.QuaterlyPlans.Any() && x.QuaterlyPlans.Where(y => !string.IsNullOrEmpty(y.QAchievement)).Any() && x.ActivityAssesmentStatus == Status);
       }
 
       if (!string.IsNullOrEmpty(quarter))
       {
-        query = query.Where(x => x.QuaterlyPlans.Any() && x.QuaterlyPlans.Where(y => y.Quarter == quarter && !string.IsNullOrEmpty(y.QAchievement)).Any());
+        query = query.Where(x => x.QuaterlyPlans != null && x.QuaterlyPlans.Any() && x.QuaterlyPlans.Where(y => y.Quarter == quarter && !string.IsNullOrEmpty(y.QAchievement)).Any());
       }
 
       var appDbContext = await query.ToListAsync();
@@ -608,7 +603,7 @@ namespace MEMIS.Controllers.ME
             foreach (var item in region.QuaterlyPlans)
             {
               item.ActivityAssessmentRegionId = activityAssessmentRegion.intRegionAssess;
-              
+
 
             }
           }
@@ -628,6 +623,7 @@ namespace MEMIS.Controllers.ME
     private async Task<List<ActivityAssessmentRegion>> GetActivityAssestsRegionalDetails(int Status, bool isHod = false, bool isRegional = false)
     {
       var query = _context.ActivityAssessmentRegion
+        .Include(x => x.QuaterlyPlans)
         .Include(x => x.ActivityAssessmentFk)
           .ThenInclude(x => x.QuaterlyPlans)
         .Include(a => a.ActivityAssessFk)
@@ -645,7 +641,7 @@ namespace MEMIS.Controllers.ME
 
       if (isHod)
       {
-        query = query.Where(x => x.ActivityAssessFk.QuaterlyPlans.Where(x => !string.IsNullOrEmpty(x.QAchievement)).Any() && x.intRegion == region);
+        query = query.Where(x => x.QuaterlyPlans.Where(x => !string.IsNullOrEmpty(x.QAchievement)).Any() && x.intRegion == region);
       }
       else if (Status == 0)
       {

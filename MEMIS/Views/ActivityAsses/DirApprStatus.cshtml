@@ -62,6 +62,12 @@
                   <input asp-for="comparativeTarget" class="form-control" type="number" />
                   <span asp-validation-for="comparativeTarget" class="text-danger"></span>
                 </div>
+                    <br />
+                    <div class="form-group">
+                        <label asp-for="unitCost" class="control-label"></label>
+                        <input asp-for="unitCost" class="form-control" type="number" />
+                        <span asp-validation-for="unitCost" class="text-danger"></span>
+                    </div>
                 <br />
                 <div class="form-group">
                   <label asp-for="justification" class="control-label"></label>
@@ -73,12 +79,6 @@
                   <label asp-for="budgetAmount" class="control-label"></label>
                   <input asp-for="budgetAmount" id="budgetAmount" class="form-control" type="number" />
                   <span asp-validation-for="budgetAmount" class="text-danger"></span>
-                </div>
-                <br />
-                <div class="form-group">
-                  <label asp-for="unitCost" class="control-label"></label>
-                  <input asp-for="unitCost"  class="form-control" type="number" />
-                  <span asp-validation-for="unitCost" class="text-danger"></span>
                 </div>
                 <br/>
                 <div class="form-group">
@@ -143,8 +143,8 @@
                                             <th>Id</th>
                                             <th>Quarter</th>
                                             <th>Target</th>
+                                            <th>Unit Cost</th>
                                             <th>Budget</th>
-                                          <th>UnitCost</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -163,11 +163,11 @@
                                               <td>
                                                 <label class="form-control">@Model.QuaterlyPlans.ToList()[i].QTarget</label>
                                               </td>
+                                                <td>
+                                                    <label class="form-control">@Model.QuaterlyPlans.ToList()[i].UnitCost</label>
+                                                </td>
                                               <td>
                                                 <label class="form-control">@Model.QuaterlyPlans.ToList()[i].QBudget</label>
-                                              </td>
-                                              <td>
-                                                <label class="form-control">@Model.QuaterlyPlans.ToList()[i].UnitCost</label>
                                               </td>
                                             </tr>
                                         }
@@ -185,8 +185,8 @@
                                                 <th>Region</th>
                                                 <th>Quarter</th>
                                                 <th>Target</th>
+                                                <th>Unit Cost</th>
                                                 <th>Budget</th>
-                                              <th>UnitCost</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -206,11 +206,11 @@
                                                   <td>
                                                     <label class="form-control">@region.QuaterlyPlans.ToList()[i].QTarget</label>
                                                   </td>
+                                                    <td>
+                                                        <label class='form-control'>@region.QuaterlyPlans.ToList()[i].UnitCost</label>
+                                                    </td>
                                                   <td>
                                                     <label class='form-control'>@region.QuaterlyPlans.ToList()[i].QBudget</label>
-                                                  </td>
-                                                  <td>
-                                                    <label class='form-control'>@region.QuaterlyPlans.ToList()[i].UnitCost</label>
                                                   </td>
 
                                                 </tr>
