@@ -103,9 +103,9 @@
             </div>
             <br />
             <div class="form-group">
-                <label asp-for="ResponsibleParty" class="control-label"></label>
-                <input asp-for="ResponsibleParty" class="form-control" />
-                <span asp-validation-for="ResponsibleParty" class="text-danger"></span>
+              <label asp-for="intDept" class="control-label"></label>
+              @Html.DropDownList("intDept", new SelectList(ViewBag.Depts, "intDept", "deptName"), new { @class = "form-control form-select", @required = "required" })
+              @* <select asp-for="intDept" class="form-control" asp-items="ViewBag.Depts"></select> *@
             </div>
             <br />
             <div class="form-group">

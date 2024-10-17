@@ -7,6 +7,7 @@ namespace MEMIS.ViewModels.ME
     public int TotalSDTsAchieved { get; set; }
     public int TotalKPIsAchieved { get; set; }
     public double DepartmentPerformance { get; set; }
+    public double OverallPerformance { get; set; }
     public List<string> StrategicInterventions { get; set; } = [];
     public List<ChartDataSeries> YearlyStrategicInterventionTrend = new();
     public List<string> FocusAreas { get; set; } = [];

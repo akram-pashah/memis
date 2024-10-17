@@ -610,7 +610,7 @@ namespace MEMIS.Helpers.ExcelReports
           worksheet.Cell(row, 13).Value = assessment?.FY4;
           worksheet.Cell(row, 14).Value = assessment?.FY5;
           worksheet.Cell(row, 15).Value = assessment?.MeansofVerification;
-          worksheet.Cell(row, 16).Value = assessment?.ResponsibleParty;
+          worksheet.Cell(row, 16).Value = assessment?.intDept?.ToString();
 
           row++;
         }
