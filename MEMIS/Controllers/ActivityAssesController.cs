@@ -80,7 +80,7 @@ namespace MEMIS.Controllers
         TotalActivities = activities.Count,
         TotalBudget = activities.Sum(x => x.QuaterlyPlans.Sum(x => x.QBudget) + x.ActivityAssessRegions.Sum(x => x.QuaterlyPlans.Sum(x => x.QBudget))),
         TotalTarget = activities.Sum(x => x.QuaterlyPlans.Sum(x => x.QTarget) + x.ActivityAssessRegions.Sum(x => x.QuaterlyPlans.Sum(x => x.QTarget))),
-        PendingActivities = activities.Where(x => x.ApprStatus != (int)deptPlanApprStatus.dirapprapproved).Count(),
+        PendingActivities = activities.Where(x => x.ApprStatus == (int)deptPlanApprStatus.headBpdVerified).Count(),
         ActivitiesCount = departments.Select(x => totalActivities.Where(a => a.intDept == x.intDept).Count()).ToList(),
         DepartmentBudgets = departments.Select(x => totalActivities.Where(a => a.intDept == x.intDept).Sum(x => x.QuaterlyPlans.Sum(x => x.QBudget) + x.ActivityAssessRegions.Sum(x => x.QuaterlyPlans.Sum(x => x.QBudget)))).ToList(),
         Departments = departments.Select(x => x.deptName).ToList(),
@@ -1186,7 +1186,17 @@ namespace MEMIS.Controllers
 
       return PartialView("_PendingForApproval", dat);
     }
+    public async Task<IActionResult> GetTotalActivityAssess()
+    {
+      var dat = await _context.ActivityAssess
+        .Include(x => x.StrategicIntervention)
+          .ThenInclude(x => x.StrategicObjective)
+        .Include(x => x.QuaterlyPlans)
+        .Include(x => x.ActivityAssessRegions)
+          .ThenInclude(x => x.QuaterlyPlans).ToListAsync();
 
+      return PartialView("_TotalActivities", dat);
+    }
     public async Task<IActionResult> DirApprStatus(int? id)
     {
       if (id == null || _context.ActivityAssess == null)

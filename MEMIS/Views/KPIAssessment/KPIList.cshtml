@@ -72,7 +72,7 @@
 					@Html.DisplayNameFor(model => model.Data[0].MeansofVerification)
 				</th>
 				<th>
-					@Html.DisplayNameFor(model => model.Data[0].ResponsibleParty)
+					@Html.DisplayNameFor(model => model.Data[0].intDept)
 				</th>
 				<th></th>
 			</tr>
@@ -127,7 +127,7 @@
 						@Html.DisplayFor(modelItem => item.MeansofVerification)
 					</td>
 					<td>
-						@Html.DisplayFor(modelItem => item.ResponsibleParty)
+						@Html.DisplayFor(modelItem => item.DepartmentFk.deptName)
 					</td>
 					<td>
 						<a role="button" class="btn btn-sm btn-outline-primary" asp-action="Create" asp-route-id="@item.Id" title="New Assessment">Create New Assessment</a>

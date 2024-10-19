@@ -950,7 +950,7 @@ namespace MEMIS.Helpers.PdfReports
           table.AddCell(new Cell().Add(new Paragraph(assessment?.FY4?.ToString() ?? "").SetFontSize(5)));
           table.AddCell(new Cell().Add(new Paragraph(assessment?.FY5?.ToString() ?? "").SetFontSize(5)));
           table.AddCell(new Cell().Add(new Paragraph(assessment?.MeansofVerification ?? "").SetFontSize(5)));
-          table.AddCell(new Cell().Add(new Paragraph(assessment?.ResponsibleParty ?? "").SetFontSize(5)));
+          table.AddCell(new Cell().Add(new Paragraph(assessment?.intDept?.ToString() ?? "").SetFontSize(5)));
         }
         document.Add(table);
 

@@ -23,7 +23,7 @@ namespace MEMIS.Controllers
     {
       int pageSize = 10;
       var offset = (pageSize * pageNumber) - pageSize;
-      var appDbContext = _context.KPIAssessment.Include(s => s.KPIMasterFk).Skip(offset).Take(pageSize);
+      var appDbContext = _context.KPIAssessment.Include(s => s.KPIMasterFk).Include(s => s.KPIMasterFk.DepartmentFk).Skip(offset).Take(pageSize);
       var result = new PagedResult<KPIAssessment>
       {
         Data = await appDbContext.AsNoTracking().ToListAsync(),
@@ -57,7 +57,7 @@ namespace MEMIS.Controllers
     {
       int pageSize = 10;
       var offset = (pageSize * pageNumber) - pageSize;
-      var appDbContext = _context.KPIAssessment.Include(s => s.KPIMasterFk).Where(s => (s != null ? s.FY == fy : true)).Skip(offset).Take(pageSize);
+      var appDbContext = _context.KPIAssessment.Include(s => s.KPIMasterFk).Include(s => s.KPIMasterFk.DepartmentFk).Where(s => (s != null ? s.FY == fy : true)).Skip(offset).Take(pageSize);
       var result = new PagedResult<KPIAssessment>
       {
         Data = await appDbContext.AsNoTracking().ToListAsync(),
@@ -90,6 +90,7 @@ namespace MEMIS.Controllers
         PageNumber = pageNumber,
         PageSize = pageSize
       };
+      ViewData["intDept"] = new SelectList(_context.Departments, "intDept", "deptName");
       ViewData["TypeofIndicator"] = ListHelper.TypeofIndicator();
       ViewData["Indicatorclassification"] = ListHelper.Indicatorclassification();
       ViewData["FrequencyofReporting"] = ListHelper.FrequencyofReporting();
@@ -110,6 +111,7 @@ namespace MEMIS.Controllers
         PageNumber = pageNumber,
         PageSize = pageSize
       };
+      ViewData["intDept"] = new SelectList(_context.Departments, "intDept", "deptName");
       ViewData["TypeofIndicator"] = ListHelper.TypeofIndicator();
       ViewData["Indicatorclassification"] = ListHelper.Indicatorclassification();
       ViewData["FrequencyofReporting"] = ListHelper.FrequencyofReporting();
@@ -130,6 +132,7 @@ namespace MEMIS.Controllers
       {
         return NotFound();
       }
+      ViewData["intDept"] = new SelectList(_context.Departments, "intDept", "deptName");
       ViewData["FYear"] = ListHelper.FYear();
       ViewData["AchievementStatus"] = ListHelper.AchievementStatus();
       ViewData["FrequencyofReporting"] = ListHelper.FrequencyofReporting();
@@ -164,6 +167,7 @@ namespace MEMIS.Controllers
         Rate = assessment.Rate,
         Achieved = assessment.Achieved,
         ApprovalStatus = 0,
+        
         Justification = assessment.Justification,
 
       };
@@ -337,7 +341,7 @@ namespace MEMIS.Controllers
     {
       int pageSize = 10;
       var offset = (pageSize * pageNumber) - pageSize;
-      var appDbContext = _context.KPIAssessment.Include(s => s.KPIMasterFk).Include(s => s.KPIMasterFk.StrategicPlanFk)
+      var appDbContext = _context.KPIAssessment.Include(s => s.KPIMasterFk).Include(s => s.KPIMasterFk.StrategicPlanFk).Include(s => s.KPIMasterFk.DepartmentFk)
           .Where(e => e.ApprovalStatus == 0)
           .Where(s => (fy != null ? s.FY == fy : true)).Skip(offset).Take(pageSize);
       var result = new PagedResult<KPIAssessment>
@@ -373,6 +377,7 @@ namespace MEMIS.Controllers
       {
         return NotFound();
       }
+
       ViewData["FYear"] = ListHelper.FYear();
       ViewData["AchievementStatus"] = ListHelper.AchievementStatus();
       ViewData["FrequencyofReporting"] = ListHelper.FrequencyofReporting();
@@ -417,7 +422,7 @@ namespace MEMIS.Controllers
     {
       int pageSize = 10;
       var offset = (pageSize * pageNumber) - pageSize;
-      var appDbContext = _context.KPIAssessment.Include(s => s.KPIMasterFk).Include(s => s.KPIMasterFk.StrategicPlanFk)
+      var appDbContext = _context.KPIAssessment.Include(s => s.KPIMasterFk).Include(s => s.KPIMasterFk.StrategicPlanFk).Include(s => s.KPIMasterFk.DepartmentFk)
           .Where(e => e.ApprovalStatus == 1)
           .Where(s => (fy != null ? s.FY == fy : true)).Skip(offset).Take(pageSize);
       var result = new PagedResult<KPIAssessment>
@@ -500,7 +505,7 @@ namespace MEMIS.Controllers
     {
       int pageSize = 10;
       var offset = (pageSize * pageNumber) - pageSize;
-      var appDbContext = _context.KPIAssessment.Include(s => s.KPIMasterFk).Include(s => s.KPIMasterFk.StrategicPlanFk)
+      var appDbContext = _context.KPIAssessment.Include(s => s.KPIMasterFk).Include(s => s.KPIMasterFk.StrategicPlanFk).Include(s => s.KPIMasterFk.DepartmentFk)
           .Where(e => e.ApprovalStatus == 3)
           .Where(s => (fy != null ? s.FY == fy : true)).Skip(offset).Take(pageSize);
       var result = new PagedResult<KPIAssessment>
@@ -582,7 +587,7 @@ namespace MEMIS.Controllers
     {
       int pageSize = 10;
       var offset = (pageSize * pageNumber) - pageSize;
-      var appDbContext = _context.KPIAssessment.Include(s => s.KPIMasterFk).Include(s => s.KPIMasterFk.StrategicPlanFk)
+      var appDbContext = _context.KPIAssessment.Include(s => s.KPIMasterFk).Include(s => s.KPIMasterFk.StrategicPlanFk).Include(s => s.KPIMasterFk.DepartmentFk)
           .Where(e => e.ApprovalStatus == 5)
           .Where(s => (fy != null ? s.FY == fy : true)).Skip(offset).Take(pageSize);
       var result = new PagedResult<KPIAssessment>
@@ -664,7 +669,7 @@ namespace MEMIS.Controllers
     {
       int pageSize = 10;
       var offset = (pageSize * pageNumber) - pageSize;
-      var appDbContext = _context.KPIAssessment.Include(s => s.KPIMasterFk).Include(s => s.KPIMasterFk.StrategicPlanFk)
+      var appDbContext = _context.KPIAssessment.Include(s => s.KPIMasterFk).Include(s => s.KPIMasterFk.StrategicPlanFk).Include(s => s.KPIMasterFk.DepartmentFk)
           .Where(e => e.ApprovalStatus == 7)
           .Where(s => (fy != null ? s.FY == fy : true)).Skip(offset).Take(pageSize);
       var result = new PagedResult<KPIAssessment>

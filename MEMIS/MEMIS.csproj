@@ -11,6 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Remove="Views\ActivityAssessment\_FullyImplementedActivities.cshtml" />
     <Content Remove="wwwroot\js\riskidentification.js~RF209946.TMP" />
   </ItemGroup>
 
@@ -19,6 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="Views\ActivityAssessment\_FullyImplementedActivities.cshtml" />
     <None Include="wwwroot\vendor\libs\form-validation\umd\bundle\popular.min.js" />
     <None Include="wwwroot\vendor\libs\form-validation\umd\plugin-auto-focus\index.min.js" />
     <None Include="wwwroot\vendor\libs\form-validation\umd\plugin-bootstrap5\index.min.js" />
@@ -64,7 +66,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <_ContentIncludedByDefault Remove="Views\ActivityAssessment\_FullyImplementedActivities.cshtml" />
     <_ContentIncludedByDefault Remove="Views\ActivityAsses\RegionalAllocations.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Views\ActivityAssessment\_FullyImplementedActivities.cshtml" />
   </ItemGroup>
 
 </Project>

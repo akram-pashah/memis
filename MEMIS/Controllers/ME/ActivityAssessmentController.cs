@@ -1,3 +1,4 @@
+using DocumentFormat.OpenXml.Bibliography;
 using DocumentFormat.OpenXml.InkML;
 using MEMIS.Data;
 using MEMIS.Models;
@@ -47,6 +48,8 @@ namespace MEMIS.Controllers.ME
       var orgSDTsquery = _context.SDTAssessment
         .Include(x => x.SDTMasterFk)
         .AsQueryable();
+
+      var deptSDTQuery = orgSDTsquery.Where(x => x.SDTMasterFk != null && x.SDTMasterFk.DepartmentId == departmentId);
       //var SDTsQuery = orgSDTsquery;
       //if (!userRoles.Contains("SuperAdmin"))
       //{
@@ -56,6 +59,8 @@ namespace MEMIS.Controllers.ME
       var orgKPIsquery = _context.KPIAssessment
         .Include(x => x.KPIMasterFk)
         .AsQueryable();
+
+      var deptKPIQuery = orgKPIsquery.Where(x => x.KPIMasterFk != null && x.KPIMasterFk.intDept == departmentId); ;
       //var KPIsQuery = orgKPIsquery;
       //if (!userRoles.Contains("SuperAdmin"))
       //{
@@ -69,6 +74,13 @@ namespace MEMIS.Controllers.ME
 
       var kpiAverage = kpiData.Any() ? kpiData.Average() : 0;
 
+      var kpiDeptData = _context.KPIAssessment
+        .Where(k => k.Achieved != null && k.KPIMasterFk != null && k.KPIMasterFk.intDept == departmentId)
+        .AsEnumerable()
+        .Select(k => double.Parse(k.Achieved));
+
+      var kpiDeptAverage = kpiDeptData.Any() ? kpiDeptData.Average() : 0;
+
       // Query to get the average rating from SDTAssessment
       var sdtData = _context.SDTAssessment
           .Where(s => s.AchivementStatus != null)
@@ -77,11 +89,20 @@ namespace MEMIS.Controllers.ME
 
       var sdtAverage = sdtData.Any() ? sdtData.Average() : 0;
 
+      var sdtDeptData = _context.SDTAssessment
+          .Where(s => s.AchivementStatus != null && s.SDTMasterFk != null && s.SDTMasterFk.DepartmentId == departmentId)
+          .AsEnumerable()
+          .Select(s => double.Parse(s.AchivementStatus));
+
+      var sdtDeptAverage = sdtDeptData.Any() ? sdtDeptData.Average() : 0;
+
       // Combine and calculate the overall average
       var combinedAverage = (kpiAverage + sdtAverage) / 2;
+      var combinedDeptAverage = (kpiDeptAverage + sdtDeptAverage) / 2;
 
       // Convert the average to a percentage
       var percentageValue = combinedAverage * 100;
+      var percentageDeptValue = combinedDeptAverage * 100;
 
       var fullyImplementedStatusId = 3;
 
@@ -166,10 +187,11 @@ namespace MEMIS.Controllers.ME
 
       TotalActivityAssessmentDetailsViewModel data = new()
       {
-        TotalActivitiesFullyImplemented = orgActivitiesquery.Where(x => x.ImpStatusId == 3).Count(),
+        TotalActivitiesFullyImplemented = orgActivitiesquery.Where(x =>x.ImpStatusId==3).Count(),
         TotalSDTsAchieved = orgSDTsquery.Count(),
         TotalKPIsAchieved = orgKPIsquery.Count(),
-        DepartmentPerformance = percentageValue,
+        OverallPerformance = percentageValue,
+        DepartmentPerformance = percentageDeptValue,
         StrategicInterventions = StrategicInterventions.Select(x => x.Name).ToList(),
         YearlyStrategicInterventionTrend = yearSIImpData.Select(x => new ChartDataSeries()
         {
@@ -199,6 +221,24 @@ namespace MEMIS.Controllers.ME
       };
 
       return View(data);
+    }
+    public async Task<IActionResult> GetImplementedActivities()
+    {
+      var dat = await _context.ActivityAssessment.Include(x => x.QuaterlyPlans)
+            .Where(x => x.ImpStatusId == 3).ToListAsync();
+      return PartialView("_FullyImplementedActivities", dat);
+    }
+    public async Task<IActionResult> GetSDTAssessment()
+    {
+      var sdt = await _context.SDTAssessment.Include(x=>x.SDTMasterFk).Include(x=>x.SDTMasterFk.DepartmentFk)
+          .Where(s => s.AchivementStatus != null && s.SDTMasterFk != null).ToListAsync();          
+      return PartialView("_SDTAchieveAssessment", sdt);
+    }
+    public async Task<IActionResult> GetKPIAssessment()
+    {
+      var kpi = await _context.KPIAssessment
+        .Include(x => x.KPIMasterFk).ThenInclude(x => x.DepartmentFk).ToListAsync();
+      return PartialView("_KPIAchieveAssessment", kpi);
     }
 
     private double GetCompletionValue(int impStatusId)
