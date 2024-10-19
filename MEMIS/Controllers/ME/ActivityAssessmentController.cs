@@ -1,3 +1,4 @@
+using DocumentFormat.OpenXml.Bibliography;
 using DocumentFormat.OpenXml.InkML;
 using MEMIS.Data;
 using MEMIS.Models;
@@ -186,7 +187,7 @@ namespace MEMIS.Controllers.ME
 
       TotalActivityAssessmentDetailsViewModel data = new()
       {
-        TotalActivitiesFullyImplemented = orgActivitiesquery.Where(x => x.ImpStatusId == 3).Count(),
+        TotalActivitiesFullyImplemented = orgActivitiesquery.Where(x =>x.ImpStatusId==3).Count(),
         TotalSDTsAchieved = orgSDTsquery.Count(),
         TotalKPIsAchieved = orgKPIsquery.Count(),
         OverallPerformance = percentageValue,
@@ -220,6 +221,24 @@ namespace MEMIS.Controllers.ME
       };
 
       return View(data);
+    }
+    public async Task<IActionResult> GetImplementedActivities()
+    {
+      var dat = await _context.ActivityAssessment.Include(x => x.QuaterlyPlans)
+            .Where(x => x.ImpStatusId == 3).ToListAsync();
+      return PartialView("_FullyImplementedActivities", dat);
+    }
+    public async Task<IActionResult> GetSDTAssessment()
+    {
+      var sdt = await _context.SDTAssessment.Include(x=>x.SDTMasterFk).Include(x=>x.SDTMasterFk.DepartmentFk)
+          .Where(s => s.AchivementStatus != null && s.SDTMasterFk != null).ToListAsync();          
+      return PartialView("_SDTAchieveAssessment", sdt);
+    }
+    public async Task<IActionResult> GetKPIAssessment()
+    {
+      var kpi = await _context.KPIAssessment
+        .Include(x => x.KPIMasterFk).ThenInclude(x => x.DepartmentFk).ToListAsync();
+      return PartialView("_KPIAchieveAssessment", kpi);
     }
 
     private double GetCompletionValue(int impStatusId)

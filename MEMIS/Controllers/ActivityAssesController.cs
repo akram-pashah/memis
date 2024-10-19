@@ -1186,7 +1186,17 @@ namespace MEMIS.Controllers
 
       return PartialView("_PendingForApproval", dat);
     }
+    public async Task<IActionResult> GetTotalActivityAssess()
+    {
+      var dat = await _context.ActivityAssess
+        .Include(x => x.StrategicIntervention)
+          .ThenInclude(x => x.StrategicObjective)
+        .Include(x => x.QuaterlyPlans)
+        .Include(x => x.ActivityAssessRegions)
+          .ThenInclude(x => x.QuaterlyPlans).ToListAsync();
 
+      return PartialView("_TotalActivities", dat);
+    }
     public async Task<IActionResult> DirApprStatus(int? id)
     {
       if (id == null || _context.ActivityAssess == null)

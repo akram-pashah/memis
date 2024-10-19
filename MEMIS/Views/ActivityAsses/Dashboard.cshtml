@@ -326,7 +326,7 @@
                                     <i class="bx bx-dots-vertical-rounded"></i>
                                 </button>
                                 <div class="dropdown-menu dropdown-menu-end" aria-labelledby="cardOpt3">
-                                    <a class="dropdown-item" href="/ActivityAsses">View More</a>
+                                    <a class="dropdown-item" id="totalActivityAssess" href="javascript:void(0);">View More</a>
                                     @* <a class="dropdown-item" href="javascript:void(0);">Delete</a> *@
                                 </div>
                             </div>
@@ -772,7 +772,7 @@
     <div class="modal-dialog modal-fullscreen" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="activityAssessModalLabel">Activity Assess Details</h5>
+                <h5 class="modal-title" id="activityAssessModalLabel"></h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -787,13 +787,30 @@
 
 @* <script src="~/lib/jquery/dist/jquery.min.js"></script>
 <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
- *@<script>
+ *@
+<script>
 
     $(document).on('click', '#pendingActivityAssess', function () {
         // var id = $(this).data('id');
-
+      document.getElementById("activityAssessModalLabel").innerText = "Pending Activities";
         $.ajax({
             url: '@Url.Action("GetPendingActivityAssess", "ActivityAsses")',
+            type: 'GET',
+            // data: { id: id },
+            success: function (data) {
+                $('#activityAssessModal .modal-body').html(data);
+                $('#activityAssessModal').modal('show');
+            },
+            error: function () {
+                alert('Failed to load details.');
+            }
+        });
+    });
+    $(document).on('click', '#totalActivityAssess', function () {
+    // var id = $(this).data('id');
+      document.getElementById("activityAssessModalLabel").innerText = "Total Activities";
+        $.ajax({
+            url: '@Url.Action("GetTotalActivityAssess", "ActivityAsses")',
             type: 'GET',
             // data: { id: id },
             success: function (data) {

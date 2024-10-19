@@ -1,4 +1,6 @@
 
+using MEMIS.Data;
+
 namespace MEMIS.ViewModels.ME
 {
   public class TotalActivityAssessmentDetailsViewModel
