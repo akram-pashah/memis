@@ -208,7 +208,7 @@
                     <ul class="menu-sub">
                         <li class='menu-item@(currentPage == "/ActivityAsses" ? " active" : "")'>
                             <a asp-controller="ActivityAsses" asp-action="Index" class="menu-link">
-                                <div>ActivityAssess</div>
+                                <div>Department Target Setting</div>
                             </a>
                         </li>
                         <li class='menu-item@(currentPage == "/ActivityAsses/AllocatetoRegion" ? " active" : "")'>
@@ -223,7 +223,7 @@
                         </li>
                         <li class='menu-item@(currentPage == "/ActivityAsses/RegionalActivityAsses" ? " active" : "")'>
                             <a asp-controller="ActivityAsses" asp-action="RegionalActivityAsses" class="menu-link">
-                                <div>Regional Activity Assess</div>
+                                <div>Regional Target Updation</div>
                             </a>
                         </li>
                         <li class='menu-item@(currentPage == "/ActivityAsses/RegionalVerify" ? " active" : "")'>
@@ -281,134 +281,7 @@
                         <div>Activity Assessment</div>
                     </a>
                     <ul class="menu-sub">
-                        @if (User.IsInRole("Regional Officer") || User.IsInRole("SuperAdmin"))
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+                        @if (User.IsInRole("Regional Officer") || User.IsInRole("SuperAdmin")) 
                         {
                             <li class='menu-item@(currentPage == "/ActivityAssessment/RegionalIndex" ? " active" : "")'>
                                 <a asp-controller="ActivityAssessment" asp-action="RegionalIndex" class="menu-link">

@@ -11,3 +11,4 @@
 /Theme/MVC
 /MEMIS/appsettings.json
 /MEMIS/Migrations/20240810041234_AssessmentRegionChanges.cs
+/MEMIS/Views/ActivityAssessment/Dashboard.cshtml
