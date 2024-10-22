@@ -3192,7 +3192,7 @@
         </li>
 
         <li class='menu-item@(currentPage.EndsWith("/") ||  currentPage.StartsWith("/ProjectInitiation")||  currentPage.StartsWith("/ProjectInitiation/add") ? " active open" : "")'>
-            <a href="javascript:void(0);" class="menu-link menu-toggle">
+            <a href="javascript:void(0);" onclick="goToPMDashboard()" class="menu-link menu-toggle">
                 <i class="menu-icon tf-icons bx bx-dock-top"></i>
                 <div>Project Management</div>
             </a>
@@ -3437,5 +3437,8 @@
     }
     function goToRiskDashboard() {
         window.location.href = "/RiskRegister/Dashboard";
+    }
+    function goToPMDashboard() {
+        window.location.href = "/ProjectInitiation/Dashboard";
     }
 </script>

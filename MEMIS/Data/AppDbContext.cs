@@ -181,6 +181,16 @@ namespace MEMIS.Data
         .WithMany(r => r.KPIAssessments)
         .HasForeignKey(t => t.KPIMasterId);
 
+      modelBuilder.Entity<ActivityPlan>()
+        .HasOne(t => t.ProjectInitiationFk)
+        .WithMany(r => r.ActivityPlans)
+        .HasForeignKey(t => t.ProjectInitiationId);
+
+      modelBuilder.Entity<ProjectRiskIdentification>()
+        .HasOne(t => t.ProjectInitiationFk)
+        .WithMany(r => r.ProjectRiskIdentifications)
+        .HasForeignKey(t => t.ProjectInitiationId);
+
       base.OnModelCreating(modelBuilder);
 
       //Boolean achStatus = false;

@@ -1,16 +1,11 @@
+using cloudscribe.Pagination.Models;
+using MEMIS.Data;
+using MEMIS.Data.Project;
+using MEMIS.Models;
+using MEMIS.ViewModels.Project;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using MEMIS.Data;
-using cloudscribe.Pagination.Models;
-using MEMIS.Models;
-using System.Collections.Generic;
-using MEMIS.Data.Risk;
-using MEMIS.Models.Risk;
-using System.Security.Claims;
-using Microsoft.AspNetCore.Identity;
-using MEMIS.Models.Project;
-using MEMIS.Data.Project;
 
 namespace MEMIS.Controllers
 {
@@ -21,6 +16,13 @@ namespace MEMIS.Controllers
     public ProjectInitiationController(Data.AppDbContext context)
     {
       _context = context;
+    }
+
+    private string[] getUserRoles()
+    {
+      string userRolesString = HttpContext.Session.GetString("UserRoles");
+      string[] userRoles = userRolesString?.Split(',', StringSplitOptions.RemoveEmptyEntries) ?? Array.Empty<string>();
+      return userRoles;
     }
 
     public async Task<IActionResult> Index(int pageNumber = 1)
@@ -37,6 +39,123 @@ namespace MEMIS.Controllers
       };
 
       return View(result);
+    }
+
+    public async Task<IActionResult> Dashboard()
+    {
+      var userRoles = getUserRoles();
+      Guid departmentId = Guid.Parse(HttpContext.Session.GetString("Department"));
+
+      List<double> projectsByType = [];
+
+      var constructions = _context.ProjectInitiations.Where(x => x.Type == 1).Count();
+      var works = _context.ProjectInitiations.Where(x => x.Type == 2).Count();
+      var services = _context.ProjectInitiations.Where(x => x.Type == 3).Count();
+      var programs = _context.ProjectInitiations.Where(x => x.Type == 4).Count();
+
+      projectsByType.Add(constructions);
+      projectsByType.Add(works);
+      projectsByType.Add(services);
+      projectsByType.Add(programs);
+
+      List<double> risksByRank = [];
+
+      var veryLow = _context.ProjectRiskIdentifications.Where(x => x.Rank == 1).Count();
+      var low = _context.ProjectRiskIdentifications.Where(x => x.Rank == 2).Count();
+      var medium = _context.ProjectRiskIdentifications.Where(x => x.Rank == 3).Count();
+      var high = _context.ProjectRiskIdentifications.Where(x => x.Rank == 4).Count();
+      var veryHigh = _context.ProjectRiskIdentifications.Where(x => x.Rank == 5).Count();
+
+      risksByRank.Add(veryLow);
+      risksByRank.Add(low);
+      risksByRank.Add(medium);
+      risksByRank.Add(high);
+      risksByRank.Add(veryHigh);
+
+      double totalProjects = _context.ProjectInitiations.Count();
+      double totalProjectsCompleted = _context.ProjectInitiations.Include(x => x.ActivityPlans).Where(x => x.ActivityPlans.All(y => y.Status == 1)).Count();
+      double totalProjectsPending = _context.ProjectInitiations.Include(x => x.ActivityPlans).Where(x => x.ActivityPlans.Any(y => y.Status != 1)).Count();
+      double totalProjectsOverdue = _context.ProjectInitiations.Include(x => x.ActivityPlans).Where(x => x.ActivityPlans.Any(y => y.Status != 1) && x.EndDate > DateTime.Now).Count();
+      double totalProjectsInProgress = _context.ProjectInitiations.Include(x => x.ActivityPlans).Where(x => x.ActivityPlans.Any(y => y.Status == 2)).Count();
+
+      List<double> activitiesByStatus = [];
+      activitiesByStatus.Add(totalProjects);
+      activitiesByStatus.Add(totalProjectsCompleted);
+      activitiesByStatus.Add(totalProjectsPending);
+      activitiesByStatus.Add(totalProjectsOverdue);
+      activitiesByStatus.Add(totalProjectsInProgress);
+
+      List<double> tasksByStatus = [];
+
+      tasksByStatus.Add(_context.MonitoringAndControls.Where(x => x.Status == "Completed").Count());
+      tasksByStatus.Add(_context.MonitoringAndControls.Where(x => x.Status == "Work on Progress").Count());
+      tasksByStatus.Add(_context.MonitoringAndControls.Where(x => x.Status == "Not Started").Count());
+
+      PMDashboardViewModel data = new()
+      {
+        TotalProjects = totalProjects,
+        TotalProjectsCompleted = totalProjectsCompleted,
+        TotalProjectsPending = totalProjectsPending,
+        TotalProjectsOverdue = totalProjectsOverdue,
+        TotalProjectsInProgress = totalProjectsInProgress,
+        ProjectsByType = projectsByType,
+        RisksByRank = risksByRank,
+        ActivitiesByStatus = activitiesByStatus,
+        TasksByStatus = tasksByStatus
+      };
+
+      return View(data);
+    }
+
+    static List<string> GenerateRandomColors(int count)
+    {
+      Random random = new Random();
+      HashSet<string> colors = new HashSet<string>();
+
+      while (colors.Count < count)
+      {
+        // Generate random RGB values
+        int r = random.Next(256);
+        int g = random.Next(256);
+        int b = random.Next(256);
+
+        // Convert RGB to hexadecimal format
+        string hexColor = $"#{r:X2}{g:X2}{b:X2}";
+
+        // Add only unique colors
+        colors.Add(hexColor);
+      }
+
+      return new List<string>(colors);
+    }
+
+    private double GetCompletionValue(int impStatusId)
+    {
+      return impStatusId switch
+      {
+        1 => 0,    // 0% completion
+        2 => 0.5,  // 50% completion
+        3 => 1,    // 100% completion
+        _ => 0     // Default to 0 if impStatusId is invalid or unexpected
+      };
+    }
+
+    private static List<int> GetFinancialYears()
+    {
+      int currentYear = DateTime.Now.Year;
+      List<int> financialYears = new List<int>();
+
+      // Find the starting year (FY1) based on the current year
+      int startYear = currentYear - ((currentYear - 1) % 5); // FY1 starts at the closest year divisible by 5 + 1
+
+      // Calculate 5 financial years starting from the determined startYear
+      for (int i = 0; i < 5; i++)
+      {
+        int fy = startYear + i;
+        financialYears.Add(fy);
+      }
+
+      return financialYears;
     }
 
     public async Task<IActionResult> Add(int id = 0)
@@ -374,7 +493,7 @@ namespace MEMIS.Controllers
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> AddStakeholder(ProjectInitiationDetailsDto projectInitiationDto)
     {
-      if (projectInitiationDto.StakeHolder != null&&projectInitiationDto.StakeHolder.StakeholderName!=null)
+      if (projectInitiationDto.StakeHolder != null && projectInitiationDto.StakeHolder.StakeholderName != null)
       {
         var stakeholderdto = projectInitiationDto.StakeHolder;
         StakeHolder _data = new()

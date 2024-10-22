@@ -1,0 +1,615 @@
+@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor httpContextAccessor
+@using System.Text.Json
+@using MEMIS.ViewModels.Project
+@model PMDashboardViewModel
+
+@{
+    ViewData["Title"] = "Dashboard - M & E";
+
+
+
+    Layout = "~/Pages/Shared/_ContentNavbarLayout.cshtml";
+
+
+
+    var userDetails = new
+
+    {
+
+        UserName = httpContextAccessor.HttpContext?.Session.GetString("UserName"),
+
+        UserRoles = httpContextAccessor.HttpContext.Session.GetString("UserRoles")
+
+    };
+}
+@section VendorStyles {
+    <link rel="stylesheet" href="~/vendor/libs/apex-charts/apex-charts.css" />
+}
+@section VendorScripts {
+    <script src="~/vendor/libs/apex-charts/apexcharts.js"></script>
+}
+@section PageScripts {
+    <script src="~/js/dashboards-analytics.js"></script>
+    <script type="text/javascript">
+        (function () {
+            initializeChart();
+            corporateRiskImplementationStatusChart();
+            ActivitiesByStatusChart();
+            TasksByStatusChart();
+        })();
+
+        var chart = null;
+
+        // Function to initialize the stacked chart
+        function initializeChart() {
+            if (chart) {
+                chart.destroy();
+                chart = null;
+            }
+
+            var options = {
+                series: [{
+                    name: 'Actions',
+                    data: @Html.Raw(JsonSerializer.Serialize(Model.ProjectsByType))
+                                }],
+                chart: {
+                    height: 350,
+                    type: 'bar',
+                },
+                plotOptions: {
+                    bar: {
+                        borderRadius: 10,
+                        dataLabels: {
+                            position: 'top', // top, center, bottom
+                        },
+                    }
+                },
+                dataLabels: {
+                    enabled: true,
+                    formatter: function (val) {
+                        return val;
+                    },
+                    offsetY: -20,
+                    style: {
+                        fontSize: '12px',
+                        colors: ["#304758"]
+                    }
+                },
+
+                xaxis: {
+                    categories: ["Construction", "Work", "Service", "Programs"],
+                    position: 'top',
+                    axisBorder: {
+                        show: false
+                    },
+                    axisTicks: {
+                        show: false
+                    },
+                    crosshairs: {
+                        fill: {
+                            type: 'gradient',
+                            gradient: {
+                                colorFrom: '#D8E3F0',
+                                colorTo: '#BED1E6',
+                                stops: [0, 100],
+                                opacityFrom: 0.4,
+                                opacityTo: 0.5,
+                            }
+                        }
+                    },
+                    tooltip: {
+                        enabled: true,
+                    }
+                },
+                yaxis: {
+                    axisBorder: {
+                        show: false
+                    },
+                    axisTicks: {
+                        show: false,
+                    },
+                    labels: {
+                        show: false,
+                        formatter: function (val) {
+                            return val;
+                        }
+                    }
+
+                },
+                title: {
+                    text: 'Projects By Project Type',
+                    floating: true,
+                    offsetY: 330,
+                    align: 'center',
+                    style: {
+                        color: '#444'
+                    }
+                }
+            };
+
+            var chart12 = new ApexCharts(document.querySelector("#implementationStatusChart"), options);
+            chart12.render();
+        }
+
+        function corporateRiskImplementationStatusChart() {
+            if (chart) {
+                chart.destroy();
+                chart = null;
+            }
+
+            var options = {
+                series: [{
+                    name: 'Actions',
+                    data: @Html.Raw(JsonSerializer.Serialize(Model.RisksByRank)),
+                }],
+                chart: {
+                    height: 350,
+                    type: 'bar',
+                },
+                plotOptions: {
+                    bar: {
+                        borderRadius: 10,
+                        dataLabels: {
+                            position: 'top', // top, center, bottom
+                        },
+                    }
+                },
+                dataLabels: {
+                    enabled: true,
+                    formatter: function (val) {
+                        return val;
+                    },
+                    offsetY: -20,
+                    style: {
+                        fontSize: '12px',
+                        colors: ["#304758"]
+                    }
+                },
+
+                xaxis: {
+                    categories: ["Very Low", "Low", "Medium", "High", "Very High"],
+                    position: 'top',
+                    axisBorder: {
+                        show: false
+                    },
+                    axisTicks: {
+                        show: false
+                    },
+                    crosshairs: {
+                        fill: {
+                            type: 'gradient',
+                            gradient: {
+                                colorFrom: '#D8E3F0',
+                                colorTo: '#BED1E6',
+                                stops: [0, 100],
+                                opacityFrom: 0.4,
+                                opacityTo: 0.5,
+                            }
+                        }
+                    },
+                    tooltip: {
+                        enabled: true,
+                    }
+                },
+                yaxis: {
+                    axisBorder: {
+                        show: false
+                    },
+                    axisTicks: {
+                        show: false,
+                    },
+                    labels: {
+                        show: false,
+                        formatter: function (val) {
+                            return val;
+                        }
+                    }
+
+                },
+                title: {
+                    text: 'Risks By Rank',
+                    floating: true,
+                    offsetY: 330,
+                    align: 'center',
+                    style: {
+                        color: '#444'
+                    }
+                }
+            };
+
+            var chart15 = new ApexCharts(document.querySelector("#implementationStatusCorporateChart"), options);
+            chart15.render();
+        }
+
+        function ActivitiesByStatusChart() {
+            if (chart) {
+                chart.destroy();
+                chart = null;
+            }
+
+            var options = {
+                series: [{
+                    name: 'Actions',
+                    data: @Html.Raw(JsonSerializer.Serialize(Model.ActivitiesByStatus)),
+                }],
+                chart: {
+                    height: 350,
+                    type: 'bar',
+                },
+                plotOptions: {
+                    bar: {
+                        borderRadius: 10,
+                        dataLabels: {
+                            position: 'top', // top, center, bottom
+                        },
+                    }
+                },
+                dataLabels: {
+                    enabled: true,
+                    formatter: function (val) {
+                        return val;
+                    },
+                    offsetY: -20,
+                    style: {
+                        fontSize: '12px',
+                        colors: ["#304758"]
+                    }
+                },
+
+                xaxis: {
+                    categories: ["Total", "Completed", "Pending", "Overdue", "In-Progress"],
+                    position: 'top',
+                    axisBorder: {
+                        show: false
+                    },
+                    axisTicks: {
+                        show: false
+                    },
+                    crosshairs: {
+                        fill: {
+                            type: 'gradient',
+                            gradient: {
+                                colorFrom: '#D8E3F0',
+                                colorTo: '#BED1E6',
+                                stops: [0, 100],
+                                opacityFrom: 0.4,
+                                opacityTo: 0.5,
+                            }
+                        }
+                    },
+                    tooltip: {
+                        enabled: true,
+                    }
+                },
+                yaxis: {
+                    axisBorder: {
+                        show: false
+                    },
+                    axisTicks: {
+                        show: false,
+                    },
+                    labels: {
+                        show: false,
+                        formatter: function (val) {
+                            return val;
+                        }
+                    }
+
+                },
+                title: {
+                    text: 'Activities By Status',
+                    floating: true,
+                    offsetY: 330,
+                    align: 'center',
+                    style: {
+                        color: '#444'
+                    }
+                }
+            };
+
+            var chart13 = new ApexCharts(document.querySelector("#activitiesByStatusChart"), options);
+            chart13.render();
+        }
+
+        function TasksByStatusChart() {
+            if (chart) {
+                chart.destroy();
+                chart = null;
+            }
+
+            var options = {
+                series: [{
+                    name: 'Actions',
+                    data: @Html.Raw(JsonSerializer.Serialize(Model.TasksByStatus)),
+                }],
+                chart: {
+                    height: 350,
+                    type: 'bar',
+                },
+                plotOptions: {
+                    bar: {
+                        borderRadius: 10,
+                        dataLabels: {
+                            position: 'top', // top, center, bottom
+                        },
+                    }
+                },
+                dataLabels: {
+                    enabled: true,
+                    formatter: function (val) {
+                        return val;
+                    },
+                    offsetY: -20,
+                    style: {
+                        fontSize: '12px',
+                        colors: ["#304758"]
+                    }
+                },
+
+                xaxis: {
+                    categories: ["Completed", "Work on Progress", "Not Started"],
+                    position: 'top',
+                    axisBorder: {
+                        show: false
+                    },
+                    axisTicks: {
+                        show: false
+                    },
+                    crosshairs: {
+                        fill: {
+                            type: 'gradient',
+                            gradient: {
+                                colorFrom: '#D8E3F0',
+                                colorTo: '#BED1E6',
+                                stops: [0, 100],
+                                opacityFrom: 0.4,
+                                opacityTo: 0.5,
+                            }
+                        }
+                    },
+                    tooltip: {
+                        enabled: true,
+                    }
+                },
+                yaxis: {
+                    axisBorder: {
+                        show: false
+                    },
+                    axisTicks: {
+                        show: false,
+                    },
+                    labels: {
+                        show: false,
+                        formatter: function (val) {
+                            return val;
+                        }
+                    }
+
+                },
+                title: {
+                    text: 'Tasks By Status',
+                    floating: true,
+                    offsetY: 330,
+                    align: 'center',
+                    style: {
+                        color: '#444'
+                    }
+                }
+            };
+
+            var chart14 = new ApexCharts(document.querySelector("#tasksByStatusChart"), options);
+            chart14.render();
+        }
+
+    </script>
+
+}
+
+@* ************** Content ************** *@
+<div class="row">
+    <div class="col-lg-10 mb-4 order-0">
+        <div class="card">
+            <div class="d-flex align-items-end row">
+                <div class="col-sm-7">
+                    <div class="card-body">
+                        <h5 class="card-title text-primary">Welcome, @userDetails.UserName! 🎉</h5>
+                        <p class="mb-4">
+                            &nbsp;
+                        </p>
+
+                        <a>&nbsp;</a>
+                    </div>
+                </div>
+                <div class="col-sm-5 text-center text-sm-left">
+                    <div class="card-body pb-0 px-0 px-md-4">
+                        <img src="~/img/illustrations/man-with-laptop-light.png" height="140" alt="View Badge User" data-app-dark-img="illustrations/man-with-laptop-dark.png" data-app-light-img="illustrations/man-with-laptop-light.png">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-2 col-md-2 order-1">
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-12 mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="card-title d-flex align-items-start justify-content-between">
+                            <div class="avatar flex-shrink-0">
+                                <img src="~/img/icons/unicons/chart-success.png" alt="chart success" class="rounded">
+                            </div>
+                            <div class="dropdown">
+                                <button class="btn p-0" type="button" id="cardOpt3" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <i class="bx bx-dots-vertical-rounded"></i>
+                                </button>
+                                <div class="dropdown-menu dropdown-menu-end" aria-labelledby="cardOpt3">
+                                    <a class="dropdown-item" href="javascript:void(0);">View More</a>
+                                </div>
+                            </div>
+                        </div>
+                        <span class="fw-medium d-block mb-1">Total Projects</span>
+                        <h3 class="card-title mb-2">@Model.TotalProjects</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-12 col-md-4 order-1">
+        <div class="row">
+            <div class="col-lg-3 col-md-12 col-6 mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="card-title d-flex align-items-start justify-content-between">
+                            <div class="avatar flex-shrink-0">
+                                <img src="~/img/icons/unicons/chart-success.png" alt="chart success" class="rounded">
+                            </div>
+                            <div class="dropdown">
+                                <button class="btn p-0" type="button" id="cardOpt3" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <i class="bx bx-dots-vertical-rounded"></i>
+                                </button>
+                                <div class="dropdown-menu dropdown-menu-end" aria-labelledby="cardOpt3">
+                                    <a class="dropdown-item" href="javascript:void(0);">View More</a>
+                                </div>
+                            </div>
+                        </div>
+                        <span class="fw-medium d-block mb-1">Total Projects Completed</span>
+                        <h3 class="card-title mb-2">@Model.TotalProjectsCompleted</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-12 col-6 mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="card-title d-flex align-items-start justify-content-between">
+                            <div class="avatar flex-shrink-0">
+                                <img src="~/img/icons/unicons/wallet-info.png" alt="Credit Card" class="rounded">
+                            </div>
+                            <div class="dropdown">
+                                <button class="btn p-0" type="button" id="cardOpt6" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <i class="bx bx-dots-vertical-rounded"></i>
+                                </button>
+                                <div class="dropdown-menu dropdown-menu-end" aria-labelledby="cardOpt6">
+                                    <a class="dropdown-item" href="javascript:void(0);">View More</a>
+                                </div>
+                            </div>
+                        </div>
+                        <span>Total Projects Pending</span>
+                        <h3 class="card-title text-nowrap mb-1">@Model.TotalProjectsPending</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-12 col-6 mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="card-title d-flex align-items-start justify-content-between">
+                            <div class="avatar flex-shrink-0">
+                                <img src="~/img/icons/unicons/chart-success.png" alt="chart success" class="rounded">
+                            </div>
+                            <div class="dropdown">
+                                <button class="btn p-0" type="button" id="cardOpt3" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <i class="bx bx-dots-vertical-rounded"></i>
+                                </button>
+                                <div class="dropdown-menu dropdown-menu-end" aria-labelledby="cardOpt3">
+                                    <a class="dropdown-item" href="javascript:void(0);">View More</a>
+                                </div>
+                            </div>
+                        </div>
+                        <span class="fw-medium d-block mb-1">Total  Projects Overdue</span>
+                        <h3 class="card-title mb-2">@Model.TotalProjectsOverdue</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-12 col-6 mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="card-title d-flex align-items-start justify-content-between">
+                            <div class="avatar flex-shrink-0">
+                                <img src="~/img/icons/unicons/wallet-info.png" alt="Credit Card" class="rounded">
+                            </div>
+                            <div class="dropdown">
+                                <button class="btn p-0" type="button" id="cardOpt6" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <i class="bx bx-dots-vertical-rounded"></i>
+                                </button>
+                                <div class="dropdown-menu dropdown-menu-end" aria-labelledby="cardOpt6">
+                                    <a class="dropdown-item" href="javascript:void(0);">View More</a>
+                                </div>
+                            </div>
+                        </div>
+                        <span>Total  Projects In-Progress</span>
+                        <h3 class="card-title text-nowrap mb-1">@Model.TotalProjectsInProgress</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Total Activities By Department -->
+    <div class="col-12 col-lg-12 order-2 order-md-3 order-lg-2 mb-4">
+        <div class="card">
+            <div class="row row-bordered g-0">
+                <div class="col-md-12">
+                    <h5 class="card-header m-0 me-2 pb-3">Projects By Type</h5>
+                    <div class="card-body">
+                        <div class="float-right">
+                            @* <div class="dropdown">
+                            <button class="btn btn-sm btn-outline-primary dropdown-toggle" type="button" id="growthReportId" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <span id="selectedFY"></span>
+                            </button>
+                            <div class="dropdown-menu dropdown-menu-end" aria-labelledby="growthReportId" id="financialYearDropdown">
+                            <!-- Financial year options will be dynamically generated here -->
+                            </div>
+                            </div> *@
+                        </div>
+                    </div>
+                    <div id="implementationStatusChart" class="px-2"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--/ Total Activities By Department -->
+    <!--/ Expense Overview -->
+    <!-- Expense Overview -->
+    <div class="col-md-12 col-lg-12 order-1 mb-4">
+        <div class="card h-100">
+            <div class="card-header">
+                Risk By Rank
+            </div>
+            <div class="card-body px-0">
+                <div class="tab-content p-0">
+                    <div class="tab-pane fade show active" id="navs-tabs-line-card-income" role="tabpanel">
+                        <div id="implementationStatusCorporateChart"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-12 col-lg-12 order-1 mb-4">
+        <div class="card h-100">
+            <div class="card-header">
+                No. of Activities By Status
+            </div>
+            <div class="card-body px-0">
+                <div class="tab-content p-0">
+                    <div class="tab-pane fade show active" id="navs-tabs-line-card-income" role="tabpanel">
+                        <div id="activitiesByStatusChart"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-12 col-lg-12 order-1 mb-4">
+        <div class="card h-100">
+            <div class="card-header">
+                No. of Tasks By Status
+            </div>
+            <div class="card-body px-0">
+                <div class="tab-content p-0">
+                    <div class="tab-pane fade show active" id="navs-tabs-line-card-income" role="tabpanel">
+                        <div id="tasksByStatusChart"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--/ Expense Overview -->
+
+</div>
