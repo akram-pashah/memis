@@ -240,6 +240,40 @@ namespace MEMIS.Controllers.ME
         .Include(x => x.KPIMasterFk).ThenInclude(x => x.DepartmentFk).ToListAsync();
       return PartialView("_KPIAchieveAssessment", kpi);
     }
+    
+    public async Task<IActionResult> SDTAchievement(int? id)
+    {
+      var sdtAssessments = await _context.SDTAssessment
+        .Include(s => s.SDTMasterFk)
+        .Include(s=>s.AchivementStatus)
+        .Where(s => s.SDTMasterFk.Id == id)
+        .ToListAsync();
+      var groupedByQuarter = sdtAssessments
+          .GroupBy(sdt => new
+          {
+            sdt.SDTMasterFk.ServiceDeliveryTimeline,
+            Quarter = sdt.Month switch
+            {
+              7 or 8 or 9 => "Q1 (Jul-Sep)",
+              10 or 11 or 12 => "Q2 (Oct-Dec)",
+              1 or 2 or 3 => "Q3 (Jan-Mar)",
+              4 or 5 or 6 => "Q4 (Apr-Jun)",
+              _ => "Unknown"
+            }
+          })
+          .Select(group => new
+          {
+            ServiceDeliveryTimeline = group.Key.ServiceDeliveryTimeline,
+            Quarter = group.Key.Quarter,
+            Assessments = group.ToList()
+          })
+          .OrderBy(g => g.Quarter)
+          .ToList();
+
+      ViewData["Months"] = ListHelper.Months();
+      ViewData["AchievementStatus"] = ListHelper.AchievementStatus();
+      return View(groupedByQuarter);
+    }
 
     private double GetCompletionValue(int impStatusId)
     {

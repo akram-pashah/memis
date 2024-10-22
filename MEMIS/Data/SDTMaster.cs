@@ -26,5 +26,7 @@ namespace MEMIS.Data
     public virtual Guid? DepartmentId { get; set; }
     [ForeignKey("DepartmentId")]
     public virtual Department? DepartmentFk { get; set; }
+    public ICollection<SDTAssessment> SDTAssessments { get; set; } = [];
   }
 }
+

@@ -17,16 +17,21 @@ namespace MEMIS.ViewModels.ME
     public List<string> Years = GetYearsSince2016();
     public List<ChartDataSeries> YearlyStrategicPlanTrend = new();
     public List<ChartDataSeries> YearlyFocusAreaTrend = new();
-
     private static List<string> GetYearsSince2016()
     {
       List<string> allYears = [];
-      for(int year = 2016; year <= DateTime.Now.Year + 1; year++)
+      for (int year = 2016; year <= DateTime.Now.Year + 1; year++)
       {
         allYears.Add(year.ToString());
       }
-
       return allYears;
+    }
+    public List<GroupedAssessmentDto> GroupedAssessments { get; set; } = new List<GroupedAssessmentDto>();
+    public class GroupedAssessmentDto
+    {
+      public string? ServiceDeliveryTimeline { get; set; }
+      public List<SDTAssessment> Assessments { get; set; }
+      public decimal Target { get; set; } 
     }
   }
   public class ChartDataSeries
