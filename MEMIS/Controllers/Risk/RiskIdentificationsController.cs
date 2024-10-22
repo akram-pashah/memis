@@ -390,12 +390,15 @@ namespace MEMIS.Controllers.Risk
           {
             return NotFound();
           }
+          string category = await _context.RiskCategorys.Where(x => x.intCategory == objectdto.intCategory).Select(x => x.CategoryCode).FirstOrDefaultAsync() ?? "";
+          string deptCode = await _context.Departments.Where(x => x.intDept == objectdto.intDept).Select(x => x.deptCode).FirstOrDefaultAsync() ?? "";
           if (objectdto.ApprStatus == 1)
           {
             pp.ApprStatus = (int)riskIdentifyApprStatus.rmoapproved;
             RiskRegister riskRegister = new()
             {
               RiskId = objectdto.RiskId,
+              RiskCode = $"NDA/{category}/{deptCode}",
               Activity = objectdto.Activity,
               EvalCriteria = objectdto.EvalCriteria,
               //Events = objectdto.Events,

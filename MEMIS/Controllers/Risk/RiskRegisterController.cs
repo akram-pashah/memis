@@ -579,6 +579,9 @@ namespace MEMIS.Controllers.Risk
     {
       if (ModelState.IsValid && riskRegister.RiskRefID == 0)
       {
+        string category = _context.RiskCategorys.Where(x => x.intCategory == riskRegister.intCategory).Select(x => x.CategoryCode).FirstOrDefault() ?? "";
+        string deptCode = _context.Departments.Where(x => x.intDept == riskRegister.intDept).Select(x => x.deptCode).FirstOrDefault() ?? "";
+        riskRegister.RiskCode = $"NDA/{category}/{deptCode}";
         _context.RiskRegister.Add(riskRegister);
         _context.SaveChangesAsync();
         return RedirectToAction(nameof(RiskTolerence));
