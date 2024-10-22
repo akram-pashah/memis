@@ -16,11 +16,12 @@
 <div class="row">
     <div class="col-md-12">
         <ul class="nav nav-pills flex-column flex-md-row mb-3">
-            <li class="nav-item"><a class="nav-link" href="/Reports/planningIndex">Programe Implementation Plan</a></li>
-            <li class="nav-item"><a class="nav-link" href="/Reports/ConsolDeptPlan">Annual Detailed Results Framework</a></li>
-            <li class="nav-item"><a class="nav-link active" href="javascript:void(0);">Activity Implementation Status Report</a></li>
-            <li class="nav-item"><a class="nav-link" href="/Reports/StrategicPlanActivityImplementationTracker">Strategic Plan Activity Implementation Tracker</a></li>
-        </ul>
+        <li class="nav-item"><a class="nav-link" href="/Reports/planningIndex">Programe Implementation Plan</a></li>
+        <li class="nav-item"><a class="nav-link" href="/Reports/ConsolDeptPlan">Annual Detailed Results Framework</a></li>
+        <li class="nav-item"><a class="nav-link active" href="javascript:void(0);">Activity Implementation Status Report</a></li>
+        <li class="nav-item"><a class="nav-link" href="/Reports/StrategicPlanActivityImplementationTracker">Strategic Plan Activity Implementation Tracker</a></li>
+        <li class="nav-item"><a class="nav-link" href="/Reports/ConsolidatedWorkPlanReport">Consolidated work plan Report</a></li>
+      </ul>
 
         <div class="card mb-4">
             <h5 class="card-header">
@@ -50,8 +51,12 @@
                                 <label>&nbsp;</label>
                               </div>
                               <button type="submit" name="action" value="Load" class="btn btn-primary">Load</button>
-                              <button type="submit" name="action" value="Export" class="btn btn-outline-success float-end float-right">Export to Excel</button>
-                              <button type="submit" name="action" value="Pdf" class="btn btn-outline-danger float-end float-right">Export to Pdf</button>
+                              @*<button type="submit" name="action" value="Export" class="btn btn-outline-success float-end float-right">Export to Excel</button>
+    <button type="submit" name="action" value="Pdf" class="btn btn-outline-danger float-end float-right">Export to Pdf</button>*@
+                              <a class="btn btn-outline-success float-end float-right" asp-action="ActivityImplementationStatusExportToExcel" target="_blank">Export to Excel</a>
+                              <a class="btn btn-outline-danger float-end float-right" asp-action="ActivityImplementationStatusExportToPdf" target="_blank">Export to Pdf</a>
+
+
                             </div>
                         </div>
                     </form>
@@ -135,7 +140,7 @@
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
 <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-    document.querySelector('form').addEventListener('submit', function (event) {
+    @*document.querySelector('form').addEventListener('submit', function (event) {
         var action = event.submitter.value;
         if (action === 'Export') {
             this.action = '@Url.Action("ActivityImplementationStatusExportToExcel", new { action = "Export" })';
@@ -150,7 +155,7 @@
     } else {
         this.action = '@Url.Action("ActivityImplementationStatus")';
     }
-});
+});*@
 
     $(document).on('click', 'button[data-id]', function () {
         var id = $(this).data('id');

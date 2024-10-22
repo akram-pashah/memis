@@ -1263,6 +1263,82 @@ namespace MEMIS.Helpers.PdfReports
       return new MemoryStream(stream.ToArray());
     }
 
+    public static MemoryStream ConsolidatedWorkPlanReportPdf(List<ConsolidatedWorkPlanReport> reportData)
+    {
+      var stream = new MemoryStream();
+
+      using (var pdfWriter = new PdfWriter(stream))
+      using (var pdfDocument = new PdfDocument(pdfWriter))
+      using (var document = new Document(pdfDocument))
+      {
+        PdfFont boldFont = PdfFontFactory.CreateFont(StandardFonts.HELVETICA_BOLD);
+        PdfFont regularFont = PdfFontFactory.CreateFont(StandardFonts.HELVETICA);
+
+        Table table = new Table(UnitValue.CreatePercentArray(new float[] { 2, 2, 2, 1, 1, 1, 1, 2, 1 })).UseAllAvailableWidth();
+        string[] headers = {
+            "Strategic Actions",
+            "Activities/Initiatives",
+            "Output Indicators",
+            "Baseline",
+            "Annual Target",
+            "Budget Code",
+            "Amount Allocated",
+            "Identified Risks",
+            "Responsible Party"
+        };
+
+        foreach (var header in headers)
+        {
+          table.AddHeaderCell(new Cell()
+              .Add(new Paragraph(header).SetFont(boldFont).SetFontSize(10))
+              .SetBackgroundColor(ColorConstants.LIGHT_GRAY)
+              .SetTextAlignment(TextAlignment.CENTER)
+              .SetPadding(5));
+        }
+
+        foreach (var intervention in reportData)
+        {
+          Cell interventionCell = new Cell(1, 9) 
+              .Add(new Paragraph(intervention.StrategicIntervention ?? "No Intervention")
+              .SetFontSize(10)
+              .SetPadding(5)
+              .SetTextAlignment(TextAlignment.CENTER));
+          table.AddCell(interventionCell);
+
+          foreach (var action in intervention.StrategicActions)
+          {
+            int rowspan = action.ActivityAssesses.Count;
+
+            table.AddCell(new Cell(rowspan, 1)
+                .Add(new Paragraph(action.StrategicAction ?? string.Empty)
+                .SetFontSize(10)
+                .SetPadding(5)));
+
+            for (int i = 0; i < action.ActivityAssesses.Count; i++)
+            {
+              var assess = action.ActivityAssesses[i];
+
+              if (i > 0) table.StartNewRow();
+
+              table.AddCell(new Cell().Add(new Paragraph(assess.ActivityFk?.activityName ?? "N/A").SetFontSize(10).SetPadding(5)));
+              table.AddCell(new Cell().Add(new Paragraph(assess.outputIndicator ?? string.Empty).SetFontSize(10).SetPadding(5)));
+              table.AddCell(new Cell().Add(new Paragraph(assess.baseline?.ToString() ?? "N/A").SetFontSize(10).SetPadding(5)));
+              table.AddCell(new Cell().Add(new Paragraph(assess.comparativeTarget?.ToString() ?? "N/A").SetFontSize(10).SetPadding(5)));
+              table.AddCell(new Cell().Add(new Paragraph(assess.budgetCode.ToString()).SetFontSize(10).SetPadding(5)));
+              table.AddCell(new Cell().Add(new Paragraph(assess.budgetAmount?.ToString() ?? "N/A").SetFontSize(10).SetPadding(5)));
+              table.AddCell(new Cell().Add(new Paragraph(assess.IdentifiedRisks ?? "None").SetFontSize(10).SetPadding(5)));
+              table.AddCell(new Cell().Add(new Paragraph(assess.DepartmentFk?.deptName ?? "N/A").SetFontSize(10).SetPadding(5)));
+            }
+          }
+        }
+
+        document.Add(table);
+        document.Close();
+      }
+
+      return new MemoryStream(stream.ToArray());
+    }
+
 
   }
 }

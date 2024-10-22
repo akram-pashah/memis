@@ -181,7 +181,85 @@ namespace MEMIS.Helpers.ExcelReports
         throw;
       }
     }
+    public static MemoryStream ConsolidatedWorkPlanReport(List<ConsolidatedWorkPlanReport> reportData)
+    {
+      var workbook = new XLWorkbook();
+      IXLWorksheet worksheet = workbook.Worksheets.Add("Consolidated Work Plan Report");
 
+      var headerRange = worksheet.Range("A1:I2");
+      headerRange.Style.Fill.BackgroundColor = XLColor.FromHtml("#063241");
+      headerRange.Style.Font.FontColor = XLColor.White;
+      headerRange.Style.Font.Bold = true;
+      headerRange.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+      headerRange.Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
+
+      worksheet.Cell(1, 1).Value = "Strategic Actions";
+      worksheet.Cell(1, 2).Value = "Activities/Initiatives";
+      worksheet.Cell(1, 3).Value = "Output Indicators";
+      worksheet.Cell(1, 4).Value = "Baseline";
+      worksheet.Cell(1, 5).Value = "Annual Target";
+      worksheet.Cell(1, 6).Value = "Budget Code";
+      worksheet.Cell(1, 7).Value = "Amount Allocated";
+      worksheet.Cell(1, 8).Value = "Identified Risks";
+      worksheet.Cell(1, 9).Value = "Responsible Party";
+
+      worksheet.Range(1, 1, 2, 1).Merge();
+      worksheet.Range(1, 2, 2, 2).Merge();
+      worksheet.Range(1, 3, 2, 3).Merge();
+      worksheet.Range(1, 4, 2, 4).Merge();
+      worksheet.Range(1, 5, 2, 5).Merge();
+      worksheet.Range(1, 6, 2, 6).Merge();
+      worksheet.Range(1, 7, 2, 7).Merge();
+      worksheet.Range(1, 8, 2, 8).Merge();
+      worksheet.Range(1, 9, 2, 9).Merge();
+
+      worksheet.Columns().AdjustToContents();
+      AdjustColumnWidths(worksheet, 25, 65); 
+
+      int row = 3; 
+      foreach (var intervention in reportData)
+      {
+        worksheet.Cell(row, 1).Value = intervention.StrategicIntervention ?? "No Intervention";
+        worksheet.Cell(row, 1).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+
+        row++;
+
+        foreach (var action in intervention.StrategicActions)
+        {
+          int rowspan = action.ActivityAssesses.Count;
+
+          worksheet.Cell(row, 1).Value = action.StrategicAction ?? string.Empty;
+
+          for (int i = 0; i < action.ActivityAssesses.Count; i++)
+          {
+            var assess = action.ActivityAssesses[i];
+
+            if (i > 0) row++;
+
+            worksheet.Cell(row, 2).Value = assess.ActivityFk?.activityName ?? "N/A";
+            worksheet.Cell(row, 3).Value = assess.outputIndicator ?? string.Empty;
+            worksheet.Cell(row, 4).Value = assess.baseline?.ToString() ?? "N/A";
+            worksheet.Cell(row, 5).Value = assess.comparativeTarget?.ToString() ?? "N/A";
+            worksheet.Cell(row, 6).Value = assess.budgetCode.ToString();
+            worksheet.Cell(row, 7).Value = assess.budgetAmount?.ToString() ?? "N/A";
+            worksheet.Cell(row, 8).Value = assess.IdentifiedRisks ?? "None";
+            worksheet.Cell(row, 9).Value = assess.DepartmentFk?.deptName ?? "N/A";
+          }
+        }
+
+        row++;
+      }
+      var tableRange = worksheet.Range(1, 1, row - 1, 9);
+      var table = tableRange.CreateTable();
+      tableRange.Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
+      tableRange.Style.Border.InsideBorder = XLBorderStyleValues.Thin;
+      table.ShowAutoFilter = true;
+
+      var stream = new MemoryStream();
+      workbook.SaveAs(stream);
+      stream.Position = 0;
+      return stream;
+    }
 
     public static MemoryStream AnnualDetailedResultsFrameworkReport(List<ActivityAssess> activityAssesses)
     {

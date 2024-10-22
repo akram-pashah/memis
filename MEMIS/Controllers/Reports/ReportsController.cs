@@ -1070,5 +1070,131 @@ namespace MEMIS.Controllers.Reports
       return File(stream, "application/pdf", "SDT M&E Framework Report.pdf");
     }
 
+    public async Task<IActionResult> ConsolidatedWorkPlanReport(Guid? selectedDeptId, string? quarter)
+    {
+      try
+      {
+        ViewBag.Departments = new SelectList(await _context.Departments.ToListAsync(), "intDept", "deptName", selectedDeptId);
+
+        var query = await _context.ActivityAssess
+            .Include(m => m.StrategicAction)
+            .Include(m => m.StrategicIntervention)
+            .Include(m => m.ActivityFk)
+            .Include(x => x.QuaterlyPlans)
+            .ToListAsync();
+
+        var reportData = query
+            .GroupBy(a => new { a.intIntervention })
+            .Select(g => new ConsolidatedWorkPlanReport
+            {
+              StrategicIntervention = g.FirstOrDefault()?.StrategicIntervention?.InterventionName ?? "No Intervention",
+              StrategicActions = g.GroupBy(sa => sa.intAction)
+                                   .Select(saGroup => new CWP_StrategicAction
+                                   {
+                                     StrategicAction = saGroup.FirstOrDefault()?.StrategicAction.actionName,
+                                     ActivityAssesses = saGroup.ToList()
+                                   }).ToList(),
+            }).ToList();
+
+        ViewData["SelectedDeptId"] = selectedDeptId;
+        ViewData["SelectedQuarter"] = quarter;
+
+        return View(reportData);
+      }
+      catch (Exception ex)
+      {
+        throw;
+      }
+    }
+    public async Task<IActionResult> ConsolidatedWorkPlanExportToExcel(Guid? selectedDeptId, string? quarter)
+    {
+      try
+      {
+        ViewBag.Departments = new SelectList(await _context.Departments.ToListAsync(), "intDept", "deptName", selectedDeptId);
+        var query = _context.ActivityAssess
+            .Include(m => m.StrategicAction)
+            .Include(m => m.StrategicIntervention)
+            .Include(m => m.ActivityFk)
+            .Include(x => x.QuaterlyPlans)
+            .AsQueryable();
+
+        if (selectedDeptId.HasValue)
+        {
+          query = query.Where(a => a.intDept == selectedDeptId.Value);
+        }
+
+        if (!string.IsNullOrEmpty(quarter))
+        {
+          query = query.Where(x => x.QuaterlyPlans.Any(q => q.Quarter == quarter));
+        }
+
+        var activityAssesses = await query.ToListAsync();
+
+        var reportData = activityAssesses
+            .GroupBy(a => new { a.intIntervention })
+            .Select(g => new ConsolidatedWorkPlanReport
+            {
+              StrategicIntervention = g.FirstOrDefault()?.StrategicIntervention?.InterventionName ?? "No Intervention",
+              StrategicActions = g.GroupBy(sa => sa.intAction)
+                                   .Select(saGroup => new CWP_StrategicAction
+                                   {
+                                     StrategicAction = saGroup.FirstOrDefault()?.StrategicAction.actionName,
+                                     ActivityAssesses = saGroup.ToList()
+                                   }).ToList(),
+            }).ToList();
+
+        ViewData["SelectedDeptId"] = selectedDeptId;
+        ViewData["SelectedQuarter"] = quarter;
+        var stream = ExportHandler.ConsolidatedWorkPlanReport(reportData);
+        stream.Position = 0;
+        return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Consolidated_Work_Plan_Report.xlsx");
+      }
+      catch (Exception ex)
+      {
+        throw;
+      }
+    }
+
+    public async Task<IActionResult> ConsolidatedWorkPlanReportPdf(Guid? selectedDeptId, string? quarter)
+    {
+      try
+      {
+        ViewBag.Departments = new SelectList(await _context.Departments.ToListAsync(), "intDept", "deptName", selectedDeptId);
+        var query = await _context.ActivityAssess
+            .Include(m => m.StrategicAction)
+            .Include(m => m.StrategicIntervention)
+            .Include(m => m.ActivityFk)
+            .Include(x => x.QuaterlyPlans)
+            .ToListAsync();
+        var reportData = query
+            .GroupBy(a => a.intIntervention)
+            .Select(g => new ConsolidatedWorkPlanReport
+            {
+              StrategicIntervention = g.FirstOrDefault()?.StrategicIntervention?.InterventionName ?? "No Intervention",
+              StrategicActions = g.GroupBy(sa => sa.intAction)
+                    .Select(saGroup => new CWP_StrategicAction
+                    {
+                      StrategicAction = saGroup.FirstOrDefault()?.StrategicAction.actionName ?? "No Action",
+                      ActivityAssesses = saGroup.ToList()
+                    }).ToList(),
+            }).ToList();
+
+        ViewData["SelectedDeptId"] = selectedDeptId;
+        ViewData["SelectedQuarter"] = quarter;
+        if (!reportData.Any())
+        {
+          return NotFound("No data available for the Consolidated Work Plan Report.");
+        }
+        var pdfStream = PdfHandler.ConsolidatedWorkPlanReportPdf(reportData);
+        pdfStream.Position = 0;
+        return File(pdfStream, "application/pdf", "Consolidated_Work_Plan_Report.pdf");
+      }
+      catch (Exception ex)
+      {
+        return StatusCode(500, "An error occurred while generating the report.");
+      }
+    }
+
+
   }
 }

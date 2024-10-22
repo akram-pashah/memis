@@ -1,0 +1,190 @@
+
+@using MEMIS.Data;
+@using Newtonsoft.Json;
+@using Newtonsoft.Json.Serialization
+@model List<MEMIS.Models.Report.ConsolidatedWorkPlanReport>
+@{
+  ViewData["Title"] = "Planning Reports";
+  Layout = "~/Pages/Shared/_ContentNavbarLayout.cshtml";
+  var selectedDeptId = ViewData["SelectedDeptId"]?.ToString();
+  var selectedQuarter = ViewData["SelectedQuarter"]?.ToString();
+}
+
+<h4 class="py-3 mb-4">
+  <span class="text-muted fw-light">Planning Reports /</span>Consolidated work plan Report
+</h4>
+
+<div class="row">
+  <div class="col-md-12">
+    <ul class="nav nav-pills flex-column flex-md-row mb-3">
+      <li class="nav-item"><a class="nav-link" href="/Reports/planningIndex">Programe Implementation Plan</a></li>
+      <li class="nav-item"><a class="nav-link" href="ConsolDeptPlan">Annual Detailed Results Framework</a></li>
+      <li class="nav-item"><a class="nav-link" href="/Reports/ActivityImplementationStatus">Activity Implementation Status Report</a></li>
+      <li class="nav-item"><a class="nav-link" href="/Reports/StrategicPlanActivityImplementationTracker">Strategic Plan Activity Implementation Tracker</a></li>
+      <li class="nav-item"><a class="nav-link active" href="javascript:void(0);">Consolidated work plan Report</a></li>
+    </ul>
+
+    <div class="card mb-4">
+      <h5 class="card-header">
+        <div class="row">
+          <form asp-action="ConsolDeptPlan" method="get">
+            <div class="row">
+              <div class="col-4">
+                <div class="form-group">
+                  <label for="departmentSelect">Select Department:</label>
+                  @Html.DropDownList("selectedDeptId", (SelectList)ViewBag.Departments, "-- Select a Department --", new { @class = "form-control form-select" })
+                </div>
+              </div>
+              <div class="col-4">
+                <div class="form-group">
+                  <label for="departmentSelect">Select Quarter:</label>
+                  @Html.DropDownList("quarter", new SelectList(new[] {
+                  new { Value = "", Text = "-- Select Quarter --" },
+                  new { Value = "1", Text = "Quarter 1" },
+                  new { Value = "2", Text = "Quarter 2" },
+                  new { Value = "3", Text = "Quarter 3" },
+                  new { Value = "4", Text = "Quarter 4" }
+                  }, "Value", "Text", selectedQuarter), new { @class = "form-control form-select" })
+                </div>
+              </div>
+              <div class="col-4">
+                <div class="form-group">
+                  <label>&nbsp;</label>
+                </div>
+                <button type="submit" name="action" value="Load" class="btn btn-primary">Load</button>
+                @*<button type="submit" name="action" value="Pdf" class="btn btn-outline-danger float-end float-right">Export to Pdf</button>
+                 <button type="submit" name="action" value="Export" class="btn btn-outline-success float-end float-right">Export to Excel</button>*@
+                <a class="btn btn-outline-success float-end float-right" asp-action="ConsolidatedWorkPlanExportToExcel" target="_blank">Export to Excel</a>
+                <a class="btn btn-outline-danger float-end float-right" asp-action="ConsolidatedWorkPlanReportPdf" target="_blank">Export to Pdf</a>
+              </div>
+            </div>
+          </form>
+          <br />
+        </div>
+      </h5>
+      <hr class="my-0" />
+
+      <div class="card-body">
+        <div style="width:100%; overflow-x:auto;">
+          <table class="table table-bordered table-hover dt-responsive nowrap">
+            <thead class="table-active">
+              <tr>
+
+                <th>Strategic Actions</th>
+                <th>Activities/Initiatives</th>
+                <th>Output Indicators</th>
+                <th>Baseline</th>
+                <th>Annual Target</th>
+                <th>Budget Code</th>
+                <th>Amount Allocated</th>
+                <th>Identified Risks</th>
+                <th>Responsible Party</th>
+              </tr>
+            </thead>
+            <tbody>
+              @* Grouping data by Strategic Actions *@
+              @{
+
+              }
+              @foreach (var group in Model)
+              {
+                <tr>
+                  <td colspan="9" style="text-align: center; background-color: #ffa50069;">@group.StrategicIntervention</td>
+                </tr>
+                @for (int i = 0; i < group.StrategicActions.Count; i++)
+                {
+                  <tr>
+                    <td rowspan="@group.StrategicActions[i].ActivityAssesses.Count">@group.StrategicActions[i].StrategicAction</td>
+                    @for (int j = 0; j < group.StrategicActions[i].ActivityAssesses.Count; j++)
+                    {
+                      if (j == 0)
+                      {
+                        <td>@group.StrategicActions[i].ActivityAssesses[j].ActivityFk?.activityName</td>
+                        <td>@group.StrategicActions[i].ActivityAssesses[j].outputIndicator</td>
+                        <td>@group.StrategicActions[i].ActivityAssesses[j].baseline</td>
+                        <td>@group.StrategicActions[i].ActivityAssesses[j].comparativeTarget</td>
+                        <td>@group.StrategicActions[i].ActivityAssesses[j].budgetCode</td>
+                        <td>@group.StrategicActions[i].ActivityAssesses[j].budgetAmount</td>
+                        <td>@group.StrategicActions[i].ActivityAssesses[j].IdentifiedRisks</td>
+                        <td>@group.StrategicActions[i].ActivityAssesses[j].DepartmentFk?.deptName</td>
+                      }
+                      else
+                      {
+                      <tr>
+                        <td>@group.StrategicActions[i].ActivityAssesses[j].ActivityFk?.activityName</td>
+                        <td>@group.StrategicActions[i].ActivityAssesses[j].outputIndicator</td>
+                        <td>@group.StrategicActions[i].ActivityAssesses[j].baseline</td>
+                        <td>@group.StrategicActions[i].ActivityAssesses[j].comparativeTarget</td>
+                        <td>@group.StrategicActions[i].ActivityAssesses[j].budgetCode</td>
+                        <td>@group.StrategicActions[i].ActivityAssesses[j].budgetAmount</td>
+                        <td>@group.StrategicActions[i].ActivityAssesses[j].IdentifiedRisks</td>
+                        <td>@group.StrategicActions[i].ActivityAssesses[j].DepartmentFk?.deptName</td>
+                      </tr>
+                    }
+                  }
+                    </tr>
+                  }
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="activityAssessModal" tabindex="-1" role="dialog" aria-labelledby="activityAssessModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="activityAssessModalLabel">Activity Assess Details</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <!-- Content will be loaded here -->
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    @*document.querySelector('form').addEventListener('submit', function (event) {
+        var action = event.submitter.value;
+      if (action === 'Export') {
+            this.action = '@Url.Action("ConsolidatedWorkPlanExportToExcel", new { action = "Export" })';
+        } else {
+            this.action = '@Url.Action("ConsolidatedWorkPlanReport")';
+        }
+    });
+    document.querySelector('form').addEventListener('submit', function (event) {
+      var action = event.submitter.value;
+      if (action === 'Pdf') {
+          this.action = '@Url.Action("ConsolidatedWorkPlanReportPdf", new { action = "Pdf" })';
+      } else {
+          this.action = '@Url.Action("ConsolidatedWorkPlanReport")';
+      }
+    });*@
+
+
+    $(document).on('click', 'button[data-id]', function () {
+        var id = $(this).data('id');
+
+        $.ajax({
+            url: '@Url.Action("GetActivityAssessDetails", "Reports")', // Update with your controller action
+            type: 'GET',
+            data: { id: id },
+            success: function (data) {
+                $('#activityAssessModal .modal-body').html(data);
+                $('#activityAssessModal').modal('show');
+            },
+            error: function () {
+                alert('Failed to load details.');
+            }
+        });
+    });
+</script>
