@@ -47,7 +47,7 @@ namespace MEMIS.Migrations
 
                     b.HasIndex("intAction");
 
-                    b.ToTable("Activity");
+                    b.ToTable("Activity", (string)null);
                 });
 
             modelBuilder.Entity("MEMIS.Data.ActivityAssess", b =>
@@ -122,7 +122,7 @@ namespace MEMIS.Migrations
 
                     b.HasIndex("intIntervention");
 
-                    b.ToTable("ActivityAssess");
+                    b.ToTable("ActivityAssess", (string)null);
                 });
 
             modelBuilder.Entity("MEMIS.Data.ActivityAssessRegion", b =>
@@ -163,7 +163,7 @@ namespace MEMIS.Migrations
 
                     b.HasIndex("intRegion");
 
-                    b.ToTable("ActivityAssessRegion");
+                    b.ToTable("ActivityAssessRegion", (string)null);
                 });
 
             modelBuilder.Entity("MEMIS.Data.ActivityAssessment", b =>
@@ -307,7 +307,7 @@ namespace MEMIS.Migrations
 
                     b.HasIndex("intFocus");
 
-                    b.ToTable("ActivityAssessment");
+                    b.ToTable("ActivityAssessment", (string)null);
                 });
 
             modelBuilder.Entity("MEMIS.Data.ActivityAssessmentRegion", b =>
@@ -362,7 +362,7 @@ namespace MEMIS.Migrations
 
                     b.HasIndex("intRegion");
 
-                    b.ToTable("ActivityAssessmentRegion");
+                    b.ToTable("ActivityAssessmentRegion", (string)null);
                 });
 
             modelBuilder.Entity("MEMIS.Data.ActivityPlan", b =>
@@ -401,7 +401,7 @@ namespace MEMIS.Migrations
 
                     b.HasIndex("ProjectInitiationId");
 
-                    b.ToTable("ActivityPlan");
+                    b.ToTable("ActivityPlan", (string)null);
                 });
 
             modelBuilder.Entity("MEMIS.Data.AnnualImplemtationPlan", b =>
@@ -473,7 +473,7 @@ namespace MEMIS.Migrations
 
                     b.HasIndex("intObjective");
 
-                    b.ToTable("AnnualImplemtationPlan");
+                    b.ToTable("AnnualImplemtationPlan", (string)null);
                 });
 
             modelBuilder.Entity("MEMIS.Data.ComplianceSupportSupervision", b =>
@@ -555,7 +555,7 @@ namespace MEMIS.Migrations
 
                     b.HasIndex("intRegion");
 
-                    b.ToTable("ComplianceSupportSupervision");
+                    b.ToTable("ComplianceSupportSupervision", (string)null);
                 });
 
             modelBuilder.Entity("MEMIS.Data.Department", b =>
@@ -588,7 +588,7 @@ namespace MEMIS.Migrations
 
                     b.HasIndex("intDir");
 
-                    b.ToTable("Departments");
+                    b.ToTable("Departments", (string)null);
                 });
 
             modelBuilder.Entity("MEMIS.Data.DepartmentPlan", b =>
@@ -663,7 +663,7 @@ namespace MEMIS.Migrations
 
                     b.HasKey("intDeptPlan");
 
-                    b.ToTable("DepartmentPlan");
+                    b.ToTable("DepartmentPlan", (string)null);
                 });
 
             modelBuilder.Entity("MEMIS.Data.DeptPlan", b =>
@@ -752,7 +752,7 @@ namespace MEMIS.Migrations
 
                     b.HasIndex("strategicIntervention");
 
-                    b.ToTable("DeptPlan");
+                    b.ToTable("DeptPlan", (string)null);
                 });
 
             modelBuilder.Entity("MEMIS.Data.Directorate", b =>
@@ -780,7 +780,7 @@ namespace MEMIS.Migrations
 
                     b.HasIndex("DirectorId");
 
-                    b.ToTable("Directorates");
+                    b.ToTable("Directorates", (string)null);
                 });
 
             modelBuilder.Entity("MEMIS.Data.District", b =>
@@ -797,7 +797,7 @@ namespace MEMIS.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("District");
+                    b.ToTable("District", (string)null);
                 });
 
             modelBuilder.Entity("MEMIS.Data.Enforcement", b =>
@@ -870,7 +870,7 @@ namespace MEMIS.Migrations
 
                     b.HasIndex("intRegion");
 
-                    b.ToTable("Enforcement");
+                    b.ToTable("Enforcement", (string)null);
                 });
 
             modelBuilder.Entity("MEMIS.Data.FYear", b =>
@@ -890,7 +890,7 @@ namespace MEMIS.Migrations
 
                     b.HasKey("intyear");
 
-                    b.ToTable("M_FYEAR");
+                    b.ToTable("M_FYEAR", (string)null);
                 });
 
             modelBuilder.Entity("MEMIS.Data.FocusArea", b =>
@@ -913,7 +913,7 @@ namespace MEMIS.Migrations
 
                     b.HasKey("intFocus");
 
-                    b.ToTable("FocusArea");
+                    b.ToTable("FocusArea", (string)null);
                 });
 
             modelBuilder.Entity("MEMIS.Data.GDP", b =>
@@ -989,7 +989,7 @@ namespace MEMIS.Migrations
 
                     b.HasIndex("intRegion");
 
-                    b.ToTable("GDP");
+                    b.ToTable("GDP", (string)null);
                 });
 
             modelBuilder.Entity("MEMIS.Data.GPP", b =>
@@ -1065,7 +1065,7 @@ namespace MEMIS.Migrations
 
                     b.HasIndex("intRegion");
 
-                    b.ToTable("GPP");
+                    b.ToTable("GPP", (string)null);
                 });
 
             modelBuilder.Entity("MEMIS.Data.HerbalInspection", b =>
@@ -1138,7 +1138,7 @@ namespace MEMIS.Migrations
 
                     b.HasIndex("intRegion");
 
-                    b.ToTable("HerbalInspection");
+                    b.ToTable("HerbalInspection", (string)null);
                 });
 
             modelBuilder.Entity("MEMIS.Data.KPIAssessment", b =>
@@ -1195,7 +1195,7 @@ namespace MEMIS.Migrations
 
                     b.HasIndex("KPIMasterId");
 
-                    b.ToTable("KPI_Assessment");
+                    b.ToTable("KPI_Assessment", (string)null);
                 });
 
             modelBuilder.Entity("MEMIS.Data.KPIMaster", b =>
@@ -1263,7 +1263,7 @@ namespace MEMIS.Migrations
 
                     b.HasIndex("intDept");
 
-                    b.ToTable("KPI");
+                    b.ToTable("KPI", (string)null);
                 });
 
             modelBuilder.Entity("MEMIS.Data.Master.ImplementationStatus", b =>
@@ -1280,7 +1280,7 @@ namespace MEMIS.Migrations
 
                     b.HasKey("ImpStatusId");
 
-                    b.ToTable("ImplementationStatus");
+                    b.ToTable("ImplementationStatus", (string)null);
                 });
 
             modelBuilder.Entity("MEMIS.Data.NDAFile", b =>
@@ -1307,7 +1307,7 @@ namespace MEMIS.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("NDAFile");
+                    b.ToTable("NDAFile", (string)null);
                 });
 
             modelBuilder.Entity("MEMIS.Data.NDP", b =>
@@ -1340,7 +1340,7 @@ namespace MEMIS.Migrations
 
                     b.HasKey("id");
 
-                    b.ToTable("NDP");
+                    b.ToTable("NDP", (string)null);
                 });
 
             modelBuilder.Entity("MEMIS.Data.NDPFile", b =>
@@ -1367,7 +1367,7 @@ namespace MEMIS.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("NDPFile");
+                    b.ToTable("NDPFile", (string)null);
                 });
 
             modelBuilder.Entity("MEMIS.Data.NDP_HD", b =>
@@ -1393,7 +1393,7 @@ namespace MEMIS.Migrations
 
                     b.HasKey("ID");
 
-                    b.ToTable("NDP_HD");
+                    b.ToTable("NDP_HD", (string)null);
                 });
 
             modelBuilder.Entity("MEMIS.Data.Preinspection", b =>
@@ -1489,7 +1489,7 @@ namespace MEMIS.Migrations
 
                     b.HasIndex("DistrictId");
 
-                    b.ToTable("Preinspection");
+                    b.ToTable("Preinspection", (string)null);
                 });
 
             modelBuilder.Entity("MEMIS.Data.PreinspectionNewManUnit", b =>
@@ -1558,7 +1558,7 @@ namespace MEMIS.Migrations
 
                     b.HasIndex("DistrictId");
 
-                    b.ToTable("PreinspectionManufacturingUnit");
+                    b.ToTable("PreinspectionManufacturingUnit", (string)null);
                 });
 
             modelBuilder.Entity("MEMIS.Data.PreinspectionPharma", b =>
@@ -1673,7 +1673,7 @@ namespace MEMIS.Migrations
 
                     b.HasIndex("DistrictId");
 
-                    b.ToTable("PreinspectionPharma");
+                    b.ToTable("PreinspectionPharma", (string)null);
                 });
 
             modelBuilder.Entity("MEMIS.Data.ProgramImplementationPlan", b =>
@@ -1742,7 +1742,7 @@ namespace MEMIS.Migrations
 
                     b.HasIndex("intObjective");
 
-                    b.ToTable("ProgramImplementationPlan");
+                    b.ToTable("ProgramImplementationPlan", (string)null);
                 });
 
             modelBuilder.Entity("MEMIS.Data.Project.MonitoringAndControl", b =>
@@ -1787,7 +1787,7 @@ namespace MEMIS.Migrations
 
                     b.HasIndex("ProjectInitiationId");
 
-                    b.ToTable("MonitoringAndControl");
+                    b.ToTable("MonitoringAndControl", (string)null);
                 });
 
             modelBuilder.Entity("MEMIS.Data.Project.ProjectSubmittalTracker", b =>
@@ -1839,7 +1839,7 @@ namespace MEMIS.Migrations
 
                     b.HasIndex("ProjectInitiationId");
 
-                    b.ToTable("ProjectSubmittalTracker");
+                    b.ToTable("ProjectSubmittalTracker", (string)null);
                 });
 
             modelBuilder.Entity("MEMIS.Data.Project.StakeHolder", b =>
@@ -1904,7 +1904,7 @@ namespace MEMIS.Migrations
 
                     b.HasIndex("ProjectInitiationId");
 
-                    b.ToTable("ProjectStakeHolder");
+                    b.ToTable("ProjectStakeHolder", (string)null);
                 });
 
             modelBuilder.Entity("MEMIS.Data.ProjectInitiation", b =>
@@ -1970,7 +1970,7 @@ namespace MEMIS.Migrations
 
                     b.HasIndex("DepartmentId");
 
-                    b.ToTable("ProjectInitiation");
+                    b.ToTable("ProjectInitiation", (string)null);
                 });
 
             modelBuilder.Entity("MEMIS.Data.ProjectOthersTab", b =>
@@ -2001,7 +2001,7 @@ namespace MEMIS.Migrations
 
                     b.HasIndex("ProjectInitiationId");
 
-                    b.ToTable("ProjectOthersTab");
+                    b.ToTable("ProjectOthersTab", (string)null);
                 });
 
             modelBuilder.Entity("MEMIS.Data.ProjectPayment", b =>
@@ -2030,7 +2030,7 @@ namespace MEMIS.Migrations
 
                     b.HasIndex("ProjectInitiationId");
 
-                    b.ToTable("ProjectPayment");
+                    b.ToTable("ProjectPayment", (string)null);
                 });
 
             modelBuilder.Entity("MEMIS.Data.ProjectRiskIdentification", b =>
@@ -2077,7 +2077,7 @@ namespace MEMIS.Migrations
 
                     b.HasIndex("ProjectInitiationId");
 
-                    b.ToTable("ProjectRiskIdentification");
+                    b.ToTable("ProjectRiskIdentification", (string)null);
                 });
 
             modelBuilder.Entity("MEMIS.Data.QuaterlyPlan", b =>
@@ -2139,7 +2139,7 @@ namespace MEMIS.Migrations
 
                     b.HasIndex("DeptPlanId");
 
-                    b.ToTable("QuaterlyPlans");
+                    b.ToTable("QuaterlyPlans", (string)null);
                 });
 
             modelBuilder.Entity("MEMIS.Data.Region", b =>
@@ -2176,7 +2176,7 @@ namespace MEMIS.Migrations
 
                     b.HasIndex("RegCoordinatorId");
 
-                    b.ToTable("Region");
+                    b.ToTable("Region", (string)null);
                 });
 
             modelBuilder.Entity("MEMIS.Data.RelocationDrugShop", b =>
@@ -2306,7 +2306,7 @@ namespace MEMIS.Migrations
 
                     b.HasIndex("DistrictId");
 
-                    b.ToTable("RelocationDrugShop");
+                    b.ToTable("RelocationDrugShop", (string)null);
                 });
 
             modelBuilder.Entity("MEMIS.Data.RelocationPharma", b =>
@@ -2436,7 +2436,7 @@ namespace MEMIS.Migrations
 
                     b.HasIndex("DistrictId");
 
-                    b.ToTable("RelocationPharma");
+                    b.ToTable("RelocationPharma", (string)null);
                 });
 
             modelBuilder.Entity("MEMIS.Data.Renewal", b =>
@@ -2512,7 +2512,7 @@ namespace MEMIS.Migrations
 
                     b.HasIndex("intRegion");
 
-                    b.ToTable("Renewal");
+                    b.ToTable("Renewal", (string)null);
                 });
 
             modelBuilder.Entity("MEMIS.Data.Risk.Cause", b =>
@@ -2537,7 +2537,7 @@ namespace MEMIS.Migrations
 
                     b.HasIndex("intRisk");
 
-                    b.ToTable("Cause");
+                    b.ToTable("Cause", (string)null);
                 });
 
             modelBuilder.Entity("MEMIS.Data.Risk.Event", b =>
@@ -2559,7 +2559,7 @@ namespace MEMIS.Migrations
 
                     b.HasIndex("RiskId");
 
-                    b.ToTable("Events");
+                    b.ToTable("Events", (string)null);
                 });
 
             modelBuilder.Entity("MEMIS.Data.Risk.QuarterlyRiskAction", b =>
@@ -2594,7 +2594,7 @@ namespace MEMIS.Migrations
 
                     b.HasIndex("TreatmentPlanId");
 
-                    b.ToTable("QuarterlyRiskActions");
+                    b.ToTable("QuarterlyRiskActions", (string)null);
                 });
 
             modelBuilder.Entity("MEMIS.Data.Risk.RiskCategory", b =>
@@ -2617,7 +2617,7 @@ namespace MEMIS.Migrations
 
                     b.HasKey("intCategory");
 
-                    b.ToTable("RiskCategorys");
+                    b.ToTable("RiskCategorys", (string)null);
                 });
 
             modelBuilder.Entity("MEMIS.Data.Risk.RiskCause", b =>
@@ -2639,7 +2639,7 @@ namespace MEMIS.Migrations
 
                     b.HasIndex("RiskId");
 
-                    b.ToTable("RiskCauses");
+                    b.ToTable("RiskCauses", (string)null);
                 });
 
             modelBuilder.Entity("MEMIS.Data.Risk.RiskConsequenceDetails", b =>
@@ -2661,7 +2661,7 @@ namespace MEMIS.Migrations
 
                     b.HasIndex("RiskId");
 
-                    b.ToTable("RiskConsequenceDetails");
+                    b.ToTable("RiskConsequenceDetails", (string)null);
                 });
 
             modelBuilder.Entity("MEMIS.Data.Risk.RiskDetail", b =>
@@ -2695,7 +2695,7 @@ namespace MEMIS.Migrations
 
                     b.HasIndex("RiskId");
 
-                    b.ToTable("RiskDetails");
+                    b.ToTable("RiskDetails", (string)null);
                 });
 
             modelBuilder.Entity("MEMIS.Data.Risk.RiskIdent", b =>
@@ -2716,7 +2716,7 @@ namespace MEMIS.Migrations
 
                     b.HasIndex("intStrategicObjective");
 
-                    b.ToTable("T_RISKIDENTIFICATION");
+                    b.ToTable("T_RISKIDENTIFICATION", (string)null);
                 });
 
             modelBuilder.Entity("MEMIS.Data.Risk.RiskIdentification", b =>
@@ -2801,7 +2801,7 @@ namespace MEMIS.Migrations
 
                     b.HasIndex("intDept");
 
-                    b.ToTable("RiskIdentification");
+                    b.ToTable("RiskIdentification", (string)null);
                 });
 
             modelBuilder.Entity("MEMIS.Data.Risk.RiskMatrix", b =>
@@ -2829,7 +2829,7 @@ namespace MEMIS.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("RiskMatrix");
+                    b.ToTable("RiskMatrix", (string)null);
                 });
 
             modelBuilder.Entity("MEMIS.Data.Risk.RiskRegister", b =>
@@ -2969,7 +2969,7 @@ namespace MEMIS.Migrations
 
                     b.HasIndex("intDept");
 
-                    b.ToTable("RiskRegister");
+                    b.ToTable("RiskRegister", (string)null);
                 });
 
             modelBuilder.Entity("MEMIS.Data.Risk.RiskSource", b =>
@@ -2991,7 +2991,7 @@ namespace MEMIS.Migrations
 
                     b.HasIndex("RiskId");
 
-                    b.ToTable("RiskSources");
+                    b.ToTable("RiskSources", (string)null);
                 });
 
             modelBuilder.Entity("MEMIS.Data.Risk.RiskTreatmentPlan", b =>
@@ -3038,7 +3038,7 @@ namespace MEMIS.Migrations
 
                     b.HasIndex("RiskRefID");
 
-                    b.ToTable("RiskTreatmentPlan");
+                    b.ToTable("RiskTreatmentPlan", (string)null);
                 });
 
             modelBuilder.Entity("MEMIS.Data.SDTAssessment", b =>
@@ -3169,7 +3169,7 @@ namespace MEMIS.Migrations
 
                     b.HasIndex("SDTMasterId");
 
-                    b.ToTable("SDTAssessment");
+                    b.ToTable("SDTAssessment", (string)null);
                 });
 
             modelBuilder.Entity("MEMIS.Data.SDTMaster", b =>
@@ -3208,7 +3208,7 @@ namespace MEMIS.Migrations
 
                     b.HasIndex("DepartmentId");
 
-                    b.ToTable("SDTMaster");
+                    b.ToTable("SDTMaster", (string)null);
                 });
 
             modelBuilder.Entity("MEMIS.Data.StrategicAction", b =>
@@ -3236,7 +3236,7 @@ namespace MEMIS.Migrations
 
                     b.HasIndex("intIntervention");
 
-                    b.ToTable("StrategicAction");
+                    b.ToTable("StrategicAction", (string)null);
                 });
 
             modelBuilder.Entity("MEMIS.Data.StrategicIntervention", b =>
@@ -3264,7 +3264,7 @@ namespace MEMIS.Migrations
 
                     b.HasIndex("intObjective");
 
-                    b.ToTable("StrategicIntervention");
+                    b.ToTable("StrategicIntervention", (string)null);
                 });
 
             modelBuilder.Entity("MEMIS.Data.StrategicObjective", b =>
@@ -3292,7 +3292,7 @@ namespace MEMIS.Migrations
 
                     b.HasIndex("intFocus");
 
-                    b.ToTable("StrategicObjective");
+                    b.ToTable("StrategicObjective", (string)null);
                 });
 
             modelBuilder.Entity("MEMIS.Data.StrategicPlan", b =>
@@ -3337,7 +3337,7 @@ namespace MEMIS.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("StrategicPlan");
+                    b.ToTable("StrategicPlan", (string)null);
                 });
 
             modelBuilder.Entity("MEMIS.Data.WorkPlanSettingsRegion", b =>
@@ -3409,7 +3409,7 @@ namespace MEMIS.Migrations
 
                     b.HasKey("intWrokPlan");
 
-                    b.ToTable("WorkPlanSettingsRegion");
+                    b.ToTable("WorkPlanSettingsRegion", (string)null);
                 });
 
             modelBuilder.Entity("MEMIS.Models.ApplicationUser", b =>
@@ -3528,7 +3528,7 @@ namespace MEMIS.Migrations
 
                     b.HasKey("IntUser");
 
-                    b.ToTable("Regsiter");
+                    b.ToTable("Regsiter", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>

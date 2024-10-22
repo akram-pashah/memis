@@ -1,6 +1,3 @@
-
-using MEMIS.Data;
-
 namespace MEMIS.ViewModels.ME
 {
   public class TotalActivityAssessmentDetailsViewModel
@@ -26,13 +23,19 @@ namespace MEMIS.ViewModels.ME
       }
       return allYears;
     }
-    public List<GroupedAssessmentDto> GroupedAssessments { get; set; } = new List<GroupedAssessmentDto>();
-    public class GroupedAssessmentDto
-    {
-      public string? ServiceDeliveryTimeline { get; set; }
-      public List<SDTAssessment> Assessments { get; set; }
-      public decimal Target { get; set; } 
-    }
+    public List<GroupedAssessmentDto> SDTAssessments { get; set; } = new List<GroupedAssessmentDto>();
+    public List<GroupedAssessmentDto> KPIAssessments { get; set; } = new List<GroupedAssessmentDto>();
+    public double SDTTarget { get; set; }
+    public double KPITarget { get; set; }
+  }
+  public class GroupedAssessmentDto
+  {
+    public string? ServiceDeliveryTimeline { get; set; }
+    public double Quarter1 { get; set; }
+    public double Quarter2 { get; set; }
+    public double Quarter3 { get; set; }
+    public double Quarter4 { get; set; }
+    public double Target { get; set; }
   }
   public class ChartDataSeries
   {

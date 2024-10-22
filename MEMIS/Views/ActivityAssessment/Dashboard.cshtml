@@ -658,9 +658,63 @@
   <div class="card-header">
     <h5>Service Delivery Timelines Assessment</h5>
   </div>
-  <div class="col d-flex justify-content-end mb-3">
+  @* <div class="col d-flex justify-content-end mb-3">
     <a class="btn btn-info" asp-controller="SDTAssessments" asp-action="SDTList">Create New</a>
+  </div> *@
+  <div class="card">
+    <div class="card-body">
+      <div style="width:100%; overflow-x:auto;margin-top:20px;">
+        <table class="table table-striped table-bordered table-hover dt-responsive nowrap" id="datatable">
+   <thead class="table-active">
+     <tr>
+       <th rowspan="2">No.</th>
+       <th rowspan="2">Service Delivery Timeline</th>
+       <th rowspan="2">Target (%)</th> <!-- rowspan applied here -->
+       <th colspan="5">Weighted Average Performance</th>
+     </tr>
+     <tr>
+       <th>Q1</th>
+       <th>Q2</th>
+       <th>Q3</th>
+       <th>Q4</th>
+       <th>Annual</th>
+     </tr>
+   </thead>
+   <tbody>
+     @for (int i = 0; i < Model.SDTAssessments.Count; i++)
+     {
+       var group = Model.SDTAssessments[i];
+       <tr>
+         <td>@(i + 1)</td>
+         <td>@group.ServiceDeliveryTimeline</td>
+
+         @if (i == 0) 
+         { 
+             <td rowspan="@Model.SDTAssessments.Count">@Model.SDTTarget</td>
+         }
+
+         <td>@group.Quarter1</td>
+         <td>@group.Quarter2</td>
+         <td>@group.Quarter3</td>
+         <td>@group.Quarter4</td>
+         <td>@group.Target</td>
+       </tr>
+     }
+   </tbody>
+</table>
+      </div>
+    </div>
   </div>
+</div>
+
+
+<div class="card mt-4">
+  <div class="card-header">
+    <h5>KPI Assesment</h5>
+  </div>
+ @*  <div class="col d-flex justify-content-end mb-3">
+    <a class="btn btn-info" asp-controller="KPIAssessment" asp-action="KPIList">Create New</a>
+  </div> *@
   <div class="card">
     <div class="card-body">
       <div style="width:100%; overflow-x:auto;margin-top:20px;">
@@ -681,82 +735,25 @@
             </tr>
           </thead>
           <tbody>
-            @for (int i = 0; i < Model.GroupedAssessments.Count; i++)
+             @for (int i = 0; i < Model.KPIAssessments.Count; i++)
             {
-              var group = Model.GroupedAssessments[i];
+              var group = Model.KPIAssessments[i];
               <tr>
-                <td>@(i + 1)</td> 
-                <td>@Html.DisplayFor(modelItem => group.ServiceDeliveryTimeline)</td>
-                <td>@Html.DisplayFor(modelItem => group.Target)</td>
-
-                <td>
-                  @Html.DisplayFor(modelItem =>
-                           group.Assessments.Where(a => a.Month >= 7 && a.Month <= 9)
-                           .Any()) 
-                </td>
-                <td>
-                  @Html.DisplayFor(modelItem =>
-                           group.Assessments.Where(a => a.Month >= 10 && a.Month <= 12)
-                           .Any())
-                </td>
-                <td>
-                  @Html.DisplayFor(modelItem =>
-                           group.Assessments.Where(a => a.Month >= 1 && a.Month <= 3)
-                           .Any()) 
-                </td>
-                <td>
-                  @Html.DisplayFor(modelItem =>
-                           group.Assessments.Where(a => a.Month >= 4 && a.Month <= 6)
-                           .Any())
-                </td>
-                <td>@Html.DisplayFor(modelItem => group.Target)</td>
+                <td>@(i+1)</td>
+                <td>@group.ServiceDeliveryTimeline</td>
+                @if (i == 0) 
+         { 
+              <td rowspan="@Model.KPIAssessments.Count">@Model.KPITarget</td>
+         }
+               
+                <td>@group.Quarter1</td>
+                <td>@group.Quarter2</td>
+                <td>@group.Quarter3</td>
+                <td>@group.Quarter4</td>
+                <td>@group.Target</td>
               </tr>
             }
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
-</div>
-
-
-<div class="card mt-4">
-  <div class="card-header">
-    <h5>KPI Assesment</h5>
-  </div>
-  <div class="col d-flex justify-content-end mb-3">
-    <a class="btn btn-info" asp-controller="KPIAssessment" asp-action="KPIList">Create New</a>
-  </div>
-  <div class="card">
-    <div class="card-body">
-      <div style="width:100%; overflow-x:auto;margin-top:20px;">
-        <table class="table table-striped table-bordered table-hover dt-responsive nowrap" id="datatable">
-          <thead class="table-active">
-            <tr>
-              <th rowspan="2">No.</th>
-              <th rowspan="2">Service Delivery Timeline</th>
-              <th rowspan="2">Target (%)</th>
-              <th colspan="5">Weighted Average Performance</th>
-            </tr>
-            <tr>
-              <th>Q1</th>
-              <th>Q2</th>
-              <th>Q3</th>
-              <th>Q4</th>
-              <th>Annual</th>
-            </tr>
-          </thead>
-          @*<tbody>
-              @foreach (var item in Model.KPIAssessment)
-              {
-                <tr>
-                  <td>
-                    @Html.DisplayFor(modelItem => item.PerformanceIndicator)
-                  </td>                
-                    @Html.DisplayFor(modelItem => item.Target)
-                  </td>
-              }
-            </tbody>*@
+            </tbody>
         </table>
       </div>
     </div>

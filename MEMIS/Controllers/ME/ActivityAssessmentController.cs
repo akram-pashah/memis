@@ -1,4 +1,3 @@
-using DocumentFormat.OpenXml.Bibliography;
 using DocumentFormat.OpenXml.InkML;
 using MEMIS.Data;
 using MEMIS.Models;
@@ -159,14 +158,21 @@ namespace MEMIS.Controllers.ME
       }
 
       List<double> yearPercentages = [];
+      List<double> yearTargetPercentages = [];
 
-      for (int year = 2016; year <= DateTime.Now.Year + 1; year++)
+      List<int> years = await _context.FYears.OrderBy(x => x.intyear).Select(x => x.intyear).ToListAsync();
+
+      for (int i = 0; i <= years.Count - 1; i++)
       {
-        var yearQuery = _context.ActivityAssessment.Where(x => x.Fyear == year).ToList();
+        var yearQuery = _context.ActivityAssessment.Where(x => x.Fyear == years[i]).ToList();
         var totalyearActivities = yearQuery.Count;
         var percentageCompletion = totalyearActivities > 0 ? (yearQuery.Select(x => GetCompletionValue(x.ImpStatusId))
                                       .Sum() / totalyearActivities) * 100 : 0;
         yearPercentages.Add(percentageCompletion);
+
+        int target = await _context.FYears.Where(x => x.intyear == years[i]).Select(x => x.KPITarget).FirstOrDefaultAsync();
+
+        yearTargetPercentages.Add(target);
       }
 
       Dictionary<int, List<double>> yearFAsData = new();
@@ -185,9 +191,73 @@ namespace MEMIS.Controllers.ME
         yearFAsData.Add(year, percentages);
       }
 
+      var sdtTarget = await _context.SDTAssessment.AverageAsync(x => x.Target);
+      var kpiTarget = await _context.KPIAssessment.AverageAsync(x => x.Target);
+
+      var sdtMastersData = await _context.SDTMasters.Include(x => x.SDTAssessments)
+        .ToListAsync();
+
+      var sdtMasters = sdtMastersData.GroupBy(x => x.ServiceDeliveryTimeline.Trim()).ToList();
+
+      var sdtsTargets = sdtMasters.Select(x => new GroupedAssessmentDto()
+      {
+        ServiceDeliveryTimeline = x.Key,
+
+        Quarter1 = x.Count() > 0 && x.SelectMany(y => y.SDTAssessments).Any(z => z.Month >= 7 && z.Month <= 9)
+        ? x.SelectMany(y => y.SDTAssessments).Where(z => z.Month >= 7 && z.Month <= 9).Average(a => double.Parse(a.AchivementStatus ?? "0")) * 100
+        : 0,
+
+        Quarter2 = x.Count() > 0 && x.SelectMany(y => y.SDTAssessments).Any(z => z.Month >= 10 && z.Month <= 12)
+        ? x.SelectMany(y => y.SDTAssessments).Where(z => z.Month >= 10 && z.Month <= 12).Average(a => double.Parse(a.AchivementStatus ?? "0")) * 100
+        : 0,
+
+        Quarter3 = x.Count() > 0 && x.SelectMany(y => y.SDTAssessments).Any(z => z.Month >= 1 && z.Month <= 3)
+        ? x.SelectMany(y => y.SDTAssessments).Where(z => z.Month >= 1 && z.Month <= 3).Average(a => double.Parse(a.AchivementStatus ?? "0")) * 100
+        : 0,
+
+        Quarter4 = x.Count() > 0 && x.SelectMany(y => y.SDTAssessments).Any(z => z.Month >= 4 && z.Month <= 6)
+        ? x.SelectMany(y => y.SDTAssessments).Where(z => z.Month >= 4 && z.Month <= 6).Average(a => double.Parse(a.AchivementStatus ?? "0")) * 100
+        : 0,
+
+        Target = x.Count() > 0 && x.SelectMany(y => y.SDTAssessments).Any()
+        ? x.SelectMany(y => y.SDTAssessments).Average(a => double.Parse(a.AchivementStatus ?? "0")) * 100
+        : 0
+      }).ToList();
+
+
+      var kpiMastersData = await _context.KPIMasters.Include(x => x.StrategicPlanFk).Include(x => x.KPIAssessments)
+        .ToListAsync();
+
+      var kpiMasters = kpiMastersData.GroupBy(x => x.StrategicPlanFk.focusArea).ToList();
+
+      var kpisTargets = kpiMasters.Select(x => new GroupedAssessmentDto()
+      {
+        ServiceDeliveryTimeline = x.Key,
+
+        Quarter1 = x.SelectMany(y => y.KPIAssessments).Any(z => z.AssessmentDate.Month >= 7 && z.AssessmentDate.Month <= 9)
+        ? x.SelectMany(y => y.KPIAssessments).Where(z => z.AssessmentDate.Month >= 7 && z.AssessmentDate.Month <= 9).Average(a => double.Parse(a.Achieved ?? "0")) * 100
+        : 0,
+
+        Quarter2 = x.SelectMany(y => y.KPIAssessments).Any(z => z.AssessmentDate.Month >= 10 && z.AssessmentDate.Month <= 12)
+        ? x.SelectMany(y => y.KPIAssessments).Where(z => z.AssessmentDate.Month >= 10 && z.AssessmentDate.Month <= 12).Average(a => double.Parse(a.Achieved ?? "0")) * 100
+        : 0,
+
+        Quarter3 = x.SelectMany(y => y.KPIAssessments).Any(z => z.AssessmentDate.Month >= 1 && z.AssessmentDate.Month <= 3)
+        ? x.SelectMany(y => y.KPIAssessments).Where(z => z.AssessmentDate.Month >= 1 && z.AssessmentDate.Month <= 3).Average(a => double.Parse(a.Achieved ?? "0")) * 100
+        : 0,
+
+        Quarter4 = x.SelectMany(y => y.KPIAssessments).Any(z => z.AssessmentDate.Month >= 4 && z.AssessmentDate.Month <= 6)
+        ? x.SelectMany(y => y.KPIAssessments).Where(z => z.AssessmentDate.Month >= 4 && z.AssessmentDate.Month <= 6).Average(a => double.Parse(a.Achieved ?? "0")) * 100
+        : 0,
+
+        Target = x.SelectMany(y => y.KPIAssessments).Any()
+        ? x.SelectMany(y => y.KPIAssessments).Average(a => double.Parse(a.Achieved ?? "0")) * 100
+        : 0
+      }).ToList();
+
       TotalActivityAssessmentDetailsViewModel data = new()
       {
-        TotalActivitiesFullyImplemented = orgActivitiesquery.Where(x =>x.ImpStatusId==3).Count(),
+        TotalActivitiesFullyImplemented = orgActivitiesquery.Where(x => x.ImpStatusId == 3).Count(),
         TotalSDTsAchieved = orgSDTsquery.Count(),
         TotalKPIsAchieved = orgKPIsquery.Count(),
         OverallPerformance = percentageValue,
@@ -215,9 +285,13 @@ namespace MEMIS.Controllers.ME
           new ChartDataSeries()
           {
             name = "Target Line",
-            data = yearPercentages.Select(x => 90.0).ToList()
+            data = yearTargetPercentages
           }
-        }
+        },
+        SDTTarget = sdtTarget,
+        KPITarget = kpiAverage,
+        SDTAssessments = sdtsTargets,
+        KPIAssessments = kpisTargets,
       };
 
       return View(data);
@@ -230,8 +304,8 @@ namespace MEMIS.Controllers.ME
     }
     public async Task<IActionResult> GetSDTAssessment()
     {
-      var sdt = await _context.SDTAssessment.Include(x=>x.SDTMasterFk).Include(x=>x.SDTMasterFk.DepartmentFk)
-          .Where(s => s.AchivementStatus != null && s.SDTMasterFk != null).ToListAsync();          
+      var sdt = await _context.SDTAssessment.Include(x => x.SDTMasterFk).Include(x => x.SDTMasterFk.DepartmentFk)
+          .Where(s => s.AchivementStatus != null && s.SDTMasterFk != null).ToListAsync();
       return PartialView("_SDTAchieveAssessment", sdt);
     }
     public async Task<IActionResult> GetKPIAssessment()
@@ -240,12 +314,12 @@ namespace MEMIS.Controllers.ME
         .Include(x => x.KPIMasterFk).ThenInclude(x => x.DepartmentFk).ToListAsync();
       return PartialView("_KPIAchieveAssessment", kpi);
     }
-    
+
     public async Task<IActionResult> SDTAchievement(int? id)
     {
       var sdtAssessments = await _context.SDTAssessment
         .Include(s => s.SDTMasterFk)
-        .Include(s=>s.AchivementStatus)
+        .Include(s => s.AchivementStatus)
         .Where(s => s.SDTMasterFk.Id == id)
         .ToListAsync();
       var groupedByQuarter = sdtAssessments

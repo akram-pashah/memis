@@ -1,9 +1,5 @@
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace MEMIS.Data
 {
@@ -52,5 +48,6 @@ namespace MEMIS.Data
     [ForeignKey("intDept")]
     public virtual Department? DepartmentFk { get; set; }
 
+    public ICollection<KPIAssessment> KPIAssessments = [];
   }
 }

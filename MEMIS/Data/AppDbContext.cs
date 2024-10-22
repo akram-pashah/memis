@@ -72,7 +72,7 @@ namespace MEMIS.Data
     public DbSet<ProjectOthersTab>? ProjectOthersTab { get; set; }
 
     public DbSet<StakeHolder>? StakeHolder { get; set; }
-    public DbSet<ProjectSubmittalTracker> ProjectSubmittalTracker {  get; set; }
+    public DbSet<ProjectSubmittalTracker> ProjectSubmittalTracker { get; set; }
 
     public DbSet<MEMIS.Data.Activity>? Activity { get; set; }
     public DbSet<RiskDetail> RiskDetails { get; set; }
@@ -170,6 +170,16 @@ namespace MEMIS.Data
         .HasOne(t => t.ImplementationStatus)
         .WithMany(x => x.QuarterlyRiskActions)
         .HasForeignKey(t => t.ImpStatusId);
+
+      modelBuilder.Entity<SDTAssessment>()
+        .HasOne(t => t.SDTMasterFk)
+        .WithMany(r => r.SDTAssessments)
+        .HasForeignKey(t => t.SDTMasterId);
+
+      modelBuilder.Entity<KPIAssessment>()
+        .HasOne(t => t.KPIMasterFk)
+        .WithMany(r => r.KPIAssessments)
+        .HasForeignKey(t => t.KPIMasterId);
 
       base.OnModelCreating(modelBuilder);
 
