@@ -195,6 +195,7 @@ namespace MEMIS.Controllers.ME
       var kpiTarget = await _context.KPIAssessment.AverageAsync(x => x.Target);
 
       var sdtMastersData = await _context.SDTMasters.Include(x => x.SDTAssessments)
+        .Where(x => x.DepartmentId == departmentId)
         .ToListAsync();
 
       var sdtMasters = sdtMastersData.GroupBy(x => x.ServiceDeliveryTimeline.Trim()).ToList();
@@ -226,6 +227,7 @@ namespace MEMIS.Controllers.ME
 
 
       var kpiMastersData = await _context.KPIMasters.Include(x => x.StrategicPlanFk).Include(x => x.KPIAssessments)
+        .Where(x => x.intDept == departmentId)
         .ToListAsync();
 
       var kpiMasters = kpiMastersData.GroupBy(x => x.StrategicPlanFk.focusArea).ToList();
