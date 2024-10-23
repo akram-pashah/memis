@@ -4,6 +4,7 @@ using MEMIS.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MEMIS.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241023080401_Incidentvalue")]
+    partial class Incidentvalue
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -2570,26 +2573,18 @@ namespace MEMIS.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IncidentId"));
 
-                    b.Property<DateTime?>("DateOccured")
-                        .HasColumnType("datetime2");
-
                     b.Property<string>("Description")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<double?>("FinancialLoss")
-                        .HasColumnType("float");
-
-                    b.Property<double?>("NoOfIncedents")
-                        .HasColumnType("float");
-
-                    b.Property<long?>("QuarterlyRiskActionId")
+                    b.Property<long>("QuarterlyRiskActionId")
                         .HasColumnType("bigint");
 
                     b.HasKey("IncidentId");
 
                     b.HasIndex("QuarterlyRiskActionId");
 
-                    b.ToTable("Incidents");
+                    b.ToTable("Incident");
                 });
 
             modelBuilder.Entity("MEMIS.Data.Risk.QuarterlyRiskAction", b =>
@@ -4274,7 +4269,9 @@ namespace MEMIS.Migrations
                 {
                     b.HasOne("MEMIS.Data.Risk.QuarterlyRiskAction", "QuarterlyRiskAction")
                         .WithMany("Incidents")
-                        .HasForeignKey("QuarterlyRiskActionId");
+                        .HasForeignKey("QuarterlyRiskActionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("QuarterlyRiskAction");
                 });

@@ -22,5 +22,7 @@ namespace MEMIS.Data.Risk
     public string? RiskDescription { get; set; }
     [Display(Name = "Incident Value/Financial Loss")]
     public double? IncidentValue { get; set; }
+    public List<Incident> Incidents { get; set; }
+
   }
 }

@@ -38,51 +38,52 @@
                         </div>
                         </div>
                     @* </div> *@
-                    <div class="row">
-                        <div class="col-md-3 mb-3">
-                            <label class="form-label" for="frequencyOfReporting">Frequency of Reporting</label>
-                            <select class="form-select" name="FrequencyOfReporting" asp-for="FrequencyOfReporting" id="frequencyOfReporting" disabled>
-                                <option value="Monthly">Monthly</option>
-                                <option value="Quarterly" selected>Quarterly</option>
-                                <option value="Annually">Annually</option>
-                            </select>
-                            <div class="valid-feedback"> Looks good! </div>
-                            <div class="invalid-feedback"> This field is required. </div>
-                        </div>
-                        <div class="col-md-3 mb-3">
-                          <label class="form-label">&nbsp; &nbsp;</label>
-                          <button type="button" class="form-control btn btn-info float-end" data-bs-toggle="modal" data-bs-target="#riskTreatmentModal">
-                          Add Quarterly Risk Action Plan
-                          </button>
-                        </div>
-                    </div>
+    <div class="row">
+      <div class="col-md-3 mb-3">
+        <label class="form-label" for="frequencyOfReporting">Frequency of Reporting</label>
+        <select class="form-select" name="FrequencyOfReporting" asp-for="FrequencyOfReporting" id="frequencyOfReporting" disabled>
+          <option value="Monthly">Monthly</option>
+          <option value="Quarterly" selected>Quarterly</option>
+          <option value="Annually">Annually</option>
+        </select>
+        <div class="valid-feedback"> Looks good! </div>
+        <div class="invalid-feedback"> This field is required. </div>
+      </div>
+        <div class="col-md-3 mb-3">
+          <label class="form-label">&nbsp; &nbsp;</label>
+          <button type="button" class="form-control btn btn-info float-end" data-bs-toggle="modal" data-bs-target="#riskTreatmentModal">
+            Add Quarterly Risk Action Plan
+          </button>
+        </div>
+    </div>
 
-                    
-        @{
-            var viewData = new ViewDataDictionary(ViewData);
-            viewData["TreatmentPlanId"] = Model.TreatmentPlanId;
-        }
 
-        @Html.Partial("_QuarterlyTreatmentActionForm", new MEMIS.Data.Risk.QuarterlyRiskAction(){
-          RiskTreatmentPlan = Model
-        }, viewData)
-        <!-- Risk Treatment Plan Grid -->
-        @* <table class="table table-bordered" id="riskTreatmentTable">
-            <thead>
-                <tr>
-                    <th>Treatment Action</th>
-                    <th>Indicator Description</th>
-                    <th>Baseline</th>
-                    <th>Cumulative Target</th>
-                    <th>Frequency of Reporting</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-            </tbody>
-        </table> *@
+      @{
+        var viewData = new ViewDataDictionary(ViewData);
+        viewData["TreatmentPlanId"] = Model.TreatmentPlanId;
+      }
 
-        <!-- Modal -->
+      @Html.Partial("_QuarterlyTreatmentActionForm", new MEMIS.Data.Risk.QuarterlyRiskAction()
+      {
+        RiskTreatmentPlan = Model
+      }, viewData)
+      <!-- Risk Treatment Plan Grid -->
+      @* <table class="table table-bordered" id="riskTreatmentTable">
+        <thead>
+            <tr>
+                <th>Treatment Action</th>
+                <th>Indicator Description</th>
+                <th>Baseline</th>
+                <th>Cumulative Target</th>
+                <th>Frequency of Reporting</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table> *@
+
+      <!-- Modal -->
 
     </div>
     <div class="col-md-12">
@@ -133,6 +134,10 @@
         //     });
         // });
     });
+
+    window.addIncidentListener('load', function () {
+      GetData();
+    })
     window.addEventListener('load', function () {
         GetData();
     })

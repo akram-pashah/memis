@@ -670,8 +670,37 @@ namespace MEMIS.Controllers.Risk
     {
       if (ModelState.IsValid)
       {
-        // Add the treatment plan to the database with the correct RiskRefID
+
+        //if (quarterlyRiskAction.Incidents != null)
+        //{
+        //  foreach (var incident in quarterlyRiskAction.Incidents)
+        //  {
+        //    incident.QuarterlyRiskActionId = quarterlyRiskAction.Id;
+        //    _context.Incidents.Add(incident); // Add each incident to the context
+        //  }
+        //  _context.SaveChanges();
+        //}
+        QuarterlyRiskAction qr = new QuarterlyRiskAction
+        {
+          Quarter = quarterlyRiskAction.Quarter,
+          TreatmentPlanId = quarterlyRiskAction.TreatmentPlanId,
+          RiskDescription = quarterlyRiskAction.RiskDescription,
+          RiskTreatmentPlan = quarterlyRiskAction.RiskTreatmentPlan,
+          ImplementationStatus = quarterlyRiskAction.ImplementationStatus,
+          NoOfIncedents = quarterlyRiskAction.Incidents.Sum(x => x.NoOfIncedents),
+          ImpStatusId = quarterlyRiskAction.ImpStatusId,
+          IncidentValue = quarterlyRiskAction.IncidentValue,
+          //Incidents = quarterlyRiskAction.Incidents,
+        };
+        //_context.Update(qr);
         _context.QuarterlyRiskActions.Add(quarterlyRiskAction);
+        _context.SaveChanges();
+
+        foreach (var incident in quarterlyRiskAction.Incidents)
+        {
+          incident.QuarterlyRiskActionId = qr.Id;
+          _context.Incidents.Add(incident);
+        }
         _context.SaveChanges();
 
         if (quarterlyRiskAction.Quarter == 1)
@@ -680,7 +709,6 @@ namespace MEMIS.Controllers.Risk
           Data.Risk.RiskRegister riskRegister = _context.RiskRegister.First(x => x.RiskRefID == riskId);
           riskRegister.RiskConsequenceId = await GetRiskConsequence(riskRegister.RiskRefID);
           riskRegister.RiskLikelihoodId = await GetRiskLikelihood(riskRegister.RiskRefID);
-
           _context.RiskRegister.Update(riskRegister);
           _context.SaveChanges();
           //riskRegister.RiskConsequenceId = await GetRiskConsequence(riskRegister.RiskRefID);

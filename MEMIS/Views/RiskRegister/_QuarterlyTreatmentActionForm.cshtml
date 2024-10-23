@@ -11,88 +11,148 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <input type="hidden" id="TreatmentPlanId" asp-for="TreatmentPlanId" name="TreatmentPlanId" value="@ViewBag.TreatmentPlanId" />
-                    <div class="row">
-                        <div class="col mb-3">
-                            <label class="form-label" for="RiskTreatmentPlan.TreatmentAction">Treatment Action</label>
-                            <input type="text" class="form-control" id="treatmentAction" asp-for="RiskTreatmentPlan.TreatmentAction" name="RiskTreatmentPlan.TreatmentAction" placeholder="Treatment Action" disabled>
-                            @* <div class="valid-feedback"> Looks good! </div>
-                            <div class="invalid-feedback"> This field is required. </div> *@
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col mb-3">
-                            <label class="form-label" for="RiskTreatmentPlan.IndicatorDescription">Indicator Description</label>
-                            <input type="text" class="form-control" id="indicatorDescription" asp-for="RiskTreatmentPlan.IndicatorDescription" name="RiskTreatmentPlan.IndicatorDescription" placeholder="Indicator Description" disabled>
-                            @* <div class="valid-feedback"> Looks good! </div>
-                            <div class="invalid-feedback"> This field is required. </div> *@
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col mb-3">
-                            <label class="form-label" for="RiskTreatmentPlan.CumulativeTarget">RiskDescription</label>
-                            <input type="number" class="form-control" id="baseline" asp-for="RiskTreatmentPlan.CumulativeTarget" name="RiskTreatmentPlan.CumulativeTarget" placeholder="RiskDescription" disabled>
-                            @* <div class="valid-feedback"> Looks good! </div>
-                            <div class="invalid-feedback"> This field is required. </div> *@
-                        </div>
-                    </div>
-                    @* <div class="row">
+                  <input type="hidden" id="TreatmentPlanId" asp-for="TreatmentPlanId" name="TreatmentPlanId" value="@ViewBag.TreatmentPlanId" />
+                  <div class="row">
                     <div class="col mb-3">
-                    <label class="form-label" for="cumulativeTarget">Cumulative Target</label>
-                    <input type="number" class="form-control" id="cumulativeTarget" name="CumulativeTarget" placeholder="Cumulative Target" required="">
-                    <div class="valid-feedback"> Looks good! </div>
-                    <div class="invalid-feedback"> This field is required. </div>
+                      <label class="form-label" for="RiskTreatmentPlan.TreatmentAction">Treatment Action</label>
+                      <input type="text" class="form-control" id="treatmentAction" asp-for="RiskTreatmentPlan.TreatmentAction" name="RiskTreatmentPlan.TreatmentAction" placeholder="Treatment Action" disabled>
+                      @* <div class="valid-feedback"> Looks good! </div>
+        <div class="invalid-feedback"> This field is required. </div> *@
                     </div>
-                    </div> *@
-                    <div class="row">
-                        <div class="col mb-3">
-                            <label class="form-label" for="Quarter">Quarter</label>
-                            <select class="form-select" name="Quarter" id="Quarter" asp-for="Quarter" required>
-                                <option value="1">Quarter 1</option>
-                                <option value="2">Quarter 2</option>
-                                <option value="3">Quarter 3</option>
-                                <option value="4">Quarter 4</option>
-                            </select>
-                            <div class="valid-feedback"> Looks good! </div>
-                            <div class="invalid-feedback"> This field is required. </div>
+                  </div>
+                  <div class="row">
+                    <div class="col mb-3">
+                      <label class="form-label" for="RiskTreatmentPlan.IndicatorDescription">Indicator Description</label>
+                      <input type="text" class="form-control" id="indicatorDescription" asp-for="RiskTreatmentPlan.IndicatorDescription" name="RiskTreatmentPlan.IndicatorDescription" placeholder="Indicator Description" disabled>
+                      @* <div class="valid-feedback"> Looks good! </div>
+        <div class="invalid-feedback"> This field is required. </div> *@
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col mb-3">
+                      <label class="form-label" for="RiskTreatmentPlan.CumulativeTarget">RiskDescription</label>
+                      <input type="number" class="form-control" id="baseline" asp-for="RiskTreatmentPlan.CumulativeTarget" name="RiskTreatmentPlan.CumulativeTarget" placeholder="RiskDescription" disabled>
+                      @* <div class="valid-feedback"> Looks good! </div>
+        <div class="invalid-feedback"> This field is required. </div> *@
+                    </div>
+                  </div>
+                  @* <div class="row">
+    <div class="col mb-3">
+    <label class="form-label" for="cumulativeTarget">Cumulative Target</label>
+    <input type="number" class="form-control" id="cumulativeTarget" name="CumulativeTarget" placeholder="Cumulative Target" required="">
+    <div class="valid-feedback"> Looks good! </div>
+    <div class="invalid-feedback"> This field is required. </div>
+    </div>
+    </div> *@
+                  <div class="row">
+                    <div class="col mb-3">
+                      <label class="form-label" for="Quarter">Quarter</label>
+                      <select class="form-select" name="Quarter" id="Quarter" asp-for="Quarter" required>
+                        <option value="1">Quarter 1</option>
+                        <option value="2">Quarter 2</option>
+                        <option value="3">Quarter 3</option>
+                        <option value="4">Quarter 4</option>
+                      </select>
+                      <div class="valid-feedback"> Looks good! </div>
+                      <div class="invalid-feedback"> This field is required. </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col mb-3">
+                      <label class="form-label" for="ImpStatusId">Implementation Status</label>
+                      <select class="form-select" name="ImpStatusId" id="ImpStatusId" asp-for="ImpStatusId" required>
+                        <option value="1">Not Implemented</option>
+                        <option value="2">Partially Implemented</option>
+                        <option value="3">Fully Implemented</option>
+                      </select>
+                      <div class="valid-feedback"> Looks good! </div>
+                      <div class="invalid-feedback"> This field is required. </div>
+                    </div>
+                  </div>
+                  @*<div class="row">
+                    <div class="col mb-3">
+                      <label class="form-label" for="">No. Of Incidents</label>
+                      <input type="number" class="form-control" id="NoOfIncedents" asp-for="NoOfIncedents" name="NoOfIncedents" placeholder="No. Of Incidents" required="">
+                      <div class="valid-feedback"> Looks good! </div>
+                      <div class="invalid-feedback"> This field is required. </div>
+                    </div>
+                  </div>*@
+                  <div class="form-group">
+                    <label asp-for="Incidents" class="control-label">No. Of Incidents</label>
+                    <div class="accordion" id="accordionid" >
+                      <div class="card accordion-item">
+                        <h2 class="accordion-header" id="headingOne">
+                          <div class="input-group">
+                            <input type="number" class="form-control" id="NoOfIncedents" aria-label="Text input with segmented dropdown button">
+                            <input type="text" class="form-control" id="newIncidentDescription" aria-label="Text input with segmented dropdown button">
+                            <input type="number" class="form-control" id="newIncidentFinancialLoss" aria-label="Text input with segmented dropdown button">
+                            <input type="date" class="form-control" id="newIncidentDateOccured" aria-label="Text input with segmented dropdown button">
+                            <button type="button" class="btn btn-outline-primary" onclick="addIncident()">
+                              <i class="bx bx-plus-circle"></i>
+                            </button>
+                            <button type="button" class="btn btn-outline-primary" data-bs-toggle="collapse" data-bs-target="#accordionOne" aria-expanded="true" aria-controls="accordionOne">
+                              <i class="bx bx-collapse-alt"></i>
+                            </button>
+                          </div>
+                        </h2>
+                        <span id="incidentValidation" class="text-danger"></span>
+                        <div id="accordionOne" class="accordion-collapse collapse" data-bs-parent="#accordionid">
+                          <div class="accordion-body" id="collapsedocument">
+                            <table class="table table-striped table-bordered" id="incidentsTable">
+                              <thead class="thead-dark">
+                                <tr>
+                                  <th>Id</th>
+                                  <th>No Of Incedents</th>
+                                  <th>Description</th>
+                                  <th>Financial Loss</th>
+                                  <th>Date Occured</th>
+                                  <th>Action</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                @for (int i = 0; i < Model.Incidents?.Count; i++)
+                                {
+                                  <tr>
+                                    <td>
+                                      @(i + 1)
+                                    </td>
+                                    <td>
+                                      <input type="hidden" asp-for="Incidents[i].IncidentId" />
+                                      <input type="hidden" asp-for="Incidents[i].QuarterlyRiskActionId" />
+                                      <input asp-for="Incidents[i].NoOfIncedents" class="form-control" />
+                                      <input asp-for="Incidents[i].Description" class="form-control" />
+                                      <input asp-for="Incidents[i].FinancialLoss" class="form-control" />
+                                      <input asp-for="Incidents[i].DateOccured" class="form-control" />
+                                    </td>
+                                    <td>
+                                      <a class="btn btn-danger delete-btn" onclick="removeIncident(this)" data-toggle="tooltip" data-placement="top" title="Delete"><i class="bx bx-message-square-x"></i></a>
+                                    </td>
+                                  </tr>
+                                }
+                              </tbody>
+                            </table>
+                          </div>
                         </div>
+                      </div>
                     </div>
-                    <div class="row">
-                        <div class="col mb-3">
-                            <label class="form-label" for="ImpStatusId">Implementation Status</label>
-                            <select class="form-select" name="ImpStatusId" id="ImpStatusId" asp-for="ImpStatusId" required>
-                                <option value="1">Not Implemented</option>
-                                <option value="2">Partially Implemented</option>
-                                <option value="3">Fully Implemented</option>
-                            </select>
-                            <div class="valid-feedback"> Looks good! </div>
-                            <div class="invalid-feedback"> This field is required. </div>
-                        </div>
+                  </div>
+                  <br/>
+                  <div class="row">
+                    <div class="col mb-3">
+                      <label class="form-label" for="RiskDescription">Risk Description</label>
+                      <textarea class="form-control" id="cumulativeTarget" asp-for="RiskDescription" name="RiskDescription" placeholder="Risk Description" required></textarea>
+                      <div class="valid-feedback"> Looks good! </div>
+                      <div class="invalid-feedback"> This field is required. </div>
                     </div>
-                    <div class="row">
-                        <div class="col mb-3">
-                            <label class="form-label" for="">No. Of Incidents</label>
-                            <input type="number" class="form-control" id="NoOfIncedents" asp-for="NoOfIncedents" name="NoOfIncedents" placeholder="No. Of Incidents" required="">
-                            <div class="valid-feedback"> Looks good! </div>
-                            <div class="invalid-feedback"> This field is required. </div>
-                        </div>
+                  </div>
+                  <div class="row">
+                    <div class="col mb-3">
+                      <label class="form-label" for="">Incident value(Financial Loss)</label>
+                      <input type="number" class="form-control" id="IncidentValue" asp-for="IncidentValue" name="IncidentValue" placeholder="Incident value(Financial Loss)" required="">
+                      <div class="valid-feedback"> Looks good! </div>
+                      <div class="invalid-feedback"> This field is required. </div>
                     </div>
-                    <div class="row">
-                        <div class="col mb-3">
-                            <label class="form-label" for="RiskDescription">Risk Description</label>
-                            <textarea class="form-control" id="cumulativeTarget" asp-for="RiskDescription" name="RiskDescription" placeholder="Risk Description" required></textarea>
-                            <div class="valid-feedback"> Looks good! </div>
-                            <div class="invalid-feedback"> This field is required. </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col mb-3">
-                            <label class="form-label" for="">Incident value(Financial Loss)</label>
-                            <input type="number" class="form-control" id="IncidentValue" asp-for="IncidentValue" name="IncidentValue" placeholder="Incident value(Financial Loss)" required="">
-                            <div class="valid-feedback"> Looks good! </div>
-                            <div class="invalid-feedback"> This field is required. </div>
-                        </div>
-                    </div>
+                  </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
@@ -102,3 +162,66 @@
         </div>
     </div>
 </div>
+<script>
+  function addIncident() {
+    var NoOfIncedents = $('#NoOfIncedents').val();
+    var description = $('#newIncidentDescription').val();
+    var financialloss = $('#newIncidentFinancialLoss').val();
+    var dateOccurred = $('#newIncidentDateOccured').val();
+    if (description.trim() === "") {
+      $('#incidentValidation').text("Incident cannot be empty.");
+      return;
+    } else {
+      $('#incidentValidation').text("");
+    }
+    var $tableBody = $('#incidentsTable tbody');
+    var index;
+
+    if ($tableBody.find('tr:first').text().trim() === "No data available in table") {
+      $tableBody.find('tr:first').remove();
+      index = 0;
+    } else {
+      index = $tableBody.find('tr').length;
+    }
+    var row = `
+                                 <tr>
+                                     <td>${index + 1}</td>
+                                     <td>
+                                         <input type="number" name="Incidents[${index}].NoOfIncedents" class="form-control" value="${NoOfIncedents}" />
+                                     </td>
+                                     <td>
+                                         <input name="Incidents[${index}].Description" class="form-control" value="${description}" />
+                                     </td>
+                                      <td>
+     <input type="number" name="Incidents[${index}].FinancialLoss" class="form-control" value="${financialloss}" />
+ </td>
+                                      <td>
+     <input type="date" name="Incidents[${index}].DateOccured" class="form-control" value="${dateOccurred}" />
+ </td>
+                                     <td>
+                                         <a class="btn btn-danger delete-btn" onclick="removeIncident(this)" data-toggle="tooltip" data-placement="top" title="Delete">
+                                             <i class="bx bx-message-square-x"></i>
+                                         </a>
+                                     </td>
+                                 </tr>`;
+    $('#incidentsTable tbody').append(row);
+    $('#NoOfIncedents').val(''); 
+    $('#newIncidentDescription').val(''); 
+    $('#newIncidentFinancialLoss').val(''); 
+    $('#newIncidentDateOccured').val(''); 
+    $('#accordionOne').addClass('show')
+  }
+
+  function removeIncident(button) {
+    $(button).closest('tr').remove();
+    $('#incidentsTable tbody tr').each(function (index, tr) {
+      $(tr).find('input[name^="Incidents["]').each(function () {
+        var name = $(this).attr('name');
+        var newName = name.replace(/Incidents\[\d+\]/, `Incidents[${index}]`);
+        $(this).attr('name', newName);
+      });
+      $(tr).find('td:first').text(index + 1);
+    });
+  }
+
+</script>

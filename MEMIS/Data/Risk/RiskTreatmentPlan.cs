@@ -24,6 +24,8 @@ namespace MEMIS.Data.Risk
 
     [Required]
     public string FrequencyOfReporting { get; set; }  // Monthly, Quarterly, Annually
+    public string FrequencyOfOccurrence { get; set; }
+    public int SampleSize { get; set; }
     public string? DataCollectionInstrumentMethods { get; set; }
     public string? MeansOfVerification { get; set; }
     public string? ResponsiblePersons { get; set; }

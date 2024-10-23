@@ -77,6 +77,7 @@ namespace MEMIS.Data
     public DbSet<MEMIS.Data.Activity>? Activity { get; set; }
     public DbSet<RiskDetail> RiskDetails { get; set; }
     public DbSet<Event> Events { get; set; }
+    public DbSet<Incident> Incidents { get; set; }
     public DbSet<RiskSource> RiskSources { get; set; }
     public DbSet<RiskCause> RiskCauses { get; set; }
     public DbSet<RiskConsequenceDetails> RiskConsequenceDetails { get; set; }
@@ -115,6 +116,10 @@ namespace MEMIS.Data
                 .HasMany(r => r.Events)
                 .WithOne(e => e.RiskIdentification)
                 .HasForeignKey(e => e.RiskId);
+      modelBuilder.Entity<QuarterlyRiskAction>()
+               .HasMany(r => r.Incidents)
+               .WithOne(e => e.QuarterlyRiskAction)
+               .HasForeignKey(e => e.QuarterlyRiskActionId);
 
       modelBuilder.Entity<RiskIdentification>()
           .HasMany(r => r.RiskSources)

@@ -12,6 +12,8 @@
                 <th>Baseline</th>
                 <th>Cumulative Target</th>
                 <th>Frequency of Reporting</th>
+                <th>Frequency of Occurrence</th>
+                <th>Minimum Sample Size</th>
                 <th>Date Collection Instrument & Methods</th>
                 <th>Means Of Verification</th>
                 <th>Responsible Person(s)</th>
@@ -22,25 +24,27 @@
             @foreach (var plan in Model)
             {
                 <tr>
-                    <td>@plan.TreatmentAction</td>
-                    <td>@plan.IndicatorDescription</td>
-                    <td>@plan.Baseline</td>
-                    <td>@plan.CumulativeTarget</td>
-                    <td>@plan.FrequencyOfReporting</td>
-                    <td>@plan.DataCollectionInstrumentMethods</td>
-                    <td>@plan.MeansOfVerification</td>
-                    <td>@plan.ResponsiblePersons</td>
-                    <td>
-                        @* <a asp-action="RiskTreatmentPlanDetails" asp-controller="RiskRegister" asp-route-id="@plan.TreatmentPlanId" class="btn btn-primary btn-sm remove-treatment" data-id="@plan.TreatmentPlanId"><i class="menu-icon tf-icons bx bx-detail"></i></a> *@
-                        @if (plan.RiskRegister?.ApprStatus >= 7)
-                        {
-                            <a asp-action="RiskTreatmentPlanEdit" asp-controller="RiskRegister" asp-route-id="@plan.TreatmentPlanId" class="btn btn-info btn-sm remove-treatment" data-id="@plan.TreatmentPlanId"><i class='bx bx-log-in-circle'></i></a>
-                        }
-                        else
-                        {
-                            <a asp-action="RemoveTreatmentPlan" asp-controller="RiskRegister" asp-route-id="@plan.TreatmentPlanId" class="btn btn-danger btn-sm remove-treatment" data-id="@plan.TreatmentPlanId"><i class="menu-icon tf-icons bx bx-trash"></i></a>
-                        }
-                    </td>
+                  <td>@plan.TreatmentAction</td>
+                  <td>@plan.IndicatorDescription</td>
+                  <td>@plan.Baseline</td>
+                  <td>@plan.CumulativeTarget</td>
+                  <td>@plan.FrequencyOfReporting</td>
+                  <td>@plan.FrequencyOfOccurrence</td>
+                  <td>@plan.SampleSize</td>
+                  <td>@plan.DataCollectionInstrumentMethods</td>
+                  <td>@plan.MeansOfVerification</td>
+                  <td>@plan.ResponsiblePersons</td>
+                  <td>
+                    @* <a asp-action="RiskTreatmentPlanDetails" asp-controller="RiskRegister" asp-route-id="@plan.TreatmentPlanId" class="btn btn-primary btn-sm remove-treatment" data-id="@plan.TreatmentPlanId"><i class="menu-icon tf-icons bx bx-detail"></i></a> *@
+                    @if (plan.RiskRegister?.ApprStatus >= 7)
+                    {
+                      <a asp-action="RiskTreatmentPlanEdit" asp-controller="RiskRegister" asp-route-id="@plan.TreatmentPlanId" class="btn btn-info btn-sm remove-treatment" data-id="@plan.TreatmentPlanId"><i class='bx bx-log-in-circle'></i></a>
+                    }
+                    else
+                    {
+                      <a asp-action="RemoveTreatmentPlan" asp-controller="RiskRegister" asp-route-id="@plan.TreatmentPlanId" class="btn btn-danger btn-sm remove-treatment" data-id="@plan.TreatmentPlanId"><i class="menu-icon tf-icons bx bx-trash"></i></a>
+                    }
+                  </td>
                 </tr>
             }
         </tbody>

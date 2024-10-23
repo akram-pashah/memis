@@ -11,75 +11,98 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <input type="hidden" id="RiskRefID" name="RiskRefID" value="@ViewBag.RiskRefID" />
-                    <div class="row">
-                        <div class="col mb-3">
-                            <label class="form-label" for="treatmentAction">Treatment Action</label>
-                            <input type="text" class="form-control" id="treatmentAction" name="TreatmentAction" placeholder="Treatment Action" required="">
-                            <div class="valid-feedback"> Looks good! </div>
-                            <div class="invalid-feedback"> This field is required. </div>
-                        </div>
+                  <input type="hidden" id="RiskRefID" name="RiskRefID" value="@ViewBag.RiskRefID" />
+                  <div class="row">
+                    <div class="col mb-3">
+                      <label class="form-label" for="treatmentAction">Treatment Action</label>
+                      <input type="text" class="form-control" id="treatmentAction" name="TreatmentAction" placeholder="Treatment Action" required="">
+                      <div class="valid-feedback"> Looks good! </div>
+                      <div class="invalid-feedback"> This field is required. </div>
                     </div>
-                    <div class="row">
-                        <div class="col mb-3">
-                            <label class="form-label" for="indicatorDescription">Indicator Description</label>
-                            <input type="text" class="form-control" id="indicatorDescription" name="IndicatorDescription" placeholder="Description" required="">
-                            <div class="valid-feedback"> Looks good! </div>
-                            <div class="invalid-feedback"> This field is required. </div>
-                        </div>
+                  </div>
+                  <div class="row">
+                    <div class="col mb-3">
+                      <label class="form-label" for="indicatorDescription">Indicator Description</label>
+                      <input type="text" class="form-control" id="indicatorDescription" name="IndicatorDescription" placeholder="Description" required="">
+                      <div class="valid-feedback"> Looks good! </div>
+                      <div class="invalid-feedback"> This field is required. </div>
                     </div>
-                    <div class="row">
-                        <div class="col mb-3">
-                            <label class="form-label" for="baseline">Baseline</label>
-                            <input type="number" class="form-control" id="baseline" name="Baseline" placeholder="Baseline" required="">
-                            <div class="valid-feedback"> Looks good! </div>
-                            <div class="invalid-feedback"> This field is required. </div>
-                        </div>
+                  </div>
+                  <div class="row">
+                    <div class="col mb-3">
+                      <label class="form-label" for="baseline">Baseline</label>
+                      <input type="number" class="form-control" id="baseline" name="Baseline" placeholder="Baseline" required="">
+                      <div class="valid-feedback"> Looks good! </div>
+                      <div class="invalid-feedback"> This field is required. </div>
                     </div>
-                    <div class="row">
-                        <div class="col mb-3">
-                            <label class="form-label" for="cumulativeTarget">Cumulative Target</label>
-                            <input type="number" class="form-control" id="cumulativeTarget" name="CumulativeTarget" placeholder="Cumulative Target" required="">
-                            <div class="valid-feedback"> Looks good! </div>
-                            <div class="invalid-feedback"> This field is required. </div>
-                        </div>
+                  </div>
+                  <div class="row">
+                    <div class="col mb-3">
+                      <label class="form-label" for="cumulativeTarget">Cumulative Target</label>
+                      <input type="number" class="form-control" id="cumulativeTarget" name="CumulativeTarget" placeholder="Cumulative Target" required="">
+                      <div class="valid-feedback"> Looks good! </div>
+                      <div class="invalid-feedback"> This field is required. </div>
                     </div>
-                    <div class="row">
-                        <div class="col mb-3">
-                            <label class="form-label" for="frequencyOfReporting">Frequency of Reporting</label>
-                            <select class="form-select" name="FrequencyOfReporting" id="frequencyOfReporting" require="">
-                                <option value="Monthly">Monthly</option>
-                                <option value="Quarterly" selected>Quarterly</option>
-                                <option value="Annually">Annually</option>
-                            </select>
-                            <div class="valid-feedback"> Looks good! </div>
-                            <div class="invalid-feedback"> This field is required. </div>
-                        </div>
+                  </div>
+                  <div class="row">
+                    <div class="col mb-3">
+                      <label class="form-label" for="frequencyOfReporting">Frequency of Reporting</label>
+                      <select class="form-select" name="FrequencyOfReporting" id="frequencyOfReporting" require="">
+                        <option value="Monthly">Monthly</option>
+                        <option value="Quarterly" selected>Quarterly</option>
+                        <option value="Annually">Annually</option>
+                      </select>
+                      <div class="valid-feedback"> Looks good! </div>
+                      <div class="invalid-feedback"> This field is required. </div>
                     </div>
-                    <div class="row">
-                        <div class="col mb-3">
-                            <label class="form-label" for="DataCollectionInstrumentMethods">Data Collection Instrument & Methods</label>
-                            <textarea type="text" class="form-control" id="DataCollectionInstrumentMethods" name="DataCollectionInstrumentMethods" placeholder="Data Collection Instrument & Methods" required></textarea>
-                            <div class="valid-feedback"> Looks good! </div>
-                            <div class="invalid-feedback"> This field is required. </div>
-                        </div>
+                  </div>
+                  <div class="row">
+                    <div class="col mb-3">
+                      <label class="form-label" for="frequencyofOccurrence ">Frequency of Occurrence</label>
+                      <select class="form-select" name="frequencyofOccurrence" id="frequencyofOccurrence" require="">
+                        <option value="Daily">Daily</option>
+                        <option value="OnceinaDay">Once in a Day</option>
+                        <option value="Weekly">Weekly</option>
+                        <option value="Monthly" selected>Monthly</option>
+                        <option value="Quarterly">Quarterly</option>
+                        <option value="Annually">Annually</option>
+                      </select>
+                      <div class="valid-feedback"> Looks good! </div>
+                      <div class="invalid-feedback"> This field is required. </div>
                     </div>
-                    <div class="row">
-                        <div class="col mb-3">
-                            <label class="form-label" for="MeansOfVerification">Means Of Verification</label>
-                            <input type="text" class="form-control" id="MeansOfVerification" name="MeansOfVerification" placeholder="Means Of Verification" required />
-                            <div class="valid-feedback"> Looks good! </div>
-                            <div class="invalid-feedback"> This field is required. </div>
-                        </div>
+                  </div>
+                  <div class="row">
+                    <div class="col mb-3">
+                      <label class="form-label" for="sampleSize">Minimum Sample Size</label>
+                      <input type="number" class="form-control" id="sampleSize" name="SampleSize" placeholder="Minimum Sample Size" required="">
+                      <div class="valid-feedback"> Looks good! </div>
+                      <div class="invalid-feedback"> This field is required. </div>
                     </div>
-                    <div class="row">
-                        <div class="col mb-3">
-                            <label class="form-label" for="ResponsiblePersons">Responsible Person(s)</label>
-                            <input type="text" class="form-control" id="ResponsiblePersons" name="ResponsiblePersons" placeholder="Responsible Person(s)" required />
-                            <div class="valid-feedback"> Looks good! </div>
-                            <div class="invalid-feedback"> This field is required. </div>
-                        </div>
+                  </div>
+                  <div class="row">
+                    <div class="col mb-3">
+                      <label class="form-label" for="DataCollectionInstrumentMethods">Data Collection Instrument & Methods</label>
+                      <textarea type="text" class="form-control" id="DataCollectionInstrumentMethods" name="DataCollectionInstrumentMethods" placeholder="Data Collection Instrument & Methods" required></textarea>
+                      <div class="valid-feedback"> Looks good! </div>
+                      <div class="invalid-feedback"> This field is required. </div>
                     </div>
+                  </div>
+                  <div class="row">
+                    <div class="col mb-3">
+                      <label class="form-label" for="MeansOfVerification">Means Of Verification</label>
+                      <input type="text" class="form-control" id="MeansOfVerification" name="MeansOfVerification" placeholder="Means Of Verification" required />
+                      <div class="valid-feedback"> Looks good! </div>
+                      <div class="invalid-feedback"> This field is required. </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col mb-3">
+                      <label class="form-label" for="ResponsiblePersons">Responsible Person(s)</label>
+                      <input type="text" class="form-control" id="ResponsiblePersons" name="ResponsiblePersons" placeholder="Responsible Person(s)" required />
+                      <div class="valid-feedback"> Looks good! </div>
+                      <div class="invalid-feedback"> This field is required. </div>
+                    </div>
+                  </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
