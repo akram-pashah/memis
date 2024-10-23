@@ -214,9 +214,9 @@ namespace MEMIS.Helpers.ExcelReports
       worksheet.Range(1, 9, 2, 9).Merge();
 
       worksheet.Columns().AdjustToContents();
-      AdjustColumnWidths(worksheet, 25, 65); 
+      AdjustColumnWidths(worksheet, 25, 65);
 
-      int row = 3; 
+      int row = 3;
       foreach (var intervention in reportData)
       {
         worksheet.Cell(row, 1).Value = intervention.StrategicIntervention ?? "No Intervention";
@@ -1548,6 +1548,78 @@ namespace MEMIS.Helpers.ExcelReports
       {
 
         throw;
+      }
+    }
+
+    public static MemoryStream IncidentReport(List<QuarterlyRiskAction> plans)
+    {
+      try
+      {
+        var workbook = new XLWorkbook();
+        IXLWorksheet worksheet = workbook.Worksheets.Add("Risk Monitoring Report");
+
+        // Setting the header row
+        worksheet.Cell(1, 1).Value = "Risk Title";
+        worksheet.Cell(1, 2).Value = "Action";
+        worksheet.Cell(1, 3).Value = "Incident";
+        worksheet.Cell(1, 4).Value = "Date Occurred";
+        worksheet.Cell(1, 5).Value = "Financial Loss";
+
+        // Style the headers
+        var headerRange = worksheet.Range("A1:E1");
+        headerRange.Style.Fill.BackgroundColor = XLColor.FromHtml("#063241");
+        headerRange.Style.Font.Bold = true;
+        headerRange.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+        headerRange.Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
+
+        // Initialize row counter
+        int row = 2;
+
+        foreach (var plan in plans)
+        {
+          bool isFirstRowForRisk = true;
+          foreach (var incident in plan.Incidents)
+          {
+            // Merge cells for "Risk Title" and "Action" in the first row of each risk group
+            if (isFirstRowForRisk)
+            {
+              worksheet.Cell(row, 1).Value = plan.RiskDescription;
+              worksheet.Cell(row, 2).Value = plan.RiskTreatmentPlan?.TreatmentAction;
+              worksheet.Range(row, 1, row + plan.Incidents.Count - 1, 1).Merge();  // Merge "Risk Title"
+              worksheet.Range(row, 2, row + plan.Incidents.Count - 1, 2).Merge();  // Merge "Action"
+              isFirstRowForRisk = false;
+            }
+
+            // Add incident-specific data
+            worksheet.Cell(row, 3).Value = incident.Description;
+            worksheet.Cell(row, 4).Value = incident.DateOccured.Value.ToString("dd/MMM/yyyy");
+            worksheet.Cell(row, 5).Value = incident.FinancialLoss;
+
+            row++;
+          }
+        }
+
+        // Auto-fit columns to content
+        worksheet.Columns().AdjustToContents();
+        AdjustColumnWidths(worksheet, 25, 65);
+
+        // Apply borders and table formatting
+        var tableRange = worksheet.Range(1, 1, row - 1, 5);
+        var table = tableRange.CreateTable();
+        tableRange.Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
+        tableRange.Style.Border.InsideBorder = XLBorderStyleValues.Thin;
+        table.ShowAutoFilter = true;
+        table.AutoFilter.IsEnabled = true;
+
+        // Save the workbook to a memory stream
+        var stream = new MemoryStream();
+        workbook.SaveAs(stream);
+        stream.Position = 0;
+        return stream;
+      }
+      catch (Exception ex)
+      {
+        throw new Exception("An error occurred while generating the Excel report", ex);
       }
     }
 

@@ -3,7 +3,6 @@ using MEMIS.Helpers.ExcelReports;
 using MEMIS.Helpers.PdfReports;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.IO;
 
 namespace MEMIS.Controllers.Reports
 {
@@ -41,7 +40,7 @@ namespace MEMIS.Controllers.Reports
       {
         var list = await _context.RiskTreatmentPlans.Include(x => x.QuarterlyRiskActions).ToListAsync();
         var stream = PdfHandler.QuarterlyReportToPdf(list);
-          return File(stream, "application/pdf", "Quarterly Report.pdf");
+        return File(stream, "application/pdf", "Quarterly Report.pdf");
       }
       catch (Exception ex)
       {
@@ -84,7 +83,7 @@ namespace MEMIS.Controllers.Reports
       {
         var list = await _context.RiskRegister.ToListAsync();
         var stream = PdfHandler.AnnualReportPdf(list);
-          return File(stream, "application/pdf", "Annual Report.pdf");
+        return File(stream, "application/pdf", "Annual Report.pdf");
       }
       catch (Exception ex)
       {
@@ -217,6 +216,48 @@ namespace MEMIS.Controllers.Reports
           .Include(x => x.QuarterlyRiskActions).ToListAsync();
         var stream = PdfHandler.RiskMonitoringReportPdf(list);
         return File(stream, "application/pdf", "Risk Monitoring Plan.pdf");
+      }
+      catch (Exception ex)
+      {
+        throw;
+      }
+    }
+
+    public async Task<IActionResult> IncidentReport()
+    {
+      try
+      {
+        var list = await _context.QuarterlyRiskActions.Include(x => x.Incidents).Include(x => x.RiskTreatmentPlan).ToListAsync();
+        return View(list);
+      }
+      catch (Exception)
+      {
+
+        throw;
+      }
+    }
+
+    public async Task<IActionResult> IncidentReportExcel()
+    {
+      try
+      {
+        var list = await _context.QuarterlyRiskActions.Include(x => x.Incidents).Include(x => x.RiskTreatmentPlan).ToListAsync();
+        var stream = ExportHandler.IncidentReport(list);
+        return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Incident Report.xlsx");
+      }
+      catch (Exception ex)
+      {
+
+        throw;
+      }
+    }
+    public async Task<IActionResult> IncidentReportPdf()
+    {
+      try
+      {
+        var list = await _context.QuarterlyRiskActions.Include(x => x.Incidents).Include(x => x.RiskTreatmentPlan).ToListAsync();
+        var stream = PdfHandler.IncidentReportPdf(list);
+        return File(stream, "application/pdf", "Incident Report.pdf");
       }
       catch (Exception ex)
       {

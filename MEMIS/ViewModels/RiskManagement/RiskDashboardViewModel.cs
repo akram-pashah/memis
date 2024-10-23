@@ -10,6 +10,8 @@ namespace MEMIS.ViewModels.RiskManagement
     public int TotalActionsNotImplemented { get; set; }
     public int TotalRisksReduced { get; set; }
     public int TotalRisksIncreased { get; set; }
+    public int TotalIncidents { get; set; }
+    public List<double> QuarterlyIncidents { get; set; } = [];
     public List<double> ImplementedCounts { get; set; } = [];
     public List<double> CorporateImplementedCounts { get; set; } = [];
     public List<double> CategoryRisks { get; set; } = [];

@@ -174,6 +174,12 @@ namespace MEMIS.Controllers.Risk
       var currentRisks = _context.RiskRegister.Where(x => x.IdentifiedDate.Year == DateTime.Now.Year).Count();
       var previousYearRisks = _context.RiskRegister.Where(x => x.IdentifiedDate.Year == (DateTime.Now.Year - 1)).Count();
 
+      List<double> quarterlyIncidents = new List<double>();
+      quarterlyIncidents.Add(_context.Incidents.Include(x => x.QuarterlyRiskAction).Where(x => x.QuarterlyRiskAction.Quarter == 1).Count());
+      quarterlyIncidents.Add(_context.Incidents.Include(x => x.QuarterlyRiskAction).Where(x => x.QuarterlyRiskAction.Quarter == 2).Count());
+      quarterlyIncidents.Add(_context.Incidents.Include(x => x.QuarterlyRiskAction).Where(x => x.QuarterlyRiskAction.Quarter == 3).Count());
+      quarterlyIncidents.Add(_context.Incidents.Include(x => x.QuarterlyRiskAction).Where(x => x.QuarterlyRiskAction.Quarter == 4).Count());
+
       RiskDashboardViewModel data = new()
       {
         TotalRiskInRiskRegister = _context.RiskRegister.Count(),
@@ -192,6 +198,8 @@ namespace MEMIS.Controllers.Risk
 
         FocusAreas = chartFocusAreas.Select(x => x.Name).ToList(),
         RisksFocusAreaTrend = focusAreaWiseRisks,
+        TotalIncidents = _context.Incidents.Count(),
+        QuarterlyIncidents = quarterlyIncidents
       };
 
       return View(data);
@@ -693,7 +701,7 @@ namespace MEMIS.Controllers.Risk
           //Incidents = quarterlyRiskAction.Incidents,
         };
         //_context.Update(qr);
-        _context.QuarterlyRiskActions.Add(quarterlyRiskAction);
+        _context.QuarterlyRiskActions.Add(qr);
         _context.SaveChanges();
 
         foreach (var incident in quarterlyRiskAction.Incidents)

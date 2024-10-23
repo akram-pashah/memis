@@ -73,6 +73,7 @@
             // focusAreaTrendLine();
             focusAreaTrendAnalysis();
             currentYearSummaryPieChart();
+            incidentsTrendChart();
         })();
 
         var chart = null;
@@ -254,8 +255,8 @@
         }
         };
 
-            chart = new ApexCharts(document.querySelector("#implementationStatusCorporateChart"), options);
-            chart.render();
+           var chart43 = new ApexCharts(document.querySelector("#implementationStatusCorporateChart"), options);
+            chart43.render();
         }
 
         // Function to handle chart data update on financial year change
@@ -506,6 +507,97 @@
         var chart = new ApexCharts(document.querySelector("#focusAreaTrendAnalysis"), options);
         chart.render();
         }
+
+                function incidentsTrendChart() {
+            if (chart) {
+                chart.destroy();
+                chart = null;
+            }
+
+            var options = {
+          series: [{
+          name: 'Actions',
+          data: @Html.Raw(JsonSerializer.Serialize(Model.QuarterlyIncidents)),
+        }],
+          chart: {
+          height: 350,
+          type: 'bar',
+        },
+        plotOptions: {
+          bar: {
+            borderRadius: 10,
+            dataLabels: {
+              position: 'top', // top, center, bottom
+            },
+          }
+        },
+        dataLabels: {
+          enabled: true,
+          formatter: function (val) {
+            return val;
+          },
+          offsetY: -20,
+          style: {
+            fontSize: '12px',
+            colors: ["#304758"]
+          }
+        },
+        
+        xaxis: {
+          categories: ["Quarter 1", "Quarter 2", "Quarter 3", "Quarter 4"],
+          position: 'top',
+          axisBorder: {
+            show: false
+          },
+          axisTicks: {
+            show: false
+          },
+          crosshairs: {
+            fill: {
+              type: 'gradient',
+              gradient: {
+                colorFrom: '#D8E3F0',
+                colorTo: '#BED1E6',
+                stops: [0, 100],
+                opacityFrom: 0.4,
+                opacityTo: 0.5,
+              }
+            }
+          },
+          tooltip: {
+            enabled: true,
+          }
+        },
+        yaxis: {
+          axisBorder: {
+            show: false
+          },
+          axisTicks: {
+            show: false,
+          },
+          labels: {
+            show: false,
+            formatter: function (val) {
+              return val + "%";
+            }
+          }
+        
+        },
+        title: {
+          text: 'Quarterly Incident Trend Chart',
+          floating: true,
+          offsetY: 330,
+          align: 'center',
+          style: {
+            color: '#444'
+          }
+        }
+        };
+
+           var chart56 = new ApexCharts(document.querySelector("#incidentsTrendChart"), options);
+            chart56.render();
+        }
+
 
     </script>
 
@@ -832,6 +924,43 @@
                 </div>
             </div>
         </div>
+    </div>
+    <!--/ Expense Overview -->
+        <!-- Expense Overview -->
+    <div class="col-md-10 col-lg-10 order-1 mb-4">
+        <div class="card h-100">
+            <div class="card-header">
+                Quarterly Incidents Trend Chart
+            </div>
+            <div class="card-body px-0">
+                <div class="tab-content p-0">
+                    <div class="tab-pane fade show active" id="navs-tabs-line-card-income" role="tabpanel">
+                        <div id="incidentsTrendChart"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-2 col-lg-2 order-1 mb-4">
+        <div class="card">
+                    <div class="card-body">
+                        <div class="card-title d-flex align-items-start justify-content-between">
+                            <div class="avatar flex-shrink-0">
+                                <img src="~/img/icons/unicons/wallet-info.png" alt="Credit Card" class="rounded">
+                            </div>
+                            <div class="dropdown">
+                                <button class="btn p-0" type="button" id="cardOpt6" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <i class="bx bx-dots-vertical-rounded"></i>
+                                </button>
+                                <div class="dropdown-menu dropdown-menu-end" aria-labelledby="cardOpt6">
+                                    <a class="dropdown-item" href="javascript:void(0);">View More</a>
+                                </div>
+                            </div>
+                        </div>
+                        <span>No. of Incidents</span>
+                        <h3 class="card-title text-nowrap mb-1">@Model.TotalIncidents</h3>
+                    </div>
+                </div>
     </div>
     <!--/ Expense Overview -->
 

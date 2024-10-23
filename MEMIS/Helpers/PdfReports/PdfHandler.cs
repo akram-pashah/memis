@@ -1,16 +1,14 @@
+using iText.IO.Font.Constants;
+using iText.Kernel.Colors;
+using iText.Kernel.Font;
 using iText.Kernel.Pdf;
 using iText.Layout;
 using iText.Layout.Element;
 using iText.Layout.Properties;
-using System.Collections.Generic;
-using System.IO;
 using MEMIS.Data;
 using MEMIS.Data.Project;
 using MEMIS.Data.Risk;
 using MEMIS.Models.Report;
-using iText.Kernel.Colors;
-using iText.IO.Font.Constants;
-using iText.Kernel.Font;
 
 
 namespace MEMIS.Helpers.PdfReports
@@ -652,6 +650,102 @@ namespace MEMIS.Helpers.PdfReports
       }
       return new MemoryStream(stream.ToArray());
     }
+
+    public static MemoryStream IncidentReportPdf(List<QuarterlyRiskAction> plans)
+    {
+      var stream = new MemoryStream();
+
+      // Setup PDF document
+      using (var pdfWriter = new PdfWriter(stream))
+      using (var pdfDocument = new PdfDocument(pdfWriter))
+      using (var document = new Document(pdfDocument))
+      {
+        // Define fonts for the PDF
+        PdfFont boldFont = PdfFontFactory.CreateFont(StandardFonts.HELVETICA_BOLD);
+        PdfFont regularFont = PdfFontFactory.CreateFont(StandardFonts.HELVETICA);
+
+        // Define table with columns for Risk monitoring report
+        Table table = new Table(5).UseAllAvailableWidth();
+
+        // Add headers to the table
+        string[] headers = {
+            "Risk Title", "Action", "Incidents", "Date of Occurrence", "Financial Loss"
+        };
+
+        foreach (var header in headers)
+        {
+          Cell headerCell = new Cell()
+              .Add(new Paragraph(header)
+              .SetFont(boldFont)
+              .SetFontSize(10)
+              .SetFontColor(ColorConstants.WHITE))
+              .SetBackgroundColor(new DeviceRgb(6, 50, 65))
+              .SetTextAlignment(TextAlignment.CENTER)
+              .SetVerticalAlignment(VerticalAlignment.MIDDLE)
+              .SetPadding(5);
+          table.AddHeaderCell(headerCell);
+        }
+
+        // Loop through each plan and its incidents to populate table rows
+        foreach (var plan in plans)
+        {
+          bool isFirstRowForRisk = true;
+
+          // Loop through incidents related to the current plan
+          foreach (var incident in plan.Incidents)
+          {
+            // Risk Title and Action (span multiple rows if necessary)
+            if (isFirstRowForRisk)
+            {
+              Cell riskCell = new Cell(plan.Incidents.Count, 1)
+                  .Add(new Paragraph(plan?.RiskDescription ?? "")
+                  .SetFont(regularFont)
+                  .SetFontSize(9))
+                  .SetPadding(5);
+              Cell actionCell = new Cell(plan.Incidents.Count, 1)
+                  .Add(new Paragraph(plan?.RiskTreatmentPlan?.TreatmentAction ?? "")
+                  .SetFont(regularFont)
+                  .SetFontSize(9))
+                  .SetPadding(5);
+
+              table.AddCell(riskCell);
+              table.AddCell(actionCell);
+
+              isFirstRowForRisk = false; // Mark the risk row as added
+            }
+
+            // Incident details for each incident in the plan
+            table.AddCell(new Cell()
+                .Add(new Paragraph(incident.Description ?? "")
+                .SetFont(regularFont)
+                .SetFontSize(9))
+                .SetPadding(5));
+
+            table.AddCell(new Cell()
+                .Add(new Paragraph(incident.DateOccured?.ToString("dd/MMM/yyyy") ?? "")
+                .SetFont(regularFont)
+                .SetFontSize(9))
+                .SetPadding(5));
+
+            table.AddCell(new Cell()
+                .Add(new Paragraph(incident.FinancialLoss?.ToString() ?? "0")
+                .SetFont(regularFont)
+                .SetFontSize(9))
+                .SetPadding(5));
+          }
+        }
+
+        // Add the populated table to the document
+        document.Add(table);
+
+        // Finalize the document
+        document.Close();
+      }
+
+      // Return the PDF content as a memory stream
+      return new MemoryStream(stream.ToArray());
+    }
+
 
     public static MemoryStream ProjectListReportPdf(List<ProjectInitiation> projects)
     {
@@ -1298,7 +1392,7 @@ namespace MEMIS.Helpers.PdfReports
 
         foreach (var intervention in reportData)
         {
-          Cell interventionCell = new Cell(1, 9) 
+          Cell interventionCell = new Cell(1, 9)
               .Add(new Paragraph(intervention.StrategicIntervention ?? "No Intervention")
               .SetFontSize(10)
               .SetPadding(5)

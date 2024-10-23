@@ -3,7 +3,7 @@
     For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 *@
 <div class="modal fade" id="riskTreatmentModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <form asp-action="AddQuarterlyTreatmentAction" class="needs-validation was-validated" novalidate="">
                 <div class="modal-header">
@@ -83,10 +83,10 @@
                       <div class="card accordion-item">
                         <h2 class="accordion-header" id="headingOne">
                           <div class="input-group">
-                            <input type="number" class="form-control" id="NoOfIncedents" aria-label="Text input with segmented dropdown button">
-                            <input type="text" class="form-control" id="newIncidentDescription" aria-label="Text input with segmented dropdown button">
-                            <input type="number" class="form-control" id="newIncidentFinancialLoss" aria-label="Text input with segmented dropdown button">
-                            <input type="date" class="form-control" id="newIncidentDateOccured" aria-label="Text input with segmented dropdown button">
+                            <input type="number" class="form-control" id="NoOfIncedents" placeholder="No Of Incidents" aria-label="Text input with segmented dropdown button">
+                            <input type="text" class="form-control" id="newIncidentDescription" placeholder="Description" aria-label="Text input with segmented dropdown button">
+                            <input type="number" class="form-control" id="newIncidentFinancialLoss" placeholder="Financial Loss" aria-label="Text input with segmented dropdown button">
+                            <input type="date" class="form-control" id="newIncidentDateOccured" placeholder="Date Occured" aria-label="Text input with segmented dropdown button">
                             <button type="button" class="btn btn-outline-primary" onclick="addIncident()">
                               <i class="bx bx-plus-circle"></i>
                             </button>
@@ -106,7 +106,7 @@
                                   <th>Description</th>
                                   <th>Financial Loss</th>
                                   <th>Date Occured</th>
-                                  <th>Action</th>
+                                  @* <th>Action</th> *@
                                 </tr>
                               </thead>
                               <tbody>
@@ -124,9 +124,9 @@
                                       <input asp-for="Incidents[i].FinancialLoss" class="form-control" />
                                       <input asp-for="Incidents[i].DateOccured" class="form-control" />
                                     </td>
-                                    <td>
+                                    @* <td>
                                       <a class="btn btn-danger delete-btn" onclick="removeIncident(this)" data-toggle="tooltip" data-placement="top" title="Delete"><i class="bx bx-message-square-x"></i></a>
-                                    </td>
+                                    </td> *@
                                   </tr>
                                 }
                               </tbody>
@@ -168,6 +168,9 @@
     var description = $('#newIncidentDescription').val();
     var financialloss = $('#newIncidentFinancialLoss').val();
     var dateOccurred = $('#newIncidentDateOccured').val();
+
+    var incValue =  $('#IncidentValue').val();
+      $('#IncidentValue').val(incValue + financialloss);
     if (description.trim() === "") {
       $('#incidentValidation').text("Incident cannot be empty.");
       return;
@@ -198,11 +201,11 @@
                                       <td>
      <input type="date" name="Incidents[${index}].DateOccured" class="form-control" value="${dateOccurred}" />
  </td>
-                                     <td>
-                                         <a class="btn btn-danger delete-btn" onclick="removeIncident(this)" data-toggle="tooltip" data-placement="top" title="Delete">
-                                             <i class="bx bx-message-square-x"></i>
-                                         </a>
-                                     </td>
+                                     // <td>
+                                     //     <a class="btn btn-danger delete-btn" onclick="removeIncident(this)" data-toggle="tooltip" data-placement="top" title="Delete">
+                                     //         <i class="bx bx-message-square-x"></i>
+                                     //     </a>
+                                     // </td>
                                  </tr>`;
     $('#incidentsTable tbody').append(row);
     $('#NoOfIncedents').val(''); 
