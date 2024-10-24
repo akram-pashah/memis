@@ -37,13 +37,13 @@
                     </div>
                   </div>
                   @* <div class="row">
-    <div class="col mb-3">
-    <label class="form-label" for="cumulativeTarget">Cumulative Target</label>
-    <input type="number" class="form-control" id="cumulativeTarget" name="CumulativeTarget" placeholder="Cumulative Target" required="">
-    <div class="valid-feedback"> Looks good! </div>
-    <div class="invalid-feedback"> This field is required. </div>
-    </div>
-    </div> *@
+                        <div class="col mb-3">
+                        <label class="form-label" for="cumulativeTarget">Cumulative Target</label>
+                        <input type="number" class="form-control" id="cumulativeTarget" name="CumulativeTarget" placeholder="Cumulative Target" required="">
+                        <div class="valid-feedback"> Looks good! </div>
+                        <div class="invalid-feedback"> This field is required. </div>
+                        </div>
+                    </div> *@
                   <div class="row">
                     <div class="col mb-3">
                       <label class="form-label" for="Quarter">Quarter</label>
@@ -168,9 +168,13 @@
     var description = $('#newIncidentDescription').val();
     var financialloss = $('#newIncidentFinancialLoss').val();
     var dateOccurred = $('#newIncidentDateOccured').val();
+    //var incValue = $('#IncidentValue').val();
+    //$('#IncidentValue').val(incValue + financialloss);
 
-    var incValue =  $('#IncidentValue').val();
-      $('#IncidentValue').val(incValue + financialloss);
+    var incValue = parseInt($('#IncidentValue').val()) || 0; 
+    var parsedFinancialLoss = parseInt(financialloss) || 0; 
+    $('#IncidentValue').val(incValue + parsedFinancialLoss);
+     
     if (description.trim() === "") {
       $('#incidentValidation').text("Incident cannot be empty.");
       return;
@@ -196,16 +200,11 @@
                                          <input name="Incidents[${index}].Description" class="form-control" value="${description}" />
                                      </td>
                                       <td>
-     <input type="number" name="Incidents[${index}].FinancialLoss" class="form-control" value="${financialloss}" />
- </td>
+                                         <input type="number" name="Incidents[${index}].FinancialLoss" class="form-control" value="${financialloss}" />
+                                     </td>
                                       <td>
-     <input type="date" name="Incidents[${index}].DateOccured" class="form-control" value="${dateOccurred}" />
- </td>
-                                     // <td>
-                                     //     <a class="btn btn-danger delete-btn" onclick="removeIncident(this)" data-toggle="tooltip" data-placement="top" title="Delete">
-                                     //         <i class="bx bx-message-square-x"></i>
-                                     //     </a>
-                                     // </td>
+                                         <input type="date" name="Incidents[${index}].DateOccured" class="form-control" value="${dateOccurred}" />
+                                     </td>                                   
                                  </tr>`;
     $('#incidentsTable tbody').append(row);
     $('#NoOfIncedents').val(''); 

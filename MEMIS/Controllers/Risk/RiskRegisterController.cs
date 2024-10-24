@@ -678,16 +678,6 @@ namespace MEMIS.Controllers.Risk
     {
       if (ModelState.IsValid)
       {
-
-        //if (quarterlyRiskAction.Incidents != null)
-        //{
-        //  foreach (var incident in quarterlyRiskAction.Incidents)
-        //  {
-        //    incident.QuarterlyRiskActionId = quarterlyRiskAction.Id;
-        //    _context.Incidents.Add(incident); // Add each incident to the context
-        //  }
-        //  _context.SaveChanges();
-        //}
         QuarterlyRiskAction qr = new QuarterlyRiskAction
         {
           Quarter = quarterlyRiskAction.Quarter,
