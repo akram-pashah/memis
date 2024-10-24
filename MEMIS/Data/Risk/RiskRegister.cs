@@ -72,6 +72,10 @@ namespace MEMIS.Data.Risk
     public string? ControlEffectiveness { get; set; }
     public int? Effectiveness { get; set; }
     public string? Recommendation { get; set; }
+    [Display(Name = "Incident Impact")]
+    public double? IncidentImpact { get; set; }
+    [Display(Name = "Financial Impact")]
+    public double? FinancialImpact { get; set; }
     public virtual ICollection<RiskTreatmentPlan> RiskTreatmentPlans { get; set; } = [];
   }
 }

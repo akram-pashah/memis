@@ -6,254 +6,284 @@
   //Layout = "~/Views/Shared/_RiskLayout.cshtml";
   Layout = "~/Pages/Shared/_ContentNavbarLayout.cshtml";
 }
- 
+
 
 <h4>Risk Residual Assessment</h4>
 <hr />
 <div class="row">
-    <div class="col-md-6">
-        
-        <form asp-action="RiskResidualSubmit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="RiskRefID" />
-            <input type="hidden" asp-for="RiskId" />
-            <div class="form-group">
-                <label asp-for="IdentifiedDate" class="control-label">Identified Date</label>
-                <input asp-for="IdentifiedDate"  class="form-control" />
-                <span asp-validation-for="IdentifiedDate" class="text-danger"></span>
-            </div>
-            <br />
-            <div class="form-group">
-                <label asp-for="FocusArea" class="control-label">Focus Area</label>
-                @Html.DropDownList("FocusArea", new SelectList(ViewBag.FocusArea, "intFocus", "FocusAreaName"), new { @class = "form-control form-select selectpicker", @required = "required" })
-                <span asp-validation-for="FocusArea" class="text-danger"></span>
-            </div>
-            <br />
-            <div class="form-group">
-                <label asp-for="StrategicObjective" class="control-label">Strategic Objective</label>
-                @Html.DropDownList("StrategicObjective", new SelectList(ViewBag.StrategicPlanList, "intObjective", "ObjectiveName"), new { @class = "form-control form-select", @required = "required" })
-                <span asp-validation-for="StrategicObjective" class="text-danger"></span>
-            </div>
-            <br />
-            <div class="form-group">
-                <label asp-for="Activity" class="control-label"></label>
-                @Html.DropDownList("Activity", new SelectList(ViewBag.ActivityList, "intActivity", "activityName"), new { @class = "form-control form-select", @required = "required" })
-                <span asp-validation-for="Activity" class="text-danger"></span>
-            </div>
-            <br />
-            <div class="form-group">
-                <label asp-for="RiskDescription" class="control-label">Risk Description</label>
-                <input asp-for="RiskDescription" class="form-control" />
-                <span asp-validation-for="RiskDescription" class="text-danger"></span>
-            </div>
-            <br />
-            <div class="form-group">
-                <label asp-for="Events" class="control-label"></label>
-                <input asp-for="Events" class="form-control" />
-                <span asp-validation-for="Events" class="text-danger"></span>
-            </div>
-            <br />
-            <div class="form-group">
-                <label asp-for="RiskSource" class="control-label">Risk Source</label>
-                <input asp-for="RiskSource" class="form-control" />
-                <span asp-validation-for="RiskSource" class="text-danger"></span>
-            </div>
-            <br />
-            <div class="form-group">
-                <label asp-for="RiskCause" class="control-label">Risk Cause</label>
-                <input asp-for="RiskCause" class="form-control" />
-                <span asp-validation-for="RiskCause" class="text-danger"></span>
-            </div>
-            <br />
-            <div class="form-group">
-                <label asp-for="RiskConsequence" class="control-label">Risk Consequence</label>
-                <input asp-for="RiskConsequence" class="form-control" />
-                <span asp-validation-for="RiskConsequence" class="text-danger"></span>
-            </div>
-            <br />
-            <div class="form-group">
-                <label asp-for="RiskConsequenceId" class="control-label">Risk Consequence ID</label>
-                @Html.DropDownList("RiskConsequenceId", ViewBag.RiskConsequenceList as SelectList, new { @class = "form-control form-select" })
-                <span asp-validation-for="RiskConsequenceId" class="text-danger"></span>
-            </div>
-            <br />
-            <div class="form-group">
-                <label asp-for="RiskLikelihoodId" class="control-label">Risk Likelihood ID</label>
-                @Html.DropDownList("RiskLikelihoodId", ViewBag.RiskLikelihoodList as SelectList, new { @class = "form-control form-select" })
-                <span asp-validation-for="RiskLikelihoodId" class="text-danger"></span>
-            </div>
-            <br />
-            <div class="form-group">
-                <label asp-for="RiskScore" class="control-label">Risk Score</label>
-                <input asp-for="RiskScore" class="form-control"  required readonly/>
-                <span asp-validation-for="RiskScore" class="text-danger"></span>
-            </div>
-            <br />
-            <div class="form-group">
-                <label asp-for="RiskRank" class="control-label">Risk Rank</label>
-                <input asp-for="RiskRank" class="form-control" required readonly/>
-                <span asp-validation-for="RiskRank" class="text-danger"></span>
-            </div>
-            <br />
-            <div class="form-group">
-                <label asp-for="EvalCriteria" class="control-label">Evaluation Criteria</label>
-                <textarea asp-for="EvalCriteria" class="form-control" style="height:150px"  required readonly></textarea>
-                <span asp-validation-for="EvalCriteria" class="text-danger"></span>
-            </div>
-            <br />
-            <div class="form-group">
-                <label asp-for="riskTolerence" class="control-label"></label>
-                <select asp-for="riskTolerence" class="form-control" asp-items="ViewBag.RiskRank"></select>
-                <span asp-validation-for="riskTolerence" class="text-danger"></span>
-            </div>
-            <br />
-            <div class="form-group">
-                <label asp-for="riskTolerenceJustification" class="control-label"></label>
-                <input asp-for="riskTolerenceJustification" class="form-control" />
-                <span asp-validation-for="riskTolerenceJustification" class="text-danger"></span>
-            </div>
-            <br />
-            <div class="form-group">
-                <label asp-for="AdditionalMitigation" class="control-label"></label>
-                <input asp-for="AdditionalMitigation" class="form-control" />
-                <span asp-validation-for="AdditionalMitigation" class="text-danger"></span>
+  <div class="col-md-6">
 
-            </div>
-            <br />
-            <div class="form-group">
-                <label asp-for="ExpectedDate" class="control-label">Expected Date/Period of Implementation</label>
-                <input asp-for="ExpectedDate" class="form-control" />
-                <span asp-validation-for="ExpectedDate" class="text-danger"></span>
-            </div>
-            <br />
-            <div class="form-group">
-                <label asp-for="ResourcesRequired" class="control-label"></label>
-                <input asp-for="ResourcesRequired" class="form-control" />
-                <span asp-validation-for="ResourcesRequired" class="text-danger"></span>
-            </div>
-            <br />
-            <div class="form-group">
-                <label asp-for="ActionTaken" class="control-label">Action Undertaken to Mitigate Risk</label>
-                <input asp-for="ActionTaken" class="form-control" />
-                <span asp-validation-for="ActionTaken" class="text-danger"></span>
+    <form asp-action="RiskResidualSubmit">
+      <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+      <input type="hidden" asp-for="RiskRefID" />
+      <input type="hidden" asp-for="RiskId" />
+      <div class="form-group">
+        <label asp-for="IdentifiedDate" class="control-label">Identified Date</label>
+        <input asp-for="IdentifiedDate" class="form-control" />
+        <span asp-validation-for="IdentifiedDate" class="text-danger"></span>
+      </div>
+      <br />
+      <div class="form-group">
+        <label asp-for="FocusArea" class="control-label">Focus Area</label>
+        @Html.DropDownList("FocusArea", new SelectList(ViewBag.FocusArea, "intFocus", "FocusAreaName"), new { @class = "form-control form-select selectpicker", @required = "required" })
+        <span asp-validation-for="FocusArea" class="text-danger"></span>
+      </div>
+      <br />
+      <div class="form-group">
+        <label asp-for="StrategicObjective" class="control-label">Strategic Objective</label>
+        @Html.DropDownList("StrategicObjective", new SelectList(ViewBag.StrategicPlanList, "intObjective", "ObjectiveName"), new { @class = "form-control form-select", @required = "required" })
+        <span asp-validation-for="StrategicObjective" class="text-danger"></span>
+      </div>
+      <br />
+      <div class="form-group">
+        <label asp-for="Activity" class="control-label"></label>
+        @Html.DropDownList("Activity", new SelectList(ViewBag.ActivityList, "intActivity", "activityName"), new { @class = "form-control form-select", @required = "required" })
+        <span asp-validation-for="Activity" class="text-danger"></span>
+      </div>
+      <br />
+      <div class="form-group">
+        <label asp-for="RiskDescription" class="control-label">Risk Description</label>
+        <input asp-for="RiskDescription" class="form-control" />
+        <span asp-validation-for="RiskDescription" class="text-danger"></span>
+      </div>
+      <br />
+      <div class="form-group">
+        <label asp-for="Events" class="control-label"></label>
+        <input asp-for="Events" class="form-control" />
+        <span asp-validation-for="Events" class="text-danger"></span>
+      </div>
+      <br />
+      <div class="form-group">
+        <label asp-for="RiskSource" class="control-label">Risk Source</label>
+        <input asp-for="RiskSource" class="form-control" />
+        <span asp-validation-for="RiskSource" class="text-danger"></span>
+      </div>
+      <br />
+      <div class="form-group">
+        <label asp-for="RiskCause" class="control-label">Risk Cause</label>
+        <input asp-for="RiskCause" class="form-control" />
+        <span asp-validation-for="RiskCause" class="text-danger"></span>
+      </div>
+      <br />
+      <div class="form-group">
+        <label asp-for="RiskConsequence" class="control-label">Risk Consequence</label>
+        <input asp-for="RiskConsequence" class="form-control" />
+        <span asp-validation-for="RiskConsequence" class="text-danger"></span>
+      </div>
+      <br />
+      <div class="form-group">
+        <label asp-for="RiskConsequenceId" class="control-label">Risk Consequence ID</label>
+        @Html.DropDownList("RiskConsequenceId", ViewBag.RiskConsequenceList as SelectList, new { @class = "form-control form-select" })
+        <span asp-validation-for="RiskConsequenceId" class="text-danger"></span>
+      </div>
+      <br />
+      <div class="form-group">
+        <label asp-for="RiskLikelihoodId" class="control-label">Risk Likelihood ID</label>
+        @Html.DropDownList("RiskLikelihoodId", ViewBag.RiskLikelihoodList as SelectList, new { @class = "form-control form-select" })
+        <span asp-validation-for="RiskLikelihoodId" class="text-danger"></span>
+      </div>
+      <br />
+      <div class="form-group">
+        <label asp-for="RiskScore" class="control-label">Risk Score</label>
+        <input asp-for="RiskScore" class="form-control" required readonly />
+        <span asp-validation-for="RiskScore" class="text-danger"></span>
+      </div>
+      <br />
+      <div class="form-group">
+        <label asp-for="RiskRank" class="control-label">Risk Rank</label>
+        <input asp-for="RiskRank" class="form-control" required readonly />
+        <span asp-validation-for="RiskRank" class="text-danger"></span>
+      </div>
+      <br />
+      <div class="form-group">
+        <label asp-for="EvalCriteria" class="control-label">Evaluation Criteria</label>
+        <textarea asp-for="EvalCriteria" class="form-control" style="height:150px" required readonly></textarea>
+        <span asp-validation-for="EvalCriteria" class="text-danger"></span>
+      </div>
+      <br />
+      <div class="form-group">
+        <label asp-for="riskTolerence" class="control-label"></label>
+        <select asp-for="riskTolerence" class="form-control" asp-items="ViewBag.RiskRank"></select>
+        <span asp-validation-for="riskTolerence" class="text-danger"></span>
+      </div>
+      <br />
+      <div class="form-group">
+        <label asp-for="riskTolerenceJustification" class="control-label"></label>
+        <input asp-for="riskTolerenceJustification" class="form-control" />
+        <span asp-validation-for="riskTolerenceJustification" class="text-danger"></span>
+      </div>
+      <br />
+      <div class="form-group">
+        <label asp-for="AdditionalMitigation" class="control-label"></label>
+        <input asp-for="AdditionalMitigation" class="form-control" />
+        <span asp-validation-for="AdditionalMitigation" class="text-danger"></span>
 
-            </div>
-            <br />
-            <div class="form-group">
-                <label asp-for="ActualDate" class="control-label"></label>
-                <input asp-for="ActualDate" class="form-control" />
-                <span asp-validation-for="ActualDate" class="text-danger"></span>
-            </div>
-            <br />
-            <div class="form-group">
-                <label asp-for="RiskResidualConsequenceId" class="control-label">Risk Residual Consequence ID</label>
-                @Html.DropDownList("RiskResidualConsequenceId", ViewBag.RiskConsequenceList as SelectList, new { @class = "form-control form-select" })
-                <span asp-validation-for="RiskResidualConsequenceId" class="text-danger"></span>
-            </div>
-            <br />
-            <div class="form-group">
-                <label asp-for="RiskResidualLikelihoodId" class="control-label">Risk Residual Likelihood ID</label>
-                @Html.DropDownList("RiskResidualLikelihoodId", ViewBag.RiskLikelihoodList as SelectList, new { @class = "form-control form-select" })
-                <span asp-validation-for="RiskResidualLikelihoodId" class="text-danger"></span>
-            </div>
-            <br />
-            <div class="form-group">
-                <label asp-for="RiskResidualScore" class="control-label">Risk Residual Score</label>
-                <input asp-for="RiskResidualScore" class="form-control" required readonly />
-                <span asp-validation-for="RiskResidualScore" class="text-danger"></span>
-            </div>
-            <br />
-            <div class="form-group">
-                <label asp-for="RiskResidualRank" class="control-label">Risk Residual Rank </label>
-                <input asp-for="RiskResidualRank" class="form-control" required readonly />
-                <span asp-validation-for="RiskResidualRank" class="text-danger"></span>
-            </div>
-            <br />
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
-    </div>
+      </div>
+      <br />
+      <div class="form-group">
+        <label asp-for="ExpectedDate" class="control-label">Expected Date/Period of Implementation</label>
+        <input asp-for="ExpectedDate" class="form-control" />
+        <span asp-validation-for="ExpectedDate" class="text-danger"></span>
+      </div>
+      <br />
+      <div class="form-group">
+        <label asp-for="ResourcesRequired" class="control-label"></label>
+        <input asp-for="ResourcesRequired" class="form-control" />
+        <span asp-validation-for="ResourcesRequired" class="text-danger"></span>
+      </div>
+      <br />
+      <div class="form-group">
+        <label asp-for="ActionTaken" class="control-label">Action Undertaken to Mitigate Risk</label>
+        <input asp-for="ActionTaken" class="form-control" />
+        <span asp-validation-for="ActionTaken" class="text-danger"></span>
+
+      </div>
+      <br />
+      <div class="form-group">
+        <label asp-for="ActualDate" class="control-label"></label>
+        <input asp-for="ActualDate" class="form-control" />
+        <span asp-validation-for="ActualDate" class="text-danger"></span>
+      </div>
+      <br />
+      <div class="form-group">
+        <label asp-for="RiskResidualConsequenceId" class="control-label">Risk Residual Consequence ID</label>
+        @Html.DropDownList("RiskResidualConsequenceId", ViewBag.RiskConsequenceList as SelectList, new { @class = "form-control form-select" })
+        <span asp-validation-for="RiskResidualConsequenceId" class="text-danger"></span>
+      </div>
+      <br />
+      <div class="form-group">
+        <label asp-for="RiskResidualLikelihoodId" class="control-label">Risk Residual Likelihood ID</label>
+        @Html.DropDownList("RiskResidualLikelihoodId", ViewBag.RiskLikelihoodList as SelectList, new { @class = "form-control form-select" })
+        <span asp-validation-for="RiskResidualLikelihoodId" class="text-danger"></span>
+      </div>
+      <br />
+      <div class="form-group">
+        <label asp-for="RiskResidualScore" class="control-label">Risk Residual Score</label>
+        <input asp-for="RiskResidualScore" class="form-control" required readonly />
+        <span asp-validation-for="RiskResidualScore" class="text-danger"></span>
+      </div>
+      <br />
+      <div class="form-group">
+        <label asp-for="RiskResidualRank" class="control-label">Risk Residual Rank </label>
+        <input asp-for="RiskResidualRank" class="form-control" required readonly />
+        <span asp-validation-for="RiskResidualRank" class="text-danger"></span>
+      </div>
+      <br />
+      <div class="form-group">
+        <label asp-for="IncidentImpact" class="control-label">Incident Impact </label>
+        <input asp-for="IncidentImpact" class="form-control" required readonly />
+        <span asp-validation-for="IncidentImpact" class="text-danger"></span>
+      </div>
+      <br />
+      <div class="form-group">
+        <label asp-for="FinancialImpact" class="control-label">Financial Impact </label>
+        <input asp-for="FinancialImpact" class="form-control" required readonly />
+        <span asp-validation-for="FinancialImpact" class="text-danger"></span>
+      </div>
+      <br />
+      <div class="form-group">
+        <label for="operationGovernanceImpact" class="control-label">Operation / Governance Impact</label>
+        <select class="form-control" id="operationGovernanceImpact" name="OperationGovernanceImpact" aria-label="Operation Governance Impact" required>
+          <option value="" disabled selected>Select impact level</option>
+          <option value="10">Very Low</option>
+          <option value="25">Low</option>
+          <option value="50">Medium</option>
+          <option value="75">High</option>
+          <option value="100">Very High</option>
+        </select>
+      </div>
+      <br />
+      <div class="form-group">
+        <input type="submit" value="Create" class="btn btn-primary" />
+      </div>
+    </form>
+  </div>
 </div>
-<br />
+<br/>
+<div class="col-md-6">
+  <div class="card" style="width: fit-content" id="treatmentPlanGrid">
+    @Html.Partial("_TreatmentPlanGrid", Model.RiskTreatmentPlans)
+  </div>
+</div>
+<br/>
 <div>
-    <a asp-action="Index">Back to List</a>
+  <a asp-action="Index">Back to List</a>
 </div>
 
 @section Scripts {
 
-<script>
+  <script>
 
     window.addEventListener('load', function () {
-        GetData();
+      GetData();
     })
 
     $("#RiskConsequenceId").change(function () {
-        if ($('option:selected', this).val() != 0) {
-            GetData();
-        }
+      if ($('option:selected', this).val() != 0) {
+        GetData();
+      }
 
-        
+
     });
     $("#RiskLikelihoodId").change(function () {
-        if ($('option:selected', this).val() != 0) {
-            GetData();
-        }
+      if ($('option:selected', this).val() != 0) {
+        GetData();
+      }
 
     });
-        $("#RiskResidualConsequenceId").change(function () {
-            if ($('option:selected', this).val() != 0) {
-                GetResidualData();
-            }
+    $("#RiskResidualConsequenceId").change(function () {
+      if ($('option:selected', this).val() != 0) {
+        GetResidualData();
+      }
 
 
-        });
-        $("#RiskResidualLikelihoodId").change(function () {
-            if ($('option:selected', this).val() != 0) {
-                GetResidualData();
-            }
+    });
+    $("#RiskResidualLikelihoodId").change(function () {
+      if ($('option:selected', this).val() != 0) {
+        GetResidualData();
+      }
 
-        });
+    });
     function GetData() {
-        if (document.getElementById("RiskConsequenceId").value != 0 && document.getElementById("RiskLikelihoodId").value != 0) {
-            $.ajax({
-                url: '/RiskIdentifications/GetRiskMatrix',
-                type: 'GET',
-                data: { RCId: document.getElementById("RiskConsequenceId").value, RLId: document.getElementById("RiskLikelihoodId").value },
-                dataType: 'json',
-                success: function (data) {
-                    document.getElementById('RiskRank').value = data.riskValue;
-                    document.getElementById('RiskScore').value = data.riskRank;
-                    document.getElementById('EvalCriteria').value = data.evaluationCriteria;
-                },
-                error: function (error) {
-                    //log or alert the error
-                }
-            });
-        }
+      if (document.getElementById("RiskConsequenceId").value != 0 && document.getElementById("RiskLikelihoodId").value != 0) {
+        $.ajax({
+          url: '/RiskIdentifications/GetRiskMatrix',
+          type: 'GET',
+          data: { RCId: document.getElementById("RiskConsequenceId").value, RLId: document.getElementById("RiskLikelihoodId").value },
+          dataType: 'json',
+          success: function (data) {
+            document.getElementById('RiskRank').value = data.riskValue;
+            document.getElementById('RiskScore').value = data.riskRank;
+            document.getElementById('EvalCriteria').value = data.evaluationCriteria;
+          },
+          error: function (error) {
+            //log or alert the error
+          }
+        });
+      }
 
-        
+
     }
-        function GetResidualData() {
-            if (document.getElementById("RiskResidualConsequenceId").value != 0 && document.getElementById("RiskResidualLikelihoodId").value != 0) {
-                $.ajax({
-                    url: '/RiskRegister/GetRiskMatrix',
-                    type: 'GET',
-                    data: { RCId: document.getElementById("RiskResidualConsequenceId").value, RLId: document.getElementById("RiskResidualLikelihoodId").value },
-                    dataType: 'json',
-                    success: function (data) {
-                        document.getElementById('RiskResidualRank').value = data.riskValue;
-                        document.getElementById('RiskResidualScore').value = data.riskRank;
-                    },
-                    error: function (error) {
-                        //log or alert the error
-                    }
-                });
-            }
+    function GetResidualData() {
+      if (document.getElementById("RiskResidualConsequenceId").value != 0 && document.getElementById("RiskResidualLikelihoodId").value != 0) {
+        $.ajax({
+          url: '/RiskRegister/GetRiskMatrix',
+          type: 'GET',
+          data: { RCId: document.getElementById("RiskResidualConsequenceId").value, RLId: document.getElementById("RiskResidualLikelihoodId").value },
+          dataType: 'json',
+          success: function (data) {
+            document.getElementById('RiskResidualRank').value = data.riskValue;
+            document.getElementById('RiskResidualScore').value = data.riskRank;
+          },
+          error: function (error) {
+            //log or alert the error
+          }
+        });
+      }
 
 
-        }
+    }
 
-</script>
-    @*@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}*@
+  </script>
+  @*@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}*@
 }

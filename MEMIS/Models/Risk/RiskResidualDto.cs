@@ -69,5 +69,8 @@ namespace MEMIS.Models.Risk
         public int? RiskResidualScore { get; set; }
         [Required]
         public string? RiskResidualRank { get; set; }
-    }
+        public double? IncidentImpact { get; set; }
+        public double? FinancialImpact { get; set; }
+        public virtual ICollection<RiskTreatmentPlan> RiskTreatmentPlans { get; set; } = [];
+  }
 }

@@ -38,24 +38,24 @@
                         </div>
                         </div>
                     @* </div> *@
-    <div class="row">
-      <div class="col-md-3 mb-3">
-        <label class="form-label" for="frequencyOfReporting">Frequency of Reporting</label>
-        <select class="form-select" name="FrequencyOfReporting" asp-for="FrequencyOfReporting" id="frequencyOfReporting" disabled>
-          <option value="Monthly">Monthly</option>
-          <option value="Quarterly" selected>Quarterly</option>
-          <option value="Annually">Annually</option>
-        </select>
-        <div class="valid-feedback"> Looks good! </div>
-        <div class="invalid-feedback"> This field is required. </div>
-      </div>
+      <div class="row">
         <div class="col-md-3 mb-3">
-          <label class="form-label">&nbsp; &nbsp;</label>
-          <button type="button" class="form-control btn btn-info float-end" data-bs-toggle="modal" data-bs-target="#riskTreatmentModal">
-            Add Quarterly Risk Action Plan
-          </button>
+          <label class="form-label" for="frequencyOfReporting">Frequency of Reporting</label>
+          <select class="form-select" name="FrequencyOfReporting" asp-for="FrequencyOfReporting" id="frequencyOfReporting" disabled>
+            <option value="Monthly">Monthly</option>
+            <option value="Quarterly" selected>Quarterly</option>
+            <option value="Annually">Annually</option>
+          </select>
+          <div class="valid-feedback"> Looks good! </div>
+          <div class="invalid-feedback"> This field is required. </div>
         </div>
-    </div>
+          <div class="col-md-3 mb-3">
+            <label class="form-label">&nbsp; &nbsp;</label>
+            <button type="button" class="form-control btn btn-info float-end" data-bs-toggle="modal" data-bs-target="#riskTreatmentModal">
+              Add Quarterly Risk Action Plan
+            </button>
+          </div>
+      </div>
 
 
       @{

@@ -1,4 +1,4 @@
-﻿using MEMIS.Data.Risk;
+using MEMIS.Data.Risk;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -59,6 +59,6 @@ namespace MEMIS.Models.Risk
         [Display(Name = "Date (Actual Date/Period of Implementation)")]
         public DateTime? ActualDate { get; set; }
         public string? ActualBy { get; set; }
-
-    }
+    public virtual ICollection<RiskTreatmentPlan> RiskTreatmentPlans { get; set; } = [];
+  }
 }

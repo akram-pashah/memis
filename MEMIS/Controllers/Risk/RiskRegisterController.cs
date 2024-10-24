@@ -435,7 +435,8 @@ namespace MEMIS.Controllers.Risk
         StrategicObjective = riskIdentification.StrategicObjective,
         //AdditionalMitigation = riskIdentification.AdditionalMitigation,
         //ResourcesRequired= riskIdentification.ResourcesRequired,
-        //ExpectedDate= riskIdentification.ExpectedDate,
+        //ExpectedDate= riskIdentification.ExpectedDate
+        RiskTreatmentPlans = riskIdentification.RiskTreatmentPlans,
       };
       var riskLikelihoodList = new List<SelectListItem>
     {
@@ -732,6 +733,7 @@ namespace MEMIS.Controllers.Risk
 
       var riskIdentification = await _context.RiskTreatmentPlans.Include(m => m.QuarterlyRiskActions)
             .ThenInclude(m => m.ImplementationStatus)
+           
           .Where(m => m.TreatmentPlanId == id).FirstOrDefaultAsync();
       if (riskIdentification == null)
       {
@@ -1247,6 +1249,7 @@ namespace MEMIS.Controllers.Risk
         //ExpectedDate = riskIdentification.ExpectedDate,
         ActionTaken = riskIdentification.ActionTaken,
         ActualDate = riskIdentification.ActualDate,
+        RiskTreatmentPlans = riskIdentification.RiskTreatmentPlans,
       };
       var riskLikelihoodList = new List<SelectListItem>
     {
@@ -1403,6 +1406,7 @@ namespace MEMIS.Controllers.Risk
         //ExpectedDate = riskIdentification.ExpectedDate,
         ActionTaken = riskIdentification.ActionTaken,
         ActualDate = riskIdentification.ActualDate,
+        RiskTreatmentPlans = riskIdentification.RiskTreatmentPlans,
       };
       var riskLikelihoodList = new List<SelectListItem>
     {
@@ -1533,6 +1537,7 @@ namespace MEMIS.Controllers.Risk
         //ExpectedDate = riskIdentification.ExpectedDate,
         ActionTaken = riskIdentification.ActionTaken,
         ActualDate = riskIdentification.ActualDate,
+        RiskTreatmentPlans= riskIdentification.RiskTreatmentPlans,
       };
       var riskLikelihoodList = new List<SelectListItem>
     {
@@ -1663,6 +1668,7 @@ namespace MEMIS.Controllers.Risk
         //ExpectedDate = riskIdentification.ExpectedDate,
         ActionTaken = riskIdentification.ActionTaken,
         ActualDate = riskIdentification.ActualDate,
+        RiskTreatmentPlans = riskIdentification.RiskTreatmentPlans,
       };
 
       var riskLikelihoodList = new List<SelectListItem>
@@ -1772,10 +1778,20 @@ namespace MEMIS.Controllers.Risk
       }
 
       var riskIdentification = await _context.RiskRegister.Include(m => m.StrategicPlanFk).Include(m => m.ActivityFk).Include(m => m.FocusAreaFk).Include(m => m.RiskIdentificationFk)
+         .Include(x => x.RiskTreatmentPlans)
+         .ThenInclude(x => x.QuarterlyRiskActions)
+         .ThenInclude(x => x.Incidents)
           .Where(m => m.RiskRefID == id).FirstOrDefaultAsync();
       if (riskIdentification == null)
       {
         return NotFound();
+      }
+
+      double? incidentValue = riskIdentification.RiskTreatmentPlans.Sum(x => x.QuarterlyRiskActions.Sum(y => y.IncidentValue));
+      double financialImpact = 0;
+      if (incidentValue != null && riskIdentification?.ActivityBudget > 0)
+      {
+        financialImpact = ((double)incidentValue / riskIdentification.ActivityBudget) * 100;
       }
       RiskResidualDto riskDto = new RiskResidualDto
       {
@@ -1797,6 +1813,10 @@ namespace MEMIS.Controllers.Risk
         RiskResidualLikelihoodId = riskIdentification.RiskResidualLikelihoodId,
         RiskResidualScore = riskIdentification.RiskResidualScore,
         RiskResidualRank = riskIdentification.RiskResidualRank,
+        RiskTreatmentPlans = riskIdentification.RiskTreatmentPlans,
+        IncidentImpact = riskIdentification.RiskTreatmentPlans.Sum(x => x.QuarterlyRiskActions.Sum(y => y.Incidents.Count())) / (double)riskIdentification.RiskTreatmentPlans.Sum(x => x.SampleSize) * 100,
+        //FinancialImpact = riskIdentification.RiskTreatmentPlans.Sum(x => x.QuarterlyRiskActions.Sum(y => y.IncidentValue)) / (double)riskIdentification.ActivityBudget * 100
+        FinancialImpact = financialImpact,
       };
 
       var riskLikelihoodList = new List<SelectListItem>
@@ -1835,6 +1855,8 @@ namespace MEMIS.Controllers.Risk
           pp.RiskResidualLikelihoodId = objectdto.RiskResidualLikelihoodId;
           pp.RiskResidualScore = objectdto.RiskResidualScore;
           pp.RiskResidualRank = objectdto.RiskResidualRank;
+          pp.IncidentImpact = objectdto.IncidentImpact;
+          pp.FinancialImpact = objectdto.FinancialImpact;
           await _context.SaveChangesAsync();
         }
         catch (DbUpdateConcurrencyException)
@@ -1905,6 +1927,9 @@ namespace MEMIS.Controllers.Risk
       }
 
       var riskIdentification = await _context.RiskRegister.Include(m => m.StrategicPlanFk).Include(m => m.ActivityFk).Include(m => m.FocusAreaFk).Include(m => m.RiskIdentificationFk)
+          .Include(x => x.RiskTreatmentPlans)
+             .ThenInclude(x => x.QuarterlyRiskActions)
+             .ThenInclude(x => x.Incidents)
           .Where(m => m.RiskRefID == id).FirstOrDefaultAsync();
       if (riskIdentification == null)
       {
@@ -1931,6 +1956,7 @@ namespace MEMIS.Controllers.Risk
         RiskResidualLikelihoodId = riskIdentification.RiskResidualLikelihoodId,
         RiskResidualScore = riskIdentification.RiskResidualScore,
         RiskResidualRank = riskIdentification.RiskResidualRank,
+        RiskTreatmentPlans = riskIdentification.RiskTreatmentPlans,
       };
 
       var riskLikelihoodList = new List<SelectListItem>
@@ -2042,6 +2068,9 @@ namespace MEMIS.Controllers.Risk
       }
 
       var riskIdentification = await _context.RiskRegister.Include(m => m.StrategicPlanFk).Include(m => m.ActivityFk).Include(m => m.FocusAreaFk).Include(m => m.RiskIdentificationFk)
+        .Include(x => x.RiskTreatmentPlans)
+             .ThenInclude(x => x.QuarterlyRiskActions)
+             .ThenInclude(x => x.Incidents)
           .Where(m => m.RiskRefID == id).FirstOrDefaultAsync();
       if (riskIdentification == null)
       {
@@ -2068,6 +2097,7 @@ namespace MEMIS.Controllers.Risk
         RiskResidualLikelihoodId = riskIdentification.RiskResidualLikelihoodId,
         RiskResidualScore = riskIdentification.RiskResidualScore,
         RiskResidualRank = riskIdentification.RiskResidualRank,
+        RiskTreatmentPlans=riskIdentification.RiskTreatmentPlans,
       };
 
       var riskLikelihoodList = new List<SelectListItem>
@@ -2178,6 +2208,9 @@ namespace MEMIS.Controllers.Risk
       }
 
       var riskIdentification = await _context.RiskRegister.Include(m => m.StrategicPlanFk).Include(m => m.ActivityFk).Include(m => m.FocusAreaFk).Include(m => m.RiskIdentificationFk)
+        .Include(x => x.RiskTreatmentPlans)
+             .ThenInclude(x => x.QuarterlyRiskActions)
+             .ThenInclude(x => x.Incidents)
           .Where(m => m.RiskRefID == id).FirstOrDefaultAsync();
       if (riskIdentification == null)
       {
@@ -2204,6 +2237,7 @@ namespace MEMIS.Controllers.Risk
         RiskResidualLikelihoodId = riskIdentification.RiskResidualLikelihoodId,
         RiskResidualScore = riskIdentification.RiskResidualScore,
         RiskResidualRank = riskIdentification.RiskResidualRank,
+        RiskTreatmentPlans=riskIdentification.RiskTreatmentPlans,
       };
 
       var riskLikelihoodList = new List<SelectListItem>

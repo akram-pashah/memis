@@ -106,44 +106,45 @@
                 <input asp-for="ResourcesRequired" class="form-control" />
                 <span asp-validation-for="ResourcesRequired" class="text-danger"></span>
             </div> *@
-            <div class="row">
-              <div class="form-group col-md-3">
-                <label asp-for="ActionTaken" class="control-label"></label>
-                <input asp-for="ActionTaken" class="form-control" />
-                <span asp-validation-for="ActionTaken" class="text-danger"></span>
+    <div class="row">
+      <div class="form-group col-md-3">
+        <label asp-for="ActionTaken" class="control-label"></label>
+        <input asp-for="ActionTaken" class="form-control" />
+        <span asp-validation-for="ActionTaken" class="text-danger"></span>
 
-            </div>
-            <div class="form-group col-md-3">
-                <label asp-for="ActualDate" class="control-label"></label>
-                <input asp-for="ActualDate" class="form-control" />
-                <span asp-validation-for="ActualDate" class="text-danger"></span>
-            </div>
-            <div class="form-group col-md-3">
-              <label asp-for="Effectiveness" class="control-label"></label>
-                <select asp-for="Effectiveness" class="form-control">
-                  <option value="1">Very Eeffective</option>
-                  <option value="2">Effective</option>
-                  <option value="3">Somehow Effective</option>
-                  <option value="4">Not Effective</option>
-                  <option value="5">Non Existence</option>
-                </select>
-                <span asp-validation-for="Effectiveness" class="text-danger"></span>
-            </div>
-            <div class="form-group col-md-3">
-                <label asp-for="Recommendation" class="control-label"></label>
-                <input asp-for="Recommendation" class="form-control" />
-                <span asp-validation-for="Recommendation" class="text-danger"></span>
-            </div>
-            <div class="form-group col-md-3">
-                <label asp-for="ApprStatus" class="control-label"></label>
-                <select asp-for="ApprStatus" class="form-control" asp-items="ViewBag.Approval"></select>
-                <span asp-validation-for="ApprStatus" class="text-danger"></span>
-            </div>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Submit" class="btn btn-primary" />
-            </div>
-        </form>
+      </div>
+      <div class="form-group col-md-3">
+        <label asp-for="ActualDate" class="control-label"></label>
+        <input asp-for="ActualDate" class="form-control" />
+        <span asp-validation-for="ActualDate" class="text-danger"></span>
+      </div>
+      <div class="form-group col-md-3">
+        <label asp-for="Effectiveness" class="control-label"></label>
+        <select asp-for="Effectiveness" class="form-control">
+          <option value="1">Very Eeffective</option>
+          <option value="2">Effective</option>
+          <option value="3">Somehow Effective</option>
+          <option value="4">Not Effective</option>
+          <option value="5">Non Existence</option>
+        </select>
+        <span asp-validation-for="Effectiveness" class="text-danger"></span>
+      </div>
+      <div class="form-group col-md-3">
+        <label asp-for="Recommendation" class="control-label"></label>
+        <input asp-for="Recommendation" class="form-control" />
+        <span asp-validation-for="Recommendation" class="text-danger"></span>
+      </div>
+      <div class="form-group col-md-3">
+        <label asp-for="ApprStatus" class="control-label"></label>
+        <select asp-for="ApprStatus" class="form-control" asp-items="ViewBag.Approval"></select>
+        <span asp-validation-for="ApprStatus" class="text-danger"></span>
+      </div>
+      <br />
+    </div>
+    <div class="form-group">
+       <input type="submit" value="Submit" class="btn btn-primary" />
+    </div>
+    </form>
 </div>
 
 <div class="col-md-6">
@@ -151,7 +152,7 @@
             @Html.Partial("_TreatmentPlanGrid", Model.RiskTreatmentPlans)
         </div>
     </div>
-
+<br/>
 <div>
     <a href="#" onclick="history.back()">Back to List</a>
 </div>
