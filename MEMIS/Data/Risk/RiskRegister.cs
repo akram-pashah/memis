@@ -19,11 +19,11 @@ namespace MEMIS.Data.Risk
     public virtual FocusArea? FocusAreaFk { get; set; }
     public virtual int Activity { get; set; }
     [ForeignKey("Activity")]
-    public virtual Activity? ActivityFk { get; set; } 
+    public virtual Activity? ActivityFk { get; set; }
     public string RiskDescription { get; set; }
     public virtual int intCategory { get; set; }
     [ForeignKey("intCategory")]
-    public virtual RiskCategory RiskCategoryFk { get; set; } 
+    public virtual RiskCategory RiskCategoryFk { get; set; }
     public string? RiskOwner { get; set; }
     public int RiskConsequenceId { get; set; }
     public int RiskLikelihoodId { get; set; }
@@ -52,8 +52,8 @@ namespace MEMIS.Data.Risk
     //public string? ResourcesRequired { get; set; }
     //[Display(Name = "By when (expected date/period of implementation)")]
     //public DateTime? ExpectedDate { get; set; }
-    
-    
+
+
     [Display(Name = "Review/Implementation date")]
     public DateTime? ReviewDate { get; set; }
     public int? ApprStatus { get; set; } = 0;
@@ -76,6 +76,8 @@ namespace MEMIS.Data.Risk
     public double? IncidentImpact { get; set; }
     [Display(Name = "Financial Impact")]
     public double? FinancialImpact { get; set; }
+    [Display(Name = "Operation / Governance Impact")]
+    public double? OperationGovernanceImpact { get; set; }
     public virtual ICollection<RiskTreatmentPlan> RiskTreatmentPlans { get; set; } = [];
   }
 }

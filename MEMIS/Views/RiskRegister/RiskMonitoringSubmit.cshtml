@@ -118,6 +118,11 @@
                 <input asp-for="ActualDate" class="form-control" />
                 <span asp-validation-for="ActualDate" class="text-danger"></span>
             </div>
+            <div class="form-group col-md-3">
+                <label asp-for="ActivityBudget" class="control-label"></label>
+                <input asp-for="ActivityBudget" class="form-control" />
+                <span asp-validation-for="ActivityBudget" class="text-danger"></span>
+            </div>
             </div>
             <div class="form-group col-md-12">
                 <input type="submit" value="Create" class="btn btn-primary col-md-2 float-left" />
@@ -125,8 +130,8 @@
         </form>
     </div>
 
-     <div class="col-md-6">
-        <div class="card" style="width: fit-content" id="treatmentPlanGrid">
+     <div class="row">
+        <div class="card" style="overflow:auto" id="treatmentPlanGrid">
             @Html.Partial("_TreatmentPlanGrid", Model.RiskTreatmentPlans)
         </div>
     </div>

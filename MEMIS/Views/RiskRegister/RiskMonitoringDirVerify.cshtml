@@ -115,6 +115,11 @@
                 <span asp-validation-for="ActualDate" class="text-danger"></span>
             </div>
             <div class="form-group col-md-3">
+                <label asp-for="ActivityBudget" class="control-label"></label>
+                <input asp-for="ActivityBudget" class="form-control" />
+                <span asp-validation-for="ActivityBudget" class="text-danger"></span>
+            </div>
+            <div class="form-group col-md-3">
                 <label asp-for="ApprStatus" class="control-label"></label>
                 <select asp-for="ApprStatus" class="form-control" asp-items="ViewBag.Approval"></select>
                 <span asp-validation-for="ApprStatus" class="text-danger"></span>

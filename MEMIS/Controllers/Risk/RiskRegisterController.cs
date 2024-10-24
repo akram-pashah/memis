@@ -582,6 +582,48 @@ namespace MEMIS.Controllers.Risk
       return (riskRating, riskCategory, color);
     }
 
+    public (double RiskRating, string RiskCategory, string Color) GetRiskRatingByImpact(double incidentImpact, double financialImpact, double operationalImpact)
+    {
+      double probability = Math.Round((incidentImpact + financialImpact + operationalImpact) / 3, 2);
+
+      double RiskRating = 0;
+      string riskCategory = "Very Low";
+      string color = "green";
+
+      if (probability > 5)
+      {
+        riskCategory = "Very Low";
+        color = "green";
+        RiskRating = 1;
+      }
+      else if (probability >= 5 && probability <= 15)
+      {
+        riskCategory = "Low";
+        color = "yellow";
+        RiskRating = 2;
+      }
+      else if (probability >= 15 && probability <= 50)
+      {
+        riskCategory = "Medium";
+        color = "orange";
+        RiskRating = 3;
+      }
+      else if (probability >= 50 && probability <= 95)
+      {
+        riskCategory = "High";
+        color = "peach";
+        RiskRating = 4;
+      }
+      else if (probability > 95)
+      {
+        riskCategory = "Very High";
+        color = "red";
+        RiskRating = 5;
+      }
+
+      return (RiskRating, riskCategory, color);
+    }
+
     [HttpPost]
     //[ValidateAntiForgeryToken]
     public IActionResult RiskTreatmentSubmit(RiskRegister riskRegister)
@@ -733,7 +775,7 @@ namespace MEMIS.Controllers.Risk
 
       var riskIdentification = await _context.RiskTreatmentPlans.Include(m => m.QuarterlyRiskActions)
             .ThenInclude(m => m.ImplementationStatus)
-           
+
           .Where(m => m.TreatmentPlanId == id).FirstOrDefaultAsync();
       if (riskIdentification == null)
       {
@@ -1537,7 +1579,7 @@ namespace MEMIS.Controllers.Risk
         //ExpectedDate = riskIdentification.ExpectedDate,
         ActionTaken = riskIdentification.ActionTaken,
         ActualDate = riskIdentification.ActualDate,
-        RiskTreatmentPlans= riskIdentification.RiskTreatmentPlans,
+        RiskTreatmentPlans = riskIdentification.RiskTreatmentPlans,
       };
       var riskLikelihoodList = new List<SelectListItem>
     {
@@ -1787,6 +1829,9 @@ namespace MEMIS.Controllers.Risk
         return NotFound();
       }
 
+      double incidents = riskIdentification.RiskTreatmentPlans.Sum(x => x.QuarterlyRiskActions.Sum(y => y.Incidents.Count()));
+      double sampleSize = riskIdentification.RiskTreatmentPlans.Sum(x => x.SampleSize);
+
       double? incidentValue = riskIdentification.RiskTreatmentPlans.Sum(x => x.QuarterlyRiskActions.Sum(y => y.IncidentValue));
       double financialImpact = 0;
       if (incidentValue != null && riskIdentification?.ActivityBudget > 0)
@@ -1814,9 +1859,10 @@ namespace MEMIS.Controllers.Risk
         RiskResidualScore = riskIdentification.RiskResidualScore,
         RiskResidualRank = riskIdentification.RiskResidualRank,
         RiskTreatmentPlans = riskIdentification.RiskTreatmentPlans,
-        IncidentImpact = riskIdentification.RiskTreatmentPlans.Sum(x => x.QuarterlyRiskActions.Sum(y => y.Incidents.Count())) / (double)riskIdentification.RiskTreatmentPlans.Sum(x => x.SampleSize) * 100,
+        IncidentImpact = incidents > 0 && sampleSize > 0 ? Math.Round((incidents / sampleSize) * 100, 2) : 0,
         //FinancialImpact = riskIdentification.RiskTreatmentPlans.Sum(x => x.QuarterlyRiskActions.Sum(y => y.IncidentValue)) / (double)riskIdentification.ActivityBudget * 100
-        FinancialImpact = financialImpact,
+        FinancialImpact = Math.Round(financialImpact, 2),
+        ActivityBudget = riskIdentification.ActivityBudget,
       };
 
       var riskLikelihoodList = new List<SelectListItem>
@@ -1857,6 +1903,11 @@ namespace MEMIS.Controllers.Risk
           pp.RiskResidualRank = objectdto.RiskResidualRank;
           pp.IncidentImpact = objectdto.IncidentImpact;
           pp.FinancialImpact = objectdto.FinancialImpact;
+          pp.OperationGovernanceImpact = objectdto.OperationGovernanceImpact;
+          (double riskRating, string category, string color) = GetRiskRatingByImpact(objectdto.IncidentImpact ?? 0, objectdto.FinancialImpact ?? 0, objectdto.OperationGovernanceImpact ?? 0);
+          pp.RiskRatingId = (int)riskRating;
+          pp.RiskRatingCategory = category;
+          pp.RiskRatingColor = color;
           await _context.SaveChangesAsync();
         }
         catch (DbUpdateConcurrencyException)
@@ -1935,6 +1986,7 @@ namespace MEMIS.Controllers.Risk
       {
         return NotFound();
       }
+      (double riskRating, string category, string color) = GetRiskRatingByImpact(riskIdentification.IncidentImpact ?? 0, riskIdentification.FinancialImpact ?? 0, riskIdentification.OperationGovernanceImpact ?? 0);
       RiskResidualDto riskDto = new RiskResidualDto
       {
         RiskRefID = riskIdentification.RiskRefID,
@@ -1957,6 +2009,13 @@ namespace MEMIS.Controllers.Risk
         RiskResidualScore = riskIdentification.RiskResidualScore,
         RiskResidualRank = riskIdentification.RiskResidualRank,
         RiskTreatmentPlans = riskIdentification.RiskTreatmentPlans,
+        ActivityBudget = riskIdentification.ActivityBudget,
+        IncidentImpact = riskIdentification.IncidentImpact,
+        FinancialImpact = riskIdentification.FinancialImpact,
+        OperationGovernanceImpact = riskIdentification.OperationGovernanceImpact,
+        RiskRatingId = (int)riskRating,
+        RiskRatingCategory = category,
+        RiskRatingColor = color,
       };
 
       var riskLikelihoodList = new List<SelectListItem>
@@ -2097,7 +2156,11 @@ namespace MEMIS.Controllers.Risk
         RiskResidualLikelihoodId = riskIdentification.RiskResidualLikelihoodId,
         RiskResidualScore = riskIdentification.RiskResidualScore,
         RiskResidualRank = riskIdentification.RiskResidualRank,
-        RiskTreatmentPlans=riskIdentification.RiskTreatmentPlans,
+        RiskTreatmentPlans = riskIdentification.RiskTreatmentPlans,
+        ActivityBudget = riskIdentification.ActivityBudget,
+        IncidentImpact = riskIdentification.IncidentImpact,
+        FinancialImpact = riskIdentification.FinancialImpact,
+        OperationGovernanceImpact = riskIdentification.OperationGovernanceImpact
       };
 
       var riskLikelihoodList = new List<SelectListItem>
@@ -2237,7 +2300,11 @@ namespace MEMIS.Controllers.Risk
         RiskResidualLikelihoodId = riskIdentification.RiskResidualLikelihoodId,
         RiskResidualScore = riskIdentification.RiskResidualScore,
         RiskResidualRank = riskIdentification.RiskResidualRank,
-        RiskTreatmentPlans=riskIdentification.RiskTreatmentPlans,
+        RiskTreatmentPlans = riskIdentification.RiskTreatmentPlans,
+        ActivityBudget = riskIdentification.ActivityBudget,
+        IncidentImpact = riskIdentification.IncidentImpact,
+        FinancialImpact = riskIdentification.FinancialImpact,
+        OperationGovernanceImpact = riskIdentification.OperationGovernanceImpact
       };
 
       var riskLikelihoodList = new List<SelectListItem>
@@ -2280,6 +2347,9 @@ namespace MEMIS.Controllers.Risk
           {
             pp.ApprStatus = (int)riskWorkFlowStatus.resdassessrmorejected;
           }
+          pp.ControlEffectiveness = objectdto.ControlEffectiveness;
+          pp.Effectiveness = objectdto.Effectiveness;
+          pp.Recommendation = objectdto.Recommendation;
           await _context.SaveChangesAsync();
         }
         catch (DbUpdateConcurrencyException)
