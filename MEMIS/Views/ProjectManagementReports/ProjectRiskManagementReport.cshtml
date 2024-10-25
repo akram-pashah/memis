@@ -4,11 +4,39 @@
 @{
 }
 @using MEMIS.Data;
-@model List<ProjectRiskIdentification>
+@model ProjectInitiation
 @{
     ViewData["Title"] = "Project Management Reports";
+
+
+
+
+
+
+
     //Layout = "~/Views/Shared/_PlanningLayout.cshtml";
+
+
+
+
+
+
+
     Layout = "~/Pages/Shared/_ContentNavbarLayout.cshtml";
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     var ProjectInitiationId = ViewBag.SelectedProjectInitiationId;
 }
@@ -36,8 +64,8 @@
                     <input type="submit" class="btn btn-primary float-end float-right" value="Load" />
                 </div>
                 <div class="col d-flex justify-content-end mb-3">
-                  <a class="btn btn-outline-success float-end float-right" asp-action="ProjectRiskManagementReportExcel" asp-route-ProjectInitiationId="@ViewBag.SelectedProjectInitiationId" target="_blank">Export to Excel</a>
-                  <a class="btn btn-outline-danger float-end float-right" asp-action="ProjectRiskManagementReportPdf" asp-route-ProjectInitiationId="@ViewBag.SelectedProjectInitiationId" target="_blank">Export to Pdf</a>
+                    <a class="btn btn-outline-success float-end float-right" asp-action="ProjectRiskManagementReportExcel" asp-route-ProjectInitiationId="@ViewBag.SelectedProjectInitiationId" target="_blank">Export to Excel</a>
+                    <a class="btn btn-outline-danger float-end float-right" asp-action="ProjectRiskManagementReportPdf" asp-route-ProjectInitiationId="@ViewBag.SelectedProjectInitiationId" target="_blank">Export to Pdf</a>
 
                 </div>
             </form>
@@ -45,41 +73,88 @@
             <hr class="my-0" />
 
             <div class="card-body">
+                <div class="card accordion-item active align-items-center">
+
+                    <button type="button accordion-header mb-3 text-center align-items-center" class="accordion-button text-center" data-bs-toggle="collapse" data-bs-target="#accordionOne" aria-expanded="true" aria-controls="accordionOne">
+                        <h4 id="headingOne" class="text-center align-items-center">
+                            Project Details
+                        </h4>
+                    </button>
+
+                    <div id="accordionOne" class="accordion-collapse collapse show" data-bs-parent="#accordionExample">
+                        <div class="accordion-body">
+                            <div class="row">
+                                <div class="mb-3 col-4">
+                                    <label for="exampleFormControlReadOnlyInputPlain1" class="form-label">Project Name</label>
+                                    <input type="text" readonly class="form-control-plaintext" id="exampleFormControlReadOnlyInputPlain1" value="@Model.Name" />
+                                </div>
+                                <div class="mb-3 col-4">
+                                    <label for="exampleFormControlReadOnlyInputPlain2" class="form-label">Start Date</label>
+                                    <input type="text" readonly class="form-control-plaintext" id="exampleFormControlReadOnlyInputPlain2" value="@Model.StartDate.ToShortDateString()" />
+                                </div>
+                                <div class="mb-3 col-4">
+                                    <label for="exampleFormControlReadOnlyInputPlain3" class="form-label">End Date</label>
+                                    <input type="text" readonly class="form-control-plaintext" id="exampleFormControlReadOnlyInputPlain3" value="@Model.EndDate.ToShortDateString()" />
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="mb-3 col-4">
+                                    <label for="exampleFormControlReadOnlyInputPlain4" class="form-label">Project Manager</label>
+                                    <input type="text" readonly class="form-control-plaintext" id="exampleFormControlReadOnlyInputPlain4" value="@Model.Manager" />
+                                </div>
+                                <div class="mb-3 col-4">
+                                    <label for="exampleFormControlReadOnlyInputPlain5" class="form-label">Budget</label>
+                                    <input type="text" readonly class="form-control-plaintext" id="exampleFormControlReadOnlyInputPlain5" value="@Model.Cost" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <hr class="my-0" />
+
                 <div style="width:100%; overflow-x:auto;">
                     <table class="table table-striped table-bordered table-hover dt-responsive nowrap">
                         <thead class="table-active">
                             <tr>
                                 <th>
-                                    @Html.DisplayNameFor(model => model[0].Stage)
+                                    Stage
                                 </th>
                                 <th>
-                                    @Html.DisplayNameFor(model => model[0].Risk)
+                                    Risk
                                 </th>
                                 <th>
-                                    @Html.DisplayNameFor(model => model[0].Likelihood)
+                                    Likelihood
                                 </th>
                                 <th>
-                                    @Html.DisplayNameFor(model => model[0].Severity)
+                                    Severity
                                 </th>
                                 <th>
-                                    @Html.DisplayNameFor(model => model[0].Rank)
+                                    Rank
                                 </th>
                                 <th>
-                                    @Html.DisplayNameFor(model => model[0].Consequence)
+                                    Consequence
                                 </th>
                                 <th>
-                                    @Html.DisplayNameFor(model => model[0].Mitigation)
+                                    Mitigation
                                 </th>
                                 <th>
-                                    @Html.DisplayNameFor(model => model[0].RiskImplementationCost)
+                                    Risk Implementation Cost
                                 </th>
                                 <th>
-                                    @Html.DisplayNameFor(model => model[0].Ownership)
+                                    Ownership
                                 </th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach (var item in Model)
+                            @foreach (var item in Model.ProjectRiskIdentifications)
+
+
+
+
+
+
+
                             {
                                 <tr>
                                     <td>

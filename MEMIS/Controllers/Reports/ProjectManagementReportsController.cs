@@ -1,4 +1,3 @@
-using DocumentFormat.OpenXml.Office2010.Excel;
 using MEMIS.Data;
 using MEMIS.Helpers.ExcelReports;
 using MEMIS.Helpers.PdfReports;
@@ -105,16 +104,16 @@ namespace MEMIS.Controllers.Reports
 
     public async Task<IActionResult> ProjectRiskManagementReport(int? ProjectInitiationId)
     {
-      var query = _context.ProjectRiskIdentifications.AsQueryable();
+      var query = _context.ProjectInitiations.Include(x => x.ProjectRiskIdentifications).AsQueryable();
       if (ProjectInitiationId != null && ProjectInitiationId > 0)
       {
-        query = query.Where(x => x.ProjectInitiationId == ProjectInitiationId);
+        query = query.Where(x => x.Id == ProjectInitiationId);
       }
 
-      var list = await query.ToListAsync();
+      var data = await query.FirstOrDefaultAsync();
       ViewBag.SelectedProjectInitiationId = ProjectInitiationId ?? 0;
       ViewData["ProjectInitiations"] = new SelectList(_context.ProjectInitiations.OrderBy(d => d.Name), "Id", "Name");
-      return View(list);
+      return View(data);
     }
 
     public async Task<IActionResult> ProjectRiskManagementReportExcel(int? ProjectInitiationId)
