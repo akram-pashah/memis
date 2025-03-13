@@ -146,6 +146,13 @@ namespace MEMIS.Controllers
     {
       return RedirectToAction("Index", "Home");
     }
+    [HttpGet]
+    public async Task<IActionResult> ListUsers()
+    { 
+      var users = _userManager.Users; 
+      var userList = await users.ToListAsync(); 
+      return View(userList);  
+    }
     public async Task OnGetAsync(string? returnUrl = null)
     {
 

@@ -7,10 +7,10 @@ namespace MEMIS.Data
   {
     [Key]
     public int Id { get; set; }
-    [Display(Name = "Sub Program")]
+    //[Display(Name = "Sub Program")]
 
-    [MaxLength(1000)]
-    public string? subProgram { get; set; }
+    //[MaxLength(1000)]
+    //public string? subProgram { get; set; }
 
     [Display(Name = "Focus Area")]
     public virtual int? intFocus { get; set; }
@@ -33,9 +33,7 @@ namespace MEMIS.Data
     [ForeignKey("intActivity")]
     public virtual Activity? ActivityFk { get; set; }
     [Display(Name = "Unit Cost")]
-    public double? unitCost { get; set; }
-    [Display(Name = "Baseline")]
-    public long? baseline { get; set; }
+    public double? unitCost { get; set; } 
     [Display(Name = "Year")]
     public int? Year { get; set; }
 

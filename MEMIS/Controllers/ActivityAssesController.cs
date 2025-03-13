@@ -2,6 +2,7 @@ using cloudscribe.Pagination.Models;
 using MEMIS.Data;
 using MEMIS.Data.Risk;
 using MEMIS.Helpers.ExcelReports;
+using MEMIS.Helpers.PdfReports;
 using MEMIS.Models;
 using MEMIS.ViewModels;
 using MEMIS.ViewModels.Planning;
@@ -124,8 +125,7 @@ namespace MEMIS.Controllers
         {
           intIntervention = AnnualPlan.intIntervention,
           intAction = AnnualPlan.intAction,
-          intActivity = AnnualPlan.intActivity,
-          baseline = AnnualPlan.baseline,
+          intActivity = AnnualPlan.intActivity, 
           intDept = AnnualPlan.intDept,
           IdentifiedRisks = AnnualPlan.Risk,
         };
@@ -1197,6 +1197,25 @@ namespace MEMIS.Controllers
 
       return PartialView("_TotalActivities", dat);
     }
+    //public async Task<IActionResult> GetTotalActivityAssessPdf()
+    //{
+    //  try
+    //  {
+    //    var list = await _context.ActivityAssess
+    //    .Include(x => x.StrategicIntervention)
+    //      .ThenInclude(x => x.StrategicObjective)
+    //    .Include(x => x.QuaterlyPlans)
+    //    .Include(x => x.ActivityAssessRegions)
+    //      .ThenInclude(x => x.QuaterlyPlans).ToListAsync();
+    //    var stream = PdfHandler.GetTotalActivityAssessPdf(list);
+    //    return File(stream, "application/pdf", "Quarterly Report.pdf");
+    //  }
+    //  catch (Exception ex)
+    //  {
+
+    //    throw;
+    //  }
+    //}
     public async Task<IActionResult> DirApprStatus(int? id)
     {
       if (id == null || _context.ActivityAssess == null)

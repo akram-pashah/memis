@@ -147,11 +147,31 @@ namespace MEMIS
     {
       List<SelectListItem> results = new List<SelectListItem>
             {
-                new SelectListItem() { Text = "Retail", Value = "1" },
+                new SelectListItem() { Text = "Wholesale Pharmacy", Value = "1" },
                 new SelectListItem() { Text = "Wholesale", Value = "2" },
                 new SelectListItem() { Text = "Medical", Value = "3" },
                 new SelectListItem() { Text = "Device", Value = "4" },
                 new SelectListItem() { Text = "AnnexStore", Value = "5" },
+            };
+
+      return results;
+    }
+    public static List<SelectListItem> CategoryofFacility()
+    {
+      List<SelectListItem> results = new List<SelectListItem>
+            {
+                new SelectListItem() { Text = "Retail Pharmacy", Value = "1" },
+                new SelectListItem() { Text = "Retail Pharmacy ", Value = "2" },
+                new SelectListItem() { Text = "Drug Shop", Value = "3" },
+                new SelectListItem() { Text = "External stores", Value = "4" },
+                new SelectListItem() { Text = "Hospital", Value = "5" },
+                new SelectListItem() { Text = "HCIV", Value = "6" },
+                new SelectListItem() { Text = "HCIII", Value = "7" },
+                new SelectListItem() { Text = "Clinic", Value = "8" },
+                new SelectListItem() { Text = "Herbal Selling Outlet", Value = "9" },
+                new SelectListItem() { Text = "Shift Market ", Value = "10" },
+                new SelectListItem() { Text = "Pharmaceutical/Medical Device Manufacturing premise", Value = "11" },
+                new SelectListItem() { Text = "Others", Value = "12" }, 
             };
 
       return results;
@@ -460,7 +480,22 @@ namespace MEMIS
       _ => "black"
     };
 
-  }
+    public static List<SelectListItem> PMSActivity()
+    {
+      List<SelectListItem> results = new List<SelectListItem>
+            {
+                new SelectListItem() { Text = "Sampling", Value = "1" },
+                new SelectListItem() { Text = "Follow-up on Recall", Value = "2" },
+                new SelectListItem() { Text = "Complaint investigation", Value = "3" },
+                new SelectListItem() { Text = "Others", Value = "4" },
+                new SelectListItem() { Text = "None", Value = "5" },
+            };
+
+      return results;
+    }
+
+  } 
+  
   public enum EnumProductClassification
   {
     Human = 1,

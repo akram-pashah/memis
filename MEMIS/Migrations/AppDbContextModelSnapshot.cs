@@ -421,9 +421,6 @@ namespace MEMIS.Migrations
                     b.Property<long?>("annualTarget")
                         .HasColumnType("bigint");
 
-                    b.Property<long?>("baseline")
-                        .HasColumnType("bigint");
-
                     b.Property<int?>("intAction")
                         .HasColumnType("int");
 
@@ -451,10 +448,6 @@ namespace MEMIS.Migrations
 
                     b.Property<int?>("regStatus")
                         .HasColumnType("int");
-
-                    b.Property<string>("subProgram")
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
 
                     b.Property<double?>("unitCost")
                         .HasColumnType("float");
@@ -484,37 +477,34 @@ namespace MEMIS.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("CategoryOfpremises")
+                    b.Property<int?>("CategoryOfpremises")
                         .HasColumnType("int");
 
-                    b.Property<int>("CategoryStatus")
+                    b.Property<int?>("CategoryStatus")
                         .HasColumnType("int");
 
-                    b.Property<int>("ClassofDrugs")
-                        .HasColumnType("int");
-
-                    b.Property<int>("CompAction")
-                        .HasColumnType("int");
+                    b.Property<string>("Complaint_Product")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Contact")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("DistrictId")
                         .HasColumnType("int");
 
                     b.Property<string>("FacilityName")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("FacilityPersonType")
+                    b.Property<int?>("FacilityPersonType")
                         .HasColumnType("int");
 
-                    b.Property<int>("FacilityStatus")
+                    b.Property<int?>("FacilityStatus")
                         .HasColumnType("int");
 
-                    b.Property<string>("GPS")
-                        .IsRequired()
+                    b.Property<string>("Followup_Comment")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Followup_Product")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("InspectionDate")
@@ -526,25 +516,41 @@ namespace MEMIS.Migrations
                     b.Property<string>("InspectorName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("LicenseStatus")
+                    b.Property<decimal>("Latitude")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("LicenseNo")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("LicenseStatus")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("Longitude")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("Other_Activity")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("PMSActivity")
                         .HasColumnType("int");
 
                     b.Property<string>("PersonName")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("PremisesCondition")
+                    b.Property<int?>("PremisesCondition")
                         .HasColumnType("int");
 
                     b.Property<string>("Qualifications")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("RecordKeeping")
+                    b.Property<string>("Sample_Batch")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("Sample_No")
                         .HasColumnType("int");
 
-                    b.Property<int>("UnregisteredDrugs")
-                        .HasColumnType("int");
+                    b.Property<string>("Sample_ProductName")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid>("intRegion")
                         .HasColumnType("uniqueidentifier");
@@ -924,34 +930,31 @@ namespace MEMIS.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("CategoryOfpremises")
+                    b.Property<int?>("CategoryOfpremises")
                         .HasColumnType("int");
 
-                    b.Property<int>("CategoryStatus")
+                    b.Property<int?>("CategoryStatus")
                         .HasColumnType("int");
 
                     b.Property<string>("Contact")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("DistrictId")
                         .HasColumnType("int");
 
                     b.Property<string>("FacilityName")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("FacilityPersonType")
+                    b.Property<int?>("FacilityPersonType")
                         .HasColumnType("int");
 
                     b.Property<int>("FacilityStatus")
                         .HasColumnType("int");
 
-                    b.Property<int>("FacilityType")
+                    b.Property<int?>("FacilityType")
                         .HasColumnType("int");
 
                     b.Property<string>("GPS")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("InspectionDate")
@@ -963,21 +966,28 @@ namespace MEMIS.Migrations
                     b.Property<string>("InspectorName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("LicenseStatus")
+                    b.Property<decimal>("Latitude")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("LicenseNo")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("LicenseStatus")
                         .HasColumnType("int");
 
+                    b.Property<decimal>("Longitude")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<string>("PersonName")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Qualifications")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("RecommendedforGDP")
+                    b.Property<int?>("RecommendedforGDP")
                         .HasColumnType("int");
 
-                    b.Property<int>("certStatus")
+                    b.Property<int?>("certStatus")
                         .HasColumnType("int");
 
                     b.Property<Guid>("intRegion")
@@ -1000,14 +1010,13 @@ namespace MEMIS.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("CategoryOfpremises")
+                    b.Property<int?>("CategoryOfpremises")
                         .HasColumnType("int");
 
-                    b.Property<int>("CategoryStatus")
+                    b.Property<int?>("CategoryStatus")
                         .HasColumnType("int");
 
                     b.Property<string>("Contact")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("DistrictId")
@@ -1017,17 +1026,16 @@ namespace MEMIS.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("FacilityPersonType")
+                    b.Property<int?>("FacilityPersonType")
                         .HasColumnType("int");
 
                     b.Property<int>("FacilityStatus")
                         .HasColumnType("int");
 
-                    b.Property<int>("FacilityType")
+                    b.Property<int?>("FacilityType")
                         .HasColumnType("int");
 
                     b.Property<string>("GPS")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("InspectionDate")
@@ -1039,21 +1047,28 @@ namespace MEMIS.Migrations
                     b.Property<string>("InspectorName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("LicenseStatus")
+                    b.Property<decimal>("Latitude")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("LicenseNo")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("LicenseStatus")
                         .HasColumnType("int");
 
+                    b.Property<decimal>("Longitude")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<string>("PersonName")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Qualifications")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("RecommendedforGPP")
+                    b.Property<int?>("RecommendedforGPP")
                         .HasColumnType("int");
 
-                    b.Property<int>("certStatus")
+                    b.Property<int?>("certStatus")
                         .HasColumnType("int");
 
                     b.Property<Guid>("intRegion")
@@ -1723,6 +1738,12 @@ namespace MEMIS.Migrations
                     b.Property<int?>("intActivity")
                         .HasColumnType("int");
 
+                    b.Property<Guid?>("intDept")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("intDir")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<int?>("intIntervention")
                         .HasColumnType("int");
 
@@ -1737,6 +1758,10 @@ namespace MEMIS.Migrations
                     b.HasIndex("intAction");
 
                     b.HasIndex("intActivity");
+
+                    b.HasIndex("intDept");
+
+                    b.HasIndex("intDir");
 
                     b.HasIndex("intIntervention");
 
@@ -2140,6 +2165,50 @@ namespace MEMIS.Migrations
                     b.HasIndex("DeptPlanId");
 
                     b.ToTable("QuaterlyPlans");
+                });
+
+            modelBuilder.Entity("MEMIS.Data.RadioTalkShow", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("DistrictId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("FacilityName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("InspectionDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("InspectorName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("Latitude")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("Longitude")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<Guid>("RegionintRegion")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Topic")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("intRegion")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DistrictId");
+
+                    b.HasIndex("RegionintRegion");
+
+                    b.ToTable("RadioTalkShow");
                 });
 
             modelBuilder.Entity("MEMIS.Data.Region", b =>
@@ -3257,6 +3326,53 @@ namespace MEMIS.Migrations
                     b.ToTable("SDTMaster");
                 });
 
+            modelBuilder.Entity("MEMIS.Data.SensitizationMeeting", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("DistrictId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("FacilityName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("InspectionDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("InspectorName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("Latitude")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("Longitude")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int?>("Participants")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("RegionintRegion")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Topic")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("intRegion")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DistrictId");
+
+                    b.HasIndex("RegionintRegion");
+
+                    b.ToTable("SensitizationMeeting");
+                });
+
             modelBuilder.Entity("MEMIS.Data.StrategicAction", b =>
                 {
                     b.Property<int>("intAction")
@@ -4076,6 +4192,14 @@ namespace MEMIS.Migrations
                         .WithMany()
                         .HasForeignKey("intActivity");
 
+                    b.HasOne("MEMIS.Data.Department", "DepartmentFk")
+                        .WithMany()
+                        .HasForeignKey("intDept");
+
+                    b.HasOne("MEMIS.Data.Directorate", "DirectorateFk")
+                        .WithMany()
+                        .HasForeignKey("intDir");
+
                     b.HasOne("MEMIS.Data.StrategicIntervention", "StrategicInterventionFK")
                         .WithMany()
                         .HasForeignKey("intIntervention");
@@ -4085,6 +4209,10 @@ namespace MEMIS.Migrations
                         .HasForeignKey("intObjective");
 
                     b.Navigation("ActivityFK");
+
+                    b.Navigation("DepartmentFk");
+
+                    b.Navigation("DirectorateFk");
 
                     b.Navigation("StrategicActionFK");
 
@@ -4199,6 +4327,25 @@ namespace MEMIS.Migrations
                     b.Navigation("ActivityAssessmentRegion");
 
                     b.Navigation("DeptPlan");
+                });
+
+            modelBuilder.Entity("MEMIS.Data.RadioTalkShow", b =>
+                {
+                    b.HasOne("MEMIS.Data.District", "District")
+                        .WithMany()
+                        .HasForeignKey("DistrictId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("MEMIS.Data.Region", "Region")
+                        .WithMany()
+                        .HasForeignKey("RegionintRegion")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("District");
+
+                    b.Navigation("Region");
                 });
 
             modelBuilder.Entity("MEMIS.Data.Region", b =>
@@ -4465,6 +4612,25 @@ namespace MEMIS.Migrations
                         .HasForeignKey("DepartmentId");
 
                     b.Navigation("DepartmentFk");
+                });
+
+            modelBuilder.Entity("MEMIS.Data.SensitizationMeeting", b =>
+                {
+                    b.HasOne("MEMIS.Data.District", "District")
+                        .WithMany()
+                        .HasForeignKey("DistrictId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("MEMIS.Data.Region", "Region")
+                        .WithMany()
+                        .HasForeignKey("RegionintRegion")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("District");
+
+                    b.Navigation("Region");
                 });
 
             modelBuilder.Entity("MEMIS.Data.StrategicAction", b =>

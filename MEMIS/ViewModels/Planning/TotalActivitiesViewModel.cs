@@ -1,9 +1,12 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace MEMIS.ViewModels.Planning
 {
   public class TotalActivitiesViewModel
   {
-    public int TotalActivities { get; set; }
+    public int TotalActivities { get; set; } 
     public double? TotalBudget { get; set; }
+    
     public double? TotalTarget { get; set; }
     public int PendingActivities { get; set; }
     public List<int> ActivitiesCount { get; set; }
@@ -11,12 +14,14 @@ namespace MEMIS.ViewModels.Planning
     public List<string> Departments { get; set; }
     public List<int> FocusAreaActivitiesCount { get; set; }
     public List<string> FocusAreas { get; set; }
+
     public List<DepartmentBudget> BudgetWithDepartment { get; set; } = new();
   }
   public class DepartmentBudget
   {
     public string Name { get; set; }
     public string Code { get; set; }
+    [DisplayFormat(DataFormatString = "{0:N0}", ApplyFormatInEditMode = false)]
     public double? Budget { get; set; }
   }
 }

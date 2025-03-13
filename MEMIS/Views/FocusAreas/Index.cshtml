@@ -34,14 +34,14 @@
           @foreach (var item in Model.Data)
           {
     <tr>
-      <td>
+      <td width="150px">
         @Html.DisplayFor(modelItem => item.FocusAreacode)
       </td>
       <td>
         @Html.DisplayFor(modelItem => item.FocusAreaName)
       </td>
-      <td>
-        <div class="btn-group" role="group" aria-label="Actions">
+      <td width="150px">
+        <div class="btn-group" role="group" aria-label="Action">
           <a asp-action="Edit" asp-route-id="@item.intFocus" class="btn btn-secondary" data-toggle="tooltip" data-placement="top" title="Edit">
             <i class='bx bx-edit'></i>
           </a>

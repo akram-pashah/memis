@@ -1,0 +1,173 @@
+@model MEMIS.Models.SensitizationMeetingDto
+@{
+    ViewData["Title"] = "Create";
+    //Layout = "~/Views/Shared/_GISLayout.cshtml";
+    Layout = "~/Pages/Shared/_ContentNavbarLayout.cshtml";
+}
+
+<h5>Radio Talk Shows </h5>
+<hr />
+<div></div>
+<div class="row">
+
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="InspectionDate" class="control-label"></label>
+                <input asp-for="InspectionDate" class="form-control" />
+                <span asp-validation-for="InspectionDate" class="text-danger"></span>
+            </div>
+            <br />
+            <div class="form-group">
+                <label asp-for="InspectorName" class="control-label"></label>
+                <input asp-for="InspectorName" class="form-control" />
+                <span asp-validation-for="InspectorName" class="text-danger"></span>
+            </div>
+            <br />
+            <div class="form-group">
+                <label asp-for="Latitude" class="control-label"></label>
+                <div class="input-group">
+                    <input asp-for="Latitude" class="form-control" readonly />
+                    <button type="button" id="getCoordinates" class="btn btn-sm btn-primary"><i class="bx bx-map-pin"></i> &nbsp;Location</button>
+                </div>
+                <span asp-validation-for="Latitude" class="text-danger"></span>
+            </div>
+            <br />
+            <div class="form-group">
+                <label asp-for="Longitude" class="control-label"></label>
+                <div class="input-group">
+                    <input asp-for="Longitude" class="form-control" readonly />
+                </div>
+                <span asp-validation-for="Longitude" class="text-danger"></span>
+            </div>
+            <br />
+            <div class="form-group">
+                <label asp-for="intRegion" class="control-label"></label>
+                <select asp-for="intRegion" class="form-control" asp-items="ViewBag.intRegion"></select>
+            </div>
+            <br />
+            <div class="form-group">
+                <label asp-for="DistrictId" class="control-label">District</label>
+                <select asp-for="DistrictId" class="form-control" asp-items="ViewBag.DistrictId"></select>
+            </div>
+            <br />
+            <div class="form-group">
+                <label asp-for="FacilityName" class="control-label"></label>
+                <input asp-for="FacilityName" class="form-control" />
+                <span asp-validation-for="FacilityName" class="text-danger"></span>
+            </div>
+            <br />
+            <div class="form-group">
+                <label asp-for="Topic" class="control-label"></label>
+                <input asp-for="Topic" class="form-control" />
+                <span asp-validation-for="Topic" class="text-danger"></span>
+            </div>
+            <br />
+            <div class="form-group">
+                <label asp-for="Participants" class="control-label"></label>
+                <input asp-for="Participants" class="form-control" />
+                <span asp-validation-for="Participants" class="text-danger"></span>
+            </div>
+            <br />
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+<br />
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @* <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> *@
+    @* <script type="text/javascript">
+        $(document).ready(function () {
+            // Hide all conditional fields initially
+            $('.conditional-fields').hide();
+
+
+        });
+
+    </script> *@
+    <script type="text/javascript">
+        $(document).ready(function () {
+            // Hide all conditional fields initially
+            $('.conditional-fields').hide();
+            $('.conditional-fields2').hide();
+            $('.conditional-fields3').hide();
+
+            function showConditionalFields() {
+                var facilityStatusValue = $('#FacilityStatus').val();
+                var licenseStatusValue = $('#LicenseStatus').val();
+
+                if (facilityStatusValue === '1') {
+                    $('#open-facilty').show();
+                }
+
+                if (licenseStatusValue === '1') {
+                    $('#licno').show();
+                }
+            }
+
+            // Call the function on page load to check initial selections
+            showConditionalFields();
+
+            $('#FacilityStatus').change(function () {
+                var selectedValue = $(this).val();
+
+                // Hide all conditional fields
+                $('.conditional-fields').hide();
+
+                // Show relevant fields based on the selected value
+                if (selectedValue === '1') {
+                    $('#open-facilty').show();
+                }
+            });
+            $('#LicenseStatus').change(function () {
+                var selectedValue2 = $(this).val();
+
+                // Hide all conditional fields
+                $('.conditional-fields2').hide();
+
+                // Show relevant fields based on the selected value
+                if (selectedValue2 === '1') {
+                    $('#licno').show();
+                }
+            });
+
+            $('#complianceType').change(function () {
+                var selectedValue = $(this).val();
+
+                // Hide all conditional fields
+                $('.conditional-fields3').hide();
+
+                // Show relevant fields based on the selected value
+                if (selectedValue === '1') {
+                    $('#sampling').show();
+                } else if (selectedValue === '2') {
+                    $('#followup').show();
+                } else if (selectedValue === '3') {
+                    $('#complaint').show();
+                }
+                else if (selectedValue === '4') {
+                    $('#other').show();
+                }
+            });
+            $("#getCoordinates").click(function () {
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(showPosition);
+                } else {
+                    alert("Geolocation is not supported by this browser.");
+                }
+            });
+
+            var showPosition = (position) => {
+                $("#Latitude").val(position.coords.latitude);
+                $("#Longitude").val(position.coords.longitude);
+            }
+        });
+    </script>
+}

@@ -50,7 +50,14 @@ namespace MEMIS.Data
     [Display(Name = "Responsible Party")]
     [MaxLength(1000)]
     public string ResponsibleParty { get; set; }
-
+    [Display(Name = "Department")]
+    public virtual Guid? intDept { get; set; }
+    [ForeignKey("intDept")]
+    public virtual Department? DepartmentFk { get; set; }
+    [Display(Name = "Directorate")]
+    public virtual Guid? intDir { get; set; }
+    [ForeignKey("intDir")]
+    public virtual Directorate? DirectorateFk { get; set; }
 
 
   }

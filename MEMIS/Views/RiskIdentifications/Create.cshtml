@@ -283,7 +283,7 @@
             <br />
             <div class="form-group">
                 <label asp-for="RiskRank" class="control-label">Risk Rank</label>
-                <input asp-for="RiskRank" id="RiskRank" class="form-control" required readonly />
+                <input asp-for="RiskRank" id="RiskRank" class="form-control"   required readonly />
                 <span asp-validation-for="RiskRank" class="text-danger"></span>
             </div>
             <br />
@@ -404,6 +404,7 @@
                     document.getElementById('RiskRank').value = data.riskValue;
                     document.getElementById('RiskScore').value = data.riskRank;
                     document.getElementById('EvalCriteria').value = data.evaluationCriteria;
+                    setRiskRankColor(data.riskValue);
                 },
                 error: function (error) {
                     //log or alert the error
@@ -592,6 +593,33 @@
                 $(tr).find('td:first').text(index + 1);
             });
         }
+    function setRiskRankColor(riskRankValue) {
+        const riskRankInput = document.getElementById('RiskRank');
+        let color;
+
+        switch (riskRankValue) {
+            case 'Very Low':
+                color = '#07aa53';  
+                break;
+            case 'Low':
+                color = '#ffff00';  
+                break;
+            case 'Medium':
+                color = '#ffc000'; 
+                break;
+            case 'High':
+                color = '#f0b284';
+                break;
+            case 'Very High':
+                color = '#f60605';
+                break;
+            default:
+                color = ''; // Default color
+                break;
+        }
+         
+        riskRankInput.style.backgroundColor = color;
+    }
 
 </script>
 

@@ -6,56 +6,65 @@ using System.Linq;
 using System.Threading.Tasks;
 
 namespace MEMIS.Models
-{ 
-    public class ComplianceSupportSupervisionDto
-    {
-        [Key]
-        public int Id { get; set; }
-        [Display(Name = "Inspection Date")]
-        public DateTime InspectionDate { get; set; }
-        [Display(Name = "Inspector Name")]
+{
+  public class ComplianceSupportSupervisionDto
+  {
+    [Key]
+    public int Id { get; set; }
+    [Display(Name = "Inspection Date")]
+    public DateTime InspectionDate { get; set; }
+    [Display(Name = "Inspector Name")]
 
-        public string? InspectorName { get; set; }
-        public string GPS { get; set; }
-        [Display(Name = "Region")]
-        public virtual Guid intRegion { get; set; } 
-        public virtual int DistrictId { get; set; } 
-        public string FacilityName { get; set; }
-        [Display(Name = "Facility Status")]
+    public string? InspectorName { get; set; }
+    public string GPS { get; set; }
+    [Display(Name = "Region")]
+    public virtual Guid intRegion { get; set; }
+    public virtual int DistrictId { get; set; }
+    public string? FacilityName { get; set; }
+    [Display(Name = "Facility Status")]
 
-        public int FacilityStatus { get; set; }
-        [Display(Name = "Person Found at Facility")]
+    public int? FacilityStatus { get; set; } = 0;
+    [Display(Name = "Person Found at Facility")]
 
-        public int FacilityPersonType { get; set; } 
-        public string PersonName { get; set; }
-        public string Contact { get; set; }
-        public string Qualifications { get; set; }
-        [Display(Name = "Category of  Premises")]
-        public int CategoryOfpremises { get; set; }
+    public int? FacilityPersonType { get; set; } = 0;
+    public string? PersonName { get; set; }
+    public string? Contact { get; set; }
+    public string? Qualifications { get; set; }
+    [Display(Name = "Category of  Facility")]
+    public int? CategoryOfpremises { get; set; } = 0;
 
-        [Display(Name = "License Status")]
-        public int LicenseStatus { get; set; }
+    [Display(Name = "License Status")]
+    public int? LicenseStatus { get; set; } = 0;
+    [Display(Name = "PMS Activity Carried Out")]
+    public int? PMSActivity { get; set; } = 0;
 
-        [Display(Name = "Category Status")]
-        public int CategoryStatus { get; set; }
-        [Display(Name = "Certification Status")]
-        public int CertificationStatus { get; set; }
-        [Display(Name = "GDP Recommendation")]
-        public int GDPRecommendation { get; set; }
+    [Display(Name = "Category of Product Sampled")]
+    public int? CategoryStatus { get; set; } = 0;
+    [Display(Name = "Certification Status")]
+    public int? CertificationStatus { get; set; } = 0; 
 
-        [Display(Name = "Condition of Premises")]
-        public int PremisesCondition { get; set; }
+    [Display(Name = "Condition of Premises")]
+    public int? PremisesCondition { get; set; } = 0; 
+    public string? InspectorId { get; set; }
+    public decimal Latitude { get; set; }
+    public decimal Longitude { get; set; }
+    [Display(Name = "License No.")]
 
-        [Display(Name = "Record Keeping")]
-        public int RecordKeeping { get; set; }
-        [Display(Name = "Class of Drugs")]
-        public int ClassofDrugs { get; set; }
+    public string? LicenseNo { get; set; }
+    [Display(Name = "Name of Product Sampled")]
+    public string? Sample_ProductName { get; set; }
+    [Display(Name = "Number of Samples Collected ")]
+    public int? Sample_No { get; set; } = 0;
+    [Display(Name = "Batch Number of Samples Collected ")]
 
-        [Display(Name = "Unregistered Drugs")]
-        public int UnregisteredDrugs { get; set; }
-
-        [Display(Name = "Action")]
-        public int CompAction { get; set; }  
-        public string? InspectorId { get; set; } 
-    }
+    public string? Sample_Batch { get; set; }
+    [Display(Name = "Product being Followed Up ")]
+    public string? Followup_Product { get; set; }
+    [Display(Name = "Comment on Over all Follow up  ")]
+    public string? Followup_Comment { get; set; }
+    [Display(Name = "Product Complaint Investigated ")]
+    public string? Complaint_Product { get; set; }
+    [Display(Name = "Specify Activity ")]
+    public string? Other_Activity { get; set; }
+  }
 }

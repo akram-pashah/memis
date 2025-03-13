@@ -1,9 +1,8 @@
-
 @model MEMIS.Models.GDPDto
 @{
-  ViewData["Title"] = "Create";
-  //Layout = "~/Views/Shared/_GISLayout.cshtml";
-  Layout = "~/Pages/Shared/_ContentNavbarLayout.cshtml";
+    ViewData["Title"] = "Create";
+    //Layout = "~/Views/Shared/_GISLayout.cshtml";
+    Layout = "~/Pages/Shared/_ContentNavbarLayout.cshtml";
 }
 
 <h5>GDP</h5>
@@ -21,9 +20,26 @@
             </div>
             <br />
             <div class="form-group">
-                <label asp-for="GPS" class="control-label"></label>
-                <input asp-for="GPS" class="form-control" />
-                <span asp-validation-for="GPS" class="text-danger"></span>
+                <label asp-for="InspectorName" class="control-label"></label>
+                <input asp-for="InspectorName" class="form-control" />
+                <span asp-validation-for="InspectorName" class="text-danger"></span>
+            </div>
+            <br />
+            <div class="form-group">
+                <label asp-for="Latitude" class="control-label"></label>
+                <div class="input-group">
+                    <input asp-for="Latitude" class="form-control" readonly />
+                    <button type="button" id="getCoordinates" class="btn btn-sm btn-primary"><i class="bx bx-map-pin"></i> &nbsp;Location</button>
+                </div>
+                <span asp-validation-for="Latitude" class="text-danger"></span>
+            </div>
+            <br />
+            <div class="form-group">
+                <label asp-for="Longitude" class="control-label"></label>
+                <div class="input-group">
+                    <input asp-for="Longitude" class="form-control" readonly />
+                </div>
+                <span asp-validation-for="Longitude" class="text-danger"></span>
             </div>
             <br />
             <div class="form-group">
@@ -48,66 +64,76 @@
                 <span asp-validation-for="FacilityStatus" class="text-danger"></span>
             </div>
             <br />
-            <div class="form-group">
-                <label asp-for="FacilityPersonType" class="control-label"></label>
-                <select asp-for="FacilityPersonType" class="form-control" asp-items="ViewBag.PersonFoundatFacility"></select>
-                <span asp-validation-for="FacilityPersonType" class="text-danger"></span>
-            </div>
-            <br />
-            <div class="form-group">
-                <label asp-for="PersonName" class="control-label">Person Name</label>
-                <input asp-for="PersonName" class="form-control" />
-                <span asp-validation-for="PersonName" class="text-danger"></span>
-            </div>
-            <br />
-            <div class="form-group">
-                <label asp-for="Contact" class="control-label"></label>
-                <input asp-for="Contact" class="form-control" />
-                <span asp-validation-for="Contact" class="text-danger"></span>
-            </div>
-            <br />
-            <div class="form-group">
-                <label asp-for="Qualifications" class="control-label"></label>
-                <input asp-for="Qualifications" class="form-control" />
-                <span asp-validation-for="Qualifications" class="text-danger"></span>
-            </div>
-            <br />
-            <div class="form-group">
-                <label asp-for="CategoryOfpremises" class="control-label"></label>
-                <select asp-for="CategoryOfpremises" class="form-control" asp-items="ViewBag.Category"></select>
-                <span asp-validation-for="CategoryOfpremises" class="text-danger"></span>
-            </div>
-            <br />
-           
+            <div id="open-facilty" class="conditional-fields">
+                <div class="form-group">
+                    <label asp-for="FacilityPersonType" class="control-label"></label>
+                    <select asp-for="FacilityPersonType" class="form-control" asp-items="ViewBag.PersonFoundatFacility"></select>
+                    <span asp-validation-for="FacilityPersonType" class="text-danger"></span>
+                </div>
+                <br />
+                <div class="form-group">
+                    <label asp-for="PersonName" class="control-label">Person Name</label>
+                    <input asp-for="PersonName" class="form-control" />
+                    <span asp-validation-for="PersonName" class="text-danger"></span>
+                </div>
+                <br />
+                <div class="form-group">
+                    <label asp-for="Contact" class="control-label"></label>
+                    <input asp-for="Contact" class="form-control" />
+                    <span asp-validation-for="Contact" class="text-danger"></span>
+                </div>
+                <br />
+                <div class="form-group">
+                    <label asp-for="Qualifications" class="control-label"></label>
+                    <input asp-for="Qualifications" class="form-control" />
+                    <span asp-validation-for="Qualifications" class="text-danger"></span>
+                </div>
+                <br />
+                <div class="form-group">
+                    <label asp-for="CategoryOfpremises" class="control-label"></label>
+                    <select asp-for="CategoryOfpremises" class="form-control" asp-items="ViewBag.Category"></select>
+                    <span asp-validation-for="CategoryOfpremises" class="text-danger"></span>
+                </div>
+                <br />
 
-            <div class="form-group">
-                <label asp-for="LicenseStatus" class="control-label"></label>
-                <select asp-for="LicenseStatus" class="form-control" asp-items="ViewBag.LicenseStatus"></select>
-                <span asp-validation-for="LicenseStatus" class="text-danger"></span>
-            </div>
-            <br />
-            <div class="form-group">
-                <label asp-for="CategoryStatus" class="control-label"></label>
-                <select asp-for="CategoryStatus" class="form-control" asp-items="ViewBag.CategoryofDrugs"></select>
-                <span asp-validation-for="CategoryStatus" class="text-danger"></span>
-            </div>
-            <br />
-            <div class="form-group">
-                <label asp-for="FacilityType" class="control-label"></label>
-                <select asp-for="FacilityType" class="form-control" asp-items="ViewBag.FacilityType"></select>
-                <span asp-validation-for="FacilityType" class="text-danger"></span>
-            </div>
-            <br />
-            <div class="form-group">
-                <label asp-for="certStatus" class="control-label"></label>
-                <select asp-for="certStatus" class="form-control" asp-items="ViewBag.CertificationStatus"></select>
-                <span asp-validation-for="certStatus" class="text-danger"></span>
-            </div>
-            <br />
-            <div class="form-group">
-                <label asp-for="RecommendedforGDP" class="control-label"></label>
-                <select asp-for="RecommendedforGDP" class="form-control" asp-items="ViewBag.GDPRecommendation"></select>
-                <span asp-validation-for="RecommendedforGDP" class="text-danger"></span>
+
+                <div class="form-group">
+                    <label asp-for="LicenseStatus" class="control-label"></label>
+                    <select asp-for="LicenseStatus" class="form-control" asp-items="ViewBag.LicenseStatus"></select>
+                    <span asp-validation-for="LicenseStatus" class="text-danger"></span>
+                </div>
+                <br />
+                <div id="licno" class="conditional-fields2">
+                    <div class="form-group">
+                        <label asp-for="LicenseNo" class="control-label">License No.</label>
+                        <input asp-for="LicenseNo" class="form-control" />
+                        <span asp-validation-for="LicenseNo" class="text-danger"></span>
+                    </div>
+                </div>
+                <br />
+                <div class="form-group">
+                    <label asp-for="CategoryStatus" class="control-label"></label>
+                    <select asp-for="CategoryStatus" class="form-control" asp-items="ViewBag.CategoryofDrugs"></select>
+                    <span asp-validation-for="CategoryStatus" class="text-danger"></span>
+                </div>
+                <br />
+                <div class="form-group">
+                    <label asp-for="FacilityType" class="control-label"></label>
+                    <select asp-for="FacilityType" class="form-control" asp-items="ViewBag.FacilityType"></select>
+                    <span asp-validation-for="FacilityType" class="text-danger"></span>
+                </div>
+                <br />
+                <div class="form-group">
+                    <label asp-for="certStatus" class="control-label"></label>
+                    <select asp-for="certStatus" class="form-control" asp-items="ViewBag.CertificationStatus"></select>
+                    <span asp-validation-for="certStatus" class="text-danger"></span>
+                </div>
+                <br />
+                <div class="form-group">
+                    <label asp-for="RecommendedforGDP" class="control-label"></label>
+                    <select asp-for="RecommendedforGDP" class="form-control" asp-items="ViewBag.GDPRecommendation"></select>
+                    <span asp-validation-for="RecommendedforGDP" class="text-danger"></span>
+                </div>
             </div>
             <br />
             <div class="form-group">
@@ -118,11 +144,66 @@
 </div>
 <br />
 <div>
-	<a asp-action="Index">Back to List</a>
+    <a asp-action="Index">Back to List</a>
 </div>
 
 @section Scripts {
-	@{
-//await Html.RenderPartialAsync("_ValidationScriptsPartial");
-	}
+    <script type="text/javascript">
+        $(document).ready(function () {
+            // Hide all conditional fields initially
+            $('.conditional-fields').hide();
+            $('.conditional-fields2').hide();
+
+            function showConditionalFields() {
+                var facilityStatusValue = $('#FacilityStatus').val();
+                var licenseStatusValue = $('#LicenseStatus').val();
+
+                if (facilityStatusValue === '1') {
+                    $('#open-facilty').show();
+                }
+
+                if (licenseStatusValue === '1') {
+                    $('#licno').show();
+                }
+            }
+
+            // Call the function on page load to check initial selections
+            showConditionalFields();
+
+            $('#FacilityStatus').change(function () {
+                var selectedValue = $(this).val();
+
+                // Hide all conditional fields
+                $('.conditional-fields').hide();
+
+                // Show relevant fields based on the selected value
+                if (selectedValue === '1') {
+                    $('#open-facilty').show();
+                }
+            });
+            $('#LicenseStatus').change(function () {
+                var selectedValue2 = $(this).val();
+
+                // Hide all conditional fields
+                $('.conditional-fields2').hide();
+
+                // Show relevant fields based on the selected value
+                if (selectedValue2 === '1') {
+                    $('#licno').show();
+                }
+            });
+            $("#getCoordinates").click(function () {
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(showPosition);
+                } else {
+                    alert("Geolocation is not supported by this browser.");
+                }
+            });
+
+            var showPosition = (position) => {
+                $("#Latitude").val(position.coords.latitude);
+                $("#Longitude").val(position.coords.longitude);
+            }
+        });
+    </script>
 }

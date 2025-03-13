@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -16,7 +16,7 @@ namespace MEMIS.Data
         public DateTime InspectionDate { get; set; }
         [Display(Name = "Inspector Name")]
         public string? InspectorName { get; set; }
-        public string GPS { get; set; }
+        public string? GPS { get; set; }
         [Display(Name = "Region")]
         public virtual Guid intRegion { get; set; }
         [ForeignKey("intRegion")]
@@ -26,32 +26,37 @@ namespace MEMIS.Data
         [ForeignKey("DistrictId")]
         public virtual District District { get; set; }
         [Display(Name = "Name of Facility")]
-        public string FacilityName { get; set; }
+        public string? FacilityName { get; set; }
         [Display(Name = "Facility Status")]
 
-        public int FacilityStatus { get; set; }
-        [Display(Name = "Person Found at Facility")]
+        public int FacilityStatus { get; set; } = 0;
+    [Display(Name = "Person Found at Facility")]
 
-        public int FacilityPersonType { get; set; } 
-        public string PersonName { get; set; }
-        public string Contact { get; set; }
-        public string Qualifications { get; set; }
-        [Display(Name = "Category of  Premises")]
-        public int CategoryOfpremises { get; set; }
+        public int? FacilityPersonType { get; set; } 
+        public string? PersonName { get; set; }
+        public string? Contact { get; set; }
+        public string? Qualifications { get; set; }
+    [Display(Name = "Category of  Premises")]
+    public int? CategoryOfpremises { get; set; } = 0;
 
-        [Display(Name = "License Status")]
-        public int LicenseStatus { get; set; }
+    [Display(Name = "License Status")]
+    public int? LicenseStatus { get; set; } = 0;
 
-        [Display(Name = "Category Status")]
-        public int CategoryStatus { get; set; } 
-        
-        [Display(Name = "Facility Type")]
-        public int FacilityType { get; set; }
-        [Display(Name = "Certification Status")]
-        public int certStatus { get; set; }
+    [Display(Name = "Category Status")]
+    public int? CategoryStatus { get; set; } = 0;
 
-        [Display(Name = "Recommended for GDP")]
-        public int RecommendedforGDP { get; set; }
-        public string? InspectorId { get; set; } 
-    }
+    [Display(Name = "Facility Type")]
+    public int? FacilityType { get; set; } = 0;
+    [Display(Name = "Certification Status")]
+    public int? certStatus { get; set; } = 0;
+
+    [Display(Name = "Recommended for GDP")]
+    public int? RecommendedforGDP { get; set; } = 0;
+        public string? InspectorId { get; set; }
+    public decimal Latitude { get; set; }
+    public decimal Longitude { get; set; }
+    [Display(Name = "License No.")]
+
+    public string? LicenseNo { get; set; }
+  }
 }

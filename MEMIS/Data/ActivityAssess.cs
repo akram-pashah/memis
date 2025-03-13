@@ -28,7 +28,7 @@ namespace MEMIS.Data
     public double? baseline { get; set; }
     [Display(Name = "Budget Code")]
     public double? budgetCode { get; set; }
-    [Display(Name = "Comparative Target")]
+    [Display(Name = "Annualized Target")]
     public double? comparativeTarget { get; set; }
     [Display(Name = "Justification")]
     public string? justification { get; set; }

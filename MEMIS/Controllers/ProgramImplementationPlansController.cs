@@ -78,6 +78,8 @@ namespace MEMIS.Controllers
       //ViewData["intIntervention"] = new SelectList(_context.StrategicIntervention.Select(s => new { intIntervention = s.intIntervention, InterventionName = '(' + s.InterventionCode + ')' + s.InterventionName }), "intIntervention", "InterventionName");
       ViewData["intAction"] = new SelectList(_context.StrategicAction.Select(s => new { intAction = s.intAction, actionName = '(' + s.actionCode + ')' + s.actionName }), "intAction", "actionName");
       ViewData["intActivity"] = new SelectList(_context.Activity.Select(a => new { intActivity = a.intActivity, activityName = '(' + a.activityCode + ')' + a.activityName }), "intActivity", "activityName");
+      ViewData["intDept"] = new SelectList(_context.Departments, "intDept", "deptName");
+      ViewData["intDir"] = new SelectList(_context.Directorates, "intDir", "dirName");
       return View();
     }
 
@@ -86,7 +88,7 @@ namespace MEMIS.Controllers
     // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create([Bind("Id,intObjective,intIntervention,intAction,intActivity,Output,OutputTarget,ResponsibleParty,MeansofVerification,FY1,FY2,FY3,FY4,FY5,unitCost")] ProgramImplementationPlan programImplementationPlan)
+    public async Task<IActionResult> Create([Bind("Id,intObjective,intIntervention,intAction,intActivity,Output,OutputTarget,ResponsibleParty,MeansofVerification,FY1,FY2,FY3,FY4,FY5,unitCost,intDept,intDir")] ProgramImplementationPlan programImplementationPlan)
     {
       if (ModelState.IsValid)
       {
@@ -98,6 +100,8 @@ namespace MEMIS.Controllers
       ViewData["intAction"] = new SelectList(_context.StrategicAction.Select(s => new { intAction = s.intAction, actionName = '(' + s.actionCode + ')' + s.actionName }), "intAction", "actionName", programImplementationPlan.intAction);
       ViewData["intIntervention"] = new SelectList(_context.StrategicIntervention.Select(s => new { intIntervention = s.intIntervention, InterventionName = '(' + s.InterventionCode + ')' + s.InterventionName }), "intIntervention", "InterventionName", programImplementationPlan.intIntervention);
       ViewData["intObjective"] = new SelectList(_context.StrategicObjective, "intObjective", "ObjectiveName", programImplementationPlan.intObjective);
+      ViewData["intDept"] = new SelectList(_context.Departments, "intDept", "deptName",programImplementationPlan.intDept);
+      ViewData["intDir"] = new SelectList(_context.Directorates, "intDir", "dirName",programImplementationPlan.intDir);
       return View(programImplementationPlan);
     }
 
@@ -118,6 +122,8 @@ namespace MEMIS.Controllers
       ViewData["intAction"] = new SelectList(_context.StrategicAction.Select(s => new { intAction = s.intAction, actionName = '(' + s.actionCode + ')' + s.actionName }), "intAction", "actionName", programImplementationPlan.intAction);
       ViewData["intIntervention"] = new SelectList(_context.StrategicIntervention.Select(s => new { intIntervention =s.intIntervention, InterventionName = '('+s.InterventionCode+')' +s.InterventionName }), "intIntervention", "InterventionName", programImplementationPlan.intIntervention);
       ViewData["intObjective"] = new SelectList(_context.StrategicObjective, "intObjective", "ObjectiveName", programImplementationPlan.intObjective);
+      ViewData["intDept"] = new SelectList(_context.Departments, "intDept", "deptName", programImplementationPlan.intDept);
+      ViewData["intDir"] = new SelectList(_context.Directorates, "intDir", "dirName", programImplementationPlan.intDir);
       return View(programImplementationPlan);
     }
 
@@ -126,7 +132,7 @@ namespace MEMIS.Controllers
     // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Edit(int id, [Bind("Id,intObjective,intIntervention,intAction,intActivity,Output,OutputTarget,ResponsibleParty,MeansofVerification,FY1,FY2,FY3,FY4,FY5,unitCost")] ProgramImplementationPlan programImplementationPlan)
+    public async Task<IActionResult> Edit(int id, [Bind("Id,intObjective,intIntervention,intAction,intActivity,Output,OutputTarget,ResponsibleParty,MeansofVerification,FY1,FY2,FY3,FY4,FY5,unitCost,intDept,intDir")] ProgramImplementationPlan programImplementationPlan)
     {
       if (id != programImplementationPlan.Id)
       {
@@ -157,6 +163,8 @@ namespace MEMIS.Controllers
       ViewData["intAction"] = new SelectList(_context.StrategicAction, "intAction", "actionName", programImplementationPlan.intAction);
       ViewData["intIntervention"] = new SelectList(_context.StrategicIntervention, "intIntervention", "InterventionName", programImplementationPlan.intIntervention);
       ViewData["intObjective"] = new SelectList(_context.StrategicObjective, "intObjective", "ObjectiveName", programImplementationPlan.intObjective);
+      ViewData["intDept"] = new SelectList(_context.Departments, "intDept", "deptName", programImplementationPlan.intDept);
+      ViewData["intDir"] = new SelectList(_context.Directorates, "intDir", "dirName", programImplementationPlan.intDir);
       return View(programImplementationPlan);
     }
 

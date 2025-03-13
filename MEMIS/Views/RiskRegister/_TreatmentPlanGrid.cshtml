@@ -2,7 +2,12 @@
     For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 *@
 @model IEnumerable<MEMIS.Data.Risk.RiskTreatmentPlan>
-
+<style>
+    /* Add border to all table cells in addition to .table-bordered */
+    #riskTreatmentTable th, #riskTreatmentTable td {
+        border: 1px solid #dee2e6;
+    }
+</style>
 <div class="card-body">
     <table class="table table-bordered" id="riskTreatmentTable">
         <thead>

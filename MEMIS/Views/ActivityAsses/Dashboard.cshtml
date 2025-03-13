@@ -69,7 +69,7 @@
                         bar: {
                             borderRadius: 10,
                             borderRadiusApplication: 'end',
-                            horizontal: true,
+                            horizontal: false,
                         }
                     },
                     dataLabels: {
@@ -219,7 +219,7 @@
 
                     },
                     title: {
-                        text: 'Focus Area wise Activities',
+                    text: 'Implementation Plan Activities by Focus Area',
                         floating: true,
                         offsetY: 330,
                         align: 'center',
@@ -354,8 +354,8 @@
                                 </div>
                             </div>
                         </div>
-                        <span>Total &nbsp;&nbsp;&nbsp; Budget</span>
-                        <h3 class="card-title text-nowrap mb-1">@Model.TotalBudget</h3>
+                        <span>Total Budget</span>
+                         <h5 class="card-title text-nowrap mb-1">UGX @String.Format("{0:N0}",Model.TotalBudget)</h5>
                         @* <small class="text-success fw-medium"><i class='bx bx-up-arrow-alt'></i> +28.42%</small> *@
                     </div>
                 </div>
@@ -454,7 +454,7 @@
                                 </div>
                             </div>
                         </div>
-                        <span class="fw-medium d-block mb-1">Pending Activities</span>
+                        <span class="fw-medium d-block mb-1">Pending Approvals</span>
                         <h3 class="card-title mb-2">@Model.PendingActivities</h3>
                     </div>
                 </div>
@@ -538,8 +538,7 @@
             <div class="card-body">
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <div class="d-flex flex-column align-items-center gap-1">
-                        <h2 class="mb-2">@Model.TotalBudget</h2>
-                        <span>Total Budget</span>
+                        <h5 class="mb-2">Total Budget: UGX @String.Format("{0:N0}",Model.TotalBudget)</h5> 
                     </div>
                     @* <div id="orderStatisticsChart"></div> *@
                 </div>
@@ -686,7 +685,7 @@
                                     <h6 class="mb-0">@dept.Name</h6>
                                 </div>
                                 <div class="user-progress d-flex align-items-center gap-1">
-                                    <h6 class="mb-0">@dept.Budget</h6> <span class="text-muted"></span>
+                                    <h6 class="mb-0"> UGX @String.Format("{0:N0}",@dept.Budget)</h6> <span class="text-muted"></span>
                                 </div>
                             </div>
                         </li>
@@ -780,6 +779,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
+               
             </div>
         </div>
     </div>

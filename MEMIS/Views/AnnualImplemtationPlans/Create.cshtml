@@ -14,11 +14,11 @@
     <div class="col-md-4">
       <form asp-action="Create" method="post">
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-        <div class="form-group">
+      @*   <div class="form-group">
           <label asp-for="subProgram" class="control-label"></label>
           <input asp-for="subProgram" class="form-control" />
           <span asp-validation-for="subProgram" class="text-danger"></span>
-        </div>
+        </div> *@
         <br />
         <div class="form-group">
           <label asp-for="intFocus" class="control-label"></label>
@@ -59,12 +59,7 @@
           </select>
         </div>
         <br />
-        <div class="form-group">
-          <label asp-for="baseline" class="control-label"></label>
-          <input asp-for="baseline" class="form-control" />
-          <span asp-validation-for="baseline" class="text-danger"></span>
-        </div>
-        <br />
+        
         <div class="form-group">
           <label asp-for="Year" class="control-label"></label>
           <input asp-for="Year" class="form-control" />

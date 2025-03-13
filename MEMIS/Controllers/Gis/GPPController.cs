@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MEMIS.Data;
@@ -81,7 +81,7 @@ namespace MEMIS.Controllers
             ViewData["DistrictId"] = new SelectList(_context.Districts, "Id", "Name");
             ViewData["FacilityStatus"] = ListHelper.FacilityStatus();
             ViewData["PersonFoundatFacility"] = ListHelper.PersonFoundatFacility();
-            ViewData["Category"] = ListHelper.CategoryofPremises();
+            ViewData["Category"] = ListHelper.CategoryofFacility();
             ViewData["LicenseStatus"] = ListHelper.LicenseStatus();
             ViewData["CategoryofDrugs"] = ListHelper.CategoryofDrugs();
             ViewData["FacilityType"] = ListHelper.FacilityType();
@@ -103,12 +103,11 @@ namespace MEMIS.Controllers
             {
                 GPP dataobject = new()
                 {
-                    InspectionDate = gpp.InspectionDate, 
-                    GPS = gpp.GPS, 
+                    InspectionDate = gpp.InspectionDate,  
                     intRegion= gpp.intRegion,
                     DistrictId = gpp.DistrictId,
                     FacilityName = gpp.FacilityName,
-                    FacilityStatus = gpp.FacilityStatus,
+                    FacilityStatus = (int)gpp.FacilityStatus,
                     FacilityPersonType = gpp.FacilityPersonType,
                     PersonName = gpp.PersonName,
                     Contact= gpp.Contact,
@@ -119,6 +118,10 @@ namespace MEMIS.Controllers
                     FacilityType= gpp.FacilityType,
                     certStatus= gpp.certStatus,
                     RecommendedforGPP=gpp.RecommendedforGPP,
+                    LicenseNo=gpp.LicenseNo,
+                    InspectorName=gpp.InspectorName,
+                    Latitude=gpp.Latitude,
+                    Longitude=gpp.Longitude,
                    // InspectorId = User.FindFirstValue(ClaimTypes.NameIdentifier), 
                 };
                 _context.Add(dataobject);
@@ -130,7 +133,7 @@ namespace MEMIS.Controllers
             ViewData["DistrictId"] = new SelectList(_context.Districts, "Id", "Name");
             ViewData["FacilityStatus"] = ListHelper.FacilityStatus();
             ViewData["PersonFoundatFacility"] = ListHelper.PersonFoundatFacility();
-            ViewData["Category"] = ListHelper.CategoryofPremises();
+            ViewData["Category"] = ListHelper.CategoryofFacility();
             ViewData["LicenseStatus"] = ListHelper.LicenseStatus();
             ViewData["CategoryofDrugs"] = ListHelper.CategoryofDrugs();
             ViewData["FacilityType"] = ListHelper.FacilityType();
@@ -153,8 +156,7 @@ namespace MEMIS.Controllers
             }
             GPPDto gppdto = new GPPDto
             {
-                InspectionDate = gpp.InspectionDate,
-                GPS = gpp.GPS,
+                InspectionDate = gpp.InspectionDate, 
                 FacilityName = gpp.FacilityName,
                 FacilityStatus = gpp.FacilityStatus,
                 FacilityPersonType = gpp.FacilityPersonType,
@@ -166,17 +168,21 @@ namespace MEMIS.Controllers
                 CategoryStatus= gpp.CategoryStatus,
                 FacilityType = gpp.FacilityType,
                 certStatus = gpp.certStatus,
-                RecommendedforGPP = gpp.RecommendedforGPP,
+                RecommendedforGPP = (int)gpp.RecommendedforGPP,
                 intRegion = gpp.intRegion,
                 DistrictId = gpp.DistrictId,
                 Id = gpp.Id,
                 InspectorId = gpp.InspectorId,
+              LicenseNo = gpp.LicenseNo,
+              InspectorName = gpp.InspectorName,
+              Latitude = gpp.Latitude,
+              Longitude = gpp.Longitude,
             };
             ViewData["intRegion"] = new SelectList(_context.Region, "intRegion", "regionName");
             ViewData["DistrictId"] = new SelectList(_context.Districts, "Id", "Name");
             ViewData["FacilityStatus"] = ListHelper.FacilityStatus();
             ViewData["PersonFoundatFacility"] = ListHelper.PersonFoundatFacility();
-            ViewData["Category"] = ListHelper.CategoryofPremises();
+            ViewData["Category"] = ListHelper.CategoryofFacility();
             ViewData["LicenseStatus"] = ListHelper.LicenseStatus();
             ViewData["CategoryofDrugs"] = ListHelper.CategoryofDrugs();
             ViewData["FacilityType"] = ListHelper.FacilityType();
@@ -199,7 +205,7 @@ namespace MEMIS.Controllers
                         InspectionDate = objectdto.InspectionDate, 
                         GPS = objectdto.GPS, 
                         FacilityName= objectdto.FacilityName,
-                        FacilityStatus= objectdto.FacilityStatus,
+                        FacilityStatus= (int)objectdto.FacilityStatus,
                         FacilityPersonType= objectdto.FacilityPersonType,
                         PersonName= objectdto.PersonName,
                         Contact=    objectdto.Contact,
@@ -236,7 +242,7 @@ namespace MEMIS.Controllers
             ViewData["DistrictId"] = new SelectList(_context.Districts, "Id", "Name");
             ViewData["FacilityStatus"] = ListHelper.FacilityStatus();
             ViewData["PersonFoundatFacility"] = ListHelper.PersonFoundatFacility();
-            ViewData["Category"] = ListHelper.CategoryofPremises();
+            ViewData["Category"] = ListHelper.CategoryofFacility();
             ViewData["LicenseStatus"] = ListHelper.LicenseStatus();
             ViewData["CategoryofDrugs"] = ListHelper.CategoryofDrugs();
             ViewData["FacilityType"] = ListHelper.FacilityType();

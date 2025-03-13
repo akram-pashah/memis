@@ -5,15 +5,18 @@
         <h5 class="card-header">National Development Plan</h5>
         <div class="card-body row">
             <div class="col-md-6">
-                <form asp-action="UploadFile" method="post" enctype="multipart/form-data">
-                    <div class="form-group">
-                        <label asp-for="FileContent" class="form-label">Select file to upload:</label>
-                        <input asp-for="FileContent" type="file" class="form-control-file" />
-                    </div>
-                    <div class="form-group mt-3">
-                        <input type="submit" value="Upload" class="btn btn-outline-primary" />
-                    </div>
-                </form>
+                @if (User.IsInRole("SuperAdmin") || User.IsInRole("M&E Officer") || User.IsInRole("Head BPD"))
+                {
+                    <form asp-action="UploadFile" method="post" enctype="multipart/form-data">
+                        <div class="form-group">
+                            <label asp-for="FileContent" class="form-label">Select file to upload:</label>
+                            <input asp-for="FileContent" type="file" class="form-control-file" />
+                        </div>
+                        <div class="form-group mt-3">
+                            <input type="submit" value="Upload" class="btn btn-outline-primary" />
+                        </div>
+                    </form>
+                }
             </div>
             <div class="col-md-6">
                 @if (Model?.FileContent != null && Model?.FileContent?.Length > 0)
