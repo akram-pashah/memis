@@ -29,10 +29,10 @@ namespace MEMIS.Data
     [Required]
     [Display(Name = "Output Indicator")]
     [MaxLength(1000)]
-    public string Output { get; set; } 
+    public string? Output { get; set; } 
     [Display(Name = "Output Target")]
     [MaxLength(1000)]
-    public string? OutputTarget { get; set; } 
+    public long? OutputTarget { get; set; } 
     [Display(Name = "Target FY 1")]
     public string? FY1 { get; set; }
     [Display(Name = "Target FY 2")]

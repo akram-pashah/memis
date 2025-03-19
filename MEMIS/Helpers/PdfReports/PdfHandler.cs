@@ -84,7 +84,7 @@ namespace MEMIS.Helpers.PdfReports
             .SetPadding(5));
 
         table.AddCell(new Cell()
-            .Add(new Paragraph(plan.OutputTarget ?? string.Empty))
+            .Add(new Paragraph((plan.OutputTarget ?? 0).ToString()))
             .SetFontSize(5)
             .SetPadding(5));
 

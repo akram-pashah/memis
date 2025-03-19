@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -19,6 +20,7 @@ namespace MEMIS.Data
     public virtual int? intFocus { get; set; }
     [ForeignKey("intFocus")]
     public virtual FocusArea? FocusArea { get; set; }
-    public virtual ICollection<StrategicIntervention> StrategicInterventions { get; set; }
+    [ValidateNever]
+    public virtual ICollection<StrategicIntervention> StrategicInterventions { get; set; }= new List<StrategicIntervention>();
   }
 }

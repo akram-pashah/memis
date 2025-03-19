@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using System.ComponentModel.DataAnnotations;
 
 namespace MEMIS.Data
@@ -14,6 +15,7 @@ namespace MEMIS.Data
     [Display(Name = "Focus Area")]
     [MaxLength(1000)]
     public string FocusAreaName { get; set; }
-    public virtual ICollection<StrategicObjective> StrategicObjectives { get; set; }
+    [ValidateNever]
+    public virtual ICollection<StrategicObjective> StrategicObjectives { get; set; } = new List<StrategicObjective>();
   }
 }

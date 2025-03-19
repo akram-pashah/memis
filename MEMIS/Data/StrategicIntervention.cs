@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -19,7 +20,8 @@ namespace MEMIS.Data
     public virtual int? intObjective { get; set; }
     [ForeignKey("intObjective")]
     public virtual StrategicObjective? StrategicObjective { get; set; }
-    public virtual ICollection<StrategicAction> StrategicActions { get; set; }
+    [ValidateNever]
+    public virtual ICollection<StrategicAction> StrategicActions { get; set; }=new List<StrategicAction>();
 
   }
 }
