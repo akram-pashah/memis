@@ -1,132 +1,5 @@
 @{
     TempData.Keep();
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     string? currentPage = ViewContext.HttpContext.Request.Path;
 }
 
@@ -263,11 +136,11 @@
                         }
                         @if (User.IsInRole("M&E Officer") || User.IsInRole("SuperAdmin"))
                         {
-                        <li class='menu-item@(currentPage == "/ActivityAsses/Consolidation" ? " active" : "")'>
-                            <a asp-controller="ActivityAsses" asp-action="Consolidation" class="menu-link">
-                                <div>Work Plan Consolidation [M&E Officer]</div>
-                            </a>
-                        </li>
+                            <li class='menu-item@(currentPage == "/ActivityAsses/Consolidation" ? " active" : "")'>
+                                <a asp-controller="ActivityAsses" asp-action="Consolidation" class="menu-link">
+                                    <div>Work Plan Consolidation [M&E Officer]</div>
+                                </a>
+                            </li>
                         }
                         @if (User.IsInRole("Head BPD") || User.IsInRole("SuperAdmin"))
                         {
@@ -310,7 +183,7 @@
                         <div>Activity Assessment</div>
                     </a>
                     <ul class="menu-sub">
-                        @if (User.IsInRole("Regional Officer") || User.IsInRole("SuperAdmin")) 
+                        @if (User.IsInRole("Regional Officer") || User.IsInRole("SuperAdmin"))
                         {
                             <li class='menu-item@(currentPage == "/ActivityAssessment/RegionalIndex" ? " active" : "")'>
                                 <a asp-controller="ActivityAssessment" asp-action="RegionalIndex" class="menu-link">
@@ -319,133 +192,6 @@
                             </li>
                         }
                         @if (User.IsInRole("Head of Department") || User.IsInRole("SuperAdmin"))
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                         {
                             <li class='menu-item@(currentPage == "/ActivityAssessment/RegionalHodVerification" ? " active" : "")'>
                                 <a asp-controller="ActivityAssessment" asp-action="RegionalHodVerification" class="menu-link">
@@ -454,133 +200,6 @@
                             </li>
                         }
                         @if (User.IsInRole("M&E and Risk Coordinator") || User.IsInRole("SuperAdmin"))
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                         {
                             <li class='menu-item@(currentPage == "/ActivityAssessment/Index" ? " active" : "")'>
                                 <a asp-controller="ActivityAssessment" asp-action="Index" class="menu-link">
@@ -589,133 +208,6 @@
                             </li>
                         }
                         @if (User.IsInRole("Head of Department") || User.IsInRole("SuperAdmin"))
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                         {
                             <li class='menu-item@(currentPage == "/ActivityAssessment/HodVerification" ? " active" : "")'>
                                 <a asp-controller="ActivityAssessment" asp-action="HodVerification" class="menu-link">
@@ -724,133 +216,6 @@
                             </li>
                         }
                         @if (User.IsInRole("Director") || User.IsInRole("SuperAdmin"))
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                         {
                             <li class='menu-item@(currentPage == "/ActivityAssessment/VerificationDir" ? " active" : "")'>
                                 <a asp-controller="ActivityAssessment" asp-action="VerificationDir" class="menu-link">
@@ -859,133 +224,6 @@
                             </li>
                         }
                         @if (User.IsInRole("M&E Officer") || User.IsInRole("SuperAdmin"))
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                         {
                             <li class='menu-item@(currentPage == "/ActivityAssessment/Consolidation" ? " active" : "")'>
                                 <a asp-controller="ActivityAssessment" asp-action="Consolidation" class="menu-link">
@@ -995,132 +233,6 @@
                         }
                         @if (User.IsInRole("Head BPD") || User.IsInRole("SuperAdmin"))
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                         {
                             <li class='menu-item@(currentPage == "/ActivityAssessment/VerificationBpd" ? " active" : "")'>
                                 <a asp-controller="ActivityAssessment" asp-action="VerificationBpd" class="menu-link">
@@ -1129,133 +241,6 @@
                             </li>
                         }
                         @if (User.IsInRole("Director (DCS)") || User.IsInRole("SuperAdmin"))
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                         {
                             <li class='menu-item@(currentPage == "/ActivityAssessment/Approval" ? " active" : "")'>
                                 <a asp-controller="ActivityAssessment" asp-action="Approval" class="menu-link">
@@ -1321,69 +306,6 @@
                 </ul>
                 </li> *@
                 @if (User.IsInRole("M&E Officer") || User.IsInRole("SuperAdmin"))
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                 {
                     <li class='menu-item@(currentPage == "/SDTMasters" ? " active" : "")'>
                         <a asp-controller="SDTMasters" asp-action="index" class="menu-link">
@@ -1397,133 +319,6 @@
                     </a>
                     <ul class="menu-sub">
                         @if (User.IsInRole("M&E and Risk Coordinator") || User.IsInRole("SuperAdmin"))
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                         {
                             <li class='menu-item@(currentPage == "/SDTAssessments" ? " active" : "")'>
                                 <a asp-controller="SDTAssessments" asp-action="index" class="menu-link">
@@ -1532,133 +327,6 @@
                             </li>
                         }
                         @if (User.IsInRole("Head of Department") || User.IsInRole("SuperAdmin"))
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                         {
                             <li class='menu-item@(currentPage == "/SDTAssessments/VerifyByHOD" ? " active" : "")'>
                                 <a asp-controller="SDTAssessments" asp-action="VerifyByHOD" class="menu-link">
@@ -1667,133 +335,6 @@
                             </li>
                         }
                         @if (User.IsInRole("Director") || User.IsInRole("SuperAdmin"))
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                         {
                             <li class='menu-item@(currentPage == "/SDTAssessments/VerifyByDirector" ? " active" : "")'>
                                 <a asp-controller="SDTAssessments" asp-action="VerifyByDirector" class="menu-link">
@@ -1802,133 +343,6 @@
                             </li>
                         }
                         @if (User.IsInRole("M&E Officer") || User.IsInRole("SuperAdmin"))
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                         {
                             <li class='menu-item@(currentPage == "/SDTAssessments/VerifyByMEOfficer" ? " active" : "")'>
                                 <a asp-controller="SDTAssessments" asp-action="VerifyByMEOfficer" class="menu-link">
@@ -1937,133 +351,6 @@
                             </li>
                         }
                         @if (User.IsInRole("Head BPD") || User.IsInRole("SuperAdmin"))
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                         {
                             <li class='menu-item@(currentPage == "/SDTAssessments/VerifyByHBPD" ? " active" : "")'>
                                 <a asp-controller="SDTAssessments" asp-action="VerifyByHBPD" class="menu-link">
@@ -2071,7 +358,7 @@
                                 </a>
                             </li>
                         }
-                        @if (User.IsInRole("Director (DCS)") || User.IsInRole("SuperAdmin")) 
+                        @if (User.IsInRole("Director (DCS)") || User.IsInRole("SuperAdmin"))
                         {
                             <li class='menu-item@(currentPage == "/SDTAssessments/VerifyByDDCS" ? " active" : "")'>
                                 <a asp-controller="SDTAssessments" asp-action="VerifyByDDCS" class="menu-link">
@@ -2081,9 +368,7 @@
                         }
                     </ul>
                 </li>
-
-
-                @if (User.IsInRole("M&E Officer") || User.IsInRole("SuperAdmin")) 
+                @if (User.IsInRole("M&E Officer") || User.IsInRole("SuperAdmin"))
                 {
                     <li class='menu-item@(currentPage == "/KPIMaster" ? " active" : "")'>
                         <a asp-controller="KPIMaster" asp-action="index" class="menu-link">
@@ -2091,13 +376,12 @@
                         </a>
                     </li>
                 }
-
                 <li class='menu-item@(currentPage.StartsWith("/KPIAssessment") ? " active open" : "")'>
                     <a href="javascript:void(0);" class="menu-link menu-toggle">
                         <div>KPI Assessment</div>
                     </a>
                     <ul class="menu-sub">
-                        @if (User.IsInRole("M&E and Risk Coordinator") || User.IsInRole("SuperAdmin")) 
+                        @if (User.IsInRole("M&E and Risk Coordinator") || User.IsInRole("SuperAdmin"))
                         {
                             <li class='menu-item@(currentPage == "/KPIAssessment" ? " active" : "")'>
                                 <a asp-controller="KPIAssessment" asp-action="index" class="menu-link">
@@ -2105,7 +389,7 @@
                                 </a>
                             </li>
                         }
-                        @if (User.IsInRole("Head of Department") || User.IsInRole("SuperAdmin")) 
+                        @if (User.IsInRole("Head of Department") || User.IsInRole("SuperAdmin"))
                         {
                             <li class='menu-item@(currentPage == "/KPIAssessment/VerifyByHOD" ? " active" : "")'>
                                 <a asp-controller="KPIAssessment" asp-action="VerifyByHOD" class="menu-link">
@@ -2113,7 +397,7 @@
                                 </a>
                             </li>
                         }
-                        @if (User.IsInRole("Director") || User.IsInRole("SuperAdmin")) 
+                        @if (User.IsInRole("Director") || User.IsInRole("SuperAdmin"))
                         {
                             <li class='menu-item@(currentPage == "/KPIAssessment/VerifyByDirector" ? " active" : "")'>
                                 <a asp-controller="KPIAssessment" asp-action="VerifyByDirector" class="menu-link">
@@ -2121,7 +405,7 @@
                                 </a>
                             </li>
                         }
-                        @if (User.IsInRole("M&E Officer") || User.IsInRole("SuperAdmin")) 
+                        @if (User.IsInRole("M&E Officer") || User.IsInRole("SuperAdmin"))
                         {
                             <li class='menu-item@(currentPage == "/KPIAssessment/VerifyByMEOfficer" ? " active" : "")'>
                                 <a asp-controller="KPIAssessment" asp-action="VerifyByMEOfficer" class="menu-link">
@@ -2129,7 +413,7 @@
                                 </a>
                             </li>
                         }
-                        @if (User.IsInRole("Head BPD") || User.IsInRole("SuperAdmin")) 
+                        @if (User.IsInRole("Head BPD") || User.IsInRole("SuperAdmin"))
                         {
                             <li class='menu-item@(currentPage == "/KPIAssessment/VerifyByHBPD" ? " active" : "")'>
                                 <a asp-controller="KPIAssessment" asp-action="VerifyByHBPD" class="menu-link">
@@ -2137,7 +421,7 @@
                                 </a>
                             </li>
                         }
-                        @if (User.IsInRole("Director (DCS)") || User.IsInRole("SuperAdmin")) 
+                        @if (User.IsInRole("Director (DCS)") || User.IsInRole("SuperAdmin"))
 
                         {
                             <li class='menu-item@(currentPage == "/KPIAssessment/VerifyByDDCS" ? " active" : "")'>
@@ -2190,7 +474,7 @@
                                 </a>
                             </li>
                         }
-                         @if (User.IsInRole("RMO") || User.IsInRole("SuperAdmin"))
+                        @if (User.IsInRole("RMO") || User.IsInRole("SuperAdmin"))
                         {
                             <li class='menu-item@(currentPage == "/RiskIdentifications/RmoVerify" ? " active" : "")'>
                                 <a asp-controller="RiskIdentifications" asp-action="RmoVerify" class="menu-link">
@@ -2271,11 +555,11 @@
                         {
                             <li class='menu-item@(currentPage == "/RiskRegister/RiskMonitoringDirVerifyList" ? " active" : "")'>
                                 <a asp-controller="RiskRegister" asp-action="RiskMonitoringDirVerifyList" class="menu-link">
-                                <div>Risk Monitoring Verification [Director]</div>
-                            </a>
-                        </li>
+                                    <div>Risk Monitoring Verification [Director]</div>
+                                </a>
+                            </li>
                         }
-                         @if (User.IsInRole("RMO") || User.IsInRole("SuperAdmin"))
+                        @if (User.IsInRole("RMO") || User.IsInRole("SuperAdmin"))
                         {
                             <li class='menu-item@(currentPage == "/RiskRegister/RiskMonitoringRmoVerifyList" ? " active" : "")'>
                                 <a asp-controller="RiskRegister" asp-action="RiskMonitoringRmoVerifyList" class="menu-link">
@@ -2307,7 +591,7 @@
                                 </a>
                             </li>
                         }
-                         @if (User.IsInRole("RMO") || User.IsInRole("SuperAdmin"))
+                        @if (User.IsInRole("RMO") || User.IsInRole("SuperAdmin"))
                         {
                             <li class='menu-item@(currentPage == "/RiskRegister/RiskResidualRmoVerifyList" ? " active" : "")'>
                                 <a asp-controller="RiskRegister" asp-action="RiskResidualRmoVerifyList" class="menu-link">
@@ -2350,7 +634,7 @@
             </a>
             <ul class="menu-sub">
 
-               @*  <li class='menu-item@(currentPage.StartsWith("/PreInspections") ? " active open" : "")'>
+                @*  <li class='menu-item@(currentPage.StartsWith("/PreInspections") ? " active open" : "")'>
                     <a href="javascript:void(0);" class="menu-link menu-toggle">
                         <div>Pre Inspection</div>
                     </a>
@@ -2438,17 +722,17 @@
 
 
 
-              @*   <li class='menu-item@(currentPage == "/ComplianceSupportSupervision" ? " active" : "")'>
+                @*   <li class='menu-item@(currentPage == "/ComplianceSupportSupervision" ? " active" : "")'>
                     <a asp-controller="ComplianceSupportSupervision" asp-action="Index" class="menu-link">
                         <div>Compliance Support Supervision</div>
                     </a>
                 </li> *@
-               @*  <li class='menu-item@(currentPage == "/renewal" ? " active" : "")'>
+                @*  <li class='menu-item@(currentPage == "/renewal" ? " active" : "")'>
                     <a asp-controller="renewal" asp-action="Index" class="menu-link">
                         <div>Renewal</div>
                     </a>
                 </li> *@
-              @*   <li class='menu-item@(currentPage == "/enforcement" ? " active" : "")'>
+                @*   <li class='menu-item@(currentPage == "/enforcement" ? " active" : "")'>
                     <a asp-controller="enforcement" asp-action="Index" class="menu-link">
                         <div>Enforcement</div>
                     </a>
@@ -2463,7 +747,7 @@
                         <div>GDP</div>
                     </a>
                 </li>
-               @*  <li class='menu-item@(currentPage == "/ComplianceSupportSupervision" ? " active" : "")'>
+                @*  <li class='menu-item@(currentPage == "/ComplianceSupportSupervision" ? " active" : "")'>
                     <a asp-controller="ComplianceSupportSupervision" asp-action="Index" class="menu-link">
                         <div>Herbal Inspection</div>
                     </a>
@@ -2507,8 +791,8 @@
                         <div>Regions</div>
                     </a>
                 </li>
-                <li class='menu-item@(currentPage == "/login/register" ? " active" : "")'>
-                    <a asp-controller="login" asp-action="register" class="menu-link">
+                <li class='menu-item@(currentPage == "/UserManagement" ? " active" : "")'>
+                    <a asp-controller="UserManagement" asp-action="Index" class="menu-link">
                         <div>User Management</div>
                     </a>
                 </li>
@@ -2556,6 +840,111 @@
 
 </aside>
 <!-- / Menu -->
+<div class="modal fade" id="resetPasswordModal" tabindex="-1" aria-labelledby="resetPasswordModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="resetPasswordModalLabel">Reset Password</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="resetPasswordForm">
+                    <div class="mb-3">
+                        <label for="oldPassword" class="form-label">Old Password</label>
+                        <input type="password" class="form-control" id="oldPassword" name="oldPassword" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="newPassword" class="form-label">New Password</label>
+                        <input type="password" class="form-control" id="newPassword" name="newPassword" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="confirmPassword" class="form-label">Confirm Password</label>
+                        <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" required>
+                    </div>
+                    <div id="passwordError" class="text-danger"></div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="resetPasswordSubmit">Update Password</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        // Show modal on settings click
+        $("#openResetPasswordModal").on("click", function () {
+            $("#resetPasswordModal").modal("show");
+        });
+
+        // Handle password reset submission
+        $("#resetPasswordSubmit").on("click", function () {
+            let userId = $("#userId").val();
+            let currentPassword = $("#oldPassword").val();
+            let newPassword = $("#newPassword").val();
+            let confirmPassword = $("#confirmPassword").val();
+
+            // Clear previous error messages
+            $("#passwordError").text("");
+
+            // Regular expression for password validation
+            let passwordRegex = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$/;
+
+            // Basic validation
+            if (!currentPassword || !newPassword || !confirmPassword) {
+                $("#passwordError").text("All fields are required.");
+                return;
+            }
+
+            if (!passwordRegex.test(newPassword)) {
+                $("#passwordError").text("Password must be at least 8 characters long, contain one uppercase letter, one lowercase letter, and one number.");
+                return;
+            }
+
+            if (newPassword !== confirmPassword) {
+                $("#passwordError").text("New password and confirm password do not match.");
+                return;
+            }
+
+            // AJAX request to change password
+            $.ajax({
+                url: "/UserManagement/ChangePassword",
+                type: "POST",
+                data: {
+                    currentPassword: currentPassword,
+                    newPassword: newPassword
+                },
+                success: function (response) {
+                    if (response.success) {
+                        showSuccessMessage('Password updated successfully!', () => {
+                            $("#resetPasswordModal").modal("hide");
+                            $("#oldPassword, #newPassword, #confirmPassword").val("");
+                        });
+                    } else {
+                        showErrorMessage('There was an error updating password.');
+                        $("#passwordError").text(response.errors ? response.errors.join(", ") : response.message);
+                    }
+                },
+                error: function () {
+                    $("#passwordError").text("An error occurred while updating the password.");
+                }
+            });
+        });
+
+        // Real-time validation for password input
+        $("#newPassword").on("input", function () {
+            let password = $(this).val();
+            let passwordRegex = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$/;
+
+            if (!passwordRegex.test(password)) {
+                $("#passwordHelp").text("Password must be at least 8 characters, include an uppercase letter, a lowercase letter, and a number.");
+            } else {
+                $("#passwordHelp").text("");
+            }
+        });
+    });
+</script>
 
 <script type="text/javascript">
     function goToPlanningDashboard() {

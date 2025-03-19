@@ -1,8 +1,8 @@
+using MEMIS.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using MEMIS.Models;
-using Syncfusion.Blazor;
 using Newtonsoft.Json;
+using Syncfusion.Blazor;
 namespace MEMIS
 {
   public class Startup
@@ -24,7 +24,11 @@ namespace MEMIS
           options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
         });
       services.AddDbContext<Data.AppDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
-      services.AddIdentity<ApplicationUser, IdentityRole>().AddEntityFrameworkStores<Data.AppDbContext>();
+      services.AddIdentity<ApplicationUser, IdentityRole>(options =>
+      {
+        options.Tokens.PasswordResetTokenProvider = TokenOptions.DefaultProvider;
+      }).AddEntityFrameworkStores<Data.AppDbContext>()
+      .AddDefaultTokenProviders();
       services.AddCloudscribePagination();
       services.AddServerSideBlazor();
       services.AddSyncfusionBlazor();

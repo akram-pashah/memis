@@ -1,0 +1,126 @@
+@model EditUserViewModel
+
+@{
+    ViewData["Title"] = "Edit User";
+    Layout = "~/Pages/Shared/_ContentNavbarLayout.cshtml";
+}
+
+<h4>Edit User</h4>
+<hr />
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-user-edit"></i> Edit User
+            </div>
+            <div class="card-body">
+                <form id="editForm">
+                    <input type="hidden" asp-for="Id" />
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label asp-for="Username" class="control-label"></label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fas fa-user"></i></span>
+                                    </div>
+                                    <input asp-for="Username" class="form-control" />
+                                </div>
+                                <span asp-validation-for="Username" class="text-danger"></span>
+                            </div>
+                            <br />
+                            <div class="form-group">
+                                <label asp-for="Email" class="control-label"></label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                                    </div>
+                                    <input asp-for="Email" class="form-control" />
+                                </div>
+                                <span asp-validation-for="Email" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label asp-for="Password" class="control-label">New Password (Optional)</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                                    </div>
+                                    <input type="password" asp-for="Password" class="form-control" />
+                                </div>
+                                <span asp-validation-for="Password" class="text-danger"></span>
+                            </div>
+                            <br />
+                            <div class="form-group">
+                                <label asp-for="intDept" class="control-label">Department</label>
+                                <select asp-for="intDept" class="form-control" asp-items="ViewBag.intDept"></select>
+                                <span asp-validation-for="intDept" class="text-danger"></span>
+                            </div>
+                            <br />
+                            <div class="form-group">
+                                <label asp-for="intDir" class="control-label">Directorate</label>
+                                <select asp-for="intDir" class="form-control" asp-items="ViewBag.intDir"></select>
+                                <span asp-validation-for="intDir" class="text-danger"></span>
+                            </div>
+                            <br />
+                            <div class="form-group">
+                                <label asp-for="intRegion" class="control-label">Region</label>
+                                <select asp-for="intRegion" class="form-control" asp-items="ViewBag.intRegion"></select>
+                                <span asp-validation-for="intRegion" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row mt-2">
+                        <div class="form-group col-md-6">
+                            <button type="button" id="updateBtn" class="btn btn-primary w-100">
+                                <i class="fas fa-save"></i> Update
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        $(document).ready(function () {
+            $('#updateBtn').click(function (e) {
+                e.preventDefault();
+
+                if (!$("#editForm").valid()) {
+                    return;
+                }
+
+                var formData = $('#editForm').serialize();
+                $.ajax({
+                    url: '@Url.Action("Edit", "UserManagement")',
+                    type: 'POST',
+                    data: formData,
+                    success: function (response) {
+                        if (response.success) {
+                            showSuccessMessage('User details updated successfully.', () => {
+                                window.location.href = '@Url.Action("Index", "UserManagement")';
+                            });
+                        } else {
+                            showErrorMessage('An error occurred while updating user details.');
+                            var validationSummary = $('.alert-danger');
+                            validationSummary.empty().show();
+                            response.errors.forEach(function (error) {
+                                validationSummary.append('<p>' + error + '</p>');
+                            });
+                        }
+                    },
+                    error: function () {
+                        showErrorMessage('An error occurred while processing your request.');
+                    }
+                });
+            });
+        });
+    </script>
+}

@@ -5,6 +5,14 @@
     {
       "library": "jquery@3.7.1",
       "destination": "wwwroot/lib/jquery/"
+    },
+    {
+      "library": "sweetalert2@11.15.10",
+      "destination": "wwwroot/lib/sweetalert2/"
+    },
+    {
+      "library": "font-awesome@6.7.2",
+      "destination": "wwwroot/lib/font-awesome/"
     }
   ]
 }

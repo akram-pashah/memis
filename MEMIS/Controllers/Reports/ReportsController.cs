@@ -1,13 +1,10 @@
 using MEMIS.Data;
 using MEMIS.Helpers.ExcelReports;
 using MEMIS.Helpers.PdfReports;
-using MEMIS.Migrations;
 using MEMIS.Models.Report;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using System.IO;
-using System.Numerics;
 
 
 namespace MEMIS.Controllers.Reports
@@ -69,7 +66,7 @@ namespace MEMIS.Controllers.Reports
           .ToListAsync();
 
         var stream = PdfHandler.StrategicImplementationPlanReportToPdf(list);
-        return File(stream.ToArray(), "application/pdf", "Strategic Implementation Plan.pdf");       
+        return File(stream.ToArray(), "application/pdf", "Strategic Implementation Plan.pdf");
       }
       catch (Exception ex)
       {
@@ -147,7 +144,7 @@ namespace MEMIS.Controllers.Reports
     {
       try
       {
-        var list = _context.ActivityAssess.Include(m => m.StrategicAction).Include(m => m.StrategicIntervention).ThenInclude(x => x.StrategicObjective).Include(m => m.ActivityFk).Include(x => x.QuaterlyPlans).Include(x=>x.DepartmentFk).AsQueryable();
+        var list = _context.ActivityAssess.Include(m => m.StrategicAction).Include(m => m.StrategicIntervention).ThenInclude(x => x.StrategicObjective).Include(m => m.ActivityFk).Include(x => x.QuaterlyPlans).Include(x => x.DepartmentFk).AsQueryable();
 
         if (selectedDeptId.HasValue)
         {
@@ -293,8 +290,8 @@ namespace MEMIS.Controllers.Reports
           item.activity = _context.Activity.Where(x => x.intActivity == int.Parse(item.activity)).Select(x => x.activityName).FirstOrDefault() ?? "";
         }
         var stream = PdfHandler.ActivityImplementationStatusExportPdf(await list.ToListAsync());
-          return File(stream, "application/pdf", "Activity Implementation Status Report.pdf");
-        }
+        return File(stream, "application/pdf", "Activity Implementation Status Report.pdf");
+      }
       catch (Exception ex)
       {
 
@@ -843,7 +840,7 @@ namespace MEMIS.Controllers.Reports
             ) * 100
         })
         .ToListAsync();
-      
+
       return View(list);
     }
 
@@ -962,7 +959,7 @@ namespace MEMIS.Controllers.Reports
         .Include(x => x.ImplementationStatus)
         .Include(x => x.DepartmentFk)
         .ToListAsync();
-      foreach(var item in list)
+      foreach (var item in list)
       {
         item.strategicObjective = _context.StrategicObjective.Where(x => x.intObjective == int.Parse(item.strategicObjective)).Select(x => x.ObjectiveName).FirstOrDefault() ?? "";
       }
@@ -1091,8 +1088,8 @@ namespace MEMIS.Controllers.Reports
               StrategicActions = g.GroupBy(sa => sa.intAction)
                                    .Select(saGroup => new CWP_StrategicAction
                                    {
-                                     StrategicAction = saGroup.FirstOrDefault()?.StrategicAction.actionName,
-                                     ActivityAssesses = saGroup.ToList()
+                                     StrategicAction = saGroup?.FirstOrDefault()?.StrategicAction?.actionName,
+                                     ActivityAssesses = saGroup?.ToList()
                                    }).ToList(),
             }).ToList();
 
@@ -1138,8 +1135,8 @@ namespace MEMIS.Controllers.Reports
               StrategicActions = g.GroupBy(sa => sa.intAction)
                                    .Select(saGroup => new CWP_StrategicAction
                                    {
-                                     StrategicAction = saGroup.FirstOrDefault()?.StrategicAction.actionName,
-                                     ActivityAssesses = saGroup.ToList()
+                                     StrategicAction = saGroup?.FirstOrDefault()?.StrategicAction?.actionName,
+                                     ActivityAssesses = saGroup?.ToList()
                                    }).ToList(),
             }).ToList();
 
@@ -1174,8 +1171,8 @@ namespace MEMIS.Controllers.Reports
               StrategicActions = g.GroupBy(sa => sa.intAction)
                     .Select(saGroup => new CWP_StrategicAction
                     {
-                      StrategicAction = saGroup.FirstOrDefault()?.StrategicAction.actionName ?? "No Action",
-                      ActivityAssesses = saGroup.ToList()
+                      StrategicAction = saGroup?.FirstOrDefault()?.StrategicAction?.actionName ?? "No Action",
+                      ActivityAssesses = saGroup?.ToList()
                     }).ToList(),
             }).ToList();
 
