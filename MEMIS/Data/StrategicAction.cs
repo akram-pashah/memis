@@ -1,4 +1,5 @@
 using MEMIS.Migrations;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -21,7 +22,8 @@ namespace MEMIS.Data
     public virtual int? intIntervention { get; set; }
     [ForeignKey("intIntervention")]
     public virtual StrategicIntervention? StrategicIntervention { get; set; }
-    public virtual ICollection<Activity> Activities { get; set; }
+    [ValidateNever]
+    public virtual ICollection<Activity> Activities { get; set; }= new List<Activity>();
 
   }
 }
