@@ -1,5 +1,5 @@
 
-function confirmDelete(userId) {
+function confirmDelete(userId, onConfirm) {
   return Swal.fire({
     title: 'Are you sure?',
     text: "You won't be able to revert this!",
@@ -9,7 +9,7 @@ function confirmDelete(userId) {
     cancelButtonColor: '#d33',
     confirmButtonText: 'Yes, delete it!'
   }).then((result) => {
-    return result.isConfirmed;
+    onConfirm();
   });
 }
 

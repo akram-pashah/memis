@@ -23,7 +23,7 @@
                 <td>@user.Email</td>
                 <td>
                     <a asp-controller="UserManagement" asp-action="Edit" asp-route-id="@user.Id" class="btn btn-primary">Edit</a>
-                    <button class="btn btn-danger" onclick="confirmDelete('@user.Id')">Delete</button>
+                    <button class="btn btn-danger" onclick="confirmUserDelete('@user.Id')">Delete</button>
                 </td>
             </tr>
         }
@@ -34,47 +34,25 @@
 
 @section Scripts {
     <script>
-        function confirmDelete(userId) {
-            Swal.fire({
-                title: 'Are you sure?',
-                text: "You won't be able to revert this!",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes, delete it!'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    $.ajax({
+        function confirmUserDelete(userId){
+          confirmDelete(userId, () => {
+           $.ajax({
                         url: '/UserManagement/Delete/' + userId,
                         type: 'POST',
                         success: function (response) {
-                            if (response.success) {
-                                Swal.fire(
-                                    'Deleted!',
-                                    'User has been deactivated.',
-                                    'success'
-                                ).then(() => {
-                                    location.reload();
-                                });
-                            } else {
-                                Swal.fire(
-                                    'Error!',
-                                    'There was an error deactivating the user.',
-                                    'error'
-                                );
-                            }
+                          if (response.success) {
+                                  showSuccessMessage('User has been deactivated.', () => {
+                                      location.reload();
+                                  });
+                              } else {
+                                  showErrorMessage('There was an error deactivating the user.');
+                              }
                         },
                         error: function () {
-                            Swal.fire(
-                                'Error!',
-                                'There was an error deactivating the user.',
-                                'error'
-                            );
+                            showErrorMessage('There was an error deactivating the user.');
                         }
                     });
-                }
-            });
-        }
+        });
+        };
     </script>
 }
