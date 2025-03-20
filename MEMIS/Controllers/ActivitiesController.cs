@@ -67,7 +67,7 @@ namespace MEMIS.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("intActivity,activityCode,activityName,intAction")] Activity activity)
+        public async Task<IActionResult> Create([Bind("intActivity,activityCode,activityName,intAction,budgetCode,unitCost")] Activity activity)
         {
             if (ModelState.IsValid)
             {

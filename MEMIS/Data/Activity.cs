@@ -15,6 +15,10 @@ namespace MEMIS.Data
     [MaxLength(1000)]
     [Display(Name = "Activity")]
     public string activityName { get; set; }
+    [Display(Name = "Budget Code")]
+    public double? budgetCode { get; set; }
+    [Display(Name = "Unit Cost")]
+    public double? unitCost { get; set; }
     [Display(Name = "Strategic Action")]
     public virtual int? intAction { get; set; }
     [ForeignKey("intAction")]

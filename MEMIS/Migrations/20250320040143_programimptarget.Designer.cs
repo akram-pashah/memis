@@ -4,6 +4,7 @@ using MEMIS.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MEMIS.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250320040143_programimptarget")]
+    partial class programimptarget
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -40,14 +43,8 @@ namespace MEMIS.Migrations
                         .HasMaxLength(1000)
                         .HasColumnType("nvarchar(1000)");
 
-                    b.Property<double?>("budgetCode")
-                        .HasColumnType("float");
-
                     b.Property<int?>("intAction")
                         .HasColumnType("int");
-
-                    b.Property<double?>("unitCost")
-                        .HasColumnType("float");
 
                     b.HasKey("intActivity");
 
@@ -427,12 +424,6 @@ namespace MEMIS.Migrations
                     b.Property<long?>("annualTarget")
                         .HasColumnType("bigint");
 
-                    b.Property<double?>("budgetAmount")
-                        .HasColumnType("float");
-
-                    b.Property<double?>("budgetCode")
-                        .HasColumnType("float");
-
                     b.Property<int?>("intAction")
                         .HasColumnType("int");
 
@@ -449,9 +440,6 @@ namespace MEMIS.Migrations
                         .HasColumnType("int");
 
                     b.Property<int?>("intObjective")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("intyear")
                         .HasColumnType("int");
 
                     b.Property<string>("meansofVerification")
@@ -480,8 +468,6 @@ namespace MEMIS.Migrations
                     b.HasIndex("intIntervention");
 
                     b.HasIndex("intObjective");
-
-                    b.HasIndex("intyear");
 
                     b.ToTable("AnnualImplemtationPlan");
                 });
@@ -1741,6 +1727,7 @@ namespace MEMIS.Migrations
                         .HasColumnType("nvarchar(1000)");
 
                     b.Property<long?>("OutputTarget")
+                        .HasMaxLength(1000)
                         .HasColumnType("bigint");
 
                     b.Property<string>("ResponsibleParty")
@@ -3977,17 +3964,11 @@ namespace MEMIS.Migrations
                         .WithMany()
                         .HasForeignKey("intObjective");
 
-                    b.HasOne("MEMIS.Data.FYear", "FyearFk")
-                        .WithMany()
-                        .HasForeignKey("intyear");
-
                     b.Navigation("ActivityFk");
 
                     b.Navigation("DepartmentFk");
 
                     b.Navigation("FocusAreaFk");
-
-                    b.Navigation("FyearFk");
 
                     b.Navigation("StrategicActionFk");
 

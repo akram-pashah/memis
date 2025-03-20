@@ -24,7 +24,7 @@ namespace MEMIS.Controllers
     {
       int pageSize = 10;
       var offset = (pageSize * pageNumber) - pageSize;
-      var appDbContext = _context.AnnualImplemtationPlan.Include(a => a.ActivityFk).Include(a => a.DepartmentFk).Include(a => a.FocusAreaFk).Include(a => a.StrategicActionFk).Include(a => a.StrategicInterventionFk).Include(a => a.StrategicObjectiveFk);
+      var appDbContext = _context.AnnualImplemtationPlan.Include(a => a.ActivityFk).Include(a => a.DepartmentFk).Include(a => a.FocusAreaFk).Include(a => a.StrategicActionFk).Include(a => a.StrategicInterventionFk).Include(a => a.StrategicObjectiveFk).Include(a=>a.FyearFk);
       var result = new PagedResult<AnnualImplemtationPlan>
       {
         Data = await appDbContext.AsNoTracking().ToListAsync(),
@@ -127,6 +127,7 @@ namespace MEMIS.Controllers
       ViewData["intAction"] = new SelectList(_context.StrategicAction, "intAction", "actionName");
       ViewData["intIntervention"] = new SelectList(_context.StrategicIntervention, "intIntervention", "InterventionName");
       ViewData["intObjective"] = new SelectList(_context.StrategicObjective, "intObjective", "ObjectiveName");
+      ViewBag.fyear = _context.FYears.ToList();
       ViewBag.FocusAreas = _context.FocusArea.ToList();
       return View();
     }
@@ -150,6 +151,7 @@ namespace MEMIS.Controllers
       ViewData["intAction"] = new SelectList(_context.StrategicAction, "intAction", "actionName", annualImplemtationPlan.intAction);
       ViewData["intIntervention"] = new SelectList(_context.StrategicIntervention, "intIntervention", "InterventionName", annualImplemtationPlan.intIntervention);
       ViewData["intObjective"] = new SelectList(_context.StrategicObjective, "intObjective", "ObjectiveName", annualImplemtationPlan.intObjective);
+      ViewData["fyear"] = new SelectList(_context.FYears, "intyear", "yearcode",annualImplemtationPlan.Year);
       return View(annualImplemtationPlan);
     }
 
@@ -172,6 +174,7 @@ namespace MEMIS.Controllers
       ViewData["intAction"] = new SelectList(_context.StrategicAction, "intAction", "actionName", annualImplemtationPlan.intAction);
       ViewData["intIntervention"] = new SelectList(_context.StrategicIntervention, "intIntervention", "InterventionName", annualImplemtationPlan.intIntervention);
       ViewData["intObjective"] = new SelectList(_context.StrategicObjective, "intObjective", "ObjectiveName", annualImplemtationPlan.intObjective);
+      ViewData["fyear"] = new SelectList(_context.FYears, "intyear", "yearcode", annualImplemtationPlan.Year);
       return View(annualImplemtationPlan);
     }
 
@@ -342,7 +345,7 @@ namespace MEMIS.Controllers
       }
       else
       {
-        return NotFound();
+        return NoContent();
       }
 
     }

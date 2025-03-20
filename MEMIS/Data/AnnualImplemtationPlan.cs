@@ -32,11 +32,17 @@ namespace MEMIS.Data
     public virtual int? intActivity { get; set; }
     [ForeignKey("intActivity")]
     public virtual Activity? ActivityFk { get; set; }
+    [Display(Name = "Budget Code")]
+    public double? budgetCode { get; set; }
     [Display(Name = "Unit Cost")]
-    public double? unitCost { get; set; } 
+    public double? unitCost { get; set; }
+    [Display(Name = "Budget Amount")]
+    public double? budgetAmount { get; set; }
     [Display(Name = "Year")]
     public int? Year { get; set; }
-
+    [ForeignKey("intyear")]
+    public virtual FYear? FyearFk { get; set; }
+    
     [Display(Name = "Annual Target")]
     public long? annualTarget { get; set; }
     [Display(Name = "Means of Verification")]
