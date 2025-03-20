@@ -130,6 +130,9 @@ namespace MEMIS.Controllers
           intActivity = AnnualPlan.intActivity, 
           intDept = AnnualPlan.intDept,
           IdentifiedRisks = AnnualPlan.Risk,
+          budgetCode=AnnualPlan.budgetCode,
+          outputIndicator=AnnualPlan.outputIndicator,
+          
         };
         _context.ActivityAssess.Add(activityAssess);
         await _context.SaveChangesAsync();
