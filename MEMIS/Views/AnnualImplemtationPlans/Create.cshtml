@@ -54,7 +54,7 @@
             <br />
             <div class="form-group">
                 <label asp-for="intActivity" class="control-label"></label>
-                <select id="Activity" asp-for="intActivity" class="form-control">
+                <select id="Activity" asp-for="intActivity" class="form-control" onchange="GetActivityData()">
                     <option value="">Select Activity</option>
                 </select>
             </div>
@@ -84,9 +84,21 @@
             </div>
             <br />
             <div class="form-group">
+                <label asp-for="budgetCode" class="control-label"></label>
+                <input asp-for="budgetCode" class="form-control" />
+                <span asp-validation-for="budgetCode" class="text-danger"></span>
+            </div>
+            <br />
+            <div class="form-group">
                 <label asp-for="unitCost" class="control-label"></label>
-                <input asp-for="unitCost" class="form-control" />
+                <input asp-for="unitCost" class="form-control" type="number"/>
                 <span asp-validation-for="unitCost" class="text-danger"></span>
+            </div>
+            <br />
+            <div class="form-group">
+                <label asp-for="budgetAmount" class="control-label"></label>
+                <input asp-for="budgetAmount" class="form-control" type="number" />
+                <span asp-validation-for="budgetAmount" class="text-danger"></span>
             </div>
             <br />
             <div class="form-group">
@@ -173,6 +185,35 @@
                 });
             }
         }
+        
+        function GetActivityData() {
+            if (document.getElementById("Activity").value != 0  ) {
+                $.ajax({
+                    url: '/AnnualImplemtationPlans/GetActivityDetails',
+                    type: 'GET',
+                    data: { Id: document.getElementById("Activity").value},
+                    dataType: 'json',
+                    success: function (data) {
+                        document.getElementById('budgetCode').value = data.budgetCode;
+                        document.getElementById('unitCost').value = data.unitCost;
+                    },
+                    error: function (error) {
+                        //log or alert the error
+                    }
+                });
+            }
+
+        }
+        $(function () {
+
+            $("#annualTarget").keyup(function () {
+                let target = Number($("#annualTarget").val());
+                let unitcost = Number($("#unitCost").val());
+                let budget = (target * unitcost);
+
+                $("#budgetAmount").val(budget);
+            });
+        });
 
     </script>
 }

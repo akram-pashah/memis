@@ -30,9 +30,11 @@ namespace MEMIS.Controllers
     {
       int pageSize = 10;
       var offset = (pageSize * pageNumber) - pageSize;
+      Guid departmentId = Guid.Parse(HttpContext.Session.GetString("Department"));
       if (_context.ActivityAssess != null)
       {
-        var dat = _context.ActivityAssess.Include(m => m.StrategicAction).Include(m => m.StrategicIntervention).Include(m => m.ActivityFk);
+        var dat = _context.ActivityAssess.Include(m => m.StrategicAction).Include(m => m.StrategicIntervention).Include(m => m.ActivityFk).
+          Where(m=>m.intDept==departmentId);
 
         var result = new PagedResult<ActivityAssess>
         {
@@ -811,14 +813,14 @@ namespace MEMIS.Controllers
           {
             return NotFound();
           }
-          if (objectdto.ApprStatus == 1)
-          {
-            pp.ApprStatus = (int)deptPlanApprStatus.hodreviewed;
-          }
-          else if (objectdto.ApprStatus == 2)
-          {
-            pp.ApprStatus = (int)deptPlanApprStatus.hodrejected;
-          }
+          //if (objectdto.ApprStatus == 1)
+          //{
+           pp.ApprStatus = (int)deptPlanApprStatus.hodreviewed;
+          //}
+          //else if (objectdto.ApprStatus == 2)
+          //{
+          //  pp.ApprStatus = (int)deptPlanApprStatus.hodrejected;
+          //}
           await _context.SaveChangesAsync();
         }
         catch (DbUpdateConcurrencyException)
@@ -957,7 +959,7 @@ namespace MEMIS.Controllers
       if (_context.ActivityAssess != null)
       {
         var dat = _context.ActivityAssess.Include(m => m.StrategicIntervention).Include(m => m.StrategicAction).Include(s => s.ActivityFk).Include(x => x.ActivityAssessRegions).ThenInclude(x => x.QuaterlyPlans).Include(x => x.QuaterlyPlans)
-            .Where(x => x.ApprStatus == (int)(deptPlanApprStatus.dirapprove)).ToList();
+            .Where(x => x.ApprStatus == (int)(deptPlanApprStatus.dirapprove)||x.ApprStatus==(int)(deptPlanApprStatus.headBpdRejected)).ToList();
 
         //var result = new PagedResult<ActivityAssess>
         //{
@@ -1425,13 +1427,14 @@ namespace MEMIS.Controllers
     }
     public async Task<IActionResult> Create(int Id = 0)
     {
-
+      Guid departmentId = Guid.Parse(HttpContext.Session.GetString("Department"));
       ViewBag.StrategicIntervention = _context.StrategicIntervention == null ? new List<StrategicIntervention>() : await _context.StrategicIntervention.ToListAsync();
       //ViewBag.StrategicAction = _context.StrategicAction == null ? new List<StrategicAction>() : await _context.StrategicAction.ToListAsync();
       //ViewBag.Activity = _context.Activity == null ? new List<Activity>() : await _context.Activity.ToListAsync();
       ViewData["intDept"] = new SelectList(_context.Departments, "intDept", "deptName");
       ViewData["Quarter"] = ListHelper.Quarter();
       ActivityAssessDto activityAssessDto = new ActivityAssessDto();
+      activityAssessDto.intDept = departmentId;
       return View(activityAssessDto);
     }
 

@@ -1,5 +1,6 @@
 using cloudscribe.Pagination.Models;
 using MEMIS.Data;
+using MEMIS.Data.Risk;
 using MEMIS.Helpers.ExcelReports;
 using MEMIS.Models;
 using Microsoft.AspNetCore.Identity;
@@ -118,6 +119,18 @@ namespace MEMIS.Controllers
       return Json(activities);
     }
 
+    public Activity GetActivityDetails(int Id)
+    {
+      if (_context.Activity != null)
+      {
+        var activity = _context.Activity.Where(e => e.intActivity==Id).FirstOrDefault();
+        return activity;
+      }
+      else
+      {
+        return new Activity();
+      }
+    }
     // GET: AnnualImplemtationPlans/Create
     public IActionResult Create()
     {
@@ -336,6 +349,8 @@ namespace MEMIS.Controllers
           meansofVerification = ImplemtationPlan.MeansofVerification,
           outputIndicator = ImplemtationPlan.Output,
           annualTarget=ImplemtationPlan.OutputTarget,
+          budgetCode=ImplemtationPlan.ActivityFK.budgetCode,
+          unitCost=ImplemtationPlan.ActivityFK.unitCost,
           Year = startYear
         };
         _context.AnnualImplemtationPlan.Add(annualImplementation);
