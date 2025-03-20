@@ -331,7 +331,8 @@ namespace MEMIS.Controllers
           intActivity = ImplemtationPlan.intActivity,
           intObjective = ImplemtationPlan.intObjective,
           meansofVerification = ImplemtationPlan.MeansofVerification,
-          outputIndicator = ImplemtationPlan.Output, 
+          outputIndicator = ImplemtationPlan.Output,
+          annualTarget=ImplemtationPlan.OutputTarget,
           Year = startYear
         };
         _context.AnnualImplemtationPlan.Add(annualImplementation);
