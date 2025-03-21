@@ -16,19 +16,19 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="intObjective" />
             <div class="form-group">
-                <label asp-for="ObjectiveCode" class="control-label"></label>
+                <label asp-for="ObjectiveCode" class="control-label"></label><span class="text-danger">*</span>
                 <input asp-for="ObjectiveCode" class="form-control" />
                 <span asp-validation-for="ObjectiveCode" class="text-danger"></span>
             </div>
             <br />
             <div class="form-group">
-                <label asp-for="ObjectiveName" class="control-label"></label>
+                <label asp-for="ObjectiveName" class="control-label"></label><span class="text-danger">*</span>
                 <input asp-for="ObjectiveName" class="form-control" />
                 <span asp-validation-for="ObjectiveName" class="text-danger"></span>
             </div>
             <br />
             <div class="form-group">
-                <label asp-for="intFocus" class="control-label"></label>
+                <label asp-for="intFocus" class="control-label"></label><span class="text-danger">*</span>
                 <select asp-for="intFocus" class="form-control" asp-items="ViewBag.intFocus"></select>
                 <span asp-validation-for="intFocus" class="text-danger"></span>
             </div>

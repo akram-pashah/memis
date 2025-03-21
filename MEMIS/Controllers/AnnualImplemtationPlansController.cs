@@ -348,9 +348,10 @@ namespace MEMIS.Controllers
           intObjective = ImplemtationPlan.intObjective,
           meansofVerification = ImplemtationPlan.MeansofVerification,
           outputIndicator = ImplemtationPlan.Output,
-          annualTarget=ImplemtationPlan.OutputTarget,
-          budgetCode=ImplemtationPlan.ActivityFK.budgetCode,
-          unitCost=ImplemtationPlan.ActivityFK.unitCost,
+          annualTarget = ImplemtationPlan.OutputTarget,
+          budgetCode = ImplemtationPlan.ActivityFK.budgetCode,
+          unitCost = ImplemtationPlan.ActivityFK.unitCost,
+          budgetAmount = ImplemtationPlan.ActivityFK.unitCost * ImplemtationPlan.OutputTarget,
           Year = startYear
         };
         _context.AnnualImplemtationPlan.Add(annualImplementation);

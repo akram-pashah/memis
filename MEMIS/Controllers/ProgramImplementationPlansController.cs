@@ -88,7 +88,7 @@ namespace MEMIS.Controllers
     // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create([Bind("Id,intObjective,intIntervention,intAction,intActivity,Output,OutputTarget,ResponsibleParty,MeansofVerification,FY1,FY2,FY3,FY4,FY5,unitCost,intDept,intDir")] ProgramImplementationPlan programImplementationPlan)
+    public async Task<IActionResult> Create([Bind("Id,intObjective,intIntervention,intAction,intActivity,Output,OutputTarget,MeansofVerification,FY1,FY2,FY3,FY4,FY5,unitCost,intDept,intDir")] ProgramImplementationPlan programImplementationPlan)
     {
       if (ModelState.IsValid)
       {
@@ -132,7 +132,7 @@ namespace MEMIS.Controllers
     // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Edit(int id, [Bind("Id,intObjective,intIntervention,intAction,intActivity,Output,OutputTarget,ResponsibleParty,MeansofVerification,FY1,FY2,FY3,FY4,FY5,unitCost,intDept,intDir")] ProgramImplementationPlan programImplementationPlan)
+    public async Task<IActionResult> Edit(int id, [Bind("Id,intObjective,intIntervention,intAction,intActivity,Output,OutputTarget,MeansofVerification,FY1,FY2,FY3,FY4,FY5,unitCost,intDept,intDir")] ProgramImplementationPlan programImplementationPlan)
     {
       if (id != programImplementationPlan.Id)
       {

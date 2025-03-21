@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MEMIS.Data;
 using cloudscribe.Pagination.Models;
+using Org.BouncyCastle.Asn1.X509;
 
 namespace MEMIS.Controllers
 {
@@ -58,7 +59,7 @@ namespace MEMIS.Controllers
         // GET: StrategicInterventions/Create
         public IActionResult Create()
         {
-            ViewData["intObjective"] = new SelectList(_context.StrategicObjective, "intObjective", "ObjectiveName");
+            ViewData["intObjective"] = new SelectList(_context.StrategicObjective.Select(o => new {o.intObjective,DisplayText=o.ObjectiveCode + " - " + o.ObjectiveName}), "intObjective", "DisplayText");
             return View();
         }
 
@@ -74,9 +75,10 @@ namespace MEMIS.Controllers
                 _context.Add(strategicIntervention);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
-            }
-            ViewData["intObjective"] = new SelectList(_context.StrategicObjective, "intObjective", "ObjectiveName", strategicIntervention.intObjective);
-            return View(strategicIntervention);
+            } 
+      ViewData["intObjective"] = new SelectList(_context.StrategicObjective.Select(o => new { o.intObjective, DisplayText = o.ObjectiveCode + " - " + o.ObjectiveName }), "intObjective", "DisplayText", strategicIntervention.intObjective);
+
+      return View(strategicIntervention);
         }
 
         // GET: StrategicInterventions/Edit/5
@@ -92,8 +94,8 @@ namespace MEMIS.Controllers
             {
                 return NotFound();
             }
-            ViewData["intObjective"] = new SelectList(_context.StrategicObjective, "intObjective", "ObjectiveName", strategicIntervention.intObjective);
-            return View(strategicIntervention);
+      ViewData["intObjective"] = new SelectList(_context.StrategicObjective.Select(o => new { o.intObjective, DisplayText = o.ObjectiveCode + " - " + o.ObjectiveName }), "intObjective", "DisplayText");
+      return View(strategicIntervention);
         }
 
         // POST: StrategicInterventions/Edit/5
@@ -128,7 +130,7 @@ namespace MEMIS.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["intObjective"] = new SelectList(_context.StrategicObjective, "intObjective", "ObjectiveCode", strategicIntervention.intObjective);
+      ViewData["intObjective"] = new SelectList(_context.StrategicObjective.Select(o => new { o.intObjective, DisplayText = o.ObjectiveCode + " - " + o.ObjectiveName }), "intObjective", "DisplayText", strategicIntervention.intObjective);
             return View(strategicIntervention);
         }
 

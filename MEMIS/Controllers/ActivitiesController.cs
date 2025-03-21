@@ -57,9 +57,9 @@ namespace MEMIS.Controllers
 
         // GET: Activities/Create
         public IActionResult Create()
-        {
-            ViewData["intAction"] = new SelectList(_context.StrategicAction, "intAction", "actionName");
-            return View();
+        { 
+      ViewData["intAction"] = new SelectList(_context.StrategicAction.Select(o => new { o.intAction, DisplayText = o.actionCode + " - " + o.actionName }), "intAction", "DisplayText");
+      return View();
         }
 
         // POST: Activities/Create
@@ -74,9 +74,9 @@ namespace MEMIS.Controllers
                 _context.Add(activity);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
-            }
-            ViewData["intAction"] = new SelectList(_context.StrategicAction, "intAction", "actionName", activity.intAction);
-            return View(activity);
+            } 
+      ViewData["intAction"] = new SelectList(_context.StrategicAction.Select(o => new { o.intAction, DisplayText = o.actionCode + " - " + o.actionName }), "intAction", "DisplayText", activity.intAction);
+      return View(activity);
         }
 
         // GET: Activities/Edit/5
@@ -92,8 +92,8 @@ namespace MEMIS.Controllers
             {
                 return NotFound();
             }
-            ViewData["intAction"] = new SelectList(_context.StrategicAction, "intAction", "actionName", activity.intAction);
-            return View(activity);
+      ViewData["intAction"] = new SelectList(_context.StrategicAction.Select(o => new { o.intAction, DisplayText = o.actionCode + " - " + o.actionName }), "intAction", "DisplayText", activity.intAction);
+      return View(activity);
         }
 
         // POST: Activities/Edit/5
@@ -128,8 +128,8 @@ namespace MEMIS.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["intAction"] = new SelectList(_context.StrategicAction, "intAction", "actionName", activity.intAction);
-            return View(activity);
+      ViewData["intAction"] = new SelectList(_context.StrategicAction.Select(o => new { o.intAction, DisplayText = o.actionCode + " - " + o.actionName }), "intAction", "DisplayText", activity.intAction);
+      return View(activity);
         }
 
         // GET: Activities/Delete/5

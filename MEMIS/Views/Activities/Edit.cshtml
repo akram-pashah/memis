@@ -16,20 +16,33 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="intActivity" />
             <div class="form-group">
-                <label asp-for="activityCode" class="control-label"></label>
+                <label asp-for="activityCode" class="control-label"></label><span class="text-danger">*</span>
                 <input asp-for="activityCode" class="form-control" />
                 <span asp-validation-for="activityCode" class="text-danger"></span>
             </div>
             <br />
             <div class="form-group">
-                <label asp-for="activityName" class="control-label"></label>
+                <label asp-for="activityName" class="control-label"></label><span class="text-danger">*</span>
                 <input asp-for="activityName" class="form-control" />
                 <span asp-validation-for="activityName" class="text-danger"></span>
             </div>
             <br />
             <div class="form-group">
-                <label asp-for="intAction" class="control-label"></label>
-                <select asp-for="intAction" class="form-control" asp-items="ViewBag.intAction"></select>
+                <label asp-for="budgetCode" class="control-label"></label><span class="text-danger">*</span>
+                <input asp-for="budgetCode" class="form-control" maxlength="7" />
+                <span asp-validation-for="budgetCode" class="text-danger"></span>
+            </div>
+            <br />
+            <div class="form-group">
+                <label asp-for="unitCost" class="control-label"></label><span class="text-danger">*</span>
+                <input asp-for="unitCost" class="form-control" type="number" maxlength="12" />
+                <span asp-validation-for="unitCost" class="text-danger"></span>
+            </div>
+            <br />
+            <div class="form-group">
+                <label asp-for="intAction" class="control-label"></label><span class="text-danger">*</span>
+                @* <select asp-for="intAction" class="form-control" asp-items="ViewBag.intAction"></select> *@
+                @Html.DropDownList("intAction", ViewData["intAction"] as SelectList, "-- Select Action --", new { @class = "form-control" })
                 <span asp-validation-for="intAction" class="text-danger"></span>
             </div>
             <br />

@@ -16,20 +16,21 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="intAction" />
             <div class="form-group">
-                <label asp-for="actionCode" class="control-label"></label>
+                <label asp-for="actionCode" class="control-label"></label><span class="text-danger">*</span>
                 <input asp-for="actionCode" class="form-control" />
                 <span asp-validation-for="actionCode" class="text-danger"></span>
             </div>
             <br />
             <div class="form-group">
-                <label asp-for="actionName" class="control-label"></label>
+                <label asp-for="actionName" class="control-label"></label><span class="text-danger">*</span>
                 <input asp-for="actionName" class="form-control" />
                 <span asp-validation-for="actionName" class="text-danger"></span>
             </div>
             <br />
             <div class="form-group">
-                <label asp-for="intIntervention" class="control-label"></label>
-                <select asp-for="intIntervention" class="form-control" asp-items="ViewBag.intIntervention"></select>
+                <label asp-for="intIntervention" class="control-label"></label><span class="text-danger">*</span>
+                @* <select asp-for="intIntervention" class="form-control" asp-items="ViewBag.intIntervention"></select> *@
+                @Html.DropDownList("intIntervention", ViewData["intIntervention"] as SelectList, "-- Select Intervention --", new { @class = "form-control" })
                 <span asp-validation-for="intIntervention" class="text-danger"></span>
             </div>
             <br />

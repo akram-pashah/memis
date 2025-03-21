@@ -28,32 +28,32 @@
             </div> *@
             <br />
             <div class="form-group">
-                <label asp-for="intObjective" class="control-label"></label>
+                <label asp-for="intObjective" class="control-label"></label><span class="text-danger">*</span>
                 <select asp-for="intObjective" class="form-control" asp-items="ViewBag.intObjective"></select>
                 <span asp-validation-for="intObjective" class="text-danger"></span>
             </div>
             <br />
             <div class="form-group">
-                <label asp-for="intIntervention" class="control-label"></label>
+                <label asp-for="intIntervention" class="control-label"></label><span class="text-danger">*</span>
                 <select asp-for="intIntervention" class="form-control" asp-items="ViewBag.intIntervention"></select>
                 <span asp-validation-for="intIntervention" class="text-danger"></span>
             </div>
             <br />
             <div class="form-group">
-                <label asp-for="intAction" class="control-label"></label>
+                <label asp-for="intAction" class="control-label"></label><span class="text-danger">*</span>
                 <select asp-for="intAction" class="form-control" asp-items="ViewBag.intAction"></select>
                 <span asp-validation-for="intAction" class="text-danger"></span>
             </div>
             <br />
             <div class="form-group">
-                <label asp-for="intActivity" class="control-label"></label>
+                <label asp-for="intActivity" class="control-label"></label><span class="text-danger">*</span>
                 <select asp-for="intActivity" class="form-control" asp-items="ViewBag.intActivity"></select>
                 <span asp-validation-for="intActivity" class="text-danger"></span>
             </div>
 
             <br />
             <div class="form-group">
-                <label asp-for="Year" class="control-label"></label>
+                <label asp-for="Year" class="control-label"></label><span class="text-danger">*</span>
                 <select asp-for="Year" class="form-control" asp-items="ViewBag.fyear"></select>
                 <span asp-validation-for="Year" class="text-danger"></span>
             </div>
@@ -64,7 +64,7 @@
             </div> *@
             <br />
             <div class="form-group">
-                <label asp-for="annualTarget" class="control-label"></label>
+                <label asp-for="annualTarget" class="control-label"></label><span class="text-danger">*</span>
                 <input asp-for="annualTarget" class="form-control" required />
                 <span asp-validation-for="annualTarget" class="text-danger"></span>
             </div>
@@ -76,13 +76,13 @@
             </div>
             <br />
             <div class="form-group">
-                <label asp-for="unitCost" class="control-label"></label>
-                <input asp-for="unitCost" class="form-control" />
+                <label asp-for="unitCost" class="control-label"></label><span class="text-danger">*</span>
+                <input asp-for="unitCost" class="form-control" type="number" />
                 <span asp-validation-for="unitCost" class="text-danger"></span>
             </div>
             <br />
             <div class="form-group">
-                <label asp-for="budgetAmount" class="control-label"></label>
+                <label asp-for="budgetAmount" class="control-label"></label><span class="text-danger">*</span>
                 <input asp-for="budgetAmount" class="form-control" type="number" />
                 <span asp-validation-for="budgetAmount" class="text-danger"></span>
             </div>
@@ -100,7 +100,7 @@
             </div>
             <br />
             <div class="form-group">
-                <label asp-for="intDept" class="control-label"></label>
+                <label asp-for="intDept" class="control-label"></label><span class="text-danger">*</span>
                 <select asp-for="intDept" class="form-control" asp-items="ViewBag.intDept" required></select>
                 <span asp-validation-for="intDept" class="text-danger"></span>
             </div>
@@ -119,3 +119,87 @@
 @*@section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }*@
+@section Scripts {
+    <script>
+        function loadStrategicObjectives(focusAreaId) {
+            if (focusAreaId) {
+                $.getJSON('@Url.Action("GetStrategicObjectives")', { focusAreaId: focusAreaId }, function (data) {
+                    var $objectiveDropdown = $('#StrategicObjective');
+                    $objectiveDropdown.empty();
+                    $objectiveDropdown.append('<option value="">Select Strategic Objective</option>');
+                    $.each(data, function (index, item) {
+                        $objectiveDropdown.append('<option value="' + item.intObjective + '">' + item.objectiveName + '</option>');
+                    });
+                });
+            }
+        }
+
+        function loadStrategicInterventions(objectiveId) {
+            if (objectiveId) {
+                $.getJSON('@Url.Action("GetStrategicInterventions")', { objectiveId: objectiveId }, function (data) {
+                    var $interventionDropdown = $('#StrategicIntervention');
+                    $interventionDropdown.empty();
+                    $interventionDropdown.append('<option value="">Select Strategic Intervention</option>');
+                    $.each(data, function (index, item) {
+                        $interventionDropdown.append('<option value="' + item.intIntervention + '">' + item.interventionName + '</option>');
+                    });
+                });
+            }
+        }
+
+        function loadStrategicActions(interventionId) {
+            if (interventionId) {
+                $.getJSON('@Url.Action("GetStrategicActions")', { interventionId: interventionId }, function (data) {
+                    var $actionDropdown = $('#StrategicAction');
+                    $actionDropdown.empty();
+                    $actionDropdown.append('<option value="">Select Strategic Action</option>');
+                    $.each(data, function (index, item) {
+                        $actionDropdown.append('<option value="' + item.intAction + '">' + item.actionName + '</option>');
+                    });
+                });
+            }
+        }
+        function loadActivities(actionId) {
+            if (actionId) {
+                $.getJSON('@Url.Action("GetActivities")', { actionId: actionId }, function (data) {
+                    var $activityDropdown = $('#Activity');
+                    $activityDropdown.empty();
+                    $activityDropdown.append('<option value="">Select Activity</option>');
+                    $.each(data, function (index, item) {
+                        $activityDropdown.append('<option value="' + item.intActivity + '">' + item.activityName + '</option>');
+                    });
+                });
+            }
+        }
+
+        function GetActivityData() {
+            if (document.getElementById("Activity").value != 0) {
+                $.ajax({
+                    url: '/AnnualImplemtationPlans/GetActivityDetails',
+                    type: 'GET',
+                    data: { Id: document.getElementById("Activity").value },
+                    dataType: 'json',
+                    success: function (data) {
+                        document.getElementById('budgetCode').value = data.budgetCode;
+                        document.getElementById('unitCost').value = data.unitCost;
+                    },
+                    error: function (error) {
+                        //log or alert the error
+                    }
+                });
+            }
+
+        }
+        $(function () {
+
+            $("#annualTarget").keyup(function () {
+                let target = Number($("#annualTarget").val());
+                let unitcost = Number($("#unitCost").val());
+                let budget = (target * unitcost);
+
+                $("#budgetAmount").val(budget);
+            });
+        });
+
+    </script>
+}
