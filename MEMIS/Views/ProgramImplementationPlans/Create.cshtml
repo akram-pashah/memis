@@ -44,47 +44,47 @@
                 <input asp-for="Output" class="form-control" />
                 <span asp-validation-for="Output" class="text-danger"></span>
             </div>
-          
+
             <br />
             <div class="form-group">
                 <label asp-for="FY1" class="control-label"></label> <span class="text-danger">*</span>
-                <input asp-for="FY1" class="form-control" type="number" />
+                <input asp-for="FY1" class="form-control formatted-number" type="text" />
                 <span asp-validation-for="FY1" class="text-danger"></span>
             </div>
             <br />
             <div class="form-group">
                 <label asp-for="FY2" class="control-label"></label> <span class="text-danger">*</span>
-                <input asp-for="FY2" class="form-control" type="number" />
+                <input asp-for="FY2" class="form-control formatted-number" type="text" />
                 <span asp-validation-for="FY2" class="text-danger"></span>
             </div>
             <br />
             <div class="form-group">
                 <label asp-for="FY3" class="control-label"></label> <span class="text-danger">*</span>
-                <input asp-for="FY3" class="form-control" type="number" />
+                <input asp-for="FY3" class="form-control formatted-number" type="text" />
                 <span asp-validation-for="FY3" class="text-danger"></span>
             </div>
             <br />
             <div class="form-group">
                 <label asp-for="FY4" class="control-label"></label><span class="text-danger">*</span>
-                <input asp-for="FY4" class="form-control" type="number" />
+                <input asp-for="FY4" class="form-control formatted-number" type="text" />
                 <span asp-validation-for="FY4" class="text-danger"></span>
             </div>
             <br />
             <div class="form-group">
                 <label asp-for="FY5" class="control-label"></label><span class="text-danger">*</span>
-                <input asp-for="FY5" class="form-control" type="number" />
+                <input asp-for="FY5" class="form-control formatted-number" type="text" />
                 <span asp-validation-for="FY5" class="text-danger"></span>
             </div>
             <br />
             <div class="form-group">
                 <label asp-for="OutputTarget" class="control-label"></label><span class="text-danger">*</span>
-                <input asp-for="OutputTarget" class="form-control text-bg-light"  />
+                <input asp-for="OutputTarget" class="form-control text-bg-light" />
                 <span asp-validation-for="OutputTarget" class="text-danger"></span>
             </div>
             <br />
             <div class="form-group">
                 <label asp-for="unitCost" class="control-label"></label><span class="text-danger">*</span>
-                <input asp-for="unitCost" class="form-control" type="number" />
+                <input asp-for="unitCost" class="form-control formatted-number" type="text" />
                 <span asp-validation-for="unitCost" class="text-danger"></span>
             </div>
             <br />
@@ -92,7 +92,7 @@
                 <label asp-for="MeansofVerification" class="control-label"></label>
                 <input asp-for="MeansofVerification" class="form-control" />
                 <span asp-validation-for="MeansofVerification" class="text-danger"></span>
-            </div> 
+            </div>
             <br />
             <div class="form-group">
                 <label asp-for="intDir" class="control-label"></label><span class="text-danger">*</span>
@@ -116,7 +116,7 @@
 </div>
 
 @section Scripts {
-    @*@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}*@
+@*@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}*@
 }
 <script>
     function loadStrategicActions(interventionId) {
@@ -153,7 +153,7 @@
             let fy4 = Number($("#FY4").val());
             let fy5 = Number($("#FY5").val());
             let target = (fy1 + fy2 + fy3 + fy4 + fy5);
-             
+
             $("#OutputTarget").val(target);
         });
     });

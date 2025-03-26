@@ -64,25 +64,25 @@
                     <br />
                     <div class="form-group">
                         <label asp-for="baseline" class="control-label"></label>
-                        <input asp-for="baseline" type="number" class="form-control" />
+                        <input asp-for="baseline" class="form-control formatted-number" type="text" />
                         <span asp-validation-for="baseline" class="text-danger"></span>
                     </div>
                     <br />
                     <div class="form-group">
                         <label asp-for="budgetCode" class="control-label"></label>
-                        <input asp-for="budgetCode" type="number" class="form-control" />
+                        <input asp-for="budgetCode" class="form-control formatted-number" type="text" />
                         <span asp-validation-for="budgetCode" class="text-danger"></span>
                     </div>
                     <br />
                     <div class="form-group">
                         <label asp-for="comparativeTarget" class="control-label"></label>
-                        <input asp-for="comparativeTarget" type="number" class="form-control" />
+                        <input asp-for="comparativeTarget" class="form-control formatted-number" type="text" />
                         <span asp-validation-for="comparativeTarget" class="text-danger"></span>
                     </div>
                     <br />
                     <div class="form-group">
                         <label asp-for="unitCost" class="control-label"></label>
-                        <input asp-for="unitCost" type="number" class="form-control" />
+                        <input asp-for="unitCost" class="form-control formatted-number" type="text" />
                         <span asp-validation-for="unitCost" class="text-danger"></span>
                     </div>
                     <br />
@@ -94,7 +94,7 @@
                     <br />
                     <div class="form-group">
                         <label asp-for="budgetAmount" class="control-label"></label>
-                        <input asp-for="budgetAmount" type="number" class="form-control" />
+                        <input asp-for="budgetAmount" class="form-control formatted-number" type="text" />
                         <span asp-validation-for="budgetAmount" class="text-danger"></span>
                     </div>
                     <br />
@@ -106,27 +106,27 @@
                                 <span id="quarterValidation" class="text-danger"></span>
                             </div>
                             <div class="col-2">
-                                <input id="QTarget" class="form-control" type="number" />
+                                <input id="QTarget" class="form-control formatted-number" type="text" />
                                 <span asp-validation-for="Q1Target" class="text-danger"></span>
                             </div>
                             <div class="col-2">
-                                <input id="QBudget" class="form-control" type="number" />
+                                <input id="QBudget" class="form-control formatted-number" type="text" />
                                 <span asp-validation-for="Q1Budget" class="text-danger"></span>
                             </div>
                             <div class="col-2">
-                                <input id="QUnitCost" class="form-control" type="number" />
+                                <input id="QUnitCost" class="form-control formatted-number" type="text" />
                                 <span class="text-danger"></span>
                             </div>
                             <div class="col-2">
-                                <input id="QActual" class="form-control" type="number" />
+                                <input id="QActual" class="form-control formatted-number" type="text" />
                                 <span asp-validation-for="Q1Actual" class="text-danger"></span>
                             </div>
                             <div class="col-2">
-                                <input id="QAmtSpent" class="form-control" type="number" />
+                                <input id="QAmtSpent" class="form-control formatted-number" type="text" />
                                 <span asp-validation-for="Q1AmtSpent" class="text-danger"></span>
                             </div>
                             <div class="col-3">
-                                <input id="QAchievement" class="form-control" type="number" />
+                                <input id="QAchievement" class="form-control formatted-number" type="text" />
                             </div>
                             <div class="col-3">
                                 <input id="QJustification" class="form-control" />
@@ -147,18 +147,18 @@
                                     <div class="accordion-body">
                                         <table class="table table-striped table-bordered" id="quarterDetailsTable">
                                             <thead class="thead-dark">
-                                              <tr>
-                                                <th>Id</th>
-                                                <th>Quarter</th>
-                                                <th>Target</th>
-                                                <th>Unit Cost</th>
-                                                <th>Budget</th>
-                                                <th>Actual</th>
-                                                <th>Amt Spent</th>
-                                                <th>Achievement</th>
-                                                <th>Justification</th>
-                                                <th>Action</th>
-                                              </tr>
+                                                <tr>
+                                                    <th>Id</th>
+                                                    <th>Quarter</th>
+                                                    <th>Target</th>
+                                                    <th>Unit Cost</th>
+                                                    <th>Budget</th>
+                                                    <th>Actual</th>
+                                                    <th>Amt Spent</th>
+                                                    <th>Achievement</th>
+                                                    <th>Justification</th>
+                                                    <th>Action</th>
+                                                </tr>
                                             </thead>
                                             <tbody>
                                                 @for (int i = 0; i < Model.QuaterlyPlans.Where(x => x.ActivityAssessmentRegionId == null).ToList().Count; i++)
@@ -212,7 +212,7 @@
                     <br />
                     <div class="form-group">
                         <label asp-for="TotAmtSpent" class="control-label"></label>
-                        <input asp-for="TotAmtSpent" type="number" class="form-control" />
+                        <input asp-for="TotAmtSpent" class="form-control formatted-number" type="text" />
                         <span asp-validation-for="TotAmtSpent" class="text-danger"></span>
                     </div>
                     <br />

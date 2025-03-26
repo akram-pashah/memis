@@ -1,9 +1,9 @@
 @model MEMIS.Data.Activity
 
 @{
-  ViewData["Title"] = "Edit";
-  //Layout = "~/Views/Shared/_PlanningLayout.cshtml";
-  Layout = "~/Pages/Shared/_ContentNavbarLayout.cshtml";
+    ViewData["Title"] = "Edit";
+    //Layout = "~/Views/Shared/_PlanningLayout.cshtml";
+    Layout = "~/Pages/Shared/_ContentNavbarLayout.cshtml";
 }
 
 <h1>Edit</h1>
@@ -35,7 +35,7 @@
             <br />
             <div class="form-group">
                 <label asp-for="unitCost" class="control-label"></label><span class="text-danger">*</span>
-                <input asp-for="unitCost" class="form-control" type="number" maxlength="12" />
+                <input asp-for="unitCost" class="form-control formatted-number" type="text" maxlength="12" />
                 <span asp-validation-for="unitCost" class="text-danger"></span>
             </div>
             <br />
