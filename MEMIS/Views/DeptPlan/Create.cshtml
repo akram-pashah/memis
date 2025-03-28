@@ -1,10 +1,10 @@
 @model MEMIS.Models.DeptPlanDto
 
 @{
-  ViewData["Title"] = "Department Plan";
-  //Layout = "~/Views/Shared/_PlanningLayout.cshtml";
-  Layout = "~/Pages/Shared/_ContentNavbarLayout.cshtml";
-} 
+    ViewData["Title"] = "Department Plan";
+    //Layout = "~/Views/Shared/_PlanningLayout.cshtml";
+    Layout = "~/Pages/Shared/_ContentNavbarLayout.cshtml";
+}
 <h1>Create</h1>
 <h4>Department Plan</h4>
 <hr />
@@ -12,53 +12,53 @@
     <div class="col-md-6">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                <div class="form-group">
-                    <label asp-for="StrategicObjective" class="control-label"></label>
-                    @Html.DropDownList("StrategicObjective", new SelectList(ViewBag.StrategicPlanList, "Id", "strategicObjective"), new { @class = "form-control form-select", @required = "required" })
-                    <span asp-validation-for="StrategicObjective" class="text-danger"></span>
-                </div>
-                <br />
-                <div class="form-group">
-                    <label asp-for="strategicIntervention" class="control-label"></label>
-                    @Html.DropDownList("strategicIntervention", new SelectList(ViewBag.StrategicPlanList, "Id", "strategicIntervention"), new { @class = "form-control form-select", @required = "required" })
-                    <span asp-validation-for="strategicIntervention" class="text-danger"></span>
-                </div>
-                <br />
-                <div class="form-group">
-                    <label asp-for="StrategicAction" class="control-label"></label>
-                    @Html.DropDownList("StrategicAction", new SelectList(ViewBag.StrategicPlanList, "Id", "StrategicAction"), new { @class = "form-control form-select", @required = "required" })
-                    <span asp-validation-for="StrategicAction" class="text-danger"></span>
-                </div>
-                <br />
-                <div class="form-group">
-                    <label asp-for="activity" class="control-label"></label>
-                    <input asp-for="activity" class="form-control" />
-                    <span asp-validation-for="activity" class="text-danger"></span>
-                </div>
-                <br />
-                <div class="form-group">
-                    <label asp-for="outputIndicator" class="control-label"></label>
-                    <input asp-for="outputIndicator" class="form-control" />
-                    <span asp-validation-for="outputIndicator" class="text-danger"></span>
-                </div>
-                <br />
-                <div class="form-group">
-                    <label asp-for="baseline" class="control-label"></label>
-                    <input asp-for="baseline" type="number" class="form-control" />
-                    <span asp-validation-for="baseline" class="text-danger"></span>
-                </div>
-                <br />
-                <div class="form-group">
-                    <label asp-for="budgetCode" class="control-label"></label>
-                    <input asp-for="budgetCode" type="number" class="form-control" />
-                    <span asp-validation-for="budgetCode" class="text-danger"></span>
-                </div>
-                <br />
-                <div class="form-group">
-                    <label asp-for="unitCost" class="control-label"></label>
-                    <input asp-for="unitCost"  type="number" onchange="SetBudgetValue()" id="unitCost" class="form-control" />
-                    <span asp-validation-for="unitCost" class="text-danger"></span>
-                </div>
+            <div class="form-group">
+                <label asp-for="StrategicObjective" class="control-label"></label>
+                @Html.DropDownList("StrategicObjective", new SelectList(ViewBag.StrategicPlanList, "Id", "strategicObjective"), new { @class = "form-control form-select", @required = "required" })
+                <span asp-validation-for="StrategicObjective" class="text-danger"></span>
+            </div>
+            <br />
+            <div class="form-group">
+                <label asp-for="strategicIntervention" class="control-label"></label>
+                @Html.DropDownList("strategicIntervention", new SelectList(ViewBag.StrategicPlanList, "Id", "strategicIntervention"), new { @class = "form-control form-select", @required = "required" })
+                <span asp-validation-for="strategicIntervention" class="text-danger"></span>
+            </div>
+            <br />
+            <div class="form-group">
+                <label asp-for="StrategicAction" class="control-label"></label>
+                @Html.DropDownList("StrategicAction", new SelectList(ViewBag.StrategicPlanList, "Id", "StrategicAction"), new { @class = "form-control form-select", @required = "required" })
+                <span asp-validation-for="StrategicAction" class="text-danger"></span>
+            </div>
+            <br />
+            <div class="form-group">
+                <label asp-for="activity" class="control-label"></label>
+                <input asp-for="activity" class="form-control" />
+                <span asp-validation-for="activity" class="text-danger"></span>
+            </div>
+            <br />
+            <div class="form-group">
+                <label asp-for="outputIndicator" class="control-label"></label>
+                <input asp-for="outputIndicator" class="form-control" />
+                <span asp-validation-for="outputIndicator" class="text-danger"></span>
+            </div>
+            <br />
+            <div class="form-group">
+                <label asp-for="baseline" class="control-label"></label>
+                <input asp-for="baseline" class="form-control formatted-number" type="text" />
+                <span asp-validation-for="baseline" class="text-danger"></span>
+            </div>
+            <br />
+            <div class="form-group">
+                <label asp-for="budgetCode" class="control-label"></label>
+                <input asp-for="budgetCode" class="form-control formatted-number" type="text" />
+                <span asp-validation-for="budgetCode" class="text-danger"></span>
+            </div>
+            <br />
+            <div class="form-group">
+                <label asp-for="unitCost" class="control-label"></label>
+                <input asp-for="unitCost" type="number" onchange="SetBudgetValue()" id="unitCost" class="form-control formatted-number" />
+                <span asp-validation-for="unitCost" class="text-danger"></span>
+            </div>
             <br />
             <div class="form-group">
                 <div class="input-group">
@@ -69,12 +69,12 @@
                     </div>
                     <div class="col">
                         <label asp-for="Q1Target" class="control-label">Target</label>
-                        <input id="QTarget" onchange="SetBudgetValue()" class="form-control" type="number" />
+                        <input id="QTarget" onchange="SetBudgetValue()" class="form-control formatted-number" type="text" />
                         <span asp-validation-for="Q1Target" class="text-danger"></span>
                     </div>
                     <div class="col">
                         <label asp-for="Q1Budget" class="control-label">Budget</label>
-                        <input id="QBudget" class="form-control" readonly type="number" />
+                        <input id="QBudget" class="form-control formatted-number" readonly type="number" />
                         <span asp-validation-for="Q1Budget" class="text-danger"></span>
                     </div>
                     <div class="col-auto align-self-end">
@@ -136,7 +136,7 @@
             <br />
             <div class="form-group">
                 <label asp-for="comparativeTarget" class="control-label"></label>
-                <input asp-for="comparativeTarget" type="number" class="form-control" />
+                <input asp-for="comparativeTarget" class="form-control formatted-number" type="text" />
                 <span asp-validation-for="comparativeTarget" class="text-danger"></span>
             </div>
             <br />
@@ -148,7 +148,7 @@
             <br />
             <div class="form-group">
                 <label asp-for="budgetAmount" class="control-label"></label>
-                <input asp-for="budgetAmount" type="number" class="form-control" />
+                <input asp-for="budgetAmount" class="form-control formatted-number" type="text" />
                 <span asp-validation-for="budgetAmount" class="text-danger"></span>
             </div>
             <br />
@@ -170,116 +170,116 @@
 </div>
 <script>
 
-  window.addEventListener('load', function () {
-    GetData();
-  })
-
-  $("#RiskConsequenceId").change(function () {
-    if ($('option:selected', this).val() != 0) {
+    window.addEventListener('load', function () {
       GetData();
-    }
+    })
 
-  });
-  $("#RiskLikelihoodId").change(function () {
-    if ($('option:selected', this).val() != 0) {
-      GetData();
-    }
+    $("#RiskConsequenceId").change(function () {
+      if ($('option:selected', this).val() != 0) {
+        GetData();
+      }
 
-  });
+    });
+    $("#RiskLikelihoodId").change(function () {
+      if ($('option:selected', this).val() != 0) {
+        GetData();
+      }
 
-  function GetData() {
-    if (document.getElementById("RiskConsequenceId").value != 0 && document.getElementById("RiskLikelihoodId").value != 0) {
-      $.ajax({
-        url: '/RiskIdentifications/GetRiskMatrix',
-        type: 'GET',
-        data: { RCId: document.getElementById("RiskConsequenceId").value, RLId: document.getElementById("RiskLikelihoodId").value },
-        dataType: 'json',
-        success: function (data) {
-          document.getElementById('RiskRank').value = data.riskValue;
-          document.getElementById('RiskScore').value = data.riskRank;
-          document.getElementById('EvalCriteria').value = data.evaluationCriteria;
-        },
-        error: function (error) {
-          //log or alert the error
-        }
-      });
-    }
+    });
 
-  }
-
-    var quarterOptions = $('#Quarter').html(); // Store the HTML content of the Quarter dropdown
-
-    function addQuarterDetails() {
-        var quarter = $('#Quarter').val();
-        var target = $('#QTarget').val();
-        var budget = $('#QBudget').val();
-
-        if (!quarter || !target || !budget) {
-            $('#quarterValidation').text("All fields are required.");
-            return;
-        } else {
-            $('#quarterValidation').text("");
-        }
-
-        var $tableBody = $('#quarterDetailsTable tbody');
-        var index;
-
-        if ($tableBody.find('tr:first').text().trim() === "No data available in table") {
-            $tableBody.find('tr:first').remove();
-            index = 0;
-        } else {
-            index = $tableBody.find('tr').length;
-        }
-
-        var options = '';
-        $('#Quarter option').each(function () {
-            var value = $(this).val();
-            var text = $(this).text();
-            var selected = value === quarter ? 'selected' : '';
-            options += `
-        <option value="${value}" ${selected}>${text}</option>`;
+    function GetData() {
+      if (document.getElementById("RiskConsequenceId").value != 0 && document.getElementById("RiskLikelihoodId").value != 0) {
+        $.ajax({
+          url: '/RiskIdentifications/GetRiskMatrix',
+          type: 'GET',
+          data: { RCId: document.getElementById("RiskConsequenceId").value, RLId: document.getElementById("RiskLikelihoodId").value },
+          dataType: 'json',
+          success: function (data) {
+            document.getElementById('RiskRank').value = data.riskValue;
+            document.getElementById('RiskScore').value = data.riskRank;
+            document.getElementById('EvalCriteria').value = data.evaluationCriteria;
+          },
+          error: function (error) {
+            //log or alert the error
+          }
         });
+      }
 
-        var row = `
-        <tr>
-            <td>${index + 1}</td>
-            <td>
-                <select name="QuaterlyPlans[${index}].Quarter" readonly class="form-control">
-                    ${options}
-                </select>
-            </td>
-            <td><input name="QuaterlyPlans[${index}].QTarget" value="${target}" readonly class="form-control" /></td>
-            <td><input name="QuaterlyPlans[${index}].QBudget" value="${budget}" readonly class="form-control" /></td>
-            <td>
-                <button type="button" class="btn btn-danger delete-btn" onclick="removeQuarterDetails(this)" data-toggle="tooltip" data-placement="top" title="Delete">
-                    <i class="bx bx-message-square-x"></i>
-                </button>
-            </td>
-        </tr>`;
-
-        $tableBody.append(row);
-
-        // Clear the inputs
-        $('#Quarter').val('');
-        $('#QTarget').val('');
-        $('#QBudget').val('');
-
-        $('#accordionQuarterDetailsCollapse').addClass('show');
     }
 
-    function removeQuarterDetails(button) {
-        $(button).closest('tr').remove();
-    }
+      var quarterOptions = $('#Quarter').html(); // Store the HTML content of the Quarter dropdown
+
+      function addQuarterDetails() {
+          var quarter = $('#Quarter').val();
+          var target = $('#QTarget').val();
+          var budget = $('#QBudget').val();
+
+          if (!quarter || !target || !budget) {
+              $('#quarterValidation').text("All fields are required.");
+              return;
+          } else {
+              $('#quarterValidation').text("");
+          }
+
+          var $tableBody = $('#quarterDetailsTable tbody');
+          var index;
+
+          if ($tableBody.find('tr:first').text().trim() === "No data available in table") {
+              $tableBody.find('tr:first').remove();
+              index = 0;
+          } else {
+              index = $tableBody.find('tr').length;
+          }
+
+          var options = '';
+          $('#Quarter option').each(function () {
+              var value = $(this).val();
+              var text = $(this).text();
+              var selected = value === quarter ? 'selected' : '';
+              options += `
+          <option value="${value}" ${selected}>${text}</option>`;
+          });
+
+          var row = `
+          <tr>
+              <td>${index + 1}</td>
+              <td>
+                  <select name="QuaterlyPlans[${index}].Quarter" readonly class="form-control">
+                      ${options}
+                  </select>
+              </td>
+              <td><input name="QuaterlyPlans[${index}].QTarget" value="${target}" readonly class="form-control" /></td>
+              <td><input name="QuaterlyPlans[${index}].QBudget" value="${budget}" readonly class="form-control" /></td>
+              <td>
+                  <button type="button" class="btn btn-danger delete-btn" onclick="removeQuarterDetails(this)" data-toggle="tooltip" data-placement="top" title="Delete">
+                      <i class="bx bx-message-square-x"></i>
+                  </button>
+              </td>
+          </tr>`;
+
+          $tableBody.append(row);
+
+          // Clear the inputs
+          $('#Quarter').val('');
+          $('#QTarget').val('');
+          $('#QBudget').val('');
+
+          $('#accordionQuarterDetailsCollapse').addClass('show');
+      }
+
+      function removeQuarterDetails(button) {
+          $(button).closest('tr').remove();
+      }
 
 
-    function SetBudgetValue() {
-        var target = $('#QTarget').val();
-        var unitCost = $('#unitCost').val();
+      function SetBudgetValue() {
+          var target = $('#QTarget').val();
+          var unitCost = $('#unitCost').val();
 
-        if (target != null && unitCost != null) {
-            var budVal = target * unitCost;
-            $('#QBudget').val(budVal);
-        }
-    }
+          if (target != null && unitCost != null) {
+              var budVal = target * unitCost;
+              $('#QBudget').val(budVal);
+          }
+      }
 
 </script>

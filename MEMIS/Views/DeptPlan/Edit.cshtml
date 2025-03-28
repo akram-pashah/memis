@@ -1,9 +1,9 @@
 @model MEMIS.Models.DeptPlanDto
 
 @{
-  ViewData["Title"] = "Edit";
-  //Layout = "~/Views/Shared/_PlanningLayout.cshtml";
-  Layout = "~/Pages/Shared/_ContentNavbarLayout.cshtml";
+    ViewData["Title"] = "Edit";
+    //Layout = "~/Views/Shared/_PlanningLayout.cshtml";
+    Layout = "~/Pages/Shared/_ContentNavbarLayout.cshtml";
 }
 
 <h1>Edit</h1>
@@ -21,7 +21,7 @@
                 <span asp-validation-for="StrategicObjective" class="text-danger"></span>
             </div>
             <br />
-             <div class="form-group">
+            <div class="form-group">
                 <label asp-for="strategicIntervention" class="control-label"></label>
                 @Html.DropDownList("strategicIntervention", new SelectList(ViewBag.StrategicPlanList, "Id", "strategicIntervention", Model.strategicIntervention), new { @class = "form-control form-select", @required = "required" })
                 <span asp-validation-for="strategicIntervention" class="text-danger"></span>
@@ -72,12 +72,12 @@
                     </div>
                     <div class="col">
                         <label asp-for="Q1Target" class="control-label">Target</label>
-                        <input id="QTarget" onchange="SetBudgetValue()" class="form-control" type="number" />
+                        <input id="QTarget" onchange="SetBudgetValue()" class="form-control formatted-number" type="text" />
                         <span asp-validation-for="Q1Target" class="text-danger"></span>
                     </div>
                     <div class="col">
                         <label asp-for="Q1Budget" class="control-label">Budget</label>
-                        <input id="QBudget" class="form-control" readonly type="number" />
+                        <input id="QBudget" class="form-control formatted-number" readonly type="number" />
                         <span asp-validation-for="Q1Budget" class="text-danger"></span>
                     </div>
                     <div class="col-auto align-self-end">
@@ -258,8 +258,8 @@
             }
         }
 
-     
+
 
     </script>
-    @*@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}*@
+@*@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}*@
 }

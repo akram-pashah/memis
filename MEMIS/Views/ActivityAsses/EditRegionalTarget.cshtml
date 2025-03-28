@@ -37,17 +37,17 @@
                 </div>
                 <div class="col">
                   <label asp-for="QTarget" class="control-label">Target</label>
-                        <input onkeyup="setBudgetAmount()" id="QTarget" class="form-control" type="number" />
+                        <input onkeyup="setBudgetAmount()" id="QTarget" class="form-control formatted-number" type="text" />
                   <span asp-validation-for="QTarget" class="text-danger"></span>
                 </div>
                     <div class="col">
                         <label class="control-label">UnitCost</label>
-                        <input onkeyup="setBudgetAmount()" id="UnitCost" class="form-control" type="number" />
+                        <input onkeyup="setBudgetAmount()" id="UnitCost" class="form-control formatted-number" type="text" />
                         <span class="text-danger"></span>
                     </div>
                 <div class="col">
                   <label asp-for="QBudget" class="control-label">Budget</label>
-                  <input id="QBudget" class="form-control" type="number" />
+                  <input id="QBudget" class="form-control formatted-number" type="text" />
                   <span asp-validation-for="QBudget" class="text-danger"></span>
                 </div>
                 <div class="col align-content-end">
