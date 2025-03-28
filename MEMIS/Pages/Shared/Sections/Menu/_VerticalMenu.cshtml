@@ -183,7 +183,7 @@
                         <div>Activity Assessment</div>
                     </a>
                     <ul class="menu-sub">
-                        @if (User.IsInRole("Regional Officer") || User.IsInRole("SuperAdmin"))
+                        @if (User.IsInRole("Regional Manager") || User.IsInRole("SuperAdmin"))
                         {
                             <li class='menu-item@(currentPage == "/ActivityAssessment/RegionalIndex" ? " active" : "")'>
                                 <a asp-controller="ActivityAssessment" asp-action="RegionalIndex" class="menu-link">
@@ -191,7 +191,7 @@
                                 </a>
                             </li>
                         }
-                        @if (User.IsInRole("Head of Department") || User.IsInRole("SuperAdmin"))
+                        @if (User.IsInRole("Head of Region") || User.IsInRole("SuperAdmin"))
                         {
                             <li class='menu-item@(currentPage == "/ActivityAssessment/RegionalHodVerification" ? " active" : "")'>
                                 <a asp-controller="ActivityAssessment" asp-action="RegionalHodVerification" class="menu-link">

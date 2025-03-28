@@ -73,9 +73,9 @@ namespace MEMIS.Controllers
     // GET: ProgramImplementationPlans/Create
     public IActionResult Create()
     {
-      ViewBag.StrategicIntervention = _context.StrategicIntervention == null ? new List<StrategicIntervention>() :  _context.StrategicIntervention.ToList();
+      //ViewBag.StrategicIntervention = _context.StrategicIntervention == null ? new List<StrategicIntervention>() :  _context.StrategicIntervention.ToList();
       ViewData["intObjective"] = new SelectList(_context.StrategicObjective, "intObjective", "ObjectiveName");
-      //ViewData["intIntervention"] = new SelectList(_context.StrategicIntervention.Select(s => new { intIntervention = s.intIntervention, InterventionName = '(' + s.InterventionCode + ')' + s.InterventionName }), "intIntervention", "InterventionName");
+      ViewData["intIntervention"] = new SelectList(_context.StrategicIntervention.Select(s => new { intIntervention = s.intIntervention, InterventionName = '(' + s.InterventionCode + ')' + s.InterventionName }), "intIntervention", "InterventionName");
       ViewData["intAction"] = new SelectList(_context.StrategicAction.Select(s => new { intAction = s.intAction, actionName = '(' + s.actionCode + ')' + s.actionName }), "intAction", "actionName");
       ViewData["intActivity"] = new SelectList(_context.Activity.Select(a => new { intActivity = a.intActivity, activityName = '(' + a.activityCode + ')' + a.activityName }), "intActivity", "activityName");
       ViewData["intDept"] = new SelectList(_context.Departments, "intDept", "deptName");
@@ -96,6 +96,7 @@ namespace MEMIS.Controllers
         await _context.SaveChangesAsync();
         return RedirectToAction(nameof(Index));
       }
+      //ViewBag.StrategicIntervention = _context.StrategicIntervention == null ? new List<StrategicIntervention>() : _context.StrategicIntervention.ToList();
       ViewData["intActivity"] = new SelectList(_context.Activity.Select(a => new { intActivity = a.intActivity, activityName = '(' + a.activityCode + ')' + a.activityName }), "intActivity", "activityName", programImplementationPlan.intActivity); 
       ViewData["intAction"] = new SelectList(_context.StrategicAction.Select(s => new { intAction = s.intAction, actionName = '(' + s.actionCode + ')' + s.actionName }), "intAction", "actionName", programImplementationPlan.intAction);
       ViewData["intIntervention"] = new SelectList(_context.StrategicIntervention.Select(s => new { intIntervention = s.intIntervention, InterventionName = '(' + s.InterventionCode + ')' + s.InterventionName }), "intIntervention", "InterventionName", programImplementationPlan.intIntervention);

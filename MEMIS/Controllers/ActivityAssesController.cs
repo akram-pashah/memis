@@ -132,7 +132,9 @@ namespace MEMIS.Controllers
           IdentifiedRisks = AnnualPlan.Risk,
           budgetCode=AnnualPlan.budgetCode,
           outputIndicator=AnnualPlan.outputIndicator,
-          
+          unitCost=AnnualPlan.unitCost,
+          comparativeTarget=AnnualPlan.annualTarget,
+          budgetAmount=AnnualPlan.budgetAmount
         };
         _context.ActivityAssess.Add(activityAssess);
         await _context.SaveChangesAsync();
