@@ -1,0 +1,83 @@
+@using MEMIS.Data.Risk
+@model RiskEvaluation
+
+<div class="modal fade" id="riskEvaluationModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <form asp-action="AddRiskEvaluation" class="needs-validation was-validated" novalidate="">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel1">Add Risk Evaluation</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="RiskRefID" asp-for="RiskRefID" name="RiskRefID" value="@ViewBag.RiskRefID" />
+                    <div class="row">
+                        <div class="col mb-3">
+                            <label class="form-label" for="Year">Year</label>
+                            <input type="number" class="form-control" id="Year" asp-for="Year" name="Year" placeholder="Year" required>
+                            <div class="valid-feedback"> Looks good! </div>
+                            <div class="invalid-feedback"> This field is required. </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col mb-3">
+                            <label class="form-label" for="Quarter">Quarter</label>
+                            <select asp-for="Quarter" class="form-control form-select" id="Quarter" name="Quarter" placeholder="Quarter" required>
+                                <option value="1">Q1</option>
+                                <option value="2">Q2</option>
+                                <option value="3">Q3</option>
+                                <option value="4">Q4</option>
+                            </select>
+                            <div class="valid-feedback"> Looks good! </div>
+                            <div class="invalid-feedback"> This field is required. </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col mb-3">
+                            <label class="form-label" for="ResidualRiskConsequence">Residual Risk Consequence</label>
+                            <select asp-for="ResidualRiskConsequence" asp-items="ViewBag.RiskConsequenceList" class="form-control form-select" required></select>
+                            <div class="valid-feedback"> Looks good! </div>
+                            <div class="invalid-feedback"> This field is required. </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col mb-3">
+                            <label class="form-label" for="ResidualRiskLikelihood">Residual Risk Likelihood</label>
+                            <select asp-for="ResidualRiskLikelihood" asp-items="ViewBag.RiskLikelihoodList" class="form-control form-select" required></select>
+                            <div class="valid-feedback"> Looks good! </div>
+                            <div class="invalid-feedback"> This field is required. </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col mb-3">
+                            <label class="form-label" for="ResidualRiskScore">Residual Risk Score</label>
+                            <input class="form-control" type="number" id="ResidualRiskScore" name="ResidualRiskScore" placeholder="Residual Risk Score" required>
+                            <div class="valid-feedback"> Looks good! </div>
+                            <div class="invalid-feedback"> This field is required. </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col mb-3">
+                            <label class="form-label" for="ResidualRiskRank">Residual Risk Rank</label>
+                            <input class="form-control" type="number" id="ResidualRiskScore" name="ResidualRiskRank" placeholder="Residual Risk Rank" required>
+                            <div class="valid-feedback"> Looks good! </div>
+                            <div class="invalid-feedback"> This field is required. </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col mb-3">
+                            <label class="form-label" for="EvaluationSummary">Evaluation Summary</label>
+                            <input class="form-control" type="text" asp-for="EvaluationSummary" id="EvaluationSummary" name="EvaluationSummary" placeholder="Evaluation Summary" required>
+                            <div class="valid-feedback"> Looks good! </div>
+                            <div class="invalid-feedback"> This field is required. </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Add</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

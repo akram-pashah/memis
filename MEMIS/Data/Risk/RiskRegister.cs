@@ -79,5 +79,6 @@ namespace MEMIS.Data.Risk
     [Display(Name = "Operation / Governance Impact")]
     public double? OperationGovernanceImpact { get; set; }
     public virtual ICollection<RiskTreatmentPlan> RiskTreatmentPlans { get; set; } = [];
+    public virtual ICollection<RiskEvaluation> RiskEvaluations { get; set; } = [];
   }
 }

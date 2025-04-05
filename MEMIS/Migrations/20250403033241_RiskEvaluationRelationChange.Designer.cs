@@ -4,6 +4,7 @@ using MEMIS.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MEMIS.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250403033241_RiskEvaluationRelationChange")]
+    partial class RiskEvaluationRelationChange
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -2819,9 +2822,10 @@ namespace MEMIS.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
                     b.Property<string>("EvaluatedBy")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime?>("EvaluationDate")
+                    b.Property<DateTime>("EvaluationDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("EvaluationSummary")
@@ -2833,19 +2837,10 @@ namespace MEMIS.Migrations
                     b.Property<int>("Quarter")
                         .HasColumnType("int");
 
-                    b.Property<double>("ResidualRiskConsequence")
-                        .HasColumnType("float");
-
-                    b.Property<double>("ResidualRiskLikelihood")
-                        .HasColumnType("float");
-
-                    b.Property<double>("ResidualRiskRank")
-                        .HasColumnType("float");
-
                     b.Property<double>("ResidualRiskScore")
                         .HasColumnType("float");
 
-                    b.Property<int?>("RiskRefID")
+                    b.Property<int>("RiskRefID")
                         .HasColumnType("int");
 
                     b.Property<int>("Year")
@@ -2854,8 +2849,7 @@ namespace MEMIS.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("RiskRefID", "Year", "Quarter")
-                        .IsUnique()
-                        .HasFilter("[RiskRefID] IS NOT NULL");
+                        .IsUnique();
 
                     b.ToTable("RiskEvaluation");
                 });
@@ -4558,7 +4552,9 @@ namespace MEMIS.Migrations
                 {
                     b.HasOne("MEMIS.Data.Risk.RiskRegister", "RiskRegister")
                         .WithMany("RiskEvaluations")
-                        .HasForeignKey("RiskRefID");
+                        .HasForeignKey("RiskRefID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("RiskRegister");
                 });

@@ -76,5 +76,6 @@ namespace MEMIS.Models.Risk
     public string? RiskRatingCategory { get; set; }
     public string? RiskRatingColor { get; set; }
     public virtual ICollection<RiskTreatmentPlan> RiskTreatmentPlans { get; set; } = [];
+    public virtual ICollection<RiskEvaluation> RiskEvaluations { get; set; } = [];
   }
 }

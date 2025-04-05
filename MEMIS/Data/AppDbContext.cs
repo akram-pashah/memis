@@ -85,6 +85,7 @@ namespace MEMIS.Data
     public DbSet<RiskConsequenceDetails> RiskConsequenceDetails { get; set; }
     public DbSet<RiskTreatmentPlan> RiskTreatmentPlans { get; set; }
     public DbSet<MonitoringAndControl> MonitoringAndControls { get; set; }
+    public DbSet<RiskEvaluation> RiskEvaluations { get; set; }
 
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -197,6 +198,15 @@ namespace MEMIS.Data
         .HasOne(t => t.ProjectInitiationFk)
         .WithMany(r => r.ProjectRiskIdentifications)
         .HasForeignKey(t => t.ProjectInitiationId);
+
+      modelBuilder.Entity<RiskEvaluation>()
+            .HasOne(e => e.RiskRegister)
+            .WithMany(r => r.RiskEvaluations)
+            .HasForeignKey(e => e.RiskRefID);
+
+      modelBuilder.Entity<RiskEvaluation>()
+          .HasIndex(e => new { e.RiskRefID, e.Year, e.Quarter })
+          .IsUnique();
 
       base.OnModelCreating(modelBuilder);
 
