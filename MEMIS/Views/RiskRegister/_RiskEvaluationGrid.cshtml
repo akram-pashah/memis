@@ -1,0 +1,30 @@
+@using MEMIS.Data.Risk
+@model IEnumerable<RiskEvaluation>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Year</th>
+            <th>Quarter</th>
+            <th>Residual Risk Consequence</th>
+            <th>Residual Risk Likelihood</th>
+            <th>Residual Risk Score</th>
+            <th>Evaluated Summary</th>
+            <th>Evaluation Date</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Year</td>
+                <td>@item.Quarter</td>
+                <td>@Enum.GetName(typeof(RiskConsequence), Convert.ToInt32(item.ResidualRiskConsequence))</td>
+                <td>@Enum.GetName(typeof(RiskLikelihood), Convert.ToInt32(item.ResidualRiskLikelihood))</td>
+                <td>@item.ResidualRiskScore</td>
+                <td>@item.EvaluationSummary</td>
+                <td>@item.EvaluationDate?.ToString("dd-MMM-yyyy")</td>
+            </tr>
+        }
+    </tbody>
+</table>
