@@ -1,4 +1,5 @@
 using cloudscribe.Pagination.Models;
+using DocumentFormat.OpenXml.Bibliography;
 using MEMIS.Data;
 using MEMIS.Helpers.ExcelReports;
 using MEMIS.Models;
@@ -22,7 +23,8 @@ namespace MEMIS.Controllers
     {
       int pageSize = 10;
       var offset = (pageSize * pageNumber) - pageSize;
-      var appDbContext = _context.SDTAssessment.Include(s => s.SDTMasterFk).Include(s => s.SDTMasterFk.DepartmentFk).Skip(offset).Take(pageSize);
+      Guid departmentId = Guid.Parse(HttpContext.Session.GetString("Department"));
+      var appDbContext = _context.SDTAssessment.Include(s => s.SDTMasterFk).Include(s => s.SDTMasterFk.DepartmentFk).Where(s=>s.SDTMasterFk.DepartmentId==departmentId).Skip(offset).Take(pageSize);
       var result = new PagedResult<SDTAssessment>
       {
         Data = await appDbContext.AsNoTracking().ToListAsync(),
@@ -56,6 +58,7 @@ namespace MEMIS.Controllers
     {
       int pageSize = 10;
       var offset = (pageSize * pageNumber) - pageSize;
+      Guid departmentId = Guid.Parse(HttpContext.Session.GetString("Department"));
       var appDbContext = _context.SDTAssessment.Include(s => s.SDTMasterFk).Include(s => s.SDTMasterFk.DepartmentFk).Where(s => (month != null ? s.Month == month : true) && (deptCode != null ? s.SDTMasterFk.DepartmentFk.deptCode == deptCode : true)).Skip(offset).Take(pageSize);
       var result = new PagedResult<SDTAssessment>
       {
@@ -81,7 +84,8 @@ namespace MEMIS.Controllers
     {
       int pageSize = 10;
       var offset = (pageSize * pageNumber) - pageSize;
-      var appDbContext = _context.SDTMasters.Include(s => s.DepartmentFk).Skip(offset).Take(pageSize);
+      Guid departmentId = Guid.Parse(HttpContext.Session.GetString("Department"));
+      var appDbContext = _context.SDTMasters.Include(s => s.DepartmentFk).Where(s=>s.DepartmentId== departmentId).Skip(offset).Take(pageSize);
       var result = new PagedResult<SDTMaster>
       {
         Data = await appDbContext.AsNoTracking().ToListAsync(),
@@ -98,7 +102,8 @@ namespace MEMIS.Controllers
     {
       int pageSize = 10;
       var offset = (pageSize * pageNumber) - pageSize;
-      var appDbContext = _context.SDTMasters.Include(s => s.DepartmentFk).Where(s => deptCode != null ? (s.DepartmentFk.deptCode == deptCode) : true).Skip(offset).Take(pageSize);
+      Guid departmentId = Guid.Parse(HttpContext.Session.GetString("Department"));
+      var appDbContext = _context.SDTMasters.Include(s => s.DepartmentFk).Where(s => deptCode != null ? (s.DepartmentFk.deptCode == deptCode) : s.DepartmentId== departmentId).Skip(offset).Take(pageSize);
       var result = new PagedResult<SDTMaster>
       {
         Data = await appDbContext.AsNoTracking().ToListAsync(),
@@ -333,9 +338,10 @@ namespace MEMIS.Controllers
     {
       int pageSize = 10;
       var offset = (pageSize * pageNumber) - pageSize;
+      Guid departmentId = Guid.Parse(HttpContext.Session.GetString("Department"));
       var appDbContext = _context.SDTAssessment.Include(s => s.SDTMasterFk).Include(s => s.SDTMasterFk.DepartmentFk)
           .Where(e => e.ApprovalStatusHOD == 0)
-          .Where(s => (month != null ? s.Month == month : true) && (deptCode != null ? s.SDTMasterFk.DepartmentFk.deptCode == deptCode : true)).Skip(offset).Take(pageSize);
+          .Where(s => (month != null ? s.Month == month : true) && (deptCode != null ? s.SDTMasterFk.DepartmentFk.deptCode == deptCode :s.SDTMasterFk.DepartmentId==departmentId)).Skip(offset).Take(pageSize);
       var result = new PagedResult<SDTAssessment>
       {
         Data = await appDbContext.AsNoTracking().ToListAsync(),
@@ -413,9 +419,10 @@ namespace MEMIS.Controllers
     {
       int pageSize = 10;
       var offset = (pageSize * pageNumber) - pageSize;
+      Guid departmentId = Guid.Parse(HttpContext.Session.GetString("Department"));
       var appDbContext = _context.SDTAssessment.Include(s => s.SDTMasterFk).Include(s => s.SDTMasterFk.DepartmentFk)
           .Where(e => e.ApprovalStatusDirector == 0)
-          .Where(s => (month != null ? s.Month == month : true) && (deptCode != null ? s.SDTMasterFk.DepartmentFk.deptCode == deptCode : true)).Skip(offset).Take(pageSize);
+          .Where(s => (month != null ? s.Month == month : true) && (deptCode != null ? s.SDTMasterFk.DepartmentFk.deptCode == deptCode : s.SDTMasterFk.DepartmentId == departmentId)).Skip(offset).Take(pageSize);
       var result = new PagedResult<SDTAssessment>
       {
         Data = await appDbContext.AsNoTracking().ToListAsync(),
@@ -490,7 +497,7 @@ namespace MEMIS.Controllers
       int pageSize = 10;
       var offset = (pageSize * pageNumber) - pageSize;
       var appDbContext = _context.SDTAssessment.Include(s => s.SDTMasterFk).Include(s => s.SDTMasterFk.DepartmentFk)
-          .Where(e => e.ApprovalStatusMEOFfficer == 0)
+          .Where(e => e.ApprovalStatusMEOFfficer == 0||e.ApprovalStatusDDCS==2||e.ApprovalStatusHBPD==2)
           .Where(s => (month != null ? s.Month == month : true) && (deptCode != null ? s.SDTMasterFk.DepartmentFk.deptCode == deptCode : true)).Skip(offset).Take(pageSize);
       var result = new PagedResult<SDTAssessment>
       {
@@ -662,7 +669,7 @@ namespace MEMIS.Controllers
       ViewData["Departments"] = new SelectList(_context.Departments.OrderBy(d => d.deptName), "deptCode", "deptName", deptCode);
       return View(result);
     }
-    public async Task<IActionResult> VerifyDetailsByDDCS(int? id)
+    public async Task<IActionResult> VerifyDetailsDDCS(int? id)
     {
       if (id == null || _context.SDTAssessment == null)
       {

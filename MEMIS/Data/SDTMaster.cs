@@ -11,7 +11,7 @@ namespace MEMIS.Data
     [Display(Name = "Service Delivery Timeline")]
     public string? ServiceDeliveryTimeline { get; set; }
     public string? Measure { get; set; }
-    [Display(Name = "Evaluation Period")]
+    [Display(Name = "Implemented within Timeline")]
     public string? EvaluationPeriod { get; set; }
     public string? Target { get; set; }
     public string? Numerator { get; set; }

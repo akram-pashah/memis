@@ -54,22 +54,22 @@
 			<div class="row m-t-10">
 				<div class="col-md-6">
 					<div class="form-group">
-						<label class="control-label">SDT Master Numerator : @Model.KPIMasterFk.IndicatorFormulae</label>
+						<label class="control-label">KPI Master Numerator : @Model.KPIMasterFk.IndicatorFormulae</label>
 						<input asp-for="Numerator" class="form-control form-control-sm" aria-describedby="SDTMasterNumeratorBlock" />
 						<div id="SDTMasterNumeratorBlock" class="form-text">
 							
 						</div>
-						@*<small class="text-muted">SDT Master Numerator :@Model.SDTMasterFk.Numerator</small>*@
+						@*<small class="text-muted">KPI Master Numerator :@Model.SDTMasterFk.Numerator</small>*@
 						<span asp-validation-for="Numerator" class="text-danger"></span>
 					</div>
 				</div> 
 				<div class="col-md-6">
 					<div class="form-group">
-						<label class="control-label">SDT Master Denominator : @Model.KPIMasterFk.IndicatorDefinition</label>
+						<label class="control-label">KPI Master Denominator : @Model.KPIMasterFk.IndicatorDefinition</label>
 						<input asp-for="Denominator" class="form-control form-control-sm" aria-describedby="SDTMasterDenominatorBlock" />
 						<div id="SDTMasterDenominatorBlock" class="form-text">
 						</div>
-						<small class="text-muted">SDT Master Denominator : @Model.KPIMasterFk.IndicatorDefinition</small>
+						<small class="text-muted">KPI Master Denominator : @Model.KPIMasterFk.IndicatorDefinition</small>
 						<span asp-validation-for="Denominator" class="text-danger"></span>
 					</div>
 				</div>

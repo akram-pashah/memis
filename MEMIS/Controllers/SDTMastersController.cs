@@ -83,6 +83,7 @@ namespace MEMIS.Controllers
     public IActionResult Create()
     {
       ViewData["DepartmentId"] = new SelectList(_context.Departments, "intDept", "deptName");
+
       return View();
     }
 

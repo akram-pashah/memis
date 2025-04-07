@@ -15,7 +15,7 @@ namespace MEMIS.Models
     [Required]
     public string? Measure { get; set; }
     [Required]
-    [Display(Name = "Evaluation Period")]
+    [Display(Name = "Implemented Withing Timeline")]
     public string? EvaluationPeriod { get; set; }
     [Required]
     public string? Target { get; set; }

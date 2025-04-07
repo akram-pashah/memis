@@ -122,8 +122,8 @@ namespace MEMIS
     {
       List<SelectListItem> results = new List<SelectListItem>
             {
-                new SelectListItem() { Text = "Approve", Value = "1" },
-                new SelectListItem() { Text = "NotApproved", Value = "2" },
+                new SelectListItem() { Text = "Approved", Value = "1" },
+                new SelectListItem() { Text = "Rejected", Value = "2" },
             };
 
       return results;

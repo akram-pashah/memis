@@ -4,7 +4,7 @@ using MEMIS;
 namespace MEMIS.Data
 {
   [Table("SDTAssessment")]
-  public class SDTAssessment
+  public class SDTAssessment:IValidatableObject
   {
     [Key]
     public int Id { get; set; }
@@ -43,8 +43,7 @@ namespace MEMIS.Data
     [DisplayFormat(DataFormatString = "{0:P2}")]
     [Required]
     public string? Variance { get; set; }
-
-    [Required]
+     
     [MaxLength(500)]
     public string? Justification { get; set; }
 
@@ -113,5 +112,17 @@ namespace MEMIS.Data
     public int ApprovalStatusHBPD { get; set; }
     [Display(Name = "Approval Status")]
     public int ApprovalStatusDDCS { get; set; }
+    public bool ShouldValidateHODCComments()
+    {
+      return (ApprovalStatusHOD==2);
+    }
+    public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+    {
+      if (ShouldValidateHODCComments() && string.IsNullOrWhiteSpace(HODComment))
+      {
+        yield return new ValidationResult("Comment is required when rejected.", new[] { nameof(HODComment) });
+      }
+    }
+
   }
 }

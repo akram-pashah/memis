@@ -207,7 +207,7 @@
 			let calculateProportionTL = () => {
 				let impTl = Number($("#ImplementedTimeline").val());
 				let dr = Number($("#Denominator").val());
-				let proportionTL = parseFloat(impTl / dr).toFixed(2);
+                let proportionTL = (parseFloat(impTl / dr) * 100).toFixed(2);
 				if (isNaN(proportionTL) || !isFinite(proportionTL))
 					proportionTL = 0;
 				$("#ProportionTimeline").val(proportionTL);
