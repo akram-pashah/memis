@@ -1,3 +1,4 @@
+using MEMIS.Data;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -5,10 +6,9 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace MEMIS.Data
-{
-  [Table("ComplianceSupportSupervision")]
-  public class ComplianceSupportSupervision
+namespace MEMIS.Models
+{ 
+  public class PostMarketSurveillanceDto
   {
     [Key]
     public int Id { get; set; }
@@ -19,14 +19,11 @@ namespace MEMIS.Data
     public string? InspectorId { get; set; }
     public decimal Latitude { get; set; }
     public decimal Longitude { get; set; }
-
+    [Display(Name = "Region")]
     public virtual Guid intRegion { get; set; }
-    [ForeignKey("intRegion")]
-    public virtual Region Region { get; set; }
     [Display(Name = "District")]
-    public virtual int DistrictId { get; set; }
-    [ForeignKey("DistrictId")] 
-    public virtual District District { get; set; }
+
+    public virtual int DistrictId { get; set; } 
 
     [Display(Name = "Name of Facility")]
     public string? FacilityName { get; set; }
@@ -43,35 +40,29 @@ namespace MEMIS.Data
     [Display(Name = "Category of  Premises")]
     public int? CategoryOfpremises { get; set; } = 0;
     [Display(Name = "State the type of facility")]
-    public string? Other_CategoryPremise { get; set; } 
+    public string? Other_CategoryPremise { get; set; }
     [Display(Name = "License Status")]
     public int? LicenseStatus { get; set; } = 0;
     [Display(Name = "License No.")]
     public string? LicenseNo { get; set; }
     [Display(Name = "Previously Licensed or Illegal Outlet")]
-    public int? Unlicensed { get; set; } = 0;
-    [Display(Name = "Category of Drugs")]
-    public int? CategoryStatus { get; set; } = 0;
+    public int? Unlicensed { get; set; } = 0; 
+    [Display(Name = "PMS Activity Carried Out")]
 
-    [Display(Name = "Condition of Premises")]
-    public int? PremisesCondition { get; set; } = 0;
+    public int? PMSActivity { get; set; } = 0; 
+      
+    [Display(Name = "Name of Product")]
+    public string? Sample_ProductName { get; set; }
+    [Display(Name = "Quantity ")]
+    public int? Sample_No { get; set; } = 0;
+    [Display(Name = "Batch Number ")]
 
-    [Display(Name = "Record Keeping")]
-    public int? RecordKeeping { get; set; } = 0;
-    [Display(Name = "Class of Drugs")]
-    public int? ClassofDrugs { get; set; } = 0;
-    [Display(Name = "Un Registered Drugs")]
-    public int? UnRegisteredDrug { get; set; } = 0;
-    [Display(Name = "State the name and quantities of unregistered drug")]
-
-    public string? UnRegDrugQty { get; set; }
-    [Display(Name = "Action")]
-
-    public int? Action { get; set; }
-
-
-
-
-
+    public string? Sample_Batch { get; set; } 
+    [Display(Name = "Comment on Over all Follow up  ")]
+    public string? Followup_Comment { get; set; }
+    [Display(Name = "State any post market complaint noted")]
+    public string? Complaint_Product { get; set; }
+    [Display(Name = "Specify Activity ")]
+    public string? Other_Activity { get; set; }
   }
 }

@@ -9,12 +9,12 @@ using System.Security.Claims;
 
 namespace MEMIS.Controllers
 {
-  public class ComplianceSupportSupervisionController : Controller
+  public class ShiftMarketController : Controller
   {
     private readonly Data.AppDbContext _context;
     private readonly UserManager<ApplicationUser> _userManager;
 
-    public ComplianceSupportSupervisionController(Data.AppDbContext context, UserManager<ApplicationUser> userManager)
+    public ShiftMarketController(Data.AppDbContext context, UserManager<ApplicationUser> userManager)
     {
       _context = context;
       _userManager = userManager;
@@ -24,13 +24,13 @@ namespace MEMIS.Controllers
     {
       int pageSize = 10;
       var offset = (pageSize * pageNumber) - pageSize;
-      var appDbContext = _context.ComplianceSupportSupervision.Include(s => s.District).Include(r => r.Region)
+      var appDbContext = _context.ShiftMarket.Include(s => s.District).Include(r => r.Region)
           .Skip(offset)
           .Take(pageSize);
-      var result = new PagedResult<ComplianceSupportSupervision>
+      var result = new PagedResult<ShiftMarket>
       {
         Data = await appDbContext.AsNoTracking().ToListAsync(),
-        TotalItems = _context.ComplianceSupportSupervision.Count(),
+        TotalItems = _context.ShiftMarket.Count(),
         PageNumber = pageNumber,
         PageSize = pageSize
       };
@@ -57,12 +57,12 @@ namespace MEMIS.Controllers
 
     public async Task<IActionResult> Details(int? id)
     {
-      if (id == null || _context.PreinspectionsPharma == null)
+      if (id == null || _context.PostMarketSurveillance == null)
       {
         return NotFound();
       }
 
-      var preinspection = await _context.PreinspectionsPharma
+      var preinspection = await _context.ShiftMarket
           .Include(s => s.District)
           .FirstOrDefaultAsync(m => m.Id == id);
       if (preinspection == null)
@@ -92,44 +92,34 @@ namespace MEMIS.Controllers
       ViewData["CertificationStatus"] = ListHelper.CertificationStatus();
       ViewData["GDPRecommendation"] = ListHelper.GDPRecommendation();
       ViewData["PMSActivity"] = ListHelper.PMSActivity();
-      ViewData["UnlicensedStatus"] = ListHelper.UnlicensedStatus(); 
+      ViewData["UnlicensedStatus"] = ListHelper.UnlicensedStatus();
+
+
+
       ViewBag.Users = _userManager;
 
-      return View(new ComplianceSupportSupervisionDto { InspectionDate = DateTime.Now });
+      return View(new ShiftMarketDto { InspectionDate = DateTime.Now,CategoryOfpremises=10 });
     }
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create(ComplianceSupportSupervisionDto compliance)
+    public async Task<IActionResult> Create(ShiftMarketDto compliance)
     {
       if (ModelState.IsValid)
       {
-        ComplianceSupportSupervision dataobject = new()
+        ShiftMarket dataobject = new()
         {
           InspectionDate = compliance.InspectionDate,
           intRegion = compliance.intRegion,
           DistrictId = compliance.DistrictId,
-          Latitude= compliance.Latitude,
-          Longitude= compliance.Longitude,
           FacilityName = compliance.FacilityName,
-          FacilityStatus = compliance.FacilityStatus,
-          FacilityPersonType = compliance.FacilityPersonType,
+          FacilityStatus = compliance.FacilityStatus, 
           PersonName = compliance.PersonName,
           Contact = compliance.Contact,
           Qualifications = compliance.Qualifications,
           CategoryOfpremises = compliance.CategoryOfpremises,
-          Other_CategoryPremise=compliance.OtherTypePremise,
-          LicenseStatus = compliance.LicenseStatus,
-          LicenseNo=compliance.LicenseNo,
-          Unlicensed=compliance.Unlicensed,
-          CategoryStatus = compliance.CategoryStatus,
-          PremisesCondition = compliance.PremisesCondition,
-          RecordKeeping=compliance.RecordKeeping,
-          ClassofDrugs=compliance.ClassofDrugs,
-          UnRegisteredDrug=compliance.UnRegisteredDrug,
-          UnRegDrugQty=compliance.UnRegDrugQty,
-          Action=compliance.Action,
-          // InspectorId = User.FindFirstValue(ClaimTypes.NameIdentifier), 
+          RegulatoryAction= compliance.RegulatoryAction,
+          Consignment= compliance.Consignment,
         };
         _context.Add(dataobject);
         await _context.SaveChangesAsync();
@@ -148,79 +138,64 @@ namespace MEMIS.Controllers
       ViewData["ClassofDrugs"] = ListHelper.ClassofDrugs();
       ViewData["UnregisteredDrugs"] = ListHelper.UnregisteredDrugs();
       ViewData["ComplianceAction"] = ListHelper.ComplianceAction();
-      ViewData["PMSActivity"] = ListHelper.PMSActivity();
-
+      ViewData["PMSActivity"] = ListHelper.PMSActivity(); 
       return View(compliance);
     }
 
     public async Task<IActionResult> Edit(int? id)
     {
-      if (id == null || _context.ComplianceSupportSupervision == null)
+      if (id == null || _context.PostMarketSurveillance == null)
       {
         return NotFound();
       }
 
-      var complianceSupervision = await _context.ComplianceSupportSupervision.FindAsync(id);
+      var complianceSupervision = await _context.ShiftMarket.FindAsync(id);
       if (complianceSupervision == null)
       {
         return NotFound();
       }
-      ComplianceSupportSupervisionDto complianceSupervisionDto = new ComplianceSupportSupervisionDto
+      ShiftMarketDto complianceSupervisionDto = new ShiftMarketDto
       {
         InspectionDate = complianceSupervision.InspectionDate,
         FacilityName = complianceSupervision.FacilityName,
-        FacilityStatus = complianceSupervision.FacilityStatus,
-        FacilityPersonType = complianceSupervision.FacilityPersonType,
+        FacilityStatus = complianceSupervision.FacilityStatus, 
         PersonName = complianceSupervision.PersonName,
         Contact = complianceSupervision.Contact,
         Qualifications = complianceSupervision.Qualifications,
         CategoryOfpremises = complianceSupervision.CategoryOfpremises,
-        LicenseStatus = complianceSupervision.LicenseStatus,
-        CategoryStatus = complianceSupervision.CategoryStatus, 
-        PremisesCondition = complianceSupervision.PremisesCondition, 
+        RegulatoryAction = complianceSupervision.RegulatoryAction,
+        Consignment=complianceSupervision.Consignment,
         intRegion = complianceSupervision.intRegion,
         DistrictId = complianceSupervision.DistrictId,
         Id = complianceSupervision.Id,
         InspectorId = complianceSupervision.InspectorId,
       };
-      ViewData["intRegion"] = new SelectList(_context.Region, "intRegion", "regionName");
-      ViewData["DistrictId"] = new SelectList(_context.Districts, "Id", "Name");
-      ViewData["FacilityStatus"] = ListHelper.FacilityStatus();
-      ViewData["PersonFoundatFacility"] = ListHelper.PersonFoundatFacility();
       ViewData["Category"] = ListHelper.CategoryofPremises();
-      ViewData["LicenseStatus"] = ListHelper.LicenseStatus();
-      ViewData["CategoryofDrugs"] = ListHelper.CategoryofDrugs();
-      ViewData["ConditionofPremises"] = ListHelper.ConditionofPremises();
-      ViewData["RecordKeeping"] = ListHelper.RecordKeeping();
-      ViewData["ClassofDrugs"] = ListHelper.ClassofDrugs();
-      ViewData["UnregisteredDrugs"] = ListHelper.UnregisteredDrugs();
-      ViewData["ComplianceAction"] = ListHelper.ComplianceAction();
-      ViewData["PMSActivity"] = ListHelper.PMSActivity();
+      ViewData["DistrictId"] = new SelectList(_context.Districts, "Id", "Name");
+      ViewData["ProductClassification"] = ListHelper.ProductClassification();
       return View(complianceSupervisionDto);
     }
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Edit(ComplianceSupportSupervisionDto objectdto)
+    public async Task<IActionResult> Edit(ShiftMarketDto objectdto)
     {
       if (ModelState.IsValid)
       {
         try
         {
-          ComplianceSupportSupervision dataobject = new()
+          ShiftMarket dataobject = new()
           {
             Id = objectdto.Id,
             InspectionDate = objectdto.InspectionDate,
             FacilityName = objectdto.FacilityName,
-            FacilityStatus = objectdto.FacilityStatus,
-            FacilityPersonType = objectdto.FacilityPersonType,
+            FacilityStatus = objectdto.FacilityStatus, 
             PersonName = objectdto.PersonName,
             Contact = objectdto.Contact,
             Qualifications = objectdto.Qualifications,
             CategoryOfpremises = objectdto.CategoryOfpremises,
-            LicenseStatus = objectdto.LicenseStatus,
-            CategoryStatus = objectdto.CategoryStatus,
-            PremisesCondition = objectdto.PremisesCondition, 
+            RegulatoryAction= objectdto.RegulatoryAction,
+            Consignment=  objectdto.Consignment,
             intRegion = objectdto.intRegion,
             DistrictId = objectdto.DistrictId,
             //InspectorId = User.FindFirstValue(ClaimTypes.NameIdentifier),

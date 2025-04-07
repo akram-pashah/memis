@@ -1,11 +1,11 @@
-@model MEMIS.Models.ComplianceSupportSupervisionDto
+@model MEMIS.Models.PostMarketSurveillanceDto
 @{
     ViewData["Title"] = "Create";
     //Layout = "~/Views/Shared/_GISLayout.cshtml";
     Layout = "~/Pages/Shared/_ContentNavbarLayout.cshtml";
 }
 
-<h5>Compliance Support Supervision</h5>
+<h5>Post Market Surveillance Activity</h5>
 <hr />
 <div></div>
 <div class="row">
@@ -97,9 +97,9 @@
                 <br />
                 <div id="othercatprem" class="conditional-fields5">
                     <div class="form-group">
-                        <label asp-for="OtherTypePremise" class="control-label"></label>
-                        <input asp-for="OtherTypePremise" class="form-control" />
-                        <span asp-validation-for="OtherTypePremise" class="text-danger"></span>
+                        <label asp-for="Other_CategoryPremise" class="control-label"></label>
+                        <input asp-for="Other_CategoryPremise" class="form-control" />
+                        <span asp-validation-for="Other_CategoryPremise" class="text-danger"></span>
                     </div>
                 </div>
                 <br />
@@ -123,53 +123,56 @@
                         <select asp-for="Unlicensed" class="form-control" asp-items="ViewBag.UnlicensedStatus"></select>
                         <span asp-validation-for="Unlicensed" class="text-danger"></span>
                     </div>
-                </div>
+                </div> 
                 <br />
                 <div class="form-group">
-                    <label asp-for="CategoryStatus" class="control-label"></label>
-                    <select asp-for="CategoryStatus" class="form-control" asp-items="ViewBag.CategoryofDrugs"></select>
-                    <span asp-validation-for="CategoryStatus" class="text-danger"></span>
+                    <label asp-for="PMSActivity" class="control-label"></label>
+                    <select id="complianceType" asp-for="PMSActivity" class="form-control" asp-items="ViewBag.PMSActivity"></select>
+                    <span asp-validation-for="PMSActivity" class="text-danger"></span> 
                 </div>
                 <br />
-                <div class="form-group">
-                    <label asp-for="PremisesCondition" class="control-label"></label>
-                    <select asp-for="PremisesCondition" class="form-control" asp-items="ViewBag.ConditionofPremises"></select>
-                    <span asp-validation-for="PremisesCondition" class="text-danger"></span>
-                </div>
-                <br />
-                <div class="form-group">
-                    <label asp-for="RecordKeeping" class="control-label"></label>
-                    <select asp-for="RecordKeeping" class="form-control" asp-items="ViewBag.RecordKeeping"></select>
-                    <span asp-validation-for="RecordKeeping" class="text-danger"></span>
-                </div>
-                <br />
-                <div class="form-group">
-                    <label asp-for="ClassofDrugs" class="control-label"></label>
-                    <select asp-for="ClassofDrugs" class="form-control" asp-items="ViewBag.ClassofDrugs"></select>
-                    <span asp-validation-for="ClassofDrugs" class="text-danger"></span>
-                </div>
-                <br />
-                <div class="form-group">
-                    <label asp-for="UnRegisteredDrug" class="control-label"></label>
-                    <select asp-for="UnRegisteredDrug" class="form-control" asp-items="ViewBag.UnregisteredDrugs"></select>
-                    <span asp-validation-for="UnRegisteredDrug" class="text-danger"></span>
-                </div>
-                <br />
-                <div id="unregqty" class="conditional-fields4">
+                <div id="sampling" class="conditional-fields3">
+                   
                     <div class="form-group">
-                        <label asp-for="UnRegDrugQty" class="control-label"></label>
-                        <input asp-for="UnRegDrugQty" class="form-control" />
-                        <span asp-validation-for="UnRegDrugQty" class="text-danger"></span>
+                        <label asp-for="Sample_ProductName" class="control-label"></label>
+                        <input asp-for="Sample_ProductName" class="form-control" />
+                        <span asp-validation-for="Sample_ProductName" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Sample_No" class="control-label"></label>
+                        <input asp-for="Sample_No" class="form-control" />
+                        <span asp-validation-for="Sample_No" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Sample_Batch" class="control-label"></label>
+                        <input asp-for="Sample_Batch" class="form-control" />
+                        <span asp-validation-for="Sample_Batch" class="text-danger"></span>
                     </div>
                 </div>
-                <br />
-                <div class="form-group">
-                    <label asp-for="Action" class="control-label"></label>
-                    <select asp-for="Action" class="form-control" asp-items="ViewBag.ComplianceAction" ></select>
-                    <span asp-validation-for="Action" class="text-danger"></span>
+                <div id="followup" class="conditional-fields3"> 
+                    <br /> 
+                    <div class="form-group">
+                        <label asp-for="Followup_Comment" class="control-label"></label>
+                        <input asp-for="Followup_Comment" class="form-control" />
+                        <span asp-validation-for="Followup_Comment" class="text-danger"></span>
+                    </div> 
                 </div>
-                <br />
-                  
+                <div id="complaint" class="conditional-fields3">
+                    <br />
+                    <div class="form-group">
+                        <label asp-for="Complaint_Product" class="control-label"></label>
+                        <input asp-for="Complaint_Product" class="form-control" />
+                        <span asp-validation-for="Complaint_Product" class="text-danger"></span>
+                    </div> 
+                </div>
+                <div id="other" class="conditional-fields3">
+                    <br />
+                    <div class="form-group">
+                        <label asp-for="Other_Activity" class="control-label"></label>
+                        <input asp-for="Other_Activity" class="form-control" />
+                        <span asp-validation-for="Other_Activity" class="text-danger"></span>
+                    </div>
+                </div>
             </div>
             <br />
             <div class="form-group">
@@ -200,15 +203,12 @@
             $('.conditional-fields').hide();
             $('.conditional-fields2').hide();
             $('.conditional-fields3').hide();
-            $('.conditional-fields4').hide();
             $('.conditional-fields5').hide();
-
-            
 
             function showConditionalFields() {
                 var facilityStatusValue = $('#FacilityStatus').val();
                 var licenseStatusValue = $('#LicenseStatus').val();
-                var unregval = $('#UnRegisteredDrug').val();
+                var pmsStatusValue = $('#complianceType').val();
 
                 if (facilityStatusValue === '1') {
                     $('#open-facilty').show();
@@ -217,8 +217,8 @@
                 if (licenseStatusValue === '1') {
                     $('#licno').show();
                 }
-                if (unregval === '1') {
-                    $('#unregqty').show();
+                if (pmsStatusValue === '1' || pmsStatusValue === '2' || pmsStatusValue === '3') {
+                    $('#sampling').show();
                 }
             }
 
@@ -246,22 +246,6 @@
                 if (selectedValue2 === '1') {
                     $('#licno').show();
                 }
-                if (selectedValue2 === '2') {
-                    $('#unlic').show();
-                }
-            });
-
-
-            $('#UnRegisteredDrug').change(function () {
-                var selectedValue2 = $(this).val();
-
-                // Hide all conditional fields
-                $('.conditional-fields4').hide();
-
-                // Show relevant fields based on the selected value
-                if (selectedValue2 === '1') {
-                    $('#unregqty').show();
-                } 
             });
             $('#CategoryOfpremises').change(function () {
                 var selectedValue2 = $(this).val();
@@ -274,8 +258,6 @@
                     $('#othercatprem').show();
                 }
             });
-             
-
             $('#complianceType').change(function () {
                 var selectedValue = $(this).val();
 
@@ -286,8 +268,10 @@
                 if (selectedValue === '1') {
                     $('#sampling').show();
                 } else if (selectedValue === '2') {
+                    $('#sampling').show();
                     $('#followup').show();
                 } else if (selectedValue === '3') {
+                    $('#sampling').show();
                     $('#complaint').show();
                 }
                 else if (selectedValue === '4') {

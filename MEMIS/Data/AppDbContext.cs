@@ -57,6 +57,9 @@ namespace MEMIS.Data
     public DbSet<RelocationPharma>? RelocationPharma { get; set; }
     public DbSet<RelocationDrugShop>? RelocationDrugShop { get; set; }
     public DbSet<ComplianceSupportSupervision>? ComplianceSupportSupervision { get; set; }
+    public DbSet<PostMarketSurveillance>? PostMarketSurveillance { get; set; }
+    public DbSet<ShiftMarket>? ShiftMarket { get; set; }
+
     public DbSet<RadioTalkShow>? RadioTalkShow { get; set; }
     public DbSet<SensitizationMeeting>? SensitizationMeeting { get; set; }
     public DbSet<Renewal>? Renewal { get; set; }

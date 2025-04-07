@@ -643,7 +643,8 @@ namespace MEMIS.Controllers.ME
       try
       {
         ActivityAssessmentRegion? region = await _context.ActivityAssessmentRegion
-          .Include(x => x.ActivityAssessmentFk)
+          .Include(x => x.Region)
+          .Include(x => x.ActivityAssessmentFk) 
           .ThenInclude(x => x.QuaterlyPlans)
           .Where(x => x.intRegionAssess == id).FirstOrDefaultAsync();
         if (region == null)
@@ -654,7 +655,7 @@ namespace MEMIS.Controllers.ME
         ActivityAssessmentDto activityAssessDto = new ActivityAssessmentDto();
         activityAssessDto.intAssess = region.intAssess;
         activityAssessDto.intRegionAssess = region.intRegionAssess;
-        activityAssessDto.budgetAmount = region.budgetAmount;
+        activityAssessDto.budgetAmount = region.budgetAmount; 
         activityAssessDto.QTarget = region.QTarget;
         activityAssessDto.unitCost = region.unitCost;
         activityAssessDto.QBudget = region.QBudget;

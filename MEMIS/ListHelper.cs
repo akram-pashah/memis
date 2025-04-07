@@ -148,12 +148,28 @@ namespace MEMIS
       List<SelectListItem> results = new List<SelectListItem>
             {
                 new SelectListItem() { Text = "Wholesale Pharmacy", Value = "1" },
-                new SelectListItem() { Text = "Wholesale", Value = "2" },
-                new SelectListItem() { Text = "Medical", Value = "3" },
-                new SelectListItem() { Text = "Device", Value = "4" },
-                new SelectListItem() { Text = "AnnexStore", Value = "5" },
+                new SelectListItem() { Text = "Retail Pharmacy", Value = "2" },
+                new SelectListItem() { Text = "Drug Shop", Value = "3" },
+                new SelectListItem() { Text = "External Stores", Value = "4" },
+                new SelectListItem() { Text = "Hospital", Value = "5" },
+                new SelectListItem() { Text = "HCIV", Value = "6" },
+                new SelectListItem() { Text = "HCIII", Value = "7" },
+                new SelectListItem() { Text = "Clinic", Value = "8" },
+                new SelectListItem() { Text = "Herbal Selling Outlet", Value = "9" },
+                new SelectListItem() { Text = "Shift Market", Value = "10" },
+                new SelectListItem() { Text = "Pharmaceutical/Medical Device Manufacturing Premise", Value = "11" },
+                new SelectListItem() { Text = "Other", Value = "12" },
             };
 
+      return results;
+    }
+    public static List<SelectListItem> UnlicensedStatus()
+    {
+      List<SelectListItem> results = new List<SelectListItem>
+            {
+                new SelectListItem() { Text = "Previously Licensed", Value = "1" },
+                new SelectListItem() { Text = "Illegal Outlet", Value = "2" }, 
+      };
       return results;
     }
     public static List<SelectListItem> CategoryofFacility()
@@ -171,7 +187,7 @@ namespace MEMIS
                 new SelectListItem() { Text = "Herbal Selling Outlet", Value = "9" },
                 new SelectListItem() { Text = "Shift Market ", Value = "10" },
                 new SelectListItem() { Text = "Pharmaceutical/Medical Device Manufacturing premise", Value = "11" },
-                new SelectListItem() { Text = "Others", Value = "12" }, 
+                new SelectListItem() { Text = "Others", Value = "12" },
             };
 
       return results;
@@ -494,8 +510,8 @@ namespace MEMIS
       return results;
     }
 
-  } 
-  
+  }
+
   public enum EnumProductClassification
   {
     Human = 1,

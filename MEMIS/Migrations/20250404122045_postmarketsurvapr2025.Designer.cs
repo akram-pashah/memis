@@ -4,6 +4,7 @@ using MEMIS.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MEMIS.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250404122045_postmarketsurvapr2025")]
+    partial class postmarketsurvapr2025
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -3475,68 +3478,6 @@ namespace MEMIS.Migrations
                     b.ToTable("SensitizationMeeting");
                 });
 
-            modelBuilder.Entity("MEMIS.Data.ShiftMarket", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int?>("CategoryOfpremises")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Consignment")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Contact")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("DistrictId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("FacilityName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("FacilityStatus")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("InspectionDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("InspectorId")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("InspectorName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal>("Latitude")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("Longitude")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<string>("PersonName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Qualifications")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("RegulatoryAction")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid>("intRegion")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("DistrictId");
-
-                    b.HasIndex("intRegion");
-
-                    b.ToTable("ShiftMarket");
-                });
-
             modelBuilder.Entity("MEMIS.Data.StrategicAction", b =>
                 {
                     b.Property<int>("intAction")
@@ -4814,25 +4755,6 @@ namespace MEMIS.Migrations
                     b.HasOne("MEMIS.Data.Region", "Region")
                         .WithMany()
                         .HasForeignKey("RegionintRegion")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("District");
-
-                    b.Navigation("Region");
-                });
-
-            modelBuilder.Entity("MEMIS.Data.ShiftMarket", b =>
-                {
-                    b.HasOne("MEMIS.Data.District", "District")
-                        .WithMany()
-                        .HasForeignKey("DistrictId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("MEMIS.Data.Region", "Region")
-                        .WithMany()
-                        .HasForeignKey("intRegion")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

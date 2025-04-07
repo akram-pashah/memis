@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 
 namespace MEMIS.Data
 {
-  [Table("ComplianceSupportSupervision")]
-  public class ComplianceSupportSupervision
+  [Table("PostMarketSurveillance")]
+  public class PostMarketSurveillance 
   {
     [Key]
     public int Id { get; set; }
@@ -25,7 +25,8 @@ namespace MEMIS.Data
     public virtual Region Region { get; set; }
     [Display(Name = "District")]
     public virtual int DistrictId { get; set; }
-    [ForeignKey("DistrictId")] 
+    [ForeignKey("DistrictId")]
+    [Display(Name = "District")]
     public virtual District District { get; set; }
 
     [Display(Name = "Name of Facility")]
@@ -43,35 +44,27 @@ namespace MEMIS.Data
     [Display(Name = "Category of  Premises")]
     public int? CategoryOfpremises { get; set; } = 0;
     [Display(Name = "State the type of facility")]
-    public string? Other_CategoryPremise { get; set; } 
+    public string? Other_CategoryPremise { get; set; }
     [Display(Name = "License Status")]
     public int? LicenseStatus { get; set; } = 0;
     [Display(Name = "License No.")]
     public string? LicenseNo { get; set; }
     [Display(Name = "Previously Licensed or Illegal Outlet")]
     public int? Unlicensed { get; set; } = 0;
-    [Display(Name = "Category of Drugs")]
-    public int? CategoryStatus { get; set; } = 0;
+    [Display(Name = "PMS Activity Carried Out")]
+    public int? PMSActivity { get; set; } = 0;  
+    [Display(Name = "Name of Product Sampled")]
+    public string? Sample_ProductName { get; set; }
+    [Display(Name = "Quantity")]
+    public int? Sample_No { get; set; } = 0;
+    [Display(Name = "Batch Number")]
 
-    [Display(Name = "Condition of Premises")]
-    public int? PremisesCondition { get; set; } = 0;
-
-    [Display(Name = "Record Keeping")]
-    public int? RecordKeeping { get; set; } = 0;
-    [Display(Name = "Class of Drugs")]
-    public int? ClassofDrugs { get; set; } = 0;
-    [Display(Name = "Un Registered Drugs")]
-    public int? UnRegisteredDrug { get; set; } = 0;
-    [Display(Name = "State the name and quantities of unregistered drug")]
-
-    public string? UnRegDrugQty { get; set; }
-    [Display(Name = "Action")]
-
-    public int? Action { get; set; }
-
-
-
-
-
+    public string? Sample_Batch { get; set; }
+    [Display(Name = "Product being Followed Up ")] 
+    public string? Followup_Comment { get; set; }
+    [Display(Name = "Product Complaint Investigated ")]
+    public string? Complaint_Product { get; set; }
+    [Display(Name = "Specify Activity ")]
+    public string? Other_Activity { get; set; }
   }
 }
