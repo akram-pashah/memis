@@ -13,12 +13,20 @@
 <div class="row">
     <div class="col-md-6">
         <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="StrategicObjective" class="control-label"></label>
-                <select asp-for="StrategicObjective" class="form-control" asp-items="ViewBag.StrategicObjective"></select>
+                @Html.DropDownList("StrategicObjective", ViewData["StrategicObjective"] as SelectList, "-- Select Objective --", new { @class = "form-control" })
+                @* <select asp-for="StrategicObjective" class="form-control" asp-items="ViewBag.StrategicObjective"></select> *@
             </div>
             <br />
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="intOutcome" class="control-label"></label>
+                @Html.DropDownList("intOutcome", ViewData["intOutcome"] as SelectList, "-- Select Outcome --", new { @class = "form-control" })
+                @* <select asp-for="StrategicObjective" class="form-control" asp-items="ViewBag.StrategicObjective"></select> *@
+            </div>
+            <br />
+           
             <div class="form-group">
                 <label asp-for="PerformanceIndicator" class="control-label"></label>
                 <textarea asp-for="PerformanceIndicator" class="form-control" style="height:100px"></textarea>
@@ -54,9 +62,13 @@
             </div>
             <br />
             <div class="form-group">
-                <label asp-for="DataType" class="control-label"></label>
-                <input asp-for="DataType" class="form-control" />
-                <span asp-validation-for="DataType" class="text-danger"></span>
+                <label asp-for="DataType" class="control-label"></label> 
+                <select asp-for="DataType" class="form-control form-control-sm" asp-items="ViewBag.DataType"></select>
+            </div>
+            <br />
+            <div class="form-group">
+                <label asp-for="Unitofmeasure" class="control-label"></label> 
+                <select asp-for="Unitofmeasure" class="form-control form-control-sm" asp-items="ViewBag.UnitofMeasure"></select>
             </div>
             <br />
             <div class="form-group">

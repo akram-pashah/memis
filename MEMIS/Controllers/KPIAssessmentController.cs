@@ -7,6 +7,7 @@ using MEMIS.Models;
 using System.Collections.Generic;
 using System.Security.Claims;
 using MEMIS.Helpers.ExcelReports;
+using DocumentFormat.OpenXml.Bibliography;
 
 namespace MEMIS.Controllers
 {
@@ -23,7 +24,8 @@ namespace MEMIS.Controllers
     {
       int pageSize = 10;
       var offset = (pageSize * pageNumber) - pageSize;
-      var appDbContext = _context.KPIAssessment.Include(s => s.KPIMasterFk).Include(s => s.KPIMasterFk.DepartmentFk).Skip(offset).Take(pageSize);
+      Guid departmentId = Guid.Parse(HttpContext.Session.GetString("Department"));
+      var appDbContext = _context.KPIAssessment.Include(s => s.KPIMasterFk).Include(s => s.KPIMasterFk.DepartmentFk).Where(s=>s.KPIMasterFk.intDept==departmentId).Skip(offset).Take(pageSize);
       var result = new PagedResult<KPIAssessment>
       {
         Data = await appDbContext.AsNoTracking().ToListAsync(),
@@ -82,7 +84,8 @@ namespace MEMIS.Controllers
     {
       int pageSize = 10;
       var offset = (pageSize * pageNumber) - pageSize;
-      var appDbContext = _context.KPIMasters.Skip(offset).Take(pageSize);
+      Guid departmentId = Guid.Parse(HttpContext.Session.GetString("Department"));
+      var appDbContext = _context.KPIMasters.Include(s=>s.DepartmentFk).Where(s => s.intDept == departmentId).Skip(offset).Take(pageSize);
       var result = new PagedResult<KPIMaster>
       {
         Data = await appDbContext.AsNoTracking().ToListAsync(),
@@ -103,7 +106,8 @@ namespace MEMIS.Controllers
     {
       int pageSize = 10;
       var offset = (pageSize * pageNumber) - pageSize;
-      var appDbContext = _context.KPIMasters.Skip(offset).Take(pageSize);
+      Guid departmentId = Guid.Parse(HttpContext.Session.GetString("Department"));
+      var appDbContext = _context.KPIMasters.Include(s => s.DepartmentFk).Where(s=>s.intDept== departmentId).Skip(offset).Take(pageSize);
       var result = new PagedResult<KPIMaster>
       {
         Data = await appDbContext.AsNoTracking().ToListAsync(),
@@ -127,7 +131,7 @@ namespace MEMIS.Controllers
         return NotFound();
       }
 
-      var kpiMaster = await _context.KPIMasters.Include(s => s.StrategicPlanFk).FirstOrDefaultAsync(m => m.Id == id);
+      var kpiMaster = await _context.KPIMasters.Include(s => s.StrategicObjectiveFk).FirstOrDefaultAsync(m => m.Id == id);
       if (kpiMaster == null)
       {
         return NotFound();
@@ -341,7 +345,8 @@ namespace MEMIS.Controllers
     {
       int pageSize = 10;
       var offset = (pageSize * pageNumber) - pageSize;
-      var appDbContext = _context.KPIAssessment.Include(s => s.KPIMasterFk).Include(s => s.KPIMasterFk.StrategicPlanFk).Include(s => s.KPIMasterFk.DepartmentFk)
+      Guid departmentId = Guid.Parse(HttpContext.Session.GetString("Department"));
+      var appDbContext = _context.KPIAssessment.Include(s => s.KPIMasterFk).Include(s => s.KPIMasterFk.StrategicObjectiveFk).Include(s => s.KPIMasterFk.DepartmentFk).Where(s=>s.KPIMasterFk.intDept==departmentId)
           .Where(e => e.ApprovalStatus == 0)
           .Where(s => (fy != null ? s.FY == fy : true)).Skip(offset).Take(pageSize);
       var result = new PagedResult<KPIAssessment>
@@ -422,7 +427,8 @@ namespace MEMIS.Controllers
     {
       int pageSize = 10;
       var offset = (pageSize * pageNumber) - pageSize;
-      var appDbContext = _context.KPIAssessment.Include(s => s.KPIMasterFk).Include(s => s.KPIMasterFk.StrategicPlanFk).Include(s => s.KPIMasterFk.DepartmentFk)
+      Guid departmentId = Guid.Parse(HttpContext.Session.GetString("Department"));
+      var appDbContext = _context.KPIAssessment.Include(s => s.KPIMasterFk).Include(s => s.KPIMasterFk.StrategicObjectiveFk).Include(s => s.KPIMasterFk.DepartmentFk).Where(s=>s.KPIMasterFk.intDept==departmentId)
           .Where(e => e.ApprovalStatus == 1)
           .Where(s => (fy != null ? s.FY == fy : true)).Skip(offset).Take(pageSize);
       var result = new PagedResult<KPIAssessment>
@@ -505,7 +511,7 @@ namespace MEMIS.Controllers
     {
       int pageSize = 10;
       var offset = (pageSize * pageNumber) - pageSize;
-      var appDbContext = _context.KPIAssessment.Include(s => s.KPIMasterFk).Include(s => s.KPIMasterFk.StrategicPlanFk).Include(s => s.KPIMasterFk.DepartmentFk)
+      var appDbContext = _context.KPIAssessment.Include(s => s.KPIMasterFk).Include(s => s.KPIMasterFk.StrategicObjectiveFk).Include(s => s.KPIMasterFk.DepartmentFk)
           .Where(e => e.ApprovalStatus == 3)
           .Where(s => (fy != null ? s.FY == fy : true)).Skip(offset).Take(pageSize);
       var result = new PagedResult<KPIAssessment>
@@ -587,7 +593,7 @@ namespace MEMIS.Controllers
     {
       int pageSize = 10;
       var offset = (pageSize * pageNumber) - pageSize;
-      var appDbContext = _context.KPIAssessment.Include(s => s.KPIMasterFk).Include(s => s.KPIMasterFk.StrategicPlanFk).Include(s => s.KPIMasterFk.DepartmentFk)
+      var appDbContext = _context.KPIAssessment.Include(s => s.KPIMasterFk).Include(s => s.KPIMasterFk.StrategicObjectiveFk).Include(s => s.KPIMasterFk.DepartmentFk)
           .Where(e => e.ApprovalStatus == 5)
           .Where(s => (fy != null ? s.FY == fy : true)).Skip(offset).Take(pageSize);
       var result = new PagedResult<KPIAssessment>
@@ -669,7 +675,7 @@ namespace MEMIS.Controllers
     {
       int pageSize = 10;
       var offset = (pageSize * pageNumber) - pageSize;
-      var appDbContext = _context.KPIAssessment.Include(s => s.KPIMasterFk).Include(s => s.KPIMasterFk.StrategicPlanFk).Include(s => s.KPIMasterFk.DepartmentFk)
+      var appDbContext = _context.KPIAssessment.Include(s => s.KPIMasterFk).Include(s => s.KPIMasterFk.StrategicObjectiveFk).Include(s => s.KPIMasterFk.DepartmentFk)
           .Where(e => e.ApprovalStatus == 7)
           .Where(s => (fy != null ? s.FY == fy : true)).Skip(offset).Take(pageSize);
       var result = new PagedResult<KPIAssessment>

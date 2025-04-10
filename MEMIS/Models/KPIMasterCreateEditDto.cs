@@ -13,6 +13,8 @@ namespace MEMIS.Models
     public int Id { get; set; }
     [Display(Name = "Strategic Objective")]
     public virtual int? StrategicObjective { get; set; }
+    [Display(Name = "Outcome")]
+    public virtual int? intOutcome { get; set; }
 
     [Display(Name = "Performance indicator")]
     public string? PerformanceIndicator { get; set; }
@@ -27,9 +29,9 @@ namespace MEMIS.Models
     [Display(Name = "Indicator classification")]
     public int Indicatorclassification { get; set; }
     [Display(Name = "Data Type")]
-    public string? DataType { get; set; }
+    public int? DataType { get; set; }
     [Display(Name = "Unit of Measure")]
-    public string? Unitofmeasure { get; set; }
+    public int? Unitofmeasure { get; set; }
     [Display(Name = "Frequency of Reporting")]
     public int FrequencyofReporting { get; set; }
     [Display(Name = "FY1")]

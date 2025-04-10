@@ -226,11 +226,11 @@ namespace MEMIS.Controllers.ME
       }).ToList();
 
 
-      var kpiMastersData = await _context.KPIMasters.Include(x => x.StrategicPlanFk).Include(x => x.KPIAssessments)
+      var kpiMastersData = await _context.KPIMasters.Include(x => x.StrategicObjectiveFk).Include(x => x.KPIAssessments)
         .Where(x => x.intDept == departmentId)
         .ToListAsync();
 
-      var kpiMasters = kpiMastersData.GroupBy(x => x.StrategicPlanFk.focusArea).ToList();
+      var kpiMasters = kpiMastersData.GroupBy(x => x.StrategicObjectiveFk.ObjectiveCode).ToList();
 
       var kpisTargets = kpiMasters.Select(x => new GroupedAssessmentDto()
       {

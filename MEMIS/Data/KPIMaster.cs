@@ -12,7 +12,12 @@ namespace MEMIS.Data
     public virtual int? StrategicObjective { get; set; }
 
     [ForeignKey("StrategicObjective")]
-    public virtual StrategicPlan StrategicPlanFk { get; set; }
+    public virtual StrategicObjective StrategicObjectiveFk { get; set; }
+    [Display(Name = "Outcome")]
+    public virtual int? intOutcome { get; set; }
+
+    [ForeignKey("intOutcome")]
+    public virtual Outcome OutcomeFk { get; set; }
     [Display(Name = "Performance indicator")]
     public string? PerformanceIndicator { get; set; }
     [Display(Name = "Type of Indicator")]
@@ -26,9 +31,9 @@ namespace MEMIS.Data
     [Display(Name = "Indicator classification")]
     public int Indicatorclassification { get; set; }
     [Display(Name = "Data Type")]
-    public string? DataType { get; set; }
+    public int? DataType { get; set; } = 0;
     [Display(Name = "Unit of Measure")]
-    public string? Unitofmeasure { get; set; }
+    public int? Unitofmeasure { get; set; }
     [Display(Name = "Frequency of Reporting")]
     public int FrequencyofReporting { get; set; }
     [Display(Name = "FY1")]

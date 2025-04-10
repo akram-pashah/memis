@@ -4,6 +4,7 @@ using MEMIS.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MEMIS.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250407123233_kpimastercolchange")]
+    partial class kpimastercolchange
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1286,16 +1289,11 @@ namespace MEMIS.Migrations
                     b.Property<Guid?>("intDept")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<int?>("intOutcome")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.HasIndex("StrategicObjective");
 
                     b.HasIndex("intDept");
-
-                    b.HasIndex("intOutcome");
 
                     b.ToTable("KPI");
                 });
@@ -1428,34 +1426,6 @@ namespace MEMIS.Migrations
                     b.HasKey("ID");
 
                     b.ToTable("NDP_HD");
-                });
-
-            modelBuilder.Entity("MEMIS.Data.Outcome", b =>
-                {
-                    b.Property<int>("intOutcome")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("intOutcome"));
-
-                    b.Property<string>("OutcomeCode")
-                        .IsRequired()
-                        .HasMaxLength(10)
-                        .HasColumnType("nvarchar(10)");
-
-                    b.Property<string>("OutcomeName")
-                        .IsRequired()
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
-
-                    b.Property<int?>("intObjective")
-                        .HasColumnType("int");
-
-                    b.HasKey("intOutcome");
-
-                    b.HasIndex("intObjective");
-
-                    b.ToTable("Outcome");
                 });
 
             modelBuilder.Entity("MEMIS.Data.PostMarketSurveillance", b =>
@@ -4388,7 +4358,7 @@ namespace MEMIS.Migrations
 
             modelBuilder.Entity("MEMIS.Data.KPIMaster", b =>
                 {
-                    b.HasOne("MEMIS.Data.StrategicObjective", "StrategicObjectiveFk")
+                    b.HasOne("MEMIS.Data.StrategicPlan", "StrategicPlanFk")
                         .WithMany()
                         .HasForeignKey("StrategicObjective");
 
@@ -4396,24 +4366,9 @@ namespace MEMIS.Migrations
                         .WithMany()
                         .HasForeignKey("intDept");
 
-                    b.HasOne("MEMIS.Data.Outcome", "OutcomeFk")
-                        .WithMany()
-                        .HasForeignKey("intOutcome");
-
                     b.Navigation("DepartmentFk");
 
-                    b.Navigation("OutcomeFk");
-
-                    b.Navigation("StrategicObjectiveFk");
-                });
-
-            modelBuilder.Entity("MEMIS.Data.Outcome", b =>
-                {
-                    b.HasOne("MEMIS.Data.StrategicObjective", "StrategicObjective")
-                        .WithMany()
-                        .HasForeignKey("intObjective");
-
-                    b.Navigation("StrategicObjective");
+                    b.Navigation("StrategicPlanFk");
                 });
 
             modelBuilder.Entity("MEMIS.Data.PostMarketSurveillance", b =>

@@ -1,9 +1,10 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 using MEMIS.Data;
+using Syncfusion.Blazor.Navigations;
 namespace MEMIS.Models
 {
-  public class KPIAssessmentDto
+  public class KPIAssessmentDto:IValidatableObject
   {
     [Key]
     public int Id { get; set; }
@@ -42,5 +43,18 @@ namespace MEMIS.Models
     public string? Justification { get; set; }
     [Display(Name = "Responsible Party")]
     public virtual Guid? intDept { get; set; }
+    public bool ShouldValidateJustification()
+    {
+      return (Rate > Target);
+    } 
+
+    public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+    {
+      if (ShouldValidateJustification() && string.IsNullOrWhiteSpace(Justification))
+      {
+        yield return new ValidationResult("Justification is required when Performance is greater than Target.", new[] { nameof(Justification) });
+      }
+      
+    }
   }
 }

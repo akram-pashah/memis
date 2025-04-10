@@ -24,6 +24,7 @@ namespace MEMIS.Data
     public DbSet<ProgramImplementationPlan>? ProgramImplementationPlan { get; set; }
     public DbSet<FocusArea> FocusArea { get; set; }
     public DbSet<StrategicObjective> StrategicObjective { get; set; }
+    public DbSet<Outcome> Outcome { get; set; }
     public DbSet<StrategicIntervention> StrategicIntervention { get; set; }
     public DbSet<StrategicAction> StrategicAction { get; set; }
     public DbSet<StrategicPlan>? StrategicPlan { get; set; }

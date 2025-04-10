@@ -432,6 +432,17 @@ namespace MEMIS
             {
                 new SelectListItem() { Text = "Core Performance", Value = "1" },
                 new SelectListItem() { Text = "KPI", Value = "2" },
+                new SelectListItem() { Text = "Operational Performance", Value = "3" },
+            };
+
+      return results;
+    }
+    public static List<SelectListItem> DataType()
+    {
+      List<SelectListItem> results = new List<SelectListItem>
+            {
+                new SelectListItem() { Text = "Qualitative", Value = "1" },
+                new SelectListItem() { Text = "Quantitative", Value = "2" } 
             };
 
       return results;
@@ -440,9 +451,21 @@ namespace MEMIS
     {
       List<SelectListItem> results = new List<SelectListItem>
             {
-                new SelectListItem() { Text = "Quarterly", Value = "1" },
-                new SelectListItem() { Text = "Annually", Value = "2" },
-                new SelectListItem() { Text = "5 Year", Value = "3" },
+                new SelectListItem() { Text = "Monthly", Value = "1" },
+                new SelectListItem() { Text = "Quarterly", Value = "2" },
+                new SelectListItem() { Text = "Annually", Value = "3" },
+                new SelectListItem() { Text = "5 Year", Value = "4" },
+            };
+
+      return results;
+    }
+    public static List<SelectListItem> UnitofMeasure()
+    {
+      List<SelectListItem> results = new List<SelectListItem>
+            {
+                new SelectListItem() { Text = "Percentage", Value = "1" },
+                new SelectListItem() { Text = "Number", Value = "2" },
+                new SelectListItem() { Text = "Days", Value = "3" }, 
             };
 
       return results;

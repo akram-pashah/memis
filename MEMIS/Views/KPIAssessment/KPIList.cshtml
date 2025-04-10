@@ -100,10 +100,10 @@
 						@GetIndicatorclassification(item.Indicatorclassification)
 					</td>
 					<td>
-						@Html.DisplayFor(modelItem => item.DataType)
+						@GetDatType(item.DataType)
 					</td>
 					<td>
-						@Html.DisplayFor(modelItem => item.Unitofmeasure)
+						@GetUnitofMeasure(item.Unitofmeasure)
 					</td>
 					<td>
 						@GetFrequencyofReporting(item.FrequencyofReporting)
@@ -169,6 +169,28 @@
 					}
 					return "NA";
 				}
+                public string GetDatType(int? type = 1)
+                {
+                    foreach (var ndatatype in ListHelper.DataType())
+                    {
+                        if (Convert.ToInt32(ndatatype.Value) == type)
+                        {
+                            return ndatatype.Text;
+                        }
+                    }
+                    return "NA";
+                }
+                public string GetUnitofMeasure(int? type = 1)
+                {
+                    foreach (var nunitmeasure in ListHelper.UnitofMeasure())
+                    {
+                        if (Convert.ToInt32(nunitmeasure.Value) == type)
+                        {
+                            return nunitmeasure.Text;
+                        }
+                    }
+                    return "NA";
+                }
 			}
 		</tbody>
 	</table>
@@ -176,8 +198,8 @@
 			  cs-paging-totalitems="@Model.TotalItems"
 			  cs-paging-pagesize="@Model.PageSize"
 			  cs-pagenumber-param="pagenumber"
-			  asp-controller="SDTMasters"
-			  asp-action="Index"
+              asp-controller="KPIAssessment"
+              asp-action="KPIList"
 			  cs-pager-li-current-class="page-item active"
 			  cs-pager-li-other-class="page-item"
 			  cs-pager-li-non-active-class="page-item disabled"

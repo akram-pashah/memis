@@ -21,7 +21,7 @@ namespace MEMIS.Controllers
     {
       int pageSize = 10;
       var offset = (pageSize * pageNumber) - pageSize;
-      var appDbContext = _context.KPIMasters.Include(s => s.StrategicPlanFk).Include(s=>s.DepartmentFk).Skip(offset).Take(pageSize);
+      var appDbContext = _context.KPIMasters.Include(s => s.StrategicObjectiveFk).Include(s=>s.DepartmentFk).Skip(offset).Take(pageSize);
       var result = new PagedResult<KPIMaster>
       {
         Data = await appDbContext.AsNoTracking().ToListAsync(),
@@ -33,7 +33,7 @@ namespace MEMIS.Controllers
       ViewData["TypeofIndicator"] = ListHelper.TypeofIndicator();
       ViewData["Indicatorclassification"] = ListHelper.Indicatorclassification();
       ViewData["FrequencyofReporting"] = ListHelper.FrequencyofReporting();
-      ViewData["StrategicObjective"] = new SelectList(_context.StrategicPlan.OrderBy(d => d.strategicObjective), "Id", "strategicObjective");
+      ViewData["StrategicObjective"] = new SelectList(_context.StrategicObjective.Select(o => new { o.intObjective, DisplayText = o.ObjectiveCode + " - " + o.ObjectiveName }), "intObjective", "DisplayText");
       return View(result);
     }
     [HttpPost]
@@ -41,7 +41,7 @@ namespace MEMIS.Controllers
     {
       int pageSize = 10;
       var offset = (pageSize * pageNumber) - pageSize;
-      var appDbContext = _context.KPIMasters.Include(s => s.StrategicPlanFk).Include(s => s.DepartmentFk).Where(s => (perfind != null ? EF.Functions.Like(s.PerformanceIndicator, '%' + perfind + '%') : true)).Skip(offset).Take(pageSize);
+      var appDbContext = _context.KPIMasters.Include(s => s.StrategicObjectiveFk).Include(s => s.DepartmentFk).Where(s => (perfind != null ? EF.Functions.Like(s.PerformanceIndicator, '%' + perfind + '%') : true)).Skip(offset).Take(pageSize);
       var result = new PagedResult<KPIMaster>
       {
         Data = await appDbContext.AsNoTracking().ToListAsync(),
@@ -79,7 +79,7 @@ namespace MEMIS.Controllers
       }
 
       var KPIMaster = await _context.KPIMasters
-          .Include(s => s.StrategicPlanFk)
+          .Include(s => s.StrategicObjectiveFk)
           .Include(s => s.DepartmentFk)
           .FirstOrDefaultAsync(m => m.Id == id);
       if (KPIMaster == null)
@@ -95,8 +95,11 @@ namespace MEMIS.Controllers
       ViewData["intDept"] = new SelectList(_context.Departments, "intDept", "deptName");
       ViewData["TypeofIndicator"] = ListHelper.TypeofIndicator();
       ViewData["Indicatorclassification"] = ListHelper.Indicatorclassification();
+      ViewData["DataType"] = ListHelper.DataType();
+      ViewData["UnitofMeasure"] = ListHelper.UnitofMeasure();
       ViewData["FrequencyofReporting"] = ListHelper.FrequencyofReporting();
-      ViewData["StrategicObjective"] = new SelectList(_context.StrategicPlan, "Id", "strategicObjective");
+      ViewData["StrategicObjective"] = new SelectList(_context.StrategicObjective.Select(o => new { o.intObjective, DisplayText = o.ObjectiveCode + " - " + o.ObjectiveName }), "intObjective", "DisplayText");
+      ViewData["intOutcome"] = new SelectList(_context.Outcome.Select(o => new { o.intOutcome, DisplayText = o.OutcomeCode + " - " + o.OutcomeName }), "intOutcome", "DisplayText");
       return View();
     }
 
@@ -109,6 +112,7 @@ namespace MEMIS.Controllers
         KPIMaster dto = new()
         {
           StrategicObjective = KPIMaster.StrategicObjective,
+          intOutcome= KPIMaster.intOutcome,
           PerformanceIndicator = KPIMaster.PerformanceIndicator,
           TypeofIndicator = KPIMaster.TypeofIndicator,
           IndicatorFormulae = KPIMaster.IndicatorFormulae,
@@ -134,7 +138,10 @@ namespace MEMIS.Controllers
       ViewData["TypeofIndicator"] = ListHelper.TypeofIndicator();
       ViewData["Indicatorclassification"] = ListHelper.Indicatorclassification();
       ViewData["FrequencyofReporting"] = ListHelper.FrequencyofReporting();
-      ViewData["StrategicObjective"] = new SelectList(_context.StrategicPlan, "Id", "strategicObjective", KPIMaster.StrategicObjective);
+      ViewData["DataType"] = ListHelper.DataType();
+      ViewData["UnitofMeasure"] = ListHelper.UnitofMeasure();
+      ViewData["StrategicObjective"] = new SelectList(_context.StrategicObjective.Select(o => new { o.intObjective, DisplayText = o.ObjectiveCode + " - " + o.ObjectiveName }), "intObjective", "DisplayText",KPIMaster.StrategicObjective);
+      ViewData["intOutcome"] = new SelectList(_context.Outcome.Select(o => new { o.intOutcome, DisplayText = o.OutcomeCode + " - " + o.OutcomeName }), "intOutcome", "DisplayText",KPIMaster.intOutcome);
       return View(KPIMaster);
     }
 
@@ -152,6 +159,8 @@ namespace MEMIS.Controllers
       }
       KPIMasterCreateEditDto dto = new KPIMasterCreateEditDto
       {
+        StrategicObjective=KPIMaster.StrategicObjective,
+        intOutcome = KPIMaster.intOutcome,
         PerformanceIndicator = KPIMaster.PerformanceIndicator,
         TypeofIndicator = KPIMaster.TypeofIndicator,
         IndicatorFormulae = KPIMaster.IndicatorFormulae,
@@ -172,7 +181,10 @@ namespace MEMIS.Controllers
       ViewData["TypeofIndicator"] = ListHelper.TypeofIndicator();
       ViewData["Indicatorclassification"] = ListHelper.Indicatorclassification();
       ViewData["FrequencyofReporting"] = ListHelper.FrequencyofReporting();
-      ViewData["StrategicObjective"] = new SelectList(_context.StrategicPlan, "Id", "strategicObjective", KPIMaster.StrategicObjective);
+      ViewData["DataType"] = ListHelper.DataType();
+      ViewData["UnitofMeasure"] = ListHelper.UnitofMeasure();
+      ViewData["StrategicObjective"] = new SelectList(_context.StrategicObjective.Select(o => new { o.intObjective, DisplayText = o.ObjectiveCode + " - " + o.ObjectiveName }), "intObjective", "DisplayText", KPIMaster.StrategicObjective);
+      ViewData["intOutcome"] = new SelectList(_context.Outcome.Select(o => new { o.intOutcome, DisplayText = o.OutcomeCode + " - " + o.OutcomeName }), "intOutcome", "DisplayText",KPIMaster.intOutcome);
       ViewBag.Depts = await _context.Departments.ToListAsync();
 
       return View(dto);
@@ -193,6 +205,8 @@ namespace MEMIS.Controllers
         {
           KPIMaster dto = new()
           {
+            StrategicObjective = KPIMaster.StrategicObjective,
+            intOutcome = KPIMaster.intOutcome,
             PerformanceIndicator = KPIMaster.PerformanceIndicator,
             TypeofIndicator = KPIMaster.TypeofIndicator,
             IndicatorFormulae = KPIMaster.IndicatorFormulae,
@@ -208,8 +222,7 @@ namespace MEMIS.Controllers
             FY4 = KPIMaster.FY4,
             FY5 = KPIMaster.FY5,
             MeansofVerification = KPIMaster.MeansofVerification,
-            intDept = KPIMaster.intDept,
-            StrategicObjective = KPIMaster.StrategicObjective,
+            intDept = KPIMaster.intDept, 
             Id = KPIMaster.Id
           };
           _context.Update(dto);
@@ -232,7 +245,10 @@ namespace MEMIS.Controllers
       ViewData["TypeofIndicator"] = ListHelper.TypeofIndicator();
       ViewData["Indicatorclassification"] = ListHelper.Indicatorclassification();
       ViewData["FrequencyofReporting"] = ListHelper.FrequencyofReporting();
+      ViewData["DataType"] = ListHelper.DataType();
+      ViewData["UnitofMeasure"] = ListHelper.UnitofMeasure();
       ViewData["StrategicObjective"] = new SelectList(_context.StrategicPlan, "Id", "strategicObjective", KPIMaster.StrategicObjective);
+      ViewData["intOutcome"] = new SelectList(_context.Outcome.Select(o => new { o.intOutcome, DisplayText = o.OutcomeCode + " - " + o.OutcomeName }), "intOutcome", "DisplayText", KPIMaster.intOutcome);
       ViewBag.Depts = await _context.Departments.ToListAsync();
       return View(KPIMaster);
     }
@@ -245,7 +261,7 @@ namespace MEMIS.Controllers
       }
 
       var KPIMaster = await _context.KPIMasters
-          .Include(s => s.StrategicPlanFk)
+          .Include(s => s.StrategicObjectiveFk)
           .FirstOrDefaultAsync(m => m.Id == id);
       if (KPIMaster == null)
       {

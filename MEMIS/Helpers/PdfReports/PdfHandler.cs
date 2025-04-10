@@ -1035,8 +1035,8 @@ namespace MEMIS.Helpers.PdfReports
           table.AddCell(new Cell().Add(new Paragraph(assessment?.IndicatorDefinition ?? "").SetFontSize(5)));
           table.AddCell(new Cell().Add(new Paragraph(assessment?.OriginalBaseline.ToString() ?? "").SetFontSize(5)));
           table.AddCell(new Cell().Add(new Paragraph(assessment?.Indicatorclassification.ToString() ?? "").SetFontSize(5)));
-          table.AddCell(new Cell().Add(new Paragraph(assessment?.DataType ?? "").SetFontSize(5)));
-          table.AddCell(new Cell().Add(new Paragraph(assessment?.Unitofmeasure ?? "").SetFontSize(5)));
+          table.AddCell(new Cell().Add(new Paragraph(assessment?.DataType.ToString() ?? "").SetFontSize(5)));
+          table.AddCell(new Cell().Add(new Paragraph(assessment?.Unitofmeasure.ToString() ?? "").SetFontSize(5)));
           table.AddCell(new Cell().Add(new Paragraph(assessment?.FrequencyofReporting.ToString() ?? "").SetFontSize(5)));
           table.AddCell(new Cell().Add(new Paragraph(assessment?.FY1?.ToString() ?? "").SetFontSize(5)));
           table.AddCell(new Cell().Add(new Paragraph(assessment?.FY2?.ToString() ?? "").SetFontSize(5)));

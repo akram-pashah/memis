@@ -449,7 +449,7 @@ namespace MEMIS.Controllers.Reports
     [HttpGet]
     public IActionResult GetStrategicPlanOutputMonitoringTrackerDetails(int id)
     {
-      var activityAssess = _context.KPIAssessment.Include(x => x.KPIMasterFk).ThenInclude(x => x.StrategicPlanFk).FirstOrDefault(x => x.Id == id);
+      var activityAssess = _context.KPIAssessment.Include(x => x.KPIMasterFk).ThenInclude(x => x.StrategicObjectiveFk).FirstOrDefault(x => x.Id == id);
       if (activityAssess == null)
       {
         return NotFound();
@@ -483,7 +483,7 @@ namespace MEMIS.Controllers.Reports
 
       var data = await _context.KPIAssessment
           .Include(a => a.KPIMasterFk)
-          .ThenInclude(x => x.StrategicPlanFk)
+          .ThenInclude(x => x.StrategicObjectiveFk)
           .ToListAsync();
 
       if (data == null || !data.Any())
@@ -517,17 +517,17 @@ namespace MEMIS.Controllers.Reports
       //      );
 
       var report = data
-          .GroupBy(a => a.KPIMasterFk.StrategicPlanFk.strategicObjective)
+          .GroupBy(a => a.KPIMasterFk.StrategicObjectiveFk.ObjectiveCode)
           .Select(g => new StrategicObjectiveReport
           {
             StrategicObjective = g.Key,
             StrategicInterventions = g
-                  .GroupBy(a => a.KPIMasterFk.StrategicPlanFk.strategicIntervention)
+                  .GroupBy(a => a.KPIMasterFk.StrategicObjectiveFk.ObjectiveCode)
                   .Select(ig => new StrategicInterventionReport
                   {
                     StrategicIntervention = ig.Key,
                     StrategicActions = ig
-                          .GroupBy(a => a.KPIMasterFk.StrategicPlanFk.StrategicAction)
+                          .GroupBy(a => a.KPIMasterFk.StrategicObjectiveFk.ObjectiveName)
                           .Select(ag => new StrategicActionReport
                           {
                             StrategicAction = ag.Key,
