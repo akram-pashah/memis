@@ -1,0 +1,173 @@
+@using MEMIS.ViewModels.GIS
+@model List<RadioTalkShowViewModel>
+
+@{
+    ViewData["Title"] = "GIS Reports";
+    Layout = "~/Pages/Shared/_ContentNavbarLayout.cshtml";
+}
+
+<link href="https://unpkg.com/tabulator-tables@5.5.0/dist/css/tabulator.min.css" rel="stylesheet" />
+
+<h4 class="py-3 mb-4">
+    <span class="text-muted fw-light">GIS Reports /</span> Radio Talk Shows Report
+</h4>
+
+<div class="card">
+    <div class="row card-header">
+        <div class="col-md-12">
+            <ul class="nav nav-pills flex-column flex-md-row mb-3">
+                <li class="nav-item"><a class="nav-link" asp-action="Index">GPP Report</a></li>
+                <li class="nav-item"><a class="nav-link" asp-action="GDPReport">GDP Report</a></li>
+                <li class="nav-item"><a class="nav-link" asp-action="ComplianceSupportSupervisionReport">Compliance Support Supervision Report</a></li>
+                <li class="nav-item"><a class="nav-link" asp-action="PostMarketSurveillanceReport">Post Market Surveillance Report</a></li>
+                <li class="nav-item"><a class="nav-link" asp-action="ShiftMarketReport">Shift Market Report</a></li>
+                <li class="nav-item"><a class="nav-link active" href="javascript:void(0);">Radio Talk Shows Report</a></li>
+                <li class="nav-item"><a class="nav-link" asp-action="SensitizationMeetingsReport">Sensitization Meetings Report</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="container card-body">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <div>
+                <button id="download-xlsx" class="btn btn-outline-success">📤 Export Excel</button>
+                <button id="download-pdf" class="btn btn-outline-danger">📄 Export PDF</button>
+                <button id="show-columns" class="btn btn-outline-secondary">🧩 Select Columns</button>
+            </div>
+            <div>
+                <label class="me-2 fw-semibold">Rows per page:</label>
+                <select id="page-size" class="form-select d-inline-block" style="width:auto;">
+                    <option value="5">5</option>
+                    <option value="10" selected>10</option>
+                    <option value="25">25</option>
+                    <option value="50">50</option>
+                </select>
+            </div>
+        </div>
+
+        <div id="columnMenu"></div>
+        <div style="overflow-x: auto; width: 100%;">
+            <div id="radiotalkshow-table"></div>
+        </div>
+
+        <!-- Column Selector Modal -->
+        <div class="modal fade" id="columnModal" tabindex="-1" aria-labelledby="columnModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-dialog-scrollable">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="columnModalLabel">Select Columns</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="container">
+                            <div class="row" id="columnCheckboxContainer"></div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/luxon@3/build/global/luxon.min.js"></script>
+    <script src="https://unpkg.com/tabulator-tables@5.5.0/dist/js/tabulator.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const columnMenu = document.getElementById("columnMenu");
+
+            const table = new Tabulator("#radiotalkshow-table", {
+                data: @Html.Raw(Json.Serialize(Model)),
+                layout: "fitDataTable",
+                height: "auto",
+                responsiveLayout: "collapse",
+                pagination: "local",
+                paginationSize: 10,
+                movableColumns: true,
+                autoResize: true,
+                persistence: false,
+                columns: [
+                    { title: "Inspection Date", field: "inspectionDate", headerFilter: "input" },
+                    { title: "Inspector Name", field: "inspectorName", headerFilter: "input" },
+                    { title: "Region", field: "region", headerFilter: "input" },
+                    { title: "District", field: "district", headerFilter: "input" },
+                    { title: "Facility Name", field: "facilityName", headerFilter: "input" },
+                    { title: "Topic", field: "topic", headerFilter: "input" },
+                    { title: "Latitude", field: "latitude", headerFilter: "input" },
+                    { title: "Longitude", field: "longitude", headerFilter: "input" }
+                ]
+            });
+
+            document.getElementById("page-size").addEventListener("change", function () {
+                table.setPageSize(parseInt(this.value));
+            });
+
+            document.getElementById("download-xlsx").addEventListener("click", function () {
+                table.download("xlsx", "RadioTalkShows_Report.xlsx", { sheetName: "RadioTalkShows" });
+            });
+
+            document.getElementById("download-pdf").addEventListener("click", function () {
+                table.download("pdf", "RadioTalkShows_Report.pdf", {
+                    orientation: "landscape",
+                    title: "Radio Talk Shows Report",
+                });
+            });
+
+            document.getElementById("show-columns").addEventListener("click", function () {
+                const container = document.getElementById("columnCheckboxContainer");
+                container.innerHTML = "";
+
+                const columns = table.getColumns();
+
+                columns.forEach((col, index) => {
+                    const field = col.getField();
+                    const title = col.getDefinition().title;
+                    if (!field) return;
+
+                    const colDiv = document.createElement("div");
+                    colDiv.className = "col-md-4 mb-2";
+
+                    const checkbox = document.createElement("input");
+                    checkbox.type = "checkbox";
+                    checkbox.checked = col.isVisible();
+                    checkbox.className = "form-check-input me-2";
+                    checkbox.id = `col-check-${index}`;
+                    checkbox.addEventListener("change", function () {
+                        if (this.checked) col.show();
+                        else col.hide();
+                    });
+
+                    const label = document.createElement("label");
+                    label.className = "form-check-label";
+                    label.htmlFor = checkbox.id;
+                    label.textContent = title;
+
+                    const wrapper = document.createElement("div");
+                    wrapper.className = "form-check";
+                    wrapper.appendChild(checkbox);
+                    wrapper.appendChild(label);
+
+                    colDiv.appendChild(wrapper);
+                    container.appendChild(colDiv);
+                });
+
+                const modal = new bootstrap.Modal(document.getElementById('columnModal'));
+                modal.show();
+            });
+
+            document.addEventListener("click", function (e) {
+                if (!document.getElementById("show-columns").contains(e.target) &&
+                    !columnMenu.contains(e.target)) {
+                    columnMenu.style.display = "none";
+                }
+            });
+        });
+    </script>
+}

@@ -4,6 +4,7 @@ using MEMIS.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MEMIS.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250716181806_ChangeEntityNameHead")]
+    partial class ChangeEntityNameHead
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -2352,10 +2355,10 @@ namespace MEMIS.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("CoordinatorId")
+                    b.Property<string>("HeadId")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("HeadId")
+                    b.Property<string>("RegCoordinatorId")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("intHead")
@@ -2376,9 +2379,9 @@ namespace MEMIS.Migrations
 
                     b.HasKey("intRegion");
 
-                    b.HasIndex("CoordinatorId");
-
                     b.HasIndex("HeadId");
+
+                    b.HasIndex("RegCoordinatorId");
 
                     b.ToTable("Region");
                 });
@@ -4636,17 +4639,17 @@ namespace MEMIS.Migrations
 
             modelBuilder.Entity("MEMIS.Data.Region", b =>
                 {
-                    b.HasOne("MEMIS.Models.ApplicationUser", "Coordinator")
-                        .WithMany()
-                        .HasForeignKey("CoordinatorId");
-
                     b.HasOne("MEMIS.Models.ApplicationUser", "Head")
                         .WithMany()
                         .HasForeignKey("HeadId");
 
-                    b.Navigation("Coordinator");
+                    b.HasOne("MEMIS.Models.ApplicationUser", "RegCoordinator")
+                        .WithMany()
+                        .HasForeignKey("RegCoordinatorId");
 
                     b.Navigation("Head");
+
+                    b.Navigation("RegCoordinator");
                 });
 
             modelBuilder.Entity("MEMIS.Data.RelocationDrugShop", b =>

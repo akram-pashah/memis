@@ -168,7 +168,7 @@ namespace MEMIS
       List<SelectListItem> results = new List<SelectListItem>
             {
                 new SelectListItem() { Text = "Previously Licensed", Value = "1" },
-                new SelectListItem() { Text = "Illegal Outlet", Value = "2" }, 
+                new SelectListItem() { Text = "Illegal Outlet", Value = "2" },
       };
       return results;
     }
@@ -442,7 +442,7 @@ namespace MEMIS
       List<SelectListItem> results = new List<SelectListItem>
             {
                 new SelectListItem() { Text = "Qualitative", Value = "1" },
-                new SelectListItem() { Text = "Quantitative", Value = "2" } 
+                new SelectListItem() { Text = "Quantitative", Value = "2" }
             };
 
       return results;
@@ -465,7 +465,7 @@ namespace MEMIS
             {
                 new SelectListItem() { Text = "Percentage", Value = "1" },
                 new SelectListItem() { Text = "Number", Value = "2" },
-                new SelectListItem() { Text = "Days", Value = "3" }, 
+                new SelectListItem() { Text = "Days", Value = "3" },
             };
 
       return results;
@@ -533,6 +533,41 @@ namespace MEMIS
       return results;
     }
 
+    public static Dictionary<int, string> FacilityStatusDict() =>
+    FacilityStatus().ToDictionary(x => int.Parse(x.Value), x => x.Text);
+
+    public static Dictionary<int, string> PersonFoundatFacilityDict() =>
+        PersonFoundatFacility().ToDictionary(x => int.Parse(x.Value), x => x.Text);
+
+    public static Dictionary<int, string> CategoryofPremisesDict() =>
+        CategoryofPremises().ToDictionary(x => int.Parse(x.Value), x => x.Text);
+
+    public static Dictionary<int, string> LicenseStatusDict() =>
+        LicenseStatus().ToDictionary(x => int.Parse(x.Value), x => x.Text);
+
+    public static Dictionary<int, string> CategoryofDrugsDict() =>
+        CategoryofDrugs().ToDictionary(x => int.Parse(x.Value), x => x.Text);
+
+    public static Dictionary<int, string> FacilityTypeDict() =>
+        FacilityType().ToDictionary(x => int.Parse(x.Value), x => x.Text);
+
+    public static Dictionary<int, string> CertificationStatusDict() =>
+        CertificationStatus().ToDictionary(x => int.Parse(x.Value), x => x.Text);
+
+    public static Dictionary<int, string> GDPRecommendationDict() =>
+        GDPRecommendation().ToDictionary(x => int.Parse(x.Value), x => x.Text);
+
+    public static Dictionary<int, string> GPPRecommendationDict() =>
+        GPPRecommendation().ToDictionary(x => int.Parse(x.Value), x => x.Text);
+
+    public static Dictionary<int, string> UnlicensedStatusDict() => UnlicensedStatus().ToDictionary(x => int.Parse(x.Value), x => x.Text);
+    public static Dictionary<int, string> ConditionofPremisesDict() => ConditionofPremises().ToDictionary(x => int.Parse(x.Value), x => x.Text);
+    public static Dictionary<int, string> RecordKeepingDict() => RecordKeeping().ToDictionary(x => int.Parse(x.Value), x => x.Text);
+    public static Dictionary<int, string> ClassofDrugsDict() => ClassofDrugs().ToDictionary(x => int.Parse(x.Value), x => x.Text);
+    public static Dictionary<int, string> UnregisteredDrugsDict() => UnregisteredDrugs().ToDictionary(x => int.Parse(x.Value), x => x.Text);
+    public static Dictionary<int, string> ComplianceActionDict() => ComplianceAction().ToDictionary(x => int.Parse(x.Value), x => x.Text);
+    public static Dictionary<int, string> PMSActivityDict() =>
+    PMSActivity().ToDictionary(x => int.Parse(x.Value), x => x.Text);
   }
 
   public enum EnumProductClassification

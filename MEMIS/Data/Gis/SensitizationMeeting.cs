@@ -1,9 +1,5 @@
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace MEMIS.Data
 {
@@ -16,7 +12,7 @@ namespace MEMIS.Data
     public DateTime InspectionDate { get; set; }
     [Display(Name = "Inspector Name")]
     public string? InspectorName { get; set; }
-    
+
     public virtual Guid intRegion { get; set; }
     [ForeignKey("intRegion")]
     public decimal Latitude { get; set; }
