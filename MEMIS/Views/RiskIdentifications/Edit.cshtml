@@ -39,12 +39,18 @@
             </div>
             <br />
             <div class="form-group">
+                <label asp-for="RiskTitle" class="control-label">Risk Title</label>
+                <input asp-for="RiskTitle" class="form-control" />
+                <span asp-validation-for="RiskTitle" class="text-danger"></span>
+            </div>
+            <br />
+            <div class="form-group">
                 <label asp-for="RiskDescription" class="control-label"></label>
                 <input asp-for="RiskDescription" class="form-control" />
                 <span asp-validation-for="RiskDescription" class="text-danger"></span>
             </div>
             <br />
-            <div class="form-group">
+            @* <div class="form-group">
                 <label asp-for="Events" class="control-label">Events</label>
                 <div class="accordion" id="accordionExample">
                     <div class="card accordion-item">
@@ -93,9 +99,9 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> *@
             <br />
-            <div class="form-group">
+            @* <div class="form-group">
                 <label asp-for="RiskSource" class="control-label">Risk Source</label>
                 <div class="accordion" id="accordionExample1">
                     <div class="card accordion-item">
@@ -144,8 +150,8 @@
                         </div>
                     </div>
                 </div>
-                @* <span asp-validation-for="RiskSource" class="text-danger"></span> *@
-            </div>
+                 <span asp-validation-for="RiskSource" class="text-danger"></span>  
+            </div> *@
             <br />
             <div class="form-group">
                 <label asp-for="RiskCause" class="control-label">Risk Cause</label>
@@ -236,6 +242,218 @@
                                                 <td>
                                                     <input type="hidden" asp-for="RiskConsequence[i].RiskConsequenceId" />
                                                     <input asp-for="RiskConsequence[i].Description" class="form-control" />
+                                                </td>
+                                                <td>
+                                                    <a class="btn btn-danger delete-btn" onclick="removeEvent(this)" data-toggle="tooltip" data-placement="top" title="Delete"><i class="bx bx-message-square-x"></i></a>
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                @* <span asp-validation-for="RiskConsequence" class="text-danger" ></span> *@
+            </div>
+            <br />
+            <div class="form-group">
+                <label asp-for="RiskExistMitigation" class="control-label">Existing Mitigation</label>
+                <div class="accordion" id="RiskExistMitigationaccordion">
+                    <div class="card accordion-item">
+                        <h2 class="accordion-header" id="headingOne">
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="RiskExistMitigationInput" aria-label="Text input with segmented dropdown button">
+                                <button type="button" class="btn btn-outline-primary" onclick="addExistMitigation()">
+                                    <i class="bx bx-plus-circle"></i>
+                                </button>
+                                <button type="button" class="btn btn-outline-primary" data-bs-toggle="collapse" data-bs-target="#accordionFive" aria-expanded="true"
+                                        aria-controls="accordionFive">
+                                    <i class="bx bx-collapse-alt"></i>
+                                </button>
+                            </div>
+                        </h2>
+                        <span id="RiskExistMitigationValidation" class="text-danger"></span>
+                        <div id="accordionFive" class="accordion-collapse collapse" data-bs-parent="#RiskExistMitigationaccordion">
+                            <div class="accordion-body" id="collapsedocument">
+                                <table class="table table-striped table-bordered" id="riskExistMitigationTable">
+                                    <thead class="thead-dark">
+                                        <tr>
+                                            <th>Id</th>
+                                            <th>Existing Mitigation</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @for (int i = 0; i < Model.RiskExistMitigation?.Count; i++)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    @(i + 1)
+                                                </td>
+                                                <td>
+                                                    <input type="hidden" asp-for="RiskExistMitigation[i].ExistMitigationId" />
+                                                    <input type="hidden" asp-for="RiskExistMitigation[i].RiskId" />
+                                                    <input asp-for="RiskExistMitigation[i].Description" class="form-control" />
+                                                </td>
+                                                <td>
+                                                    <a class="btn btn-danger delete-btn" onclick="removeEvent(this)" data-toggle="tooltip" data-placement="top" title="Delete"><i class="bx bx-message-square-x"></i></a>
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                @* <span asp-validation-for="RiskConsequence" class="text-danger" ></span> *@
+            </div>
+            <br />
+            <div class="form-group">
+                <label asp-for="RiskAdditionalMitigation" class="control-label">Additional Mitigation</label>
+                <div class="accordion" id="RiskAdditionalMitigationaccordion">
+                    <div class="card accordion-item">
+                        <h2 class="accordion-header" id="headingOne">
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="RiskAdditionalMitigationInput" aria-label="Text input with segmented dropdown button">
+                                <button type="button" class="btn btn-outline-primary" onclick="addAdditionalMitigation()">
+                                    <i class="bx bx-plus-circle"></i>
+                                </button>
+                                <button type="button" class="btn btn-outline-primary" data-bs-toggle="collapse" data-bs-target="#accordionSix" aria-expanded="true"
+                                        aria-controls="accordionSix">
+                                    <i class="bx bx-collapse-alt"></i>
+                                </button>
+                            </div>
+                        </h2>
+                        <span id="RiskAdditionalMitigationValidation" class="text-danger"></span>
+                        <div id="accordionSix" class="accordion-collapse collapse" data-bs-parent="#RiskAdditionalMitigationaccordion">
+                            <div class="accordion-body" id="collapsedocument">
+                                <table class="table table-striped table-bordered" id="riskAdditionalMitigationTable">
+                                    <thead class="thead-dark">
+                                        <tr>
+                                            <th>Id</th>
+                                            <th>Additionaling Mitigation</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @for (int i = 0; i < Model.RiskAdditionalMitigation?.Count; i++)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    @(i + 1)
+                                                </td>
+                                                <td>
+                                                    <input type="hidden" asp-for="RiskAdditionalMitigation[i].AdditionalMitigationId" />
+                                                    <input type="hidden" asp-for="RiskAdditionalMitigation[i].RiskId" />
+                                                    <input asp-for="RiskAdditionalMitigation[i].Description" class="form-control" />
+                                                </td>
+                                                <td>
+                                                    <a class="btn btn-danger delete-btn" onclick="removeEvent(this)" data-toggle="tooltip" data-placement="top" title="Delete"><i class="bx bx-message-square-x"></i></a>
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                @* <span asp-validation-for="RiskConsequence" class="text-danger" ></span> *@
+            </div>
+            <br />
+            <div class="form-group">
+                <label asp-for="RiskWeakness" class="control-label">Weakness</label>
+                <div class="accordion" id="RiskWeaknessaccordion">
+                    <div class="card accordion-item">
+                        <h2 class="accordion-header" id="headingOne">
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="RiskWeaknessInput" aria-label="Text input with segmented dropdown button">
+                                <button type="button" class="btn btn-outline-primary" onclick="addWeakness()">
+                                    <i class="bx bx-plus-circle"></i>
+                                </button>
+                                <button type="button" class="btn btn-outline-primary" data-bs-toggle="collapse" data-bs-target="#accordionSeven" aria-expanded="true"
+                                        aria-controls="accordionSeven">
+                                    <i class="bx bx-collapse-alt"></i>
+                                </button>
+                            </div>
+                        </h2>
+                        <span id="RiskWeaknessValidation" class="text-danger"></span>
+                        <div id="accordionSeven" class="accordion-collapse collapse" data-bs-parent="#RiskWeaknessaccordion">
+                            <div class="accordion-body" id="collapsedocument">
+                                <table class="table table-striped table-bordered" id="riskWeaknessTable">
+                                    <thead class="thead-dark">
+                                        <tr>
+                                            <th>Id</th>
+                                            <th>Weakness</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @for (int i = 0; i < Model.RiskWeakness?.Count; i++)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    @(i + 1)
+                                                </td>
+                                                <td>
+                                                    <input type="hidden" asp-for="RiskWeakness[i].WeaknessId" />
+                                                    <input type="hidden" asp-for="RiskWeakness[i].RiskId" />
+                                                    <input asp-for="RiskWeakness[i].Description" class="form-control" />
+                                                </td>
+                                                <td>
+                                                    <a class="btn btn-danger delete-btn" onclick="removeEvent(this)" data-toggle="tooltip" data-placement="top" title="Delete"><i class="bx bx-message-square-x"></i></a>
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                @* <span asp-validation-for="RiskConsequence" class="text-danger" ></span> *@
+            </div>
+            <br />
+            <div class="form-group">
+                <label asp-for="RiskOpportunity" class="control-label">Opportunity</label>
+                <div class="accordion" id="RiskOpportunityaccordion">
+                    <div class="card accordion-item">
+                        <h2 class="accordion-header" id="headingOne">
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="RiskOpportunityInput" aria-label="Text input with segmented dropdown button">
+                                <button type="button" class="btn btn-outline-primary" onclick="addOpportunity()">
+                                    <i class="bx bx-plus-circle"></i>
+                                </button>
+                                <button type="button" class="btn btn-outline-primary" data-bs-toggle="collapse" data-bs-target="#accordionEight" aria-expanded="true"
+                                        aria-controls="accordionEight">
+                                    <i class="bx bx-collapse-alt"></i>
+                                </button>
+                            </div>
+                        </h2>
+                        <span id="RiskOpportunityValidation" class="text-danger"></span>
+                        <div id="accordionEight" class="accordion-collapse collapse" data-bs-parent="#RiskOpportunityaccordion">
+                            <div class="accordion-body" id="collapsedocument">
+                                <table class="table table-striped table-bordered" id="riskOpportunityTable">
+                                    <thead class="thead-dark">
+                                        <tr>
+                                            <th>Id</th>
+                                            <th>Opportunity</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @for (int i = 0; i < Model.RiskOpportunity?.Count; i++)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    @(i + 1)
+                                                </td>
+                                                <td>
+                                                    <input type="hidden" asp-for="RiskOpportunity[i].OpportunityId" />
+                                                    <input type="hidden" asp-for="RiskOpportunity[i].RiskId" />
+                                                    <input asp-for="RiskOpportunity[i].Description" class="form-control" />
                                                 </td>
                                                 <td>
                                                     <a class="btn btn-danger delete-btn" onclick="removeEvent(this)" data-toggle="tooltip" data-placement="top" title="Delete"><i class="bx bx-message-square-x"></i></a>
@@ -556,5 +774,179 @@
         });
     }
 
+    function addExistMitigation() {
+        var desc = $('#RiskExistMitigationInput').val();
+        if (desc.trim() === "") {
+            $('#RiskExistMitigationValidation').text("Existing Mitigation cannot be empty.");
+            return;
+        } else {
+            $('#RiskExistMitigationValidation').text("");
+        }
+        var $tableBody = $('#riskExistMitigationTable tbody');
+        var index;
+
+        if ($tableBody.find('tr:first').text().trim() === "No data available in table") {
+            $tableBody.find('tr:first').remove();
+            index = 0;
+        } else {
+            index = $tableBody.find('tr').length;
+        }
+        var row = ` <tr>
+                                 <td>${index + 1}</td>
+                                                     <td>
+                                                             <input name="RiskExistMitigation[${index}].Description" value="${desc}" class="form-control" />
+                                                     </td>
+                                                     <td>
+                                                         <a class="btn btn-danger delete-btn" onclick="removeExistMitigation(this)" data-toggle="tooltip" data-placement="top" title="Delete"><i class="bx bx-message-square-x"></i></a>
+                                                     </td>
+                                             </tr>`
+        $('#riskExistMitigationTable tbody').append(row);
+        $('#RiskExistMitigationInput').val('');
+        $('#accordionFive').addClass('show');
+    }
+
+    function removeExistMitigation(button) {
+        $(button).closest('tr').remove();
+        $('#riskExistMitigationTable tbody tr').each(function (index, tr) {
+            $(tr).find('input[name^="RiskExistMitigation["]').each(function () {
+                var name = $(this).attr('name');
+                var newName = name.replace(/RiskExistMitigation\[\d+\]/, `RiskExistMitigation[${index}]`);
+                $(this).attr('name', newName);
+            });
+            // Update row numbering
+            $(tr).find('td:first').text(index + 1);
+        });
+    }
+    function addAdditionalMitigation() {
+        var desc = $('#RiskAdditionalMitigationInput').val();
+        if (desc.trim() === "") {
+            $('#RiskAdditionalMitigationValidation').text("Additional  Mitigation cannot be empty.");
+            return;
+        } else {
+            $('#RiskAdditionalMitigationValidation').text("");
+        }
+        var $tableBody = $('#riskAdditionalMitigationTable tbody');
+        var index;
+
+        if ($tableBody.find('tr:first').text().trim() === "No data available in table") {
+            $tableBody.find('tr:first').remove();
+            index = 0;
+        } else {
+            index = $tableBody.find('tr').length;
+        }
+        var row = ` <tr>
+                                     <td>${index + 1}</td>
+                                                         <td>
+                                                                 <input name="RiskAdditionalMitigation[${index}].Description" value="${desc}" class="form-control" />
+                                                         </td>
+                                                         <td>
+                                                             <a class="btn btn-danger delete-btn" onclick="removeAdditionalMitigation(this)" data-toggle="tooltip" data-placement="top" title="Delete"><i class="bx bx-message-square-x"></i></a>
+                                                         </td>
+                                                 </tr>`
+        $('#riskAdditionalMitigationTable tbody').append(row);
+        $('#RiskAdditionalMitigationInput').val('');
+        $('#accordionSix').addClass('show');
+    }
+
+    function removeAdditionalMitigation(button) {
+        $(button).closest('tr').remove();
+        $('#riskAdditionalMitigationTable tbody tr').each(function (index, tr) {
+            $(tr).find('input[name^="RiskAdditionalMitigation["]').each(function () {
+                var name = $(this).attr('name');
+                var newName = name.replace(/RiskAdditionalMitigation\[\d+\]/, `RiskAdditionalMitigation[${index}]`);
+                $(this).attr('name', newName);
+            });
+            // Update row numbering
+            $(tr).find('td:first').text(index + 1);
+        });
+    }
+
+    function addWeakness() {
+        var desc = $('#RiskWeaknessInput').val();
+        if (desc.trim() === "") {
+            $('#RiskWeaknessValidation').text("Weakness cannot be empty.");
+            return;
+        } else {
+            $('#RiskWeaknessValidation').text("");
+        }
+        var $tableBody = $('#riskWeaknessTable tbody');
+        var index;
+
+        if ($tableBody.find('tr:first').text().trim() === "No data available in table") {
+            $tableBody.find('tr:first').remove();
+            index = 0;
+        } else {
+            index = $tableBody.find('tr').length;
+        }
+        var row = ` <tr>
+                                         <td>${index + 1}</td>
+                                                             <td>
+                                                                     <input name="RiskWeakness[${index}].Description" value="${desc}" class="form-control" />
+                                                             </td>
+                                                             <td>
+                                                                 <a class="btn btn-danger delete-btn" onclick="removeWeakness(this)" data-toggle="tooltip" data-placement="top" title="Delete"><i class="bx bx-message-square-x"></i></a>
+                                                             </td>
+                                                     </tr>`
+        $('#riskWeaknessTable tbody').append(row);
+        $('#RiskWeaknessInput').val('');
+        $('#accordionSeven').addClass('show');
+    }
+
+    function removeWeakness(button) {
+        $(button).closest('tr').remove();
+        $('#riskWeaknessTable tbody tr').each(function (index, tr) {
+            $(tr).find('input[name^="RiskWeakness["]').each(function () {
+                var name = $(this).attr('name');
+                var newName = name.replace(/RiskWeakness\[\d+\]/, `RiskWeakness[${index}]`);
+                $(this).attr('name', newName);
+            });
+            // Update row numbering
+            $(tr).find('td:first').text(index + 1);
+        });
+    }
+
+    function addOpportunity() {
+        var desc = $('#RiskOpportunityInput').val();
+        if (desc.trim() === "") {
+            $('#RiskOpportunityValidation').text("Opportunity cannot be empty.");
+            return;
+        } else {
+            $('#RiskOpportunityValidation').text("");
+        }
+        var $tableBody = $('#riskOpportunityTable tbody');
+        var index;
+
+        if ($tableBody.find('tr:first').text().trim() === "No data available in table") {
+            $tableBody.find('tr:first').remove();
+            index = 0;
+        } else {
+            index = $tableBody.find('tr').length;
+        }
+        var row = ` <tr>
+                                             <td>${index + 1}</td>
+                                                                 <td>
+                                                                         <input name="RiskOpportunity[${index}].Description" value="${desc}" class="form-control" />
+                                                                 </td>
+                                                                 <td>
+                                                                     <a class="btn btn-danger delete-btn" onclick="removeOpportunity(this)" data-toggle="tooltip" data-placement="top" title="Delete"><i class="bx bx-message-square-x"></i></a>
+                                                                 </td>
+                                                         </tr>`
+        $('#riskOpportunityTable tbody').append(row);
+        $('#RiskOpportunityInput').val('');
+        $('#accordionEight').addClass('show');
+    }
+
+    function removeOpportunity(button) {
+        $(button).closest('tr').remove();
+        $('#riskOpportunityTable tbody tr').each(function (index, tr) {
+            $(tr).find('input[name^="RiskOpportunity["]').each(function () {
+                var name = $(this).attr('name');
+                var newName = name.replace(/RiskOpportunity\[\d+\]/, `RiskOpportunity[${index}]`);
+                $(this).attr('name', newName);
+            });
+            // Update row numbering
+            $(tr).find('td:first').text(index + 1);
+        });
+    }
 </script>
 

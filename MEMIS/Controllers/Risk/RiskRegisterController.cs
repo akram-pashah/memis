@@ -361,10 +361,10 @@ namespace MEMIS.Controllers.Risk
       var riskLikelihoodList = new List<SelectListItem>
     {
         new CustomSelectListItem { Value = "1", Text = "Very Low", Color = "green" },
-    new CustomSelectListItem { Value = "2", Text = "Low", Color = "yellow" },
-    new CustomSelectListItem { Value = "3", Text = "Medium", Color = "orange" },
-    new CustomSelectListItem { Value = "4", Text = "High", Color = "peach" },
-    new CustomSelectListItem { Value = "5", Text = "Very High", Color = "red" }
+        new CustomSelectListItem { Value = "2", Text = "Low", Color = "yellow" },
+        new CustomSelectListItem { Value = "3", Text = "Medium", Color = "orange" },
+        new CustomSelectListItem { Value = "4", Text = "High", Color = "peach" },
+        new CustomSelectListItem { Value = "5", Text = "Very High", Color = "red" }
     };
 
       ViewBag.RiskConsequenceList = GetSelectListForRiskConsequence();

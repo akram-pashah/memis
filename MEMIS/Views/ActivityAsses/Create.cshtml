@@ -18,7 +18,8 @@
             <div class="col-md-4">
                 <div class="form-group">
                     <label asp-for="intIntervention" class="control-label"></label>
-                    @Html.DropDownList("intIntervention", new SelectList(ViewBag.StrategicIntervention, "intIntervention", "InterventionName"), new { @class = "form-control form-select", @required = "required", onchange = "loadStrategicActions(this.value)" })
+                    @* @Html.DropDownList("intIntervention", new SelectList(ViewBag.StrategicIntervention, "intIntervention", "InterventionName"), new { @class = "form-control form-select", @required = "required", onchange = "loadStrategicActions(this.value)" }) *@
+                    @Html.DropDownList("intIntervention", ViewData["intIntervention"] as SelectList, "-- Select Intervention --", new { @class = "form-control", onchange = "loadStrategicActions(this.value)" })
                 </div>
                 <br />
                 <div class="form-group">
@@ -57,6 +58,12 @@
                     <label asp-for="comparativeTarget" class="control-label"></label>
                     <input id="comparativeTarget" asp-for="comparativeTarget" class="form-control formatted-number" type="text" onkeyup="setBudgetAmount()" />
                     <span asp-validation-for="comparativeTarget" class="text-danger"></span>
+                </div>
+                <br />
+                <div class="form-group">
+                    <label asp-for="revisedAnnualTarget" class="control-label"></label>
+                    <input id="comparativeTarget" asp-for="revisedAnnualTarget" class="form-control formatted-number" type="text"   />
+                    <span asp-validation-for="revisedAnnualTarget" class="text-danger"></span>
                 </div>
                 <br />
                 <div class="form-group">

@@ -187,7 +187,7 @@
                 if (checkBoxes[i].checked) {
                     var row = checkBoxes[i].parentNode.parentNode;
                     $.ajax({
-                        url: '/RiskIdentifications/VerifyRisk',
+                        url: '/RiskTreatmentList/RiskTreatmentList',
                         type: 'GET',
                         data: { id: row.cells[1].innerText, IsVerified: Isverified },
                         dataType: 'json',

@@ -1,4 +1,4 @@
-using cloudscribe.Pagination.Models;
+using cloudscribe.Pagination.Models; 
 using MEMIS.Data;
 using MEMIS.Data.Risk;
 using MEMIS.Models;
@@ -29,9 +29,12 @@ namespace MEMIS.Controllers.Risk
     {
       int pageSize = 10;
       var offset = (pageSize * pageNumber) - pageSize;
+      Guid departmentId = Guid.Parse(HttpContext.Session.GetString("Department"));
       if (_context.RiskIdentifications != null)
       {
         var dat = _context.RiskIdentifications.Include(m => m.StrategicPlanFk).Include(m => m.ActivityFk).Include(m => m.FocusAreaFk)
+          .Where(m=>m.intDept==departmentId)
+          .OrderByDescending(m=>m.IdentifiedDate )
             .Skip(offset)
             .Take(pageSize);
 
@@ -82,10 +85,13 @@ namespace MEMIS.Controllers.Risk
     {
       int pageSize = 10;
       var offset = (pageSize * pageNumber) - pageSize;
+      Guid departmentId = Guid.Parse(HttpContext.Session.GetString("Department"));
       if (_context.RiskIdentifications != null)
       {
         var dat = _context.RiskIdentifications.Include(m => m.StrategicPlanFk).Include(m => m.ActivityFk).Include(m => m.FocusAreaFk)
+            .Where(m => m.intDept == departmentId)
             .Where(x => x.ApprStatus == 0)
+            .OrderByDescending(m => m.IdentifiedDate)
             .Skip(offset)
             .Take(pageSize);
 
@@ -114,6 +120,7 @@ namespace MEMIS.Controllers.Risk
 
       var riskIdentification = await _context.RiskIdentifications.Include(m => m.StrategicPlanFk).Include(m => m.ActivityFk).Include(m => m.FocusAreaFk)
           .Where(m => m.RiskId == id).FirstOrDefaultAsync();
+
       if (riskIdentification == null)
       {
         return NotFound();
@@ -126,10 +133,10 @@ namespace MEMIS.Controllers.Risk
         FocusArea = riskIdentification.FocusArea,
         IdentifiedDate = riskIdentification.IdentifiedDate,
         IsVerified = riskIdentification.IsVerified,
-        Events = await _context.Events.Where(x => x.RiskId == id).ToListAsync(),
+      //  Events = await _context.Events.Where(x => x.RiskId == id).ToListAsync(),
         RiskCause = await _context.RiskCauses.Where(x => x.RiskId == id).ToListAsync(),
         RiskConsequence = await _context.RiskConsequenceDetails.Where(x => x.RiskId == id).ToListAsync(),
-        RiskSource = await _context.RiskSources.Where(x => x.RiskId == id).ToListAsync(),
+       // RiskSource = await _context.RiskSources.Where(x => x.RiskId == id).ToListAsync(),
         RiskConsequenceId = riskIdentification.RiskConsequenceId,
         RiskDescription = riskIdentification.RiskDescription,
         RiskLikelihoodId = riskIdentification.RiskLikelihoodId,
@@ -193,10 +200,12 @@ namespace MEMIS.Controllers.Risk
     {
       int pageSize = 10;
       var offset = (pageSize * pageNumber) - pageSize;
+      Guid departmentId = Guid.Parse(HttpContext.Session.GetString("Department"));
       if (_context.RiskIdentifications != null)
       {
         var dat = _context.RiskIdentifications.Include(m => m.StrategicPlanFk).Include(m => m.ActivityFk).Include(m => m.FocusAreaFk)
             .Where(x => x.ApprStatus == (int)(riskIdentifyApprStatus.hodreviewed))
+            .Where(m => m.intDept == departmentId)
             .Skip(offset)
             .Take(pageSize);
 
@@ -240,10 +249,10 @@ namespace MEMIS.Controllers.Risk
         IsVerified = riskIdentification.IsVerified,
         //RiskCause = riskIdentification.RiskCause,
         //RiskConsequence = riskIdentification.RiskConsequence,
-        Events = await _context.Events.Where(x => x.RiskId == id).ToListAsync(),
+       // Events = await _context.Events.Where(x => x.RiskId == id).ToListAsync(),
         RiskCause = await _context.RiskCauses.Where(x => x.RiskId == id).ToListAsync(),
         RiskConsequence = await _context.RiskConsequenceDetails.Where(x => x.RiskId == id).ToListAsync(),
-        RiskSource = await _context.RiskSources.Where(x => x.RiskId == id).ToListAsync(),
+      //  RiskSource = await _context.RiskSources.Where(x => x.RiskId == id).ToListAsync(),
         RiskConsequenceId = riskIdentification.RiskConsequenceId,
         RiskDescription = riskIdentification.RiskDescription,
         RiskLikelihoodId = riskIdentification.RiskLikelihoodId,
@@ -312,6 +321,7 @@ namespace MEMIS.Controllers.Risk
       {
         var dat = _context.RiskIdentifications.Include(m => m.StrategicPlanFk).Include(m => m.ActivityFk).Include(m => m.FocusAreaFk)
             .Where(x => x.ApprStatus == (int)(riskIdentifyApprStatus.dirapprove))
+            .OrderByDescending(m => m.IdentifiedDate)
             .Skip(offset)
             .Take(pageSize);
 
@@ -355,10 +365,10 @@ namespace MEMIS.Controllers.Risk
         IsVerified = riskIdentification.IsVerified,
         //RiskCause = riskIdentification.RiskCause,
         //RiskConsequence = riskIdentification.RiskConsequence,
-        Events = await _context.Events.Where(x => x.RiskId == id).ToListAsync(),
+       // Events = await _context.Events.Where(x => x.RiskId == id).ToListAsync(),
         RiskCause = await _context.RiskCauses.Where(x => x.RiskId == id).ToListAsync(),
         RiskConsequence = await _context.RiskConsequenceDetails.Where(x => x.RiskId == id).ToListAsync(),
-        RiskSource = await _context.RiskSources.Where(x => x.RiskId == id).ToListAsync(),
+        //RiskSource = await _context.RiskSources.Where(x => x.RiskId == id).ToListAsync(),
         RiskConsequenceId = riskIdentification.RiskConsequenceId,
         RiskDescription = riskIdentification.RiskDescription,
         RiskLikelihoodId = riskIdentification.RiskLikelihoodId,
@@ -414,12 +424,8 @@ namespace MEMIS.Controllers.Risk
               //RiskSource = objectdto.RiskSource,
               StrategicObjective = objectdto.StrategicObjective,
               intCategory = objectdto.intCategory,
-              intDept = objectdto.intDept,
-              ExistingMitigation = objectdto.ExistingMitigation,
-              Additional_Mitigation = objectdto.Additional_Mitigation,
-              Opportunity = objectdto.Opportunity,
-              Supporting_Owners = objectdto.Supporting_Owners,
-              Weakness = objectdto.Weakness,
+              intDept = objectdto.intDept, 
+              Supporting_Owners = objectdto.Supporting_Owners, 
               RiskOwner = User.FindFirstValue(ClaimTypes.NameIdentifier),
             };
             _context.Add(riskRegister);
@@ -488,8 +494,9 @@ namespace MEMIS.Controllers.Risk
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Create([Bind(
           "IdentifiedDate,StrategicObjective,FocusArea,Activity,BudgetCode" +
-          ",RiskDescription,Events,RiskSource,RiskCause,RiskConsequence,RiskConsequenceId," +
-          "RiskLikelihoodId,RiskScore,RiskRank,EvalCriteria,IsVerified,EventsList,intCategory,ExistingMitigation,Weakness,Additional_Mitigation,intDept,Opportunity,Supporting_Owners")]RiskIdentificationCreateEditDto dto)
+          ",RiskTitle,RiskDescription,RiskCause,RiskConsequence,RiskConsequenceId," +
+          "RiskLikelihoodId,RiskScore,RiskRank,EvalCriteria,IsVerified,intCategory,intDept,Supporting_Owners," +
+      "RiskExistMitigation,RiskAdditionalMitigation,RiskWeakness,RiskOpportunity")]RiskIdentificationCreateEditDto dto)
     {
       if (ModelState.IsValid && dto.RiskConsequenceId != 0 && dto.RiskLikelihoodId != 0)
       {
@@ -501,31 +508,30 @@ namespace MEMIS.Controllers.Risk
           IdentifiedDate = dto.IdentifiedDate,
           IsVerified = dto.IsVerified,
           RiskConsequenceId = dto.RiskConsequenceId,
+          RiskTitle= dto.RiskTitle,
           RiskDescription = dto.RiskDescription,
           RiskLikelihoodId = dto.RiskLikelihoodId,
           RiskOwner = User.FindFirstValue(ClaimTypes.NameIdentifier),
           RiskRank = dto.RiskRank,
           RiskScore = dto.RiskScore,
           StrategicObjective = dto.StrategicObjective,
-          intCategory = dto.intCategory,
-          ExistingMitigation = dto.ExistingMitigation,
-          Weakness = dto.Weakness,
-          Additional_Mitigation = dto.Additional_Mitigation,
-          Opportunity = dto.Opportunity,
+          intCategory = dto.intCategory, 
           Supporting_Owners = dto.Supporting_Owners,
           intDept = dto.intDept
         };
 
         _context.Add(riskIdentification);
         await _context.SaveChangesAsync();
-        dto.Events.ForEach(ev => ev.RiskId = riskIdentification.RiskId);
+      //  dto.Events.ForEach(ev => ev.RiskId = riskIdentification.RiskId);
         dto.RiskCause.ForEach(ev => ev.RiskId = riskIdentification.RiskId);
-        dto.RiskSource.ForEach(ev => ev.RiskId = riskIdentification.RiskId);
-        dto.RiskConsequence.ForEach(ev => ev.RiskId = riskIdentification.RiskId);
-        _context.Events.AddRange(dto.Events);
+       // dto.RiskSource.ForEach(ev => ev.RiskId = riskIdentification.RiskId);
+        dto.RiskConsequence.ForEach(ev => ev.RiskId = riskIdentification.RiskId); 
+        dto.RiskExistMitigation.ForEach(ev => ev.RiskId = riskIdentification.RiskId); 
+       // _context.Events.AddRange(dto.Events);
         _context.RiskCauses.AddRange(dto.RiskCause);
-        _context.RiskSources.AddRange(dto.RiskSource);
+       // _context.RiskSources.AddRange(dto.RiskSource);
         _context.RiskConsequenceDetails.AddRange(dto.RiskConsequence);
+        _context.RiskExistMitigations.AddRange(dto.RiskExistMitigation);
         await _context.SaveChangesAsync();
 
         return RedirectToAction(nameof(Index));
@@ -558,20 +564,25 @@ namespace MEMIS.Controllers.Risk
       {
         Activity = riskIdentification.Activity,
         EvalCriteria = riskIdentification.EvalCriteria,
-        Events = await _context.Events.Where(x => x.RiskId == id).ToListAsync(),
+       // Events = await _context.Events.Where(x => x.RiskId == id).ToListAsync(),
         FocusArea = (int)riskIdentification.FocusArea,
         IdentifiedDate = riskIdentification.IdentifiedDate,
         IsVerified = riskIdentification.IsVerified,
         RiskCause = await _context.RiskCauses.Where(x => x.RiskId == id).ToListAsync(),
         RiskConsequence = await _context.RiskConsequenceDetails.Where(x => x.RiskId == id).ToListAsync(),
         RiskConsequenceId = riskIdentification.RiskConsequenceId,
+        RiskTitle=riskIdentification.RiskTitle,
         RiskDescription = riskIdentification.RiskDescription,
         RiskId = riskIdentification.RiskId,
         RiskLikelihoodId = riskIdentification.RiskLikelihoodId,
         RiskRank = riskIdentification.RiskRank,
         RiskScore = riskIdentification.RiskScore,
-        RiskSource = await _context.RiskSources.Where(x => x.RiskId == id).ToListAsync(),
+       // RiskSource = await _context.RiskSources.Where(x => x.RiskId == id).ToListAsync(),
         StrategicObjective = (int)riskIdentification.StrategicObjective,
+        RiskExistMitigation = await _context.RiskExistMitigations.Where(x => x.RiskId == id).ToListAsync(),
+        RiskAdditionalMitigation = await _context.RiskAdditionalMitigations.Where(x => x.RiskId == id).ToListAsync(),
+        RiskWeakness = await _context.RiskWeaknesses.Where(x => x.RiskId == id).ToListAsync(),
+        RiskOpportunity = await _context.RiskOpportunitys.Where(x => x.RiskId == id).ToListAsync(),
 
       };
       ViewBag.RiskConsequenceList = GetSelectListForRiskConsequence();
@@ -587,8 +598,9 @@ namespace MEMIS.Controllers.Risk
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Edit(int id, [Bind("RiskId," +
           "IdentifiedDate,StrategicObjective,FocusArea,Activity,BudgetCode" +
-          ",RiskDescription,Events,RiskSource,RiskCause,RiskConsequence,RiskConsequenceId," +
-          "RiskLikelihoodId,RiskScore,RiskRank,EvalCriteria,IsVerified,EventsList")] RiskIdentificationCreateEditDto riskIdentification)
+          ",RiskTitle,RiskDescription,Events,RiskSource,RiskCause,RiskConsequence,RiskConsequenceId," +
+          "RiskLikelihoodId,RiskScore,RiskRank,EvalCriteria,IsVerified,EventsList," +
+      "RiskExistMitigation,RiskAdditionalMitigation,RiskWeakness,RiskOpportunity")] RiskIdentificationCreateEditDto riskIdentification)
     {
       if (id != riskIdentification.RiskId)
       {
@@ -603,19 +615,20 @@ namespace MEMIS.Controllers.Risk
           {
             Activity = riskIdentification.Activity,
             EvalCriteria = riskIdentification.EvalCriteria,
-            Events = riskIdentification.Events,
+           // Events = riskIdentification.Events,
             FocusArea = riskIdentification.FocusArea,
             IdentifiedDate = riskIdentification.IdentifiedDate,
             IsVerified = riskIdentification.IsVerified,
             RiskCauses = riskIdentification.RiskCause,
             RiskConsequenceDetails = riskIdentification.RiskConsequence,
             RiskConsequenceId = riskIdentification.RiskConsequenceId,
+            RiskTitle= riskIdentification.RiskTitle,
             RiskDescription = riskIdentification.RiskDescription,
             RiskLikelihoodId = riskIdentification.RiskLikelihoodId,
             RiskOwner = User.FindFirstValue(ClaimTypes.NameIdentifier),
             RiskRank = riskIdentification.RiskRank,
             RiskScore = riskIdentification.RiskScore,
-            RiskSources = riskIdentification.RiskSource,
+          //  RiskSources = riskIdentification.RiskSource,
             StrategicObjective = riskIdentification.StrategicObjective,
             RiskId = riskIdentification.RiskId
           };

@@ -134,7 +134,8 @@ namespace MEMIS.Controllers
           outputIndicator=AnnualPlan.outputIndicator,
           unitCost=AnnualPlan.unitCost,
           comparativeTarget=AnnualPlan.annualTarget,
-          budgetAmount=AnnualPlan.budgetAmount
+          revisedAnnualTarget=AnnualPlan.annualTarget,
+          budgetAmount =AnnualPlan.budgetAmount
         };
         _context.ActivityAssess.Add(activityAssess);
         await _context.SaveChangesAsync();
@@ -1433,7 +1434,9 @@ namespace MEMIS.Controllers
     public async Task<IActionResult> Create(int Id = 0)
     {
       Guid departmentId = Guid.Parse(HttpContext.Session.GetString("Department"));
-      ViewBag.StrategicIntervention = _context.StrategicIntervention == null ? new List<StrategicIntervention>() : await _context.StrategicIntervention.ToListAsync();
+      ViewData["intIntervention"] = new SelectList(_context.StrategicIntervention.Select(o => new { o.intIntervention, DisplayText = o.InterventionCode + " - " + o.InterventionName }), "intIntervention", "DisplayText");
+
+      // ViewBag.StrategicIntervention = _context.StrategicIntervention == null ? new List<StrategicIntervention>() : await _context.StrategicIntervention.ToListAsync();
       //ViewBag.StrategicAction = _context.StrategicAction == null ? new List<StrategicAction>() : await _context.StrategicAction.ToListAsync();
       //ViewBag.Activity = _context.Activity == null ? new List<Activity>() : await _context.Activity.ToListAsync();
       ViewData["intDept"] = new SelectList(_context.Departments, "intDept", "deptName");
@@ -1448,7 +1451,8 @@ namespace MEMIS.Controllers
     {
       var strategicObjectives = _context.StrategicObjective
                                         .Where(so => so.intFocus == focusAreaId)
-                                        .Select(so => new { so.intObjective, so.ObjectiveName })
+                                        .Select(so => new { so.intObjective,
+                                          ObjectiveName= so.ObjectiveCode + " - " +so.ObjectiveName })
                                         .ToList();
       return Json(strategicObjectives);
     }
@@ -1458,7 +1462,9 @@ namespace MEMIS.Controllers
     {
       var interventions = _context.StrategicIntervention
                                   .Where(si => si.intObjective == objectiveId)
-                                  .Select(si => new { si.intIntervention, si.InterventionName })
+                                  .Select(si => new { si.intIntervention,
+                                    InterventionName=si.InterventionCode+ " - "+ si.InterventionName
+                                  })
                                   .ToList();
       return Json(interventions);
     }
@@ -1468,7 +1474,9 @@ namespace MEMIS.Controllers
     {
       var actions = _context.StrategicAction
                             .Where(sa => sa.intIntervention == interventionId)
-                            .Select(sa => new { sa.intAction, sa.actionName })
+                            .Select(sa => new { sa.intAction,
+                              actionName = sa.actionCode + " - " + sa.actionName
+                            })
                             .ToList();
       return Json(actions);
     }
@@ -1478,7 +1486,8 @@ namespace MEMIS.Controllers
     {
       var activities = _context.Activity
                                .Where(a => a.intAction == actionId)
-                               .Select(a => new { a.intActivity, a.activityName })
+                               .Select(a => new { a.intActivity,
+                                 activityName=a.activityCode + " - "+ a.activityName })
                                .ToList();
       return Json(activities);
     }

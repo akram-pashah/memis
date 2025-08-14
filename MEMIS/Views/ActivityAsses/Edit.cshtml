@@ -55,6 +55,12 @@
             </div>
             <br />
             <div class="form-group">
+                <label asp-for="revisedAnnualTarget" class="control-label"></label>
+                <input asp-for="revisedAnnualTarget" class="form-control formatted-number" type="text" />
+                <span asp-validation-for="revisedAnnualTarget" class="text-danger"></span>
+            </div>
+            <br />
+            <div class="form-group">
                 <label asp-for="unitCost" class="control-label"></label>
                 <input asp-for="unitCost" class="form-control formatted-number" type="text" />
                 <span asp-validation-for="unitCost" class="text-danger"></span>

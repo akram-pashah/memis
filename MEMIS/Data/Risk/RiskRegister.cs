@@ -58,6 +58,7 @@ namespace MEMIS.Data.Risk
     public DateTime? ReviewDate { get; set; }
     public int? ApprStatus { get; set; } = 0;
     public int? riskTolerence { get; set; }
+    public int? riskApetite { get; set; }
     public string? riskTolerenceJustification { get; set; }
     [Display(Name = "Action Undertaken toMitigate Risk")]
     public string? ActionTaken { get; set; }

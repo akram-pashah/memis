@@ -31,6 +31,8 @@ namespace MEMIS.Models
     public double? unitCost { get; set; }
     [Display(Name = "Annualized Target")]
     public double? comparativeTarget { get; set; }
+    [Display(Name = "Revised Annualized Target")]
+    public double? revisedAnnualTarget { get; set; }
     [Display(Name = "Justification")]
     public string? justification { get; set; }
     [Display(Name = "Budget Amount")]

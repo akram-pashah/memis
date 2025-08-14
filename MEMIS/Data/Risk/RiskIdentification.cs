@@ -22,6 +22,7 @@ namespace MEMIS.Data.Risk
     public virtual int intCategory { get; set; }
     [ForeignKey("intCategory")]
     public virtual RiskCategory RiskCategoryFk { get; set; }
+    public string RiskTitle { get; set; }
     public string RiskDescription { get; set; }
     public string RiskOwner { get; set; }
     [Display(Name = "Risk Consquence ")]
@@ -30,10 +31,7 @@ namespace MEMIS.Data.Risk
     public int RiskScore { get; set; }
     public string? RiskRank { get; set; }
     public string? EvalCriteria { get; set; }
-    public string? ExistingMitigation { get; set; }
-    public string? Weakness { get; set; }
-    public string? Additional_Mitigation { get; set; }
-    public string? Opportunity { get; set; }
+   
     [Display(Name = "Primary Owner")]
     public virtual Guid? intDept { get; set; }
     [ForeignKey("intDept")]
@@ -46,6 +44,10 @@ namespace MEMIS.Data.Risk
     public ICollection<RiskSource> RiskSources { get; set; }
     public ICollection<RiskCause> RiskCauses { get; set; }
     public ICollection<RiskConsequenceDetails> RiskConsequenceDetails { get; set; }
+    public ICollection<RiskExistMitigation> RiskExistMitigations { get; set; }
+    public ICollection<RiskAdditionalMitigation> RiskAdditionalMitigations { get; set; }
+    public ICollection<RiskWeakness> RiskWeaknesses { get; set; }
+    public ICollection<RiskOpportunity> RiskOpportunitys { get; set; }
     public RiskIdentification()
     {
       RiskDetails = new HashSet<RiskDetail>();
@@ -53,6 +55,10 @@ namespace MEMIS.Data.Risk
       RiskSources = new HashSet<RiskSource>();
       RiskCauses = new HashSet<RiskCause>();
       RiskConsequenceDetails = new HashSet<RiskConsequenceDetails>();
+      RiskExistMitigations = new HashSet<RiskExistMitigation>(); 
+      RiskAdditionalMitigations = new HashSet<RiskAdditionalMitigation>();
+      RiskWeaknesses = new HashSet<RiskWeakness>();
+      RiskOpportunitys = new HashSet<RiskOpportunity>(); 
     }
   }
   public class Causes

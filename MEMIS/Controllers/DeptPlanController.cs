@@ -650,6 +650,8 @@ namespace MEMIS.Controllers
         {
  
             ViewBag.StrategicPlanList = _context.StrategicPlan == null ? new List<StrategicPlan>() : await _context.StrategicPlan.ToListAsync();
+            ViewData["intObjective"] = new SelectList(_context.StrategicObjective.Select(o => new { o.intObjective, DisplayText = o.ObjectiveCode + " - " + o.ObjectiveName }), "intObjective", "DisplayText");
+            ViewData["intIntervention"] = new SelectList(_context.StrategicIntervention.Select(o => new { o.intIntervention, DisplayText = o.InterventionCode + " - " + o.InterventionName }), "intIntervention", "DisplayText");
             ViewBag.DeptList = _context.Departments == null ? new List<Department>() : await _context.Departments.ToListAsync();
             ViewData["Quarter"] = ListHelper.Quarter();
             DeptPlanDto deptPlanDto = new DeptPlanDto();

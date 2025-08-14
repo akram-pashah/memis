@@ -86,6 +86,10 @@ namespace MEMIS.Data
     public DbSet<Incident> Incidents { get; set; }
     public DbSet<RiskSource> RiskSources { get; set; }
     public DbSet<RiskCause> RiskCauses { get; set; }
+    public DbSet<RiskExistMitigation> RiskExistMitigations { get; set; }
+    public DbSet<RiskAdditionalMitigation> RiskAdditionalMitigations { get; set; }
+    public DbSet<RiskWeakness> RiskWeaknesses { get; set; }
+    public DbSet<RiskOpportunity> RiskOpportunitys { get; set; }
     public DbSet<RiskConsequenceDetails> RiskConsequenceDetails { get; set; }
     public DbSet<RiskTreatmentPlan> RiskTreatmentPlans { get; set; }
     public DbSet<MonitoringAndControl> MonitoringAndControls { get; set; }
