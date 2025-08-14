@@ -5,7 +5,6 @@ using MEMIS.Models;
 using MEMIS.Models.Risk;
 using MEMIS.ViewModels.ME;
 using MEMIS.ViewModels.RiskManagement;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -14,7 +13,7 @@ using System.Security.Claims;
 
 namespace MEMIS.Controllers.Risk
 {
-  [Authorize]
+  //[Authorize]
   public class RiskRegisterController : Controller
   {
     private readonly Data.AppDbContext _context;
@@ -633,6 +632,10 @@ namespace MEMIS.Controllers.Risk
         string category = _context.RiskCategorys.Where(x => x.intCategory == riskRegister.intCategory).Select(x => x.CategoryCode).FirstOrDefault() ?? "";
         string deptCode = _context.Departments.Where(x => x.intDept == riskRegister.intDept).Select(x => x.deptCode).FirstOrDefault() ?? "";
         riskRegister.RiskCode = $"NDA/{category}/{deptCode}";
+        if (riskRegister.intDept == null)
+        {
+          riskRegister.intDept = Guid.Parse(HttpContext.Session.GetString("Department"));
+        }
         _context.RiskRegister.Add(riskRegister);
         _context.SaveChangesAsync();
         return RedirectToAction(nameof(RiskTolerence));
@@ -660,6 +663,10 @@ namespace MEMIS.Controllers.Risk
             //pp.AdditionalMitigation = objectdto.AdditionalMitigation;
             //pp.ResourcesRequired = objectdto.ResourcesRequired;
             //pp.ExpectedDate=   objectdto.ExpectedDate;
+            if (riskRegister.intDept == null)
+            {
+              riskRegister.intDept = Guid.Parse(HttpContext.Session.GetString("Department"));
+            }
             _context.Update(riskRegister);
             _context.SaveChanges();
 
@@ -836,26 +843,40 @@ namespace MEMIS.Controllers.Risk
       return BadRequest();
     }
 
-    public IActionResult RiskTreatmentHodReviewList(int pageNumber = 1)
+    public IActionResult RiskTreatmentHodReviewList(int pageNumber = 1, Guid? departmentId = null)
     {
       int pageSize = 10;
       var offset = (pageSize * pageNumber) - pageSize;
       if (_context.RiskRegister != null)
       {
-        var dat = _context.RiskRegister.Include(m => m.StrategicPlanFk).Include(m => m.ActivityFk).Include(m => m.FocusAreaFk).Include(m => m.RiskIdentificationFk)
-            .Where(x => x.ApprStatus == (int)riskWorkFlowStatus.treatmentsubmitted)
-            .Skip(offset)
-            .Take(pageSize);
+        // Base query
+        var query = _context.RiskRegister
+            .Include(m => m.StrategicPlanFk)
+            .Include(m => m.ActivityFk)
+            .Include(m => m.FocusAreaFk)
+            .Include(m => m.RiskIdentificationFk)
+            .Include(x => x.RiskTreatmentPlans)
+            .Where(x => x.ApprStatus == (int)riskWorkFlowStatus.treatmentsubmitted);
+
+        // Apply department filter
+        if (departmentId.HasValue)
+        {
+          query = query.Where(x => x.intDept == departmentId);
+        }
+
+        var pagedData = query.Skip(offset).Take(pageSize).AsNoTracking().ToList();
 
         var result = new PagedResult<RiskRegister>
         {
-          Data = dat.AsNoTracking().ToList(),
-          TotalItems = _context.RiskRegister.Count(),
+          Data = pagedData,
+          TotalItems = query.Count(),
           PageNumber = pageNumber,
           PageSize = pageSize
 
         };
         ViewBag.Users = _userManager;
+        ViewBag.Departments = new SelectList(_context.Departments.OrderBy(d => d.deptName), "intDept", "deptName", departmentId);
+
         return View(result);
       }
       else
@@ -974,26 +995,66 @@ namespace MEMIS.Controllers.Risk
       ViewData["RiskRank"] = ListHelper.RiskRank();
       return View(objectdto);
     }
-    public IActionResult RiskTreatmentDirVerifyList(int pageNumber = 1)
+
+    [HttpPost]
+    public async Task<IActionResult> BulkHodTreatmentReview(int[] selectedRiskIds, string action)
+    {
+      if (selectedRiskIds == null || selectedRiskIds.Length == 0)
+        return RedirectToAction(nameof(RiskTreatmentHodReviewList));
+
+      int newStatus = action == "approve"
+          ? (int)riskWorkFlowStatus.treatmenthodreviewed
+          : (int)riskWorkFlowStatus.treatmenthodrejected;
+
+      var risks = await _context.RiskRegister
+          .Where(r => selectedRiskIds.Contains(r.RiskRefID))
+          .ToListAsync();
+
+      foreach (var risk in risks)
+      {
+        risk.ApprStatus = newStatus;
+      }
+
+      await _context.SaveChangesAsync();
+
+      TempData["Message"] = $"Successfully {(action == "approve" ? "approved" : "rejected")} {selectedRiskIds.Length} risk(s).";
+      return RedirectToAction(nameof(RiskTreatmentHodReviewList));
+    }
+
+    public IActionResult RiskTreatmentDirVerifyList(int pageNumber = 1, Guid? departmentId = null)
     {
       int pageSize = 10;
       var offset = (pageSize * pageNumber) - pageSize;
       if (_context.RiskRegister != null)
       {
-        var dat = _context.RiskRegister.Include(m => m.StrategicPlanFk).Include(m => m.ActivityFk).Include(m => m.FocusAreaFk).Include(m => m.RiskIdentificationFk)
-            .Where(x => x.ApprStatus == (int)riskWorkFlowStatus.treatmenthodreviewed)
-            .Skip(offset)
-            .Take(pageSize);
+        // Base query
+        var query = _context.RiskRegister
+            .Include(m => m.StrategicPlanFk)
+            .Include(m => m.ActivityFk)
+            .Include(m => m.FocusAreaFk)
+            .Include(m => m.RiskIdentificationFk)
+            .Include(x => x.RiskTreatmentPlans)
+            .Where(x => x.ApprStatus == (int)riskWorkFlowStatus.treatmenthodreviewed);
+
+        // Apply department filter
+        if (departmentId.HasValue)
+        {
+          query = query.Where(x => x.intDept == departmentId);
+        }
+
+        var pagedData = query.Skip(offset).Take(pageSize).AsNoTracking().ToList();
 
         var result = new PagedResult<RiskRegister>
         {
-          Data = dat.AsNoTracking().ToList(),
-          TotalItems = _context.RiskRegister.Count(),
+          Data = pagedData,
+          TotalItems = query.Count(),
           PageNumber = pageNumber,
           PageSize = pageSize
 
         };
         ViewBag.Users = _userManager;
+        ViewBag.Departments = new SelectList(_context.Departments.OrderBy(d => d.deptName), "intDept", "deptName", departmentId);
+
         return View(result);
       }
       else
@@ -1111,26 +1172,66 @@ namespace MEMIS.Controllers.Risk
       ViewData["RiskRank"] = ListHelper.RiskRank();
       return View(objectdto);
     }
-    public IActionResult RiskTreatmentRmoVerifyList(int pageNumber = 1)
+
+    [HttpPost]
+    public async Task<IActionResult> BulkDirTreatmentVerify(int[] selectedRiskIds, string action)
+    {
+      if (selectedRiskIds == null || selectedRiskIds.Length == 0)
+        return RedirectToAction(nameof(RiskTreatmentDirVerifyList));
+
+      int newStatus = action == "approve"
+          ? (int)riskWorkFlowStatus.treatmentdirapprove
+          : (int)riskWorkFlowStatus.treatmentdirrejected;
+
+      var risks = await _context.RiskRegister
+          .Where(r => selectedRiskIds.Contains(r.RiskRefID))
+          .ToListAsync();
+
+      foreach (var risk in risks)
+      {
+        risk.ApprStatus = newStatus;
+      }
+
+      await _context.SaveChangesAsync();
+      TempData["Message"] = $"{selectedRiskIds.Length} risk(s) {(action == "approve" ? "approved" : "rejected")} successfully.";
+      return RedirectToAction(nameof(RiskTreatmentDirVerifyList));
+    }
+
+
+    public IActionResult RiskTreatmentRmoVerifyList(int pageNumber = 1, Guid? departmentId = null)
     {
       int pageSize = 10;
       var offset = (pageSize * pageNumber) - pageSize;
       if (_context.RiskRegister != null)
       {
-        var dat = _context.RiskRegister.Include(m => m.StrategicPlanFk).Include(m => m.ActivityFk).Include(m => m.FocusAreaFk).Include(m => m.RiskIdentificationFk)
-            .Where(x => x.ApprStatus == (int)riskWorkFlowStatus.treatmentdirapprove)
-            .Skip(offset)
-            .Take(pageSize);
+
+        // Base query
+        var query = _context.RiskRegister
+            .Include(m => m.StrategicPlanFk)
+            .Include(m => m.ActivityFk)
+            .Include(m => m.FocusAreaFk)
+            .Include(m => m.RiskIdentificationFk)
+            .Include(x => x.RiskTreatmentPlans)
+            .Where(x => x.ApprStatus == (int)riskWorkFlowStatus.treatmentdirapprove);
+
+        // Apply department filter
+        if (departmentId.HasValue)
+        {
+          query = query.Where(x => x.intDept == departmentId);
+        }
+
+        var pagedData = query.Skip(offset).Take(pageSize).AsNoTracking().ToList();
 
         var result = new PagedResult<RiskRegister>
         {
-          Data = dat.AsNoTracking().ToList(),
-          TotalItems = _context.RiskRegister.Count(),
+          Data = pagedData,
+          TotalItems = query.Count(),
           PageNumber = pageNumber,
           PageSize = pageSize
 
         };
         ViewBag.Users = _userManager;
+        ViewBag.Departments = new SelectList(_context.Departments.OrderBy(d => d.deptName), "intDept", "deptName", departmentId);
         return View(result);
       }
       else
@@ -1250,6 +1351,32 @@ namespace MEMIS.Controllers.Risk
       ViewData["RiskRank"] = ListHelper.RiskRank();
       return View(objectdto);
     }
+
+    [HttpPost]
+    public async Task<IActionResult> BulkRmoTreatmentVerify(int[] selectedRiskIds, string action)
+    {
+      if (selectedRiskIds == null || selectedRiskIds.Length == 0)
+        return RedirectToAction(nameof(RiskTreatmentRmoVerifyList));
+
+      int newStatus = action == "approve"
+          ? (int)riskWorkFlowStatus.treatmentrmoapproved
+          : (int)riskWorkFlowStatus.treatmentrmorejected;
+
+      var risks = await _context.RiskRegister
+          .Where(r => selectedRiskIds.Contains(r.RiskRefID))
+          .ToListAsync();
+
+      foreach (var risk in risks)
+      {
+        risk.ApprStatus = newStatus;
+      }
+
+      await _context.SaveChangesAsync();
+      TempData["Message"] = $"{selectedRiskIds.Length} risk(s) {(action == "approve" ? "approved" : "rejected")} successfully.";
+      return RedirectToAction(nameof(RiskTreatmentRmoVerifyList));
+    }
+
+
     public IActionResult RiskMonitoringList(int pageNumber = 1)
     {
       int pageSize = 10;
@@ -1406,26 +1533,40 @@ namespace MEMIS.Controllers.Risk
       }
     }
 
-    public IActionResult RiskMonitoringHodReviewList(int pageNumber = 1)
+    public IActionResult RiskMonitoringHodReviewList(int pageNumber = 1, Guid? departmentId = null)
     {
       int pageSize = 10;
       var offset = (pageSize * pageNumber) - pageSize;
       if (_context.RiskRegister != null)
       {
-        var dat = _context.RiskRegister.Include(m => m.StrategicPlanFk).Include(m => m.ActivityFk).Include(m => m.FocusAreaFk).Include(m => m.RiskIdentificationFk)
-            .Where(x => x.ApprStatus == (int)riskWorkFlowStatus.monitoringsubmitted)
-            .Skip(offset)
-            .Take(pageSize);
+
+        // Base query
+        var query = _context.RiskRegister
+            .Include(m => m.StrategicPlanFk)
+            .Include(m => m.ActivityFk)
+            .Include(m => m.FocusAreaFk)
+            .Include(m => m.RiskIdentificationFk)
+            .Include(x => x.RiskTreatmentPlans)
+            .Where(x => x.ApprStatus == (int)riskWorkFlowStatus.monitoringsubmitted);
+
+        // Apply department filter
+        if (departmentId.HasValue)
+        {
+          query = query.Where(x => x.intDept == departmentId);
+        }
+
+        var pagedData = query.Skip(offset).Take(pageSize).AsNoTracking().ToList();
 
         var result = new PagedResult<RiskRegister>
         {
-          Data = dat.AsNoTracking().ToList(),
-          TotalItems = _context.RiskRegister.Count(),
+          Data = pagedData,
+          TotalItems = query.Count(),
           PageNumber = pageNumber,
           PageSize = pageSize
 
         };
         ViewBag.Users = _userManager;
+        ViewBag.Departments = new SelectList(_context.Departments.OrderBy(d => d.deptName), "intDept", "deptName", departmentId);
         return View(result);
       }
       else
@@ -1550,26 +1691,65 @@ namespace MEMIS.Controllers.Risk
       ViewData["RiskRank"] = ListHelper.RiskRank();
       return View(rr);
     }
-    public IActionResult RiskMonitoringDirVerifyList(int pageNumber = 1)
+
+    [HttpPost]
+    public async Task<IActionResult> BulkMonitoringHodReview(int[] selectedRiskIds, string action)
+    {
+      if (selectedRiskIds == null || selectedRiskIds.Length == 0)
+        return RedirectToAction(nameof(RiskMonitoringHodReviewList));
+
+      int newStatus = action == "approve"
+          ? (int)riskWorkFlowStatus.monitoringhodreviewed
+          : (int)riskWorkFlowStatus.monitoringhodrejected;
+
+      var risks = await _context.RiskRegister
+          .Where(r => selectedRiskIds.Contains(r.RiskRefID))
+          .ToListAsync();
+
+      foreach (var risk in risks)
+      {
+        risk.ApprStatus = newStatus;
+      }
+
+      await _context.SaveChangesAsync();
+      TempData["Message"] = $"{selectedRiskIds.Length} risk(s) {(action == "approve" ? "approved" : "rejected")} successfully.";
+      return RedirectToAction(nameof(RiskMonitoringHodReviewList));
+    }
+
+
+    public IActionResult RiskMonitoringDirVerifyList(int pageNumber = 1, Guid? departmentId = null)
     {
       int pageSize = 10;
       var offset = (pageSize * pageNumber) - pageSize;
       if (_context.RiskRegister != null)
       {
-        var dat = _context.RiskRegister.Include(m => m.StrategicPlanFk).Include(m => m.ActivityFk).Include(m => m.FocusAreaFk).Include(m => m.RiskIdentificationFk)
-            .Where(x => x.ApprStatus == (int)riskWorkFlowStatus.monitoringhodreviewed)
-            .Skip(offset)
-            .Take(pageSize);
+        // Base query
+        var query = _context.RiskRegister
+            .Include(m => m.StrategicPlanFk)
+            .Include(m => m.ActivityFk)
+            .Include(m => m.FocusAreaFk)
+            .Include(m => m.RiskIdentificationFk)
+            .Include(x => x.RiskTreatmentPlans)
+            .Where(x => x.ApprStatus == (int)riskWorkFlowStatus.monitoringhodreviewed);
+
+        // Apply department filter
+        if (departmentId.HasValue)
+        {
+          query = query.Where(x => x.intDept == departmentId);
+        }
+
+        var pagedData = query.Skip(offset).Take(pageSize).AsNoTracking().ToList();
 
         var result = new PagedResult<RiskRegister>
         {
-          Data = dat.AsNoTracking().ToList(),
-          TotalItems = _context.RiskRegister.Count(),
+          Data = pagedData,
+          TotalItems = query.Count(),
           PageNumber = pageNumber,
           PageSize = pageSize
 
         };
         ViewBag.Users = _userManager;
+        ViewBag.Departments = new SelectList(_context.Departments.OrderBy(d => d.deptName), "intDept", "deptName", departmentId);
         return View(result);
       }
       else
@@ -1682,26 +1862,66 @@ namespace MEMIS.Controllers.Risk
       ViewData["RiskRank"] = ListHelper.RiskRank();
       return View(rr);
     }
-    public IActionResult RiskMonitoringRmoVerifyList(int pageNumber = 1)
+
+    [HttpPost]
+    public async Task<IActionResult> BulkMonitoringDirReview(int[] selectedRiskIds, string action)
+    {
+      if (selectedRiskIds == null || selectedRiskIds.Length == 0)
+        return RedirectToAction(nameof(RiskMonitoringDirVerifyList));
+
+      int newStatus = action == "approve"
+          ? (int)riskWorkFlowStatus.monitoringdirapprove
+          : (int)riskWorkFlowStatus.monitoringdirrejected;
+
+      var risks = await _context.RiskRegister
+          .Where(r => selectedRiskIds.Contains(r.RiskRefID))
+          .ToListAsync();
+
+      foreach (var risk in risks)
+      {
+        risk.ApprStatus = newStatus;
+      }
+
+      await _context.SaveChangesAsync();
+      TempData["Message"] = $"{selectedRiskIds.Length} risk(s) {(action == "approve" ? "approved" : "rejected")} successfully.";
+      return RedirectToAction(nameof(RiskMonitoringDirVerifyList));
+    }
+
+
+    public IActionResult RiskMonitoringRmoVerifyList(int pageNumber = 1, Guid? departmentId = null)
     {
       int pageSize = 10;
       var offset = (pageSize * pageNumber) - pageSize;
       if (_context.RiskRegister != null)
       {
-        var dat = _context.RiskRegister.Include(m => m.StrategicPlanFk).Include(m => m.ActivityFk).Include(m => m.FocusAreaFk).Include(m => m.RiskIdentificationFk)
-            .Where(x => x.ApprStatus == (int)riskWorkFlowStatus.monitoringdirapprove)
-            .Skip(offset)
-            .Take(pageSize);
+
+        // Base query
+        var query = _context.RiskRegister
+            .Include(m => m.StrategicPlanFk)
+            .Include(m => m.ActivityFk)
+            .Include(m => m.FocusAreaFk)
+            .Include(m => m.RiskIdentificationFk)
+            .Include(x => x.RiskTreatmentPlans)
+            .Where(x => x.ApprStatus == (int)riskWorkFlowStatus.monitoringdirapprove);
+
+        // Apply department filter
+        if (departmentId.HasValue)
+        {
+          query = query.Where(x => x.intDept == departmentId);
+        }
+
+        var pagedData = query.Skip(offset).Take(pageSize).AsNoTracking().ToList();
 
         var result = new PagedResult<RiskRegister>
         {
-          Data = dat.AsNoTracking().ToList(),
-          TotalItems = _context.RiskRegister.Count(),
+          Data = pagedData,
+          TotalItems = query.Count(),
           PageNumber = pageNumber,
           PageSize = pageSize
 
         };
         ViewBag.Users = _userManager;
+        ViewBag.Departments = new SelectList(_context.Departments.OrderBy(d => d.deptName), "intDept", "deptName", departmentId);
         return View(result);
       }
       else
@@ -1817,6 +2037,31 @@ namespace MEMIS.Controllers.Risk
       ViewData["RiskRank"] = ListHelper.RiskRank();
       return View(rr);
     }
+
+    [HttpPost]
+    public async Task<IActionResult> BulkMonitoringRmoReview(int[] selectedRiskIds, string action)
+    {
+      if (selectedRiskIds == null || selectedRiskIds.Length == 0)
+        return RedirectToAction(nameof(RiskMonitoringRmoVerifyList));
+
+      int newStatus = action == "approve"
+          ? (int)riskWorkFlowStatus.monitoringrmoapproved
+          : (int)riskWorkFlowStatus.monitoringrmorejected;
+
+      var risks = await _context.RiskRegister
+          .Where(r => selectedRiskIds.Contains(r.RiskRefID))
+          .ToListAsync();
+
+      foreach (var risk in risks)
+      {
+        risk.ApprStatus = newStatus;
+      }
+
+      await _context.SaveChangesAsync();
+      TempData["Message"] = $"{selectedRiskIds.Length} risk(s) {(action == "approve" ? "approved" : "rejected")} successfully.";
+      return RedirectToAction(nameof(RiskMonitoringRmoVerifyList));
+    }
+
 
     public IActionResult RiskResidualList(int pageNumber = 1)
     {
@@ -1991,6 +2236,7 @@ namespace MEMIS.Controllers.Risk
       if (_context.RiskRegister != null)
       {
         var dat = _context.RiskRegister.Include(m => m.StrategicPlanFk).Include(m => m.ActivityFk).Include(m => m.FocusAreaFk).Include(m => m.RiskIdentificationFk)
+          .Include(x => x.RiskTreatmentPlans)
           .Include(x => x.RiskEvaluations)
             .Where(x => x.ApprStatus == (int)riskWorkFlowStatus.resdassesssubmitted)
             .Skip(offset)
@@ -2141,6 +2387,33 @@ namespace MEMIS.Controllers.Risk
       ViewData["RiskRank"] = ListHelper.RiskRank();
       return View(objectdto);
     }
+
+    [HttpPost]
+    public async Task<IActionResult> BulkRiskResidualHodReview(int[] selectedRiskIds, string action)
+    {
+      if (selectedRiskIds == null || selectedRiskIds.Length == 0)
+        return RedirectToAction(nameof(RiskResidualHodReviewList));
+
+      int newStatus = action == "approve"
+          ? (int)riskWorkFlowStatus.resdassesshodreviewed
+          : (int)riskWorkFlowStatus.resdassesshodrejected;
+
+      var risks = await _context.RiskRegister
+          .Where(r => selectedRiskIds.Contains(r.RiskRefID))
+          .ToListAsync();
+
+      foreach (var risk in risks)
+      {
+        risk.ApprStatus = newStatus;
+      }
+
+      await _context.SaveChangesAsync();
+      TempData["Message"] = $"{selectedRiskIds.Length} risk(s) {(action == "approve" ? "approved" : "rejected")} successfully.";
+      return RedirectToAction(nameof(RiskResidualHodReviewList));
+    }
+
+
+
     public IActionResult RiskResidualDirVerifyList(int pageNumber = 1)
     {
       int pageSize = 10;
@@ -2148,6 +2421,7 @@ namespace MEMIS.Controllers.Risk
       if (_context.RiskRegister != null)
       {
         var dat = _context.RiskRegister.Include(m => m.StrategicPlanFk).Include(m => m.ActivityFk).Include(m => m.FocusAreaFk).Include(m => m.RiskIdentificationFk)
+          .Include(x => x.RiskTreatmentPlans)
           .Include(x => x.RiskEvaluations)
             .Where(x => x.ApprStatus == (int)riskWorkFlowStatus.resdassesshodreviewed)
             .Skip(offset)
@@ -2293,6 +2567,30 @@ namespace MEMIS.Controllers.Risk
       ViewData["RiskRank"] = ListHelper.RiskRank();
       return View(objectdto);
     }
+
+    [HttpPost]
+    public async Task<IActionResult> BulkRiskResidualDirVerify(int[] selectedRiskIds, string action)
+    {
+      if (selectedRiskIds == null || selectedRiskIds.Length == 0)
+        return RedirectToAction(nameof(RiskResidualDirVerifyList));
+
+      int newStatus = action == "approve"
+          ? (int)riskWorkFlowStatus.resdassessdirapprove
+          : (int)riskWorkFlowStatus.resdassessdirrejected;
+
+      var risks = await _context.RiskRegister
+          .Where(r => selectedRiskIds.Contains(r.RiskRefID))
+          .ToListAsync();
+
+      foreach (var risk in risks)
+      {
+        risk.ApprStatus = newStatus;
+      }
+
+      await _context.SaveChangesAsync();
+      TempData["Message"] = $"{selectedRiskIds.Length} risk(s) {(action == "approve" ? "approved" : "rejected")} successfully.";
+      return RedirectToAction(nameof(RiskResidualDirVerifyList));
+    }
     public IActionResult RiskResidualRmoVerifyList(int pageNumber = 1)
     {
       int pageSize = 10;
@@ -2300,6 +2598,7 @@ namespace MEMIS.Controllers.Risk
       if (_context.RiskRegister != null)
       {
         var dat = _context.RiskRegister.Include(m => m.StrategicPlanFk).Include(m => m.ActivityFk).Include(m => m.FocusAreaFk).Include(m => m.RiskIdentificationFk)
+          .Include(x => x.RiskTreatmentPlans)
           .Include(x => x.RiskEvaluations)
             .Where(x => x.ApprStatus == (int)riskWorkFlowStatus.resdassessdirapprove)
             .Skip(offset)
@@ -2449,6 +2748,30 @@ namespace MEMIS.Controllers.Risk
       ViewData["Approval"] = ListHelper.ApprovalStatus();
       ViewData["RiskRank"] = ListHelper.RiskRank();
       return View(objectdto);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> BulkRiskResidualRmoVerify(int[] selectedRiskIds, string action)
+    {
+      if (selectedRiskIds == null || selectedRiskIds.Length == 0)
+        return RedirectToAction(nameof(RiskResidualRmoVerifyList));
+
+      int newStatus = action == "approve"
+          ? (int)riskWorkFlowStatus.resdassessrmoapproved
+          : (int)riskWorkFlowStatus.resdassessrmorejected;
+
+      var risks = await _context.RiskRegister
+          .Where(r => selectedRiskIds.Contains(r.RiskRefID))
+          .ToListAsync();
+
+      foreach (var risk in risks)
+      {
+        risk.ApprStatus = newStatus;
+      }
+
+      await _context.SaveChangesAsync();
+      TempData["Message"] = $"{selectedRiskIds.Length} risk(s) {(action == "approve" ? "approved" : "rejected")} successfully.";
+      return RedirectToAction(nameof(RiskResidualRmoVerifyList));
     }
     public async Task<IActionResult> Details(int? id)
     {

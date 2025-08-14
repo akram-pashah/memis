@@ -630,7 +630,7 @@
         <li class='menu-item@(currentPage.EndsWith("/") || currentPage.StartsWith("/PreInspections") || currentPage.StartsWith("/PreInspections/Verify") || currentPage.StartsWith("/PreInspectionsPharma")
 || currentPage.StartsWith("/PreInspectionsPharma/HeadVerify") || currentPage.StartsWith("/PreInspectionsPharma/DirVerify") || currentPage.StartsWith("/PreinspectionNewManUnit") || currentPage.StartsWith("/RelocationPharma")
 || currentPage.StartsWith("/RelocationPharma/HeadVerify") || currentPage.StartsWith("/RelocationPharma/DirVerify") || currentPage.StartsWith("/RelocationDrugShop") || currentPage.StartsWith("/RelocationDrugShop/HeadVerify")
-|| currentPage.StartsWith("/RelocationDrugShop/DirVerify") || currentPage.StartsWith("/ComplianceSupportSupervision") || currentPage.StartsWith("/renewal") || currentPage.StartsWith("/enforcement") || currentPage.StartsWith("/gpp")
+                        || currentPage.StartsWith("/RelocationDrugShop/DirVerify") || currentPage.StartsWith("/ComplianceSupportSupervision") || currentPage.StartsWith("/renewal") || currentPage.StartsWith("/enforcement") || currentPage.StartsWith("/GPP")
  || currentPage.StartsWith("/gdp") || currentPage.StartsWith("/ComplianceSupportSupervision") || currentPage.StartsWith("/ComplianceSupportSupervision")? " active open" : "")'>
 
             <a href="javascript:void(0);" class="menu-link menu-toggle">
@@ -742,7 +742,7 @@
                         <div>Enforcement</div>
                     </a>
                 </li> *@
-                <li class='menu-item@(currentPage == "/gpp" ? " active" : "")'>
+                <li class='menu-item@(currentPage == "/GPP" ? " active" : "")'>
                     <a asp-controller="gpp" asp-action="Index" class="menu-link">
                         <div>GPP</div>
                     </a>
@@ -823,7 +823,7 @@
                 </li>
             </ul>
         </li>
-        <li class="menu-item m@(currentPage.StartsWith("/RiskReport") || currentPage.StartsWith("/Reports") || currentPage.StartsWith("/ProjectManagementReports") ? " active open" : "")">
+        <li class="menu-item m@(currentPage.StartsWith("/RiskReport") || currentPage.StartsWith("/GISReports") || currentPage.StartsWith("/Reports") || currentPage.StartsWith("/ProjectManagementReports") ? " active open" : "")">
             <a href="javascript:void(0);" class="menu-link menu-toggle">
                 <i class="menu-icon tf-icons bx bx-file"></i>
                 <div>Reports</div>
@@ -847,6 +847,11 @@
                 <li class='menu-item@(currentPage == "/ProjectManagementReports" ? " active" : "")'>
                     <a asp-controller="ProjectManagementReports" asp-action="Index" class="menu-link">
                         <div>Project Management Reports</div>
+                    </a>
+                </li>
+                <li class='menu-item@(currentPage.StartsWith("/GISReports") ? " active" : "")'>
+                    <a asp-controller="GISReports" asp-action="Index" class="menu-link">
+                        <div>GIS Reports</div>
                     </a>
                 </li>
             </ul>
